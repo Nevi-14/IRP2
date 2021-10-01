@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from './pages/detalle-clientes/detalle-clientes.page';
 import { ConfiguracionRutaService } from './services/configuracion-ruta.service';
@@ -9,7 +9,7 @@ import { ConfiguracionRutaService } from './services/configuracion-ruta.service'
   styleUrls: ['app.component.scss'],
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   mapSvg = '../assets/home/map.svg';
   textoBuscar = '';
   array = [
@@ -26,8 +26,12 @@ export class AppComponent {
     { nombre:'Cliente 11'},
     { nombre:'Cliente 12'}
   ];
+
   constructor( private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
 
+  ngOnInit(){
+    this.config.totalClientesRuta = this.array.length;
+  }
   async detalleClientes(){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
