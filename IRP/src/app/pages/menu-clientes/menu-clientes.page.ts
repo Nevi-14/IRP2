@@ -8,8 +8,25 @@ import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
   styleUrls: ['./menu-clientes.page.scss'],
 })
 export class MenuClientesPage implements OnInit {
-  array = Array(20);
+  textoBuscar = '';
+  array = [
+    { nombre:'Cliente 1'},
+    { nombre:'Cliente 2'},
+    { nombre:'Cliente 3'},
+    { nombre:'Cliente 4'},
+    { nombre:'Cliente 5'},
+    { nombre:'Cliente 6'},
+    { nombre:'Cliente 7'},
+    { nombre:'Cliente 8'},
+    { nombre:'Cliente 9'},
+    { nombre:'Cliente 10'},
+    { nombre:'Cliente 11'},
+    { nombre:'Cliente 12'}
+  ]
   constructor(private modalCtrl: ModalController) { }
+  onSearchChange(event){
+    this.textoBuscar = event.detail.value;
+  }
 
   ngOnInit() {
   }

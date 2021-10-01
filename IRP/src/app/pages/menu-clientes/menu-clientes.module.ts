@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MenuClientesPageRoutingModule } from './menu-clientes-routing.module';
 
 import { MenuClientesPage } from './menu-clientes.page';
+import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { MenuClientesPage } from './menu-clientes.page';
     IonicModule,
     MenuClientesPageRoutingModule
   ],
-  declarations: [MenuClientesPage]
+  declarations: [MenuClientesPage, FiltroClientesPipe]
 })
 export class MenuClientesPageModule {}

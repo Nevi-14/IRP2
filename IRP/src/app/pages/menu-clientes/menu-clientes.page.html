@@ -78,14 +78,14 @@
             
             </ion-col>
             <ion-col size="12">
-              <ion-searchbar mode="ios" placeholder="Buscar cliente"></ion-searchbar>
+              <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
             </ion-col>  
             <ion-col size="12" class="scroll-modal">
 
               <ion-list lines="none">
-                <ion-item *ngFor="let entry of array; let i = index;">
+                <ion-item *ngFor="let entry of array | filtroClientes: textoBuscar:'nombre' ; let i = index;">
                   
-                  <ion-label>Cliente {{i+1}}</ion-label>
+                  <ion-label>{{entry.nombre}}</ion-label>
                   <ion-buttons slot="end">
                     <ion-button  shape="round" fill="solid" color="primary" (click)="detalleClientes()">
                       <ion-icon  name="eye"></ion-icon>
