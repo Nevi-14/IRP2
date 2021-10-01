@@ -32,7 +32,7 @@ style="padding: 20px;">
       <ion-list style="background: transparent!important;" lines="none">
         <ion-item>
           <ion-label><ion-badge color="primary">Ruta a definir</ion-badge></ion-label>
-          <ion-input placeholder="Definir nombre de ruta"></ion-input>
+          <ion-input placeholder="Definir nombre de ruta" (ionChange)="onSearchChange($event)" debounce="250"></ion-input>
         </ion-item>
       </ion-list>
 

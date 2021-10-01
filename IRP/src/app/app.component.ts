@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from './pages/detalle-clientes/detalle-clientes.page';
+import { ConfiguracionRutaService } from './services/configuracion-ruta.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ export class AppComponent {
     { nombre:'Cliente 11'},
     { nombre:'Cliente 12'}
   ];
-  constructor( private modalCtrl: ModalController) {}
+  constructor( private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
 
   async detalleClientes(){
     const modal = await this.modalCtrl.create({

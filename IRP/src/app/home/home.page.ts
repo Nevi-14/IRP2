@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment.prod';
 import * as  Mapboxgl from 'mapbox-gl';
 import { MenuClientesPage } from '../pages/menu-clientes/menu-clientes.page';
 import { ModalController } from '@ionic/angular';
+import { ConfiguracionRutaService } from '../services/configuracion-ruta.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -14,7 +15,7 @@ imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
 
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
 
   ngOnInit(){
 this.createMap(-84.0997786,9.9774527);
@@ -61,7 +62,9 @@ this.mapa.on('load', () => {
     return await modal.present();
   }
 
-  
+  onSearchChange(event){
+    this.config.nombreRuta = event.detail.value;
+  }
   
   
 
