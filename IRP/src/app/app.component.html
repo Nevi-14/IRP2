@@ -35,7 +35,7 @@
     <ion-col size="12" class="scroll">
       <ion-list >
         <ion-item *ngFor="let entry of array | filtroClientes: textoBuscar:'nombre' ; let i = index;">
-          <ion-checkbox slot="start"></ion-checkbox>
+          <ion-checkbox (click)="addValue($event)"  slot="start"></ion-checkbox>
 
           <ion-label>{{entry.nombre}}</ion-label>
           <ion-buttons slot="end">

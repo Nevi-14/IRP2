@@ -30,7 +30,18 @@ export class AppComponent implements OnInit {
   constructor( private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
 
   ngOnInit(){
-    this.config.totalClientesRuta = this.array.length;
+    
+  }
+
+  addValue(e): void {
+    const isChecked = !e.currentTarget.checked;
+ if(isChecked=== true){
+  this.config.totalClientesRuta += 1;
+ }else{
+  this.config.totalClientesRuta -= 1;
+ }
+
+
   }
   async detalleClientes(){
     const modal = await this.modalCtrl.create({
