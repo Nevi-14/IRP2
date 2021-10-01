@@ -7,7 +7,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./detalle-clientes.page.scss'],
 })
 export class DetalleClientesPage implements OnInit {
-
+  array = Array(4);
   constructor( private modalCtrl: ModalController) { }
 
   ngOnInit() {
