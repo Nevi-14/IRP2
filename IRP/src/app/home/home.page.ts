@@ -19,22 +19,25 @@ mapa: Mapboxgl.Map;
 
   ngOnInit(){
 this.createMap(-84.0997786,9.9774527);
-this.mapa.on('load', () => {
-  this.mapa.resize();
-});
+
 
   }
 
   createMap(lng: number, lat: number){
     (Mapboxgl as any).accessToken = environment.mapboxKey;
     this.mapa = new Mapboxgl.Map({
+      
     container: 'mapa', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     //  MAPBOX  LNG , LAT AND GOOGLE MAPS IS LAT , LNG
     center: [lng,lat], // starting position
     zoom: 16 // starting zoom
+    
     });
-    this.mapa.resize();
+
+    this.mapa.on('load', () => {
+      this.mapa.resize();
+    });
     this.mapa.addControl(new Mapboxgl.NavigationControl());
     this.mapa.addControl(new Mapboxgl.FullscreenControl());
     this.createMarker(lng,lat);
