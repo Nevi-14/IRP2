@@ -1,0 +1,7 @@
+{
+  "name": "IRP",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
