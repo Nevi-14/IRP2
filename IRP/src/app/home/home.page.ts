@@ -13,6 +13,9 @@ export class HomePage implements OnInit {
 mapSvg = '../assets/home/map.svg';
 imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
+loginToggle = false;
+loginText = 'Iniciar Sección';
+color = 'light';
 
 
   constructor(private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
@@ -69,6 +72,18 @@ this.createMap(-84.0997786,9.9774527);
     this.config.nombreRuta = event.detail.value;
   }
   
-  
+  myChangeEvent(event){
+    console.log(event.detail.value)
+    if(this.loginToggle === false){
+      this.loginToggle = true;
+      this.color = 'primary';
+      this.loginText = 'Cerrar Sección';
+    }else{
+      this.loginToggle = false;
+      this.color = 'light';
+      this.loginText = 'Iniciar Sección';
+    }
+ 
+  }
 
 }

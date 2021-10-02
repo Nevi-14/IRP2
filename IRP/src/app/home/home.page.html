@@ -4,15 +4,14 @@
       <ion-menu-button menu="first" color="primary"></ion-menu-button>
     </ion-buttons>
 
-    <ion-buttons slot="end">
-      <ion-button >
-        Iniciar Sessión
-      </ion-button>
-      <ion-button >
-        Cerrar Sessión
-      </ion-button>
-
-    </ion-buttons>
+    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
+      <ion-item>
+        <ion-label slot="end"><!-- Colors -->
+          <ion-badge color="{{color}}">{{loginText}}</ion-badge></ion-label>
+        <ion-toggle slot="end" (ionChange)="myChangeEvent($event)"></ion-toggle>
+      </ion-item>
+    
+    </ion-list>
   </ion-toolbar>
 
 
