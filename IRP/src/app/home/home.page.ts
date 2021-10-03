@@ -4,6 +4,7 @@ import * as  Mapboxgl from 'mapbox-gl';
 import { MenuClientesPage } from '../pages/menu-clientes/menu-clientes.page';
 import { ModalController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../services/configuracion-ruta.service';
+import { DetalleClientesPage } from '../pages/detalle-clientes/detalle-clientes.page';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -13,9 +14,20 @@ export class HomePage implements OnInit {
 mapSvg = '../assets/home/map.svg';
 imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
-loginToggle = false;
-loginText = 'Iniciar Sección';
-color = 'light';
+array = [
+  { nombre:'Cliente 1'},
+  { nombre:'Cliente 2'},
+  { nombre:'Cliente 3'},
+  { nombre:'Cliente 4'},
+  { nombre:'Cliente 5'},
+  { nombre:'Cliente 6'},
+  { nombre:'Cliente 7'},
+  { nombre:'Cliente 8'},
+  { nombre:'Cliente 9'},
+  { nombre:'Cliente 10'},
+  { nombre:'Cliente 11'},
+  { nombre:'Cliente 12'}
+];
 
 
   constructor(private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
@@ -71,19 +83,24 @@ this.createMap(-84.0997786,9.9774527);
   onSearchChange(event){
     this.config.nombreRuta = event.detail.value;
   }
-  
-  myChangeEvent(event){
-    console.log(event.detail.value)
-    if(this.loginToggle === false){
-      this.loginToggle = true;
-      this.color = 'primary';
-      this.loginText = 'Cerrar Sección';
-    }else{
-      this.loginToggle = false;
-      this.color = 'light';
-      this.loginText = 'Iniciar Sección';
-    }
- 
+
+  async detalleClientes(){
+    const modal = await this.modalCtrl.create({
+      component: DetalleClientesPage,
+      cssClass: 'my-custom-class'
+    });
+    return await modal.present();
   }
 
+  addValue(e): void {
+    const isChecked = !e.currentTarget.checked;
+ if(isChecked=== true){
+  this.config.totalClientesRuta += 1;
+ }else{
+  this.config.totalClientesRuta -= 1;
+ }
+
+
+  }
+  
 }
