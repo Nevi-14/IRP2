@@ -9,10 +9,6 @@ import { LoginService } from './services/login.service';
 
 export class AppComponent implements OnInit {
   mapSvg = '../assets/home/map.svg';
-  textoBuscar = '';
-
-
   constructor() {}
-  ngOnInit(){ 
-}
+  ngOnInit(){ }
 }

@@ -14,6 +14,8 @@ export class HomePage implements OnInit {
 mapSvg = '../assets/home/map.svg';
 imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
+textoBuscar = '';
+
 array = [
   { nombre:'Cliente 1'},
   { nombre:'Cliente 2'},
@@ -81,7 +83,7 @@ this.createMap(-84.0997786,9.9774527);
   }
 
   onSearchChange(event){
-    this.config.nombreRuta = event.detail.value;
+    this.textoBuscar = event.detail.value;
   }
 
   async detalleClientes(){
