@@ -82,10 +82,12 @@ this.createMap(-84.0997786,9.9774527);
     return await modal.present();
   }
 
+  ruta(event){
+    this.config.nombreRuta = event.detail.value;
+  }
   onSearchChange(event){
     this.textoBuscar = event.detail.value;
   }
-
   async detalleClientes(){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
