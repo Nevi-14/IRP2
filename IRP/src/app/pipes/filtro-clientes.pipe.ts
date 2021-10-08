@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FiltroClientesPipe implements PipeTransform {
 
-  transform(arreglo: any[],texto: string ='', columna: string = 'nombre' ): any[] {
+  transform(arreglo: any[],texto: string ='', columna: string = 'NOMBRE' ): any[] {
+    console.log(texto)
     if(texto=== ''){
       return arreglo;
     }

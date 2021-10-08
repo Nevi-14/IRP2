@@ -25,7 +25,7 @@
             <ion-toolbar>
               <ion-badge color="primary"><ion-label>Filtrar por zona</ion-label></ion-badge>
   <ion-buttons slot="end">
-    <ion-button (click)="onClick()" shape="round" fill="solid" color="danger">
+    <ion-button (click)="borrarFiltro()" shape="round" fill="solid" color="danger">
      <ion-icon  name="trash"></ion-icon>
     </ion-button>
   </ion-buttons>
@@ -36,46 +36,47 @@
               <ion-item>
                 <ion-badge color="dark"> <ion-label>Provincia</ion-label></ion-badge>
                
-                <ion-select placeholder="provincia">
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
+                <ion-select placeholder="provincia" (ionChange)="onChange($event, true,false,false)">
+                  <ng-template ngFor let-provincia [ngForOf]="provincias.provincias" let-i="index" >
+                    <ion-select-option value="{{provincia.Cod_Provincia}}" >{{provincia.Provincia}}</ion-select-option>
+                  </ng-template>
 
+
+                  
                 </ion-select>
               </ion-item>
     
               <ion-item>
                 <ion-badge color="dark"> <ion-label>Cantón</ion-label></ion-badge>
-                <ion-select placeholder="cantón">
-                        <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
+                <ion-select placeholder="cantón" (ionChange)="onChange($event, false,true,false)">
+
+                  <ng-template ngFor let-canton [ngForOf]="cantones.cantones" let-i="index" >
+                    <ion-select-option value="{{canton.Cod_Canton}}" >{{canton.Canton}}</ion-select-option>
+                  </ng-template>
+
+
                   
                 </ion-select>
               </ion-item>
       
               <ion-item>
                 <ion-badge color="dark"> <ion-label>Distrito</ion-label></ion-badge>
-                <ion-select placeholder="distrito">
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
-                  <ion-select-option value="Item">Item</ion-select-option>
+                <ion-select placeholder="distrito" (ionChange)="onChange($event, false,false,true)">
+
                   
+                  <ng-template ngFor let-distrito [ngForOf]="distritos.distritos" let-i="index" >
+                    <ion-select-option value="{{distrito.Cod_Distrito}}" >{{distrito.Distrito}}</ion-select-option>
+                  </ng-template>
+
                 </ion-select>
               </ion-item>
-              <ion-item>
-                <ion-label position="floating">Barrio</ion-label>
-                <ion-input placeholder="Barrio"></ion-input>
-              </ion-item>
+  <ion-item>
+  <ion-buttons style="margin: 0 auto;">
+    <ion-button (click)="onSubmit()" shape="round" fill="solid" color="primary">
+      Filtrar
+    </ion-button>
+  </ion-buttons>
+  </ion-item>
             </ion-list>
 
 
@@ -98,14 +99,14 @@
             <ion-col size="12" class="scroll-modal">
 
               <ion-list lines="none">
-                <ion-item *ngFor="let entry of array | filtroClientes: textoBuscar:'nombre' ; let i = index;">
+                <ion-item *ngFor="let cliente of clientes.clientes | filtroClientes: textoBuscar:'NOMBRE' ; let i = index;">
                   
-                  <ion-label>{{entry.nombre}}</ion-label>
+                  <ion-label>{{cliente.NOMBRE}}</ion-label>
                   <ion-buttons slot="end">
-                    <ion-button slot="end"  shape="round" fill="solid" color="primary" (click)="detalleClientes()">
+                    <ion-button slot="end"  shape="round" fill="solid" color="primary" (click)="detalleClientes(cliente)">
                       <ion-icon  name="eye"></ion-icon>
                     </ion-button>
-                    <ion-button slot="end"  shape="round" fill="solid" color="secondary">
+                    <ion-button  (click)="agregarCliente(cliente)" slot="end"  shape="round" fill="solid" color="secondary">
                       <ion-icon  name="add"></ion-icon>
                     </ion-button>
                   </ion-buttons>

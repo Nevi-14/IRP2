@@ -3,8 +3,9 @@ import { environment } from '../../environments/environment.prod';
 import * as  Mapboxgl from 'mapbox-gl';
 import { MenuClientesPage } from '../pages/menu-clientes/menu-clientes.page';
 import { ModalController } from '@ionic/angular';
-import { ConfiguracionRutaService } from '../services/configuracion-ruta.service';
+import { ConfiguracionRutaService } from '../services/configuracionruta.service';
 import { DetalleClientesPage } from '../pages/detalle-clientes/detalle-clientes.page';
+import { ClientesService } from '../services/clientes.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -16,34 +17,17 @@ imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
 textoBuscar = '';
 
-array = [
-  { nombre:'Cliente 1'},
-  { nombre:'Cliente 2'},
-  { nombre:'Cliente 3'},
-  { nombre:'Cliente 4'},
-  { nombre:'Cliente 5'},
-  { nombre:'Cliente 6'},
-  { nombre:'Cliente 7'},
-  { nombre:'Cliente 8'},
-  { nombre:'Cliente 9'},
-  { nombre:'Cliente 10'},
-  { nombre:'Cliente 11'},
-  { nombre:'Cliente 12'}
-];
 
-
-  constructor(private modalCtrl: ModalController, private config: ConfiguracionRutaService) {}
+  constructor(private modalCtrl: ModalController, private config: ConfiguracionRutaService, private clientes: ClientesService) {}
 
   ngOnInit(){
 this.createMap(-84.0997786,9.9774527);
-
 
   }
 
   createMap(lng: number, lat: number){
     (Mapboxgl as any).accessToken = environment.mapboxKey;
     this.mapa = new Mapboxgl.Map({
-      
     container: 'mapa', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     //  MAPBOX  LNG , LAT AND GOOGLE MAPS IS LAT , LNG
@@ -86,12 +70,16 @@ this.createMap(-84.0997786,9.9774527);
     this.config.nombreRuta = event.detail.value;
   }
   onSearchChange(event){
+    console.log(event)
     this.textoBuscar = event.detail.value;
   }
-  async detalleClientes(){
+  async detalleClientes(cliente){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
-      cssClass: 'my-custom-class'
+      cssClass: 'my-custom-class',
+      componentProps:{
+        detalleCliente: cliente
+      }
     });
     return await modal.present();
   }
@@ -106,5 +94,15 @@ this.createMap(-84.0997786,9.9774527);
 
 
   }
+
+  delete(cliente: string){
+console.log(cliente)
+    for( let index = 0; index < this.clientes.clientesRutas.length ; index++){   
+    if(this.clientes.clientesRutas[index].CLIENTE === cliente){
+      this.clientes.clientesRutas.splice(index,1);
+    }
+        }
+        
+      }
   
 }

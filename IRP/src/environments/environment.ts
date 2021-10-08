@@ -4,8 +4,22 @@
 
 export const environment = {
   production: false,
-  mapboxKey:'pk.eyJ1IjoibmV2aWwtMTQiLCJhIjoiY2t0b2M5a280MGI2aTJxcDNsNW8xcjJxayJ9._v5eSc9HbKFc5wvw7_4Hvw'
+  maxCharCodigoProd: 6,
+  adminClave: '123456',
+  preURL: 'http://api_irp',
+  TestURL: '_test',
+  postURL: '.soportecr.xyz/api/',
+  mapboxKey:'pk.eyJ1IjoibmV2aWwtMTQiLCJhIjoiY2t0b2M5a280MGI2aTJxcDNsNW8xcjJxayJ9._v5eSc9HbKFc5wvw7_4Hvw',
+  provinciaID: '?IdP=',
+  cantonID: '&IdC=',
+  distritoID: '&IdD=',
+  clientesURL: 'Clientes/',
+  provinciasURL: 'Provincias/',
+  cantonesURL: 'Cantones/',
+  distritosURL: 'Distritos/',
+  prdMode: false,
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

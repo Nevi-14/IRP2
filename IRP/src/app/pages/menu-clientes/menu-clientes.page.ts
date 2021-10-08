@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
+import { ClientesService } from '../../services/clientes.service';
+import { CantonesService } from '../../services/cantones.service';
+import { ProvinciasService } from '../../services/provincias.service';
+import { DistritosService } from '../../services/distritos.service';
+import { Clientes } from 'src/app/models/clientes';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -8,27 +14,19 @@ import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
   styleUrls: ['./menu-clientes.page.scss'],
 })
 export class MenuClientesPage implements OnInit {
+  filtroClientes = {
+    Cod_Provincia : '',
+    Cod_Canton : '',
+    Cod_Distrito : '',
+  }
   textoBuscar = '';
-  array = [
-    { nombre:'Cliente 1'},
-    { nombre:'Cliente 2'},
-    { nombre:'Cliente 3'},
-    { nombre:'Cliente 4'},
-    { nombre:'Cliente 5'},
-    { nombre:'Cliente 6'},
-    { nombre:'Cliente 7'},
-    { nombre:'Cliente 8'},
-    { nombre:'Cliente 9'},
-    { nombre:'Cliente 10'},
-    { nombre:'Cliente 11'},
-    { nombre:'Cliente 12'}
-  ]
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService) { }
   onSearchChange(event){
     this.textoBuscar = event.detail.value;
   }
 
   ngOnInit() {
+    console.log(this.distritos.distritos);
   }
   medClicked(event, item) {
   
@@ -38,11 +36,42 @@ export class MenuClientesPage implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  async detalleClientes(){
+  async detalleClientes(cliente: any){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
-      cssClass: 'my-custom-class'
+      cssClass: 'my-custom-class',
+      componentProps:{
+        detalleCliente: cliente
+      }
     });
     return await modal.present();
   }
+  agregarCliente(cliente: any){
+    this.clientes.clientesRutas.push(cliente);
+    console.log(this.clientes.clientesRutas)
+  }
+  async onSubmit(formulario: NgForm){
+console.log(this.filtroClientes)
+this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
+  }
+
+  
+
+  onChange($event , provincia, canton, distrito){
+    if(provincia){
+      this.filtroClientes.Cod_Provincia = $event.target.value;
+    }else if(canton){
+      this.filtroClientes.Cod_Canton = $event.target.value;
+    }else{
+      this.filtroClientes.Cod_Distrito = $event.target.value;
+    }
+    console.log($event.target.value);
+    }
+
+    borrarFiltro(){
+      this.filtroClientes.Cod_Provincia = '';
+      this.filtroClientes.Cod_Canton= '';
+      this.filtroClientes.Cod_Distrito = '';
+      this.clientes.syncClientes('1','01','04');
+    }
 }
