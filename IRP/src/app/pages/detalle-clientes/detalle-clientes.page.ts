@@ -15,7 +15,7 @@ export class DetalleClientesPage implements OnInit {
   constructor( private modalCtrl: ModalController) { }
 
   ngOnInit() {
-    this.createMap(this.detalleCliente.LONGITUD,this.detalleCliente.LATITUD,);
+    this.createMap(this.detalleCliente.LONGITUD,this.detalleCliente.LATITUD);
     console.log(this.detalleCliente);
   }
 

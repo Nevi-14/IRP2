@@ -1,7 +1,12 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title class="title">Detalle cliente : {{detalleCliente.NOMBRE}} - Numero Cliente ({{detalleCliente.CLIENTE}})</ion-title>
+    <ion-title class="title">Detalle cliente : {{detalleCliente.NOMBRE}}
+      <ion-badge color="warning">{{detalleCliente.CLIENTE}}</ion-badge >
+    </ion-title>
+
+      
     <ion-buttons  slot="end">
+
       <ion-button (click)="cerrarModal()" fill="solid" color="danger" shape="round">
         <ion-icon  name="close"></ion-icon>
       </ion-button>
@@ -14,15 +19,17 @@
     
 <ion-grid >
   <ion-row>
-    <ion-col size="6">
+    <ion-col size="5">
       <ion-row>
     
         <ion-col size="12">
   <ion-item>
     <ion-icon name="location" style="margin-right: 10px;" color="danger"></ion-icon>
-    <ion-label class="title-2">MAPA ZONA DE {{detalleCliente.NOMBRE_ZONA}} - Barrio {{detalleCliente.BARRIO}}</ion-label>
+    <ion-label class="title-2">MAPA ZONA DE {{detalleCliente.NOMBRE_ZONA}} </ion-label>
+
   </ion-item>
         </ion-col>
+
         <ion-col size="12" id="mapaCliente">
   
 
@@ -31,32 +38,32 @@
 
       </ion-row>
     </ion-col>
-    <ion-col size="6">
+    <ion-col size="7">
 <ion-row>
   <ion-col size="12">
     <ion-label class="title-2">información general </ion-label>
   </ion-col>
 
   
-  <ion-col size="6">
+  <ion-col size="12">
+    <ion-item>
+      <ion-label class="title-2">Canal</ion-label>
+      <ion-badge color="primary">{{detalleCliente.CANAL}}</ion-badge >
+    </ion-item>
+  </ion-col>
+  <ion-col size="4">
     <ion-item>
       <ion-label><ion-badge color="dark">Provincia</ion-badge></ion-label>
       <ion-label>{{detalleCliente.PROVINCIA}}</ion-label>
     </ion-item>
   </ion-col>
-  <ion-col size="6">
-    <ion-item>
-      <ion-label><ion-badge color="dark">Provincia</ion-badge></ion-label>
-      <ion-label>{{detalleCliente.PROVINCIA}}</ion-label>
-    </ion-item>
-  </ion-col>
-  <ion-col size="6">
+  <ion-col size="4">
     <ion-item>
       <ion-label><ion-badge color="dark">Cantón</ion-badge></ion-label>
       <ion-label>{{detalleCliente.CANTON}}</ion-label>
     </ion-item>
   </ion-col>
-  <ion-col size="6">
+  <ion-col size="4">
     <ion-item>
       <ion-label><ion-badge color="dark">Distrito</ion-badge></ion-label>
       <ion-label>{{detalleCliente.DISTRITO}}</ion-label>

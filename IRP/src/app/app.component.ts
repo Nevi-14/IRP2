@@ -17,7 +17,5 @@ export class AppComponent implements OnInit {
   ngOnInit(){
     this.clientes.syncClientes('1','01','04');
     this.provincias.syncProvincias();
-    this.cantones.syncCantones();
-    this.distritos.syncDistritos();
    }
 }

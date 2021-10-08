@@ -11,18 +11,18 @@ export class DistritosService {
 
   constructor(private http: HttpClient) { }
 
-  getIRPURL( api: string, provincia: string, canton: string ,id: string ){
-    const URL = environment.preURL  + environment.postURL + api + environment.provinciaID +provincia+ environment.cantonID + canton + id;
+  getIRPURL( api: string, provincia: string, canton: string ){
+    const URL = environment.preURL  + environment.postURL + api + environment.provinciaID +provincia+ environment.cantonID + canton;
 console.log(URL);
     return URL;
   }
-  private getDistritos( ){
-    const URL = this.getIRPURL( environment.distritosURL,'4','01','');
+  private getDistritos(provincia,canton){
+    const URL = this.getIRPURL( environment.distritosURL,provincia,canton);
     return this.http.get<Distritos[]>( URL );
   }
 
-  syncDistritos(){
-    this.getDistritos().subscribe(
+  syncDistritos(provincia, canton){
+    this.getDistritos(provincia, canton).subscribe(
       resp =>{
         this.distritos = resp.slice(0);
        console.log(this.distritos)

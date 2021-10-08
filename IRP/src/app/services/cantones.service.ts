@@ -11,18 +11,18 @@ export class CantonesService {
 
   constructor(private http: HttpClient) { }
 
-  getIRPURL( api: string,id: string ){
-    const URL = environment.preURL  + environment.postURL + api + id;
+  getIRPURL( api: string,provincia: string ){
+    const URL = environment.preURL  + environment.postURL + api + provincia;
 console.log(URL);
     return URL;
   }
-  private getCantones( ){
-    const URL = this.getIRPURL( environment.cantonesURL,'1');
+  private getCantones(provincia){
+    const URL = this.getIRPURL( environment.cantonesURL,provincia);
     return this.http.get<Cantones[]>( URL );
   }
 
-  syncCantones(){
-    this.getCantones().subscribe(
+  syncCantones(provincia){
+    this.getCantones(provincia).subscribe(
       resp =>{
         this.cantones = resp.slice(0);
        console.log(this.cantones)
