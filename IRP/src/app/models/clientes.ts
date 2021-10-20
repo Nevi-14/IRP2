@@ -1,6 +1,6 @@
 export class Clientes {
     constructor(
-        public CLIENTE: string,
+        public IdCliente: string,
         public NOMBRE: string,
         public ALIAS: string ,
         public CATEGORIA_CLIENTE: number,

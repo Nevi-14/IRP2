@@ -7,6 +7,7 @@ import { ProvinciasService } from '../../services/provincias.service';
 import { DistritosService } from '../../services/distritos.service';
 import { Clientes } from 'src/app/models/clientes';
 import { NgForm } from '@angular/forms';
+import { ZonasService } from 'src/app/services/zonas.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -19,17 +20,42 @@ export class MenuClientesPage implements OnInit {
     Cod_Canton : '',
     Cod_Distrito : '',
   }
+  myvalue = 'OFF';
   textoBuscar = '';
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService) { }
+  isChecked = false;
+  clientesArray = [];
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService) { }
   onSearchChange(event){
     this.textoBuscar = event.detail.value;
   }
 
   ngOnInit() {
-    console.log(this.distritos.distritos);
+    this.clientes.isChecked = false;
+    this.clientes.clientes = [];
+    this.clientes.clientesArray = [];
+
+
   }
   medClicked(event, item) {
   
+  }
+  checkAll(e){
+
+    const isChecked = !e.currentTarget.checked;
+    if(isChecked=== true){
+      for(let i =0; i <= this.clientes.clientesArray.length; i++) {
+        this.clientes.clientesArray[i].select  = true;
+      }
+     }else{
+      for(let i =0; i <= this.clientes.clientesArray.length; i++) {
+        this.clientes.clientesArray[i].select  = false;
+      }
+     }
+
+
+   
+ 
+ 
   }
   
   cerrarModal(){
@@ -46,13 +72,23 @@ export class MenuClientesPage implements OnInit {
     });
     return await modal.present();
   }
-  agregarCliente(cliente: any){
-    this.clientes.clientesRutas.push(cliente);
-    this.message(cliente.NOMBRE,'Se agrego a la lista de RUTAS');
+  agregarCliente(){
+  for(let i = 0; i < this.clientes.clientesArray.length;i++){
+    if(this.clientes.clientesArray[i].select === true){
+      this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
+    }
+  }
+
+    this.message('IRP','Se agrego a la lista de RUTAS');
   }
   async onSubmit(formulario: NgForm){
 this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
+this.borrarFiltro();
+this.clientes.clientesArray = [];
+this.isChecked = !this.isChecked; 
+ 
   }
+
 
   onChange($event , provincia, canton, distrito){
     if(provincia){
@@ -71,7 +107,7 @@ this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes
       this.filtroClientes.Cod_Provincia = '';
       this.filtroClientes.Cod_Canton= '';
       this.filtroClientes.Cod_Distrito = '';
-      this.clientes.syncClientes('1','01','04');
+      
     }
     async  message(subtitle ,messageAlert){
     
@@ -89,6 +125,22 @@ this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes
       console.log('onDidDismiss resolved with role', role);
  
   }
+
+
+  myChange($event) {
+    console.log('evento toggle',$event)
+    if(this.myvalue === 'ON'){
+      this.myvalue = 'OFF';
+    }else{
+      this.myvalue = 'ON';
+    }
+}
+
+checkbox(){
+  
+}
+
+
 }
 
 

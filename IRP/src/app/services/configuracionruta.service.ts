@@ -6,5 +6,7 @@ import { Injectable } from '@angular/core';
 export class ConfiguracionRutaService {
   nombreRuta = '';
   totalClientesRuta = 0;
+  ruta = '';
+  zona = '';
   constructor() { }
 }

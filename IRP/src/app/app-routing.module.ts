@@ -27,6 +27,14 @@ const routes: Routes = [
     path: 'log-in',
     loadChildren: () => import('./pages/log-in/log-in.module').then( m => m.LogInPageModule)
   },
+  {
+    path: 'zonas',
+    loadChildren: () => import('./pages/zonas/zonas.module').then( m => m.ZonasPageModule)
+  },
+  {
+    path: 'rutas',
+    loadChildren: () => import('./pages/rutas/rutas.module').then( m => m.RutasPageModule)
+  },
 ];
 
 @NgModule({

@@ -7,7 +7,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ClientesService {
 clientes: Clientes[]=[];
-clientesRutas: Clientes[]=[];
+clientesRutas = [];
+isChecked = false;
+clientesArray = [];
   constructor(private http: HttpClient) { }
 
 
@@ -30,11 +32,24 @@ console.log(URL)
       resp =>{
         this.clientes = resp.slice(0);
        console.log(this.clientes)
+       this.syncClientesArray();
       }
 
     );
   }
 
+  syncClientesArray(){
+    this.clientesArray = [];
+    this.isChecked = false;
+    for(let i = 0; i < this.clientes.length; i++){
+      const objectElement = {
+        cliente:this.clientes[i],
+        select:this.isChecked
+      }
+    this.clientesArray.push(objectElement)
+    console.log('cleintes array',this.clientesArray);
+    }
+  }
 
 
 }

@@ -9,6 +9,7 @@ export const environment = {
   preURL: 'http://api_irp',
   TestURL: '_test',
   postURL: '.soportecr.xyz/api/',
+  postCLienteEspejoURL:'ActualizaClientes',
   mapboxKey:'pk.eyJ1IjoibmV2aWwtMTQiLCJhIjoiY2t0b2M5a280MGI2aTJxcDNsNW8xcjJxayJ9._v5eSc9HbKFc5wvw7_4Hvw',
   provinciaID: '?IdP=',
   cantonID: '&IdC=',
@@ -17,6 +18,8 @@ export const environment = {
   provinciasURL: 'Provincias/',
   cantonesURL: 'Cantones/',
   distritosURL: 'Distritos/',
+  rutasURL:'Rutas',
+  zonasURL:'Zonas',
   prdMode: false,
 };
 

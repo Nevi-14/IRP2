@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
-import * as  Mapboxgl from 'mapbox-gl';
 import { MenuClientesPage } from '../pages/menu-clientes/menu-clientes.page';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../services/configuracionruta.service';
 import { DetalleClientesPage } from '../pages/detalle-clientes/detalle-clientes.page';
 import { ClientesService } from '../services/clientes.service';
+import * as  Mapboxgl from 'mapbox-gl';
+import { RutasPage } from '../pages/rutas/rutas.page';
+import { ZonasService } from '../services/zonas.service';
+import { RutasService } from 'src/app/services/rutas.service';
+import { ConfiguracionService } from '../services/configuracion.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -19,7 +23,8 @@ textoBuscar = '';
 currentMarkers=[];
 
 
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService) {}
+
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService) {}
 
   ngOnInit(){
     this.getCurrentLocation();
@@ -34,32 +39,44 @@ currentMarkers=[];
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     //  MAPBOX  LNG , LAT AND GOOGLE MAPS IS LAT , LNG
     center: [lng,lat], // starting position
-    zoom: 10 // starting zoom
+    zoom: 16 // starting zoom
     
     });
 
     this.mapa.on('load', () => {
       this.mapa.resize();
     });
+
     this.mapa.addControl(new Mapboxgl.NavigationControl());
     this.mapa.addControl(new Mapboxgl.FullscreenControl());
-    this.createMarker(0,lng,lat);
+    this.mapa.addControl(new Mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }));
+
+    this.createMarker('01',lng,lat);
     
   }
 
-  createMarker(cliente: number ,lng: number, lat: number){
+  createMarker(cliente: string ,lng: number, lat: number){
     const marker = new Mapboxgl.Marker({
-      draggable: true
+      draggable: false
       })
       .setLngLat([lng, lat])
       .addTo(this.mapa);
-      marker.on('drag', () =>{
+/**
+ *       marker.on('drag', () =>{
         console.log(marker.getLngLat());
      //   this.createMap(marker.getLngLat().lng,marker.getLngLat().lat);
 
       });
+ */
       this.currentMarkers.push({'id':cliente,'marker':marker});
-      console.log(this.currentMarkers);
+      console.log('current markers',this.currentMarkers);
+
+      console.log(this.currentMarkers)
   }
   removeMarker(cliente){
 
@@ -109,11 +126,14 @@ this.createMap(resp.coords.longitude,resp.coords.latitude);
   }
 
   addValue(e, cliente): void {
+
     const isChecked = !e.currentTarget.checked;
+    console.log(isChecked)
  if(isChecked=== true){
+  console.log('checcliente',cliente.IdCliente)
   this.config.totalClientesRuta += 1;
-  this.createMarker(cliente.CLIENTE,cliente.LONGITUD,cliente.LATITUD);
-  console.log('test')
+  this.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD);
+  console.log(this.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD))
  }else{
   this.removeMarker(cliente.CLIENTE);
   this.config.totalClientesRuta -= 1;
@@ -125,7 +145,7 @@ this.createMap(resp.coords.longitude,resp.coords.latitude);
   delete(cliente: string){
 console.log(cliente)
     for( let index = 0; index < this.clientes.clientesRutas.length ; index++){   
-    if(this.clientes.clientesRutas[index].CLIENTE === cliente){
+    if(this.clientes.clientesRutas[index].IdCliente === cliente){
       this.clientes.clientesRutas.splice(index,1);
      
     }
@@ -151,5 +171,13 @@ console.log(cliente)
      
       }
 
+
+      async mostrarRuta() {
+        const modal = await this.modalCtrl.create({
+          component: RutasPage,
+          cssClass: 'my-custom-class',
+        });
+        return await modal.present();
+      }
   
 }

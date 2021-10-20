@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border" traslucent>
  
     <ion-toolbar>
-      <ion-title class="title">Menu clientes para gestion de rutas</ion-title>
+      <ion-title class="title">Menu clientes para gestion de configuracion de rutas</ion-title>
       <ion-buttons  slot="end">
         <ion-button (click)="cerrarModal()" fill="solid" color="danger" shape="round">
           <ion-icon  name="close"></ion-icon>
@@ -14,73 +14,86 @@
 </ion-header>
 
 <ion-content>
+<ion-list lines="none">
   <ion-grid >
     <ion-row>
 
       <ion-col size="6">
         <ion-row>
-          <ion-col size="12">
 
 
-            <ion-toolbar>
-              <ion-badge color="primary"><ion-label>Filtrar por zona</ion-label></ion-badge>
-  <ion-buttons slot="end">
-    <ion-button (click)="borrarFiltro()" shape="round" fill="solid" color="danger">
-     <ion-icon  name="trash"></ion-icon>
-    </ion-button>
-  </ion-buttons>
-            </ion-toolbar>
-          </ion-col>
+
+          <ion-item-divider >
+            <ion-label class="ion-text-uppercase">
+              <ion-badge color="dark"> <h3>Filtrar Clientes</h3></ion-badge>
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-button  size="small" (click)="onSubmit()" shape="round" fill="solid" color="primary">
+                <ion-icon name="funnel"></ion-icon>
+                <ion-label>Filtrar</ion-label>
+              </ion-button>
+              <ion-button  size="small" (click)="borrarFiltro()" shape="round" fill="solid" color="danger">
+                <ion-icon  name="trash"></ion-icon>
+                <ion-label>Borrar</ion-label>
+               </ion-button>
+            </ion-buttons>
+          </ion-item-divider>
           <ion-col size="12">
-            <ion-list lines="none">
-              <ion-item>
-                <ion-badge color="dark"> <ion-label>Provincia</ion-label></ion-badge>
+ <ion-item>
+  <ion-badge color="dark"> <ion-label>Provincia</ion-label></ion-badge>
                
-                <ion-select placeholder="provincia" (ionChange)="onChange($event, true,false,false)">
-                  <ng-template ngFor let-provincia [ngForOf]="provincias.provincias" let-i="index" >
-                    <ion-select-option value="{{provincia.Cod_Provincia}}" >{{provincia.Provincia}}</ion-select-option>
-                  </ng-template>
+  <ion-select placeholder="provincia" (ionChange)="onChange($event, true,false,false)" [(ngModel)]="filtroClientes.Cod_Provincia">
+    <ng-template ngFor let-provincia [ngForOf]="provincias.provincias" let-i="index" >
+      <ion-select-option value="{{provincia.Cod_Provincia}}" >{{provincia.Provincia}}</ion-select-option>
+    </ng-template>
 
 
-                  
-                </ion-select>
-              </ion-item>
     
-              <ion-item>
-                <ion-badge color="dark"> <ion-label>Cantón</ion-label></ion-badge>
-                <ion-select placeholder="cantón" (ionChange)="onChange($event, false,true,false)">
-
-                  <ng-template ngFor let-canton [ngForOf]="cantones.cantones" let-i="index" >
-                    <ion-select-option value="{{canton.Cod_Canton}}" >{{canton.Canton}}</ion-select-option>
-                  </ng-template>
-
-
-                  
-                </ion-select>
-              </ion-item>
-      
-              <ion-item>
-                <ion-badge color="dark"> <ion-label>Distrito</ion-label></ion-badge>
-                <ion-select placeholder="distrito" (ionChange)="onChange($event, false,false,true)">
-
-                  
-                  <ng-template ngFor let-distrito [ngForOf]="distritos.distritos" let-i="index" >
-                    <ion-select-option value="{{distrito.Cod_Distrito}}" >{{distrito.Distrito}}</ion-select-option>
-                  </ng-template>
-
-                </ion-select>
-              </ion-item>
-  <ion-item>
-  <ion-buttons style="margin: 0 auto;">
-    <ion-button (click)="onSubmit()" shape="round" fill="solid" color="primary">
-      Filtrar
-    </ion-button>
-  </ion-buttons>
-  </ion-item>
-            </ion-list>
-
+  </ion-select>
+ </ion-item>
 
           </ion-col>
+          
+          <ion-col size="12">
+        <ion-item>
+          <ion-badge color="dark"> <ion-label>Cantón</ion-label></ion-badge>
+          <ion-select placeholder="cantón" (ionChange)="onChange($event, false,true,false)"  [(ngModel)]="filtroClientes.Cod_Canton">
+
+            <ng-template ngFor let-canton [ngForOf]="cantones.cantones" let-i="index" >
+              <ion-select-option value="{{canton.Cod_Canton}}" >{{canton.Canton}}</ion-select-option>
+            </ng-template>
+
+
+            
+          </ion-select>
+        </ion-item>
+          </ion-col>
+          <ion-col size="12">
+ <ion-item>
+  <ion-badge color="dark"> <ion-label>Distrito</ion-label></ion-badge>
+  <ion-select placeholder="distrito" (ionChange)="onChange($event, false,false,true)" [(ngModel)]="filtroClientes.Cod_Distrito">
+
+    
+    <ng-template ngFor let-distrito [ngForOf]="distritos.distritos" let-i="index" >
+      <ion-select-option value="{{distrito.Cod_Distrito}}" >{{distrito.Distrito}}</ion-select-option>
+    </ng-template>
+
+  </ion-select>
+ </ion-item>
+          </ion-col>
+
+
+
+ 
+
+
+
+  
+
+
+
+
+
         </ion-row>
      
       </ion-col>
@@ -89,27 +102,74 @@
       <ion-col size="6" >
         <ion-grid >
           <ion-row>
-            <ion-col size="12">
-              <ion-badge color="dark"><ion-label>Lista Clientes</ion-label></ion-badge>
-            
-            </ion-col>
-            <ion-col size="12">
-              <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-            </ion-col>  
-            <ion-col size="12" class="scroll-modal">
-
+            <ion-item-divider >
+              <ion-label class="ion-text-uppercase">
+                <ion-badge color="dark"> <h3>Lista de Clientes</h3></ion-badge>
+              </ion-label>
+   
+            </ion-item-divider>
+           
+  
+            <ion-col size="12" class="scroll-sm" >
               <ion-list lines="none">
-                <ion-item *ngFor="let cliente of clientes.clientes | filtroClientes: textoBuscar:'NOMBRE' ; let i = index;">
-                  
-                  <ion-label>{{cliente.NOMBRE}}</ion-label>
+                <ion-item>
+                  <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+                </ion-item>
+                <ion-item >
+  
+          
+
+    <ion-buttons slot="start">
+      <ion-label >Clientes</ion-label>
+      <ion-button   fill="solid" color="warning">
+        <ion-label>{{clientes?.clientes?.length}}</ion-label> 
+       </ion-button>
+    </ion-buttons>
+    <ion-toggle color="dark" slot="end" name="filtro" (ionChange)="myChange($event)" value="myvalue"></ion-toggle>
+    <ion-label slot="end">{{myvalue}}</ion-label>
+  
+                  <ion-checkbox (click)="checkAll($event)"  name="clientes" [(ngModel)]="clientes.isChecked"   slot="end"></ion-checkbox>
+                  <ion-label slot="end">Todos</ion-label>
                   <ion-buttons slot="end">
-                    <ion-button slot="end"  shape="round" fill="solid" color="primary" (click)="detalleClientes(cliente)">
-                      <ion-icon  name="eye"></ion-icon>
-                    </ion-button>
-                    <ion-button  (click)="agregarCliente(cliente)" slot="end"  shape="round" fill="solid" color="secondary">
+      
+                     <ion-button   slot="end"  (click)="agregarCliente()" shape="round" fill="solid" color="secondary">
                       <ion-icon  name="add"></ion-icon>
                     </ion-button>
                   </ion-buttons>
+              
+                </ion-item>
+      
+              </ion-list>
+            </ion-col>
+            <ion-col size="12" class="scroll-modal">
+
+              <ion-list lines="none">
+                <ion-item *ngFor="let cliente of clientes.clientesArray | filtroClientes: textoBuscar:'NOMBRE' ; let i = index;">
+                  
+                  <ion-label>{{cliente.cliente.NOMBRE}}</ion-label>
+                  <ion-buttons slot="end">
+                    <ion-button   shape="round" fill="solid" color="warning" *ngIf="!cliente.cliente.LATITUD || !cliente.cliente.LONGITUD">
+                      <ion-icon  name="close"></ion-icon>
+                    </ion-button>
+
+                    <ion-button  shape="round" fill="solid" color="warning" *ngIf="cliente.cliente.LATITUD  && cliente.cliente.LONGITUD">
+                      <ion-icon  name="navigate"></ion-icon>
+                    </ion-button>
+                    <ion-button slot="end"  shape="round" fill="solid" color="primary" (click)="detalleClientes(cliente.cliente)">
+                      <ion-icon  name="eye"></ion-icon>
+                    </ion-button>
+            
+   
+          <ion-button >
+            <ion-checkbox name="cliente.IdCliente"  [(ngModel)]="cliente.select" slot="end" ></ion-checkbox>
+          </ion-button>
+      
+                  </ion-buttons>
+                  
+                 
+                </ion-item>
+                <ion-item *ngIf="clientes?.clientesArray?.length === 0" color="light">
+                  <ion-label class="ion-text-center">Lista de clientes vacia, por favor efectuar una busqueda</ion-label>
                 </ion-item>
               </ion-list>
             </ion-col>
@@ -119,4 +179,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+</ion-list>
 </ion-content>
