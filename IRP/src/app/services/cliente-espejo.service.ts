@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ClienteEspejo } from '../models/clienteEspejo';
+import { Rutas } from '../models/rutas';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +11,33 @@ export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
   constructor(private http: HttpClient) { }
-
-  getIRPURL( api: string ){
-    const URL = environment.preURL  + environment.postURL + api ;
+rutas: ClienteEspejo[]=[];
+  getIRPURL( api: string, id: string ){
+    const URL = environment.preURL  + environment.postURL + api +id;
 console.log(URL);
+console.log(id)
     return URL;
+  }
+
+  private getRutas(ruta){
+    const URL = this.getIRPURL( environment.postCLienteEspejoURL , ruta);
+    console.log('URL',URL)
+    return this.http.get<ClienteEspejo[]>( URL );
+  }
+
+  syncRutas(ruta){
+    this.getRutas(ruta).subscribe(
+      resp =>{
+        this.rutas = resp.slice(0);
+       console.log(this.rutas)
+      }
+
+    );
   }
   
 
-  private postEncaLiquid (){
-    const URL = this.getIRPURL( environment.postCLienteEspejoURL );
+  private postClienteEspejo (ruta){
+    const URL = this.getIRPURL( environment.postCLienteEspejoURL,'' );
     const options = {
       headers: {
           'Content-Type': 'application/json',
@@ -28,15 +46,18 @@ console.log(URL);
       }
     };
     console.log(JSON.stringify(this.clienteEspejo));
-    return this.http.post( URL, JSON.stringify(this.clienteEspejo), options );
+    return this.http.post( URL, JSON.stringify(ruta), options );
+  //  return this.http.post( URL, JSON.stringify(this.clienteEspejo), options );
   }
 
-  insertarpostEncaLiquid(){
-    this.postEncaLiquid().subscribe(
+  insertarClienteEspejo(ruta){
+    this.postClienteEspejo(ruta).subscribe(
+      
       resp => {
         console.log('Rutas guardadas con exito', resp);
       //  this.depositos = [];
       }, error => {
+        console.log('ruta', ruta);
         console.log('Error guardados las rutas');
       }
     )

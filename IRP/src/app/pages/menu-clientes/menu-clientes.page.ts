@@ -8,6 +8,7 @@ import { DistritosService } from '../../services/distritos.service';
 import { Clientes } from 'src/app/models/clientes';
 import { NgForm } from '@angular/forms';
 import { ZonasService } from 'src/app/services/zonas.service';
+import { RutasService } from 'src/app/services/rutas.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -20,11 +21,14 @@ export class MenuClientesPage implements OnInit {
     Cod_Canton : '',
     Cod_Distrito : '',
   }
-  myvalue = 'OFF';
+  myvalue = 'ON';
   textoBuscar = '';
   isChecked = false;
   clientesArray = [];
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService) { }
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService) { }
+
+
+
   onSearchChange(event){
     this.textoBuscar = event.detail.value;
   }

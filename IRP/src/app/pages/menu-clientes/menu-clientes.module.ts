@@ -8,6 +8,7 @@ import { MenuClientesPageRoutingModule } from './menu-clientes-routing.module';
 
 import { MenuClientesPage } from './menu-clientes.page';
 import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
+import { FiltroPipe } from '../../pipes/filtro.pipe';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
     IonicModule,
     MenuClientesPageRoutingModule
   ],
-  declarations: [MenuClientesPage, FiltroClientesPipe]
+  declarations: [MenuClientesPage, FiltroClientesPipe, FiltroPipe]
 })
 export class MenuClientesPageModule {}

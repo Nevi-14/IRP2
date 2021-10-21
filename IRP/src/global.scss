@@ -80,7 +80,7 @@ html,body {
     .modal-wrapper {
       --position:absolute;
       --left:0;
-      --width: 75% !important;
+      --width: 85% !important;
       --height: 75%;
       position: absolute;
     }
@@ -138,3 +138,12 @@ html,body {
     width: 40px;
     height: 40px;
 }
+.spin-element {
+
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

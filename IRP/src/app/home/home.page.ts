@@ -10,6 +10,8 @@ import { RutasPage } from '../pages/rutas/rutas.page';
 import { ZonasService } from '../services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ConfiguracionService } from '../services/configuracion.service';
+import { ClienteEspejoService } from '../services/cliente-espejo.service';
+import { ClienteEspejo } from '../models/clienteEspejo';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -21,10 +23,11 @@ imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
 textoBuscar = '';
 currentMarkers=[];
+clienteEspejoP: ClienteEspejo[]=[];
 
 
 
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService) {}
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService) {}
 
   ngOnInit(){
     this.getCurrentLocation();
@@ -100,11 +103,37 @@ this.createMap(resp.coords.longitude,resp.coords.latitude);
 }
 
  async menuCliente(){
+   console.log('alert',this.rutas.ruta.RUTA, this.zonas.zona.ZONA)
+   if(this.rutas.ruta.RUTA === 'Sin definir' || this.zonas.zona.ZONA === 'Sin definir'){
+this.alert('IRP','Seleccionar Ruta y Zona');
+    
+   }else{
     const modal = await this.modalCtrl.create({
       component: MenuClientesPage,
       cssClass: 'my-custom-class'
     });
     return await modal.present();
+   }
+   
+  }
+
+
+  async alert(header, message){
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: header,
+      message: message,
+      buttons: [
+      {
+          text: 'Okay',
+          handler: () => {
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   ruta(event){
@@ -179,5 +208,16 @@ console.log(cliente)
         });
         return await modal.present();
       }
-  
+
+      postRutas(){
+        const espejo = {
+IdCliente:this.clientes.clientesRutas[0].cliente.IdCliente,
+Fecha: this.clientes.clientesRutas[0].Fecha,
+Usuario: this.clientes.clientesRutas[0].Usuario,
+Zona: this.clientes.clientesRutas[0].Zona,
+Ruta: this.clientes.clientesRutas[0].Ruta,
+        }
+        this.clienteEspejoP.push(espejo)
+this.clienteEspejo.insertarClienteEspejo(this.clienteEspejoP);
+      }
 }

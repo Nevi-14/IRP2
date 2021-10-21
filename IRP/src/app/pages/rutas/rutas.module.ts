@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { RutasPageRoutingModule } from './rutas-routing.module';
 
 import { RutasPage } from './rutas.page';
+import { FiltroPipe } from '../../pipes/filtro.pipe';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { RutasPage } from './rutas.page';
     IonicModule,
     RutasPageRoutingModule
   ],
-  declarations: [RutasPage]
+  declarations: [RutasPage, FiltroPipe]
 })
 export class RutasPageModule {}

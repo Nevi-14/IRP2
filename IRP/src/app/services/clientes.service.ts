@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Clientes } from '../models/clientes';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { ConfiguracionService } from './configuracion.service';
+import { ZonasService } from './zonas.service';
+import { RutasService } from './rutas.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,7 +13,7 @@ clientes: Clientes[]=[];
 clientesRutas = [];
 isChecked = false;
 clientesArray = [];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configurations: ConfiguracionService, private zonas: ZonasService, private rutas: RutasService) { }
 
 
   getIRPURL( api: string, provincia: string , canton:string , distrito: string ,id: string ){
@@ -43,6 +46,12 @@ console.log(URL)
     this.isChecked = false;
     for(let i = 0; i < this.clientes.length; i++){
       const objectElement = {
+        Fecha: new Date().toISOString(),
+        Zona: this.zonas.zona.ZONA,
+        Ruta: this.rutas.ruta.RUTA,
+        Usuario: '1',
+        TRADE_CLIENTE: this.clientes[i].TRADE_CLIENTE,
+        NOMBRE:this.clientes[i].NOMBRE,
         cliente:this.clientes[i],
         select:this.isChecked
       }

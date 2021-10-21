@@ -37,13 +37,13 @@
        
             <ion-row>
               <ion-col size="12" class="scroll-sm">
-                <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)"  value="rutas.ruta.RUTA">
-                  <ng-template ngFor let-item [ngForOf]="rutas.rutas" let-i="index" >
+                <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)"  [(ngModel)]="rutas.ruta.RUTA">
+                  <ng-template ngFor let-item [ngForOf]="rutas.rutas  | filtro : textoBuscar:'DESCRIPCION'" let-i="index" >
                     <ion-item     >
                       <ion-label slot="start"><ion-badge color="dark">Ruta</ion-badge> {{item.RUTA}} </ion-label>
                       <ion-label  slot="start" >{{ item.DESCRIPCION }}</ion-label> 
                    
-                        <ion-radio [value]="item"    slot="end" ></ion-radio>
+                        <ion-radio [value]="item.RUTA"    slot="end" ></ion-radio>
                    
                      
                     </ion-item>
@@ -71,7 +71,7 @@
               <ion-badge color="dark"> <h3>Zona</h3></ion-badge>
               
             </ion-label>
-            <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+            <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChangeZona($event)" debounce="250" ></ion-searchbar>
           
 
           </ion-item-divider>
@@ -79,15 +79,15 @@
             <ion-row>
               <ion-col size="12" class="scroll-sm">
                 
-        <ion-radio-group allow-empty-selection="true" (ionChange)="zonaRadioButtuon($event)" value="zonas.zona">
-        <ion-item class="ion-no-padding" *ngFor="let zona of zonas.zonas">
+        <ion-radio-group allow-empty-selection="true" (ionChange)="zonaRadioButtuon($event)" [(ngModel)]="zonas.zona.ZONA">
+        <ion-item class="ion-no-padding" *ngFor="let zona of zonas.zonas  | filtro : textoBuscarZona:'NOMBRE'">
           <ion-label>
             <ion-badge>
               {{zona.ZONA}}
             </ion-badge>
           </ion-label>
           <ion-label >{{zona.NOMBRE}}</ion-label>
-          <ion-radio  slot="end" color="success" [value]="zona"></ion-radio>
+          <ion-radio  slot="end" color="success" [value]="zona.ZONA"></ion-radio>
          
           
      

@@ -29,13 +29,13 @@
     <ion-col size="4" style="display: grid; place-content: center;">
       <ion-buttons   class="margin-rignt" style="margin: 0 auto;">
         <ion-button  shape="round" fill="solid" color="dark" (click)="mostrarRuta()">
-          <ion-icon  name="settings"></ion-icon>
+          <ion-icon class="spin-element"  name="settings"></ion-icon>
         </ion-button>
         <ion-button  shape="round" fill="solid" color="primary" (click)="menuCliente()">
           <ion-icon  name="person-add"></ion-icon>
         </ion-button>
    
-        <ion-button  shape="round" fill="solid" color="secondary">
+        <ion-button (click)="postRutas()"  shape="round" fill="solid" color="secondary">
       <ion-icon  name="save"></ion-icon>
         </ion-button>
       </ion-buttons>
