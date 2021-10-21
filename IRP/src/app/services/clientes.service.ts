@@ -5,15 +5,17 @@ import { HttpClient } from '@angular/common/http';
 import { ConfiguracionService } from './configuracion.service';
 import { ZonasService } from './zonas.service';
 import { RutasService } from './rutas.service';
+import { LoadingController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
+  loading: HTMLIonLoadingElement;
 clientes: Clientes[]=[];
 clientesRutas = [];
 isChecked = false;
 clientesArray = [];
-  constructor(private http: HttpClient, private configurations: ConfiguracionService, private zonas: ZonasService, private rutas: RutasService) { }
+  constructor(private http: HttpClient, private configurations: ConfiguracionService, private zonas: ZonasService, private rutas: RutasService,private loadingCtrl: LoadingController) { }
 
 
   getIRPURL( api: string, provincia: string , canton:string , distrito: string ,id: string ){
@@ -49,7 +51,7 @@ console.log(URL)
         Fecha: new Date().toISOString(),
         Zona: this.zonas.zona.ZONA,
         Ruta: this.rutas.ruta.RUTA,
-        Usuario: '1',
+        Usuario: 'IRP',
         TRADE_CLIENTE: this.clientes[i].TRADE_CLIENTE,
         NOMBRE:this.clientes[i].NOMBRE,
         cliente:this.clientes[i],
@@ -57,9 +59,18 @@ console.log(URL)
       }
     this.clientesArray.push(objectElement)
     console.log('cleintes array',this.clientesArray);
+    this.loadingDissmiss()
     }
   }
-
+  async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+   loadingDissmiss(){
+    this.loading.dismiss();
+  }
 
 }
 

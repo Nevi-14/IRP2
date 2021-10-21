@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { Rutas } from '../models/rutas';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { Rutas } from '../models/rutas';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController) { }
 rutas: ClienteEspejo[]=[];
   getIRPURL( api: string, id: string ){
     const URL = environment.preURL  + environment.postURL + api +id;
@@ -18,7 +19,7 @@ console.log(URL);
 console.log(id)
     return URL;
   }
-
+  loading: HTMLIonLoadingElement;
   private getRutas(ruta){
     const URL = this.getIRPURL( environment.postCLienteEspejoURL , ruta);
     console.log('URL',URL)
@@ -56,6 +57,7 @@ console.log(id)
       resp => {
         console.log('Rutas guardadas con exito', resp);
       //  this.depositos = [];
+      this.loadingDissmiss();
       }, error => {
         console.log('ruta', ruta);
         console.log('Error guardados las rutas');
@@ -63,4 +65,14 @@ console.log(id)
     )
   }
 
+
+   async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+   loadingDissmiss(){
+    this.loading.dismiss();
+  }
 }

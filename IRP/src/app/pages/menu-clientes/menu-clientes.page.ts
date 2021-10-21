@@ -21,7 +21,7 @@ export class MenuClientesPage implements OnInit {
     Cod_Canton : '',
     Cod_Distrito : '',
   }
-  myvalue = 'ON';
+  myvalue = 'OFF';
   textoBuscar = '';
   isChecked = false;
   clientesArray = [];
@@ -84,8 +84,10 @@ export class MenuClientesPage implements OnInit {
   }
 
     this.message('IRP','Se agrego a la lista de RUTAS');
+    this.modalCtrl.dismiss();
   }
   async onSubmit(formulario: NgForm){
+    this.clientes.presentaLoading('Cargando clientes');
 this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
 this.borrarFiltro();
 this.clientes.clientesArray = [];
@@ -133,16 +135,14 @@ this.isChecked = !this.isChecked;
 
   myChange($event) {
     console.log('evento toggle',$event)
-    if(this.myvalue === 'ON'){
-      this.myvalue = 'OFF';
-    }else{
+    if(this.myvalue === 'OFF'){
       this.myvalue = 'ON';
+    }else{
+      this.myvalue = 'OFF';
     }
 }
 
-checkbox(){
-  
-}
+
 
 
 }

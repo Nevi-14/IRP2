@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
 import { MenuClientesPage } from '../pages/menu-clientes/menu-clientes.page';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../services/configuracionruta.service';
 import { DetalleClientesPage } from '../pages/detalle-clientes/detalle-clientes.page';
 import { ClientesService } from '../services/clientes.service';
@@ -24,10 +24,10 @@ mapa: Mapboxgl.Map;
 textoBuscar = '';
 currentMarkers=[];
 clienteEspejoP: ClienteEspejo[]=[];
+loading: HTMLIonLoadingElement;
 
 
-
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService) {}
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService,private loadingCtrl: LoadingController) {}
 
   ngOnInit(){
     this.getCurrentLocation();
@@ -210,14 +210,34 @@ console.log(cliente)
       }
 
       postRutas(){
-        const espejo = {
-IdCliente:this.clientes.clientesRutas[0].cliente.IdCliente,
-Fecha: this.clientes.clientesRutas[0].Fecha,
-Usuario: this.clientes.clientesRutas[0].Usuario,
-Zona: this.clientes.clientesRutas[0].Zona,
-Ruta: this.clientes.clientesRutas[0].Ruta,
+
+        this.clienteEspejo.presentaLoading('Guardando Rutas...');
+        for(let i =0; i < this.clientes.clientesRutas.length; i++){
+           if(this.clientes.clientesRutas[i].select === true){
+            const espejo = {
+              IdCliente:this.clientes.clientesRutas[i].cliente.IdCliente,
+              Fecha: this.clientes.clientesRutas[i].Fecha,
+              Usuario: this.clientes.clientesRutas[i].Usuario,
+              Zona: this.clientes.clientesRutas[i].Zona,
+              Ruta: this.clientes.clientesRutas[i].Ruta,
+                      }
+            
+            this.clienteEspejo.ClienteEspejoArray.push(espejo)
+           }
+           console.log(this.clienteEspejo.ClienteEspejoArray)
+  
         }
-        this.clienteEspejoP.push(espejo)
-this.clienteEspejo.insertarClienteEspejo(this.clienteEspejoP);
+       
+        
+this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
+this.rutas.ruta.RUTA = 'Sin definir';
+this.rutas.ruta.DESCRIPCION = '';
+this.zonas.zona.ZONA = 'Sin definir';
+this.zonas.zona.NOMBRE = '';
+this.clientes.clientesRutas = [];
+this.clienteEspejo.ClienteEspejoArray = [];
       }
+
+
+
 }

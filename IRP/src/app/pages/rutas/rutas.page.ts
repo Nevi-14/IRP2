@@ -92,6 +92,8 @@ if(this.zona.ZONA === 'Sin definir' || this.rutas.ruta.RUTA === 'Sin definir'){
     console.log('onDidDismiss resolved with role', role);
 
 }
-
+cerrarModal(){
+  this.modalCtrl.dismiss();
+}
   
 }

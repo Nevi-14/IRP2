@@ -2,20 +2,21 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Rutas } from '../models/rutas';
+import { LoadingController } from '@ionic/angular';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class RutasService {
-
+  loading: HTMLIonLoadingElement;
   ruta= {
     RUTA: 'Sin definir', 
   DESCRIPCION: 'Sin definir'
 }
 
   rutas: Rutas[]=[];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController) { }
 
 
   
@@ -41,4 +42,13 @@ console.log(URL);
     );
   }
 
+  async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+   loadingDissmiss(){
+    this.loading.dismiss();
+  }
 }
