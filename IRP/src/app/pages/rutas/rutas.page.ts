@@ -21,6 +21,7 @@ export class RutasPage implements OnInit {
 textoBuscar = '';
 textoBuscarZona = '';
 
+
   constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController) { }
 
   ngOnInit() {

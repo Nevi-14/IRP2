@@ -12,6 +12,7 @@ import { RutasService } from 'src/app/services/rutas.service';
 import { ConfiguracionService } from '../services/configuracion.service';
 import { ClienteEspejoService } from '../services/cliente-espejo.service';
 import { ClienteEspejo } from '../models/clienteEspejo';
+import { HomeService } from '../services/home.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -22,85 +23,28 @@ mapSvg = '../assets/home/map.svg';
 imagen = '../assets/home/isa.png';
 mapa: Mapboxgl.Map;
 textoBuscar = '';
-currentMarkers=[];
 clienteEspejoP: ClienteEspejo[]=[];
 loading: HTMLIonLoadingElement;
 
 
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService,private loadingCtrl: LoadingController) {}
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService,private loadingCtrl: LoadingController, private home: HomeService) {}
 
   ngOnInit(){
-    this.getCurrentLocation();
-
-
+    this.home.createMap(-84.14123589305028,9.982628288210657);
   }
 
-  createMap(lng: number, lat: number){
-    (Mapboxgl as any).accessToken = environment.mapboxKey;
-    this.mapa = new Mapboxgl.Map({
-    container: 'mapa', // container ID
-    style: 'mapbox://styles/mapbox/streets-v11', // style URL
-    //  MAPBOX  LNG , LAT AND GOOGLE MAPS IS LAT , LNG
-    center: [lng,lat], // starting position
-    zoom: 16 // starting zoom
-    
-    });
 
-    this.mapa.on('load', () => {
-      this.mapa.resize();
-    });
-
-    this.mapa.addControl(new Mapboxgl.NavigationControl());
-    this.mapa.addControl(new Mapboxgl.FullscreenControl());
-    this.mapa.addControl(new Mapboxgl.GeolocateControl({
-        positionOptions: {
-            enableHighAccuracy: true
-        },
-        trackUserLocation: true
-    }));
-
-    this.createMarker('01',lng,lat);
-    
-  }
-
-  createMarker(cliente: string ,lng: number, lat: number){
-    const marker = new Mapboxgl.Marker({
-      draggable: false
-      })
-      .setLngLat([lng, lat])
-      .addTo(this.mapa);
-/**
- *       marker.on('drag', () =>{
-        console.log(marker.getLngLat());
-     //   this.createMap(marker.getLngLat().lng,marker.getLngLat().lat);
-
-      });
- */
-      this.currentMarkers.push({'id':cliente,'marker':marker});
-      console.log('current markers',this.currentMarkers);
-
-      console.log(this.currentMarkers)
-  }
   removeMarker(cliente){
 
       if (cliente!==null) {
-        for (let i = this.currentMarkers.length - 1; i >= 0; i--) {
-         if(cliente ===  this.currentMarkers[i].id){
-         console.log( this.currentMarkers[i].marker.remove());
+        for (let i =    this.rutas.currentMarkers.length - 1; i >= 0; i--) {
+         if(cliente ===     this.rutas.currentMarkers[i].id){
+         console.log(    this.rutas.currentMarkers[i].marker.remove());
          }
         }
     }
   }
-getCurrentLocation(){
-  navigator.geolocation.getCurrentPosition(resp => {
-    console.log(resp)
-    console.log(resp.coords.longitude,resp.coords.latitude);
-this.createMap(resp.coords.longitude,resp.coords.latitude);
-  },
-  err => {
-    console.log(err);
-  });
-}
+
 
  async menuCliente(){
    console.log('alert',this.rutas.ruta.RUTA, this.zonas.zona.ZONA)
@@ -161,10 +105,10 @@ this.alert('IRP','Seleccionar Ruta y Zona');
  if(isChecked=== true){
   console.log('checcliente',cliente.IdCliente)
   this.config.totalClientesRuta += 1;
-  this.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD);
-  console.log(this.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD))
+  this.home.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD);
+  console.log(this.home.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD))
  }else{
-  this.removeMarker(cliente.CLIENTE);
+  this.removeMarker(cliente.IdCliente);
   this.config.totalClientesRuta -= 1;
  }
 
@@ -235,6 +179,7 @@ this.rutas.ruta.DESCRIPCION = '';
 this.zonas.zona.ZONA = 'Sin definir';
 this.zonas.zona.NOMBRE = '';
 this.clientes.clientesRutas = [];
+this.home.currentMarkers = [];
 this.clienteEspejo.ClienteEspejoArray = [];
       }
 

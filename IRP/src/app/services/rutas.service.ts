@@ -14,7 +14,7 @@ export class RutasService {
     RUTA: 'Sin definir', 
   DESCRIPCION: 'Sin definir'
 }
-
+currentMarkers=[];
   rutas: Rutas[]=[];
   constructor(private http: HttpClient,private loadingCtrl: LoadingController) { }
 
