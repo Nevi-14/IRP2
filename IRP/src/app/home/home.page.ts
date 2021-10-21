@@ -183,13 +183,13 @@ console.log(cliente)
       }
 
 
-    async  message(){
+    async  message(header,message){
     
           const alert = await this.alertCtrl.create({
             cssClass: 'my-custom-class',
-            header: 'Alert',
-            subHeader: 'Subtitle',
-            message: 'This is an alert message.',
+            header: header,
+            subHeader: 'IRP',
+            message: message,
             buttons: ['OK']
           });
       
@@ -225,7 +225,7 @@ console.log(cliente)
             this.clienteEspejo.ClienteEspejoArray.push(espejo)
            }
            console.log(this.clienteEspejo.ClienteEspejoArray)
-  
+
         }
        
         
