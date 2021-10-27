@@ -1,0 +1,55 @@
+<app-header></app-header>
+
+<ion-content class="ion-padding">
+  <ion-list lines="none">
+    <ion-grid fixed>
+      <ion-row>
+
+
+        <ion-col size="12">
+          
+          <ion-item-divider >
+            <ion-label slot="start" class="ion-text-uppercase">
+              <ion-badge color="dark"> <h3>Rutas</h3></ion-badge>
+              
+            </ion-label>
+                <!-- Default Searchbar -->
+        <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+          </ion-item-divider>
+
+
+       
+            <ion-row>
+              <ion-col size="12" class="scroll-sm">
+                <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)"  [(ngModel)]="rutas.ruta.RUTA">
+                  <ng-template ngFor let-item [ngForOf]="rutas.rutas  | filtro : textoBuscar:'DESCRIPCION'" let-i="index" >
+                    <ion-item     >
+                      <ion-label slot="start"><ion-badge color="dark">Ruta</ion-badge> {{item.RUTA}} </ion-label>
+                      <ion-label  slot="start" >{{ item.DESCRIPCION }}</ion-label> 
+                   
+                        <ion-radio [value]="item"    slot="end" ></ion-radio>
+                   
+                     
+                    </ion-item>
+                  </ng-template>
+
+                  
+                </ion-radio-group>
+           
+              </ion-col>
+            </ion-row>
+
+      
+
+
+
+     
+        </ion-col>
+
+
+  
+      </ion-row>
+    </ion-grid>
+
+  </ion-list>
+</ion-content>

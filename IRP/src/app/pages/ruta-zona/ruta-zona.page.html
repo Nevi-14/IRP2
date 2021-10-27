@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Gestionar Ruta {{rutaItem.DESCRIPCION}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onClick()" fill="solid" shape="round" color="primary">    
+        <ion-icon name="save-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+<ion-list lines="none">
+  <ion-grid>
+    <ion-row>
+    
+      <ion-col size="12">
+            
+        <ion-item-divider >
+          <ion-label slot="start" class="ion-text-uppercase">
+            <ion-badge color="dark"> <h3>Zona</h3></ion-badge>
+            
+          </ion-label>
+          <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChangeZona($event)" debounce="250" ></ion-searchbar>
+        
+  
+        </ion-item-divider>
+       
+          <ion-row>
+            <ion-col size="12" class="scroll-sm">
+              
+      <ion-radio-group allow-empty-selection="true" (ionChange)="zonaRadioButtuon($event)" [(ngModel)]="zonas.zona.ZONA">
+      <ion-item class="ion-no-padding" *ngFor="let zona of zonas.zonas  | filtro : textoBuscarZona:'NOMBRE'">
+        <ion-label>
+          <ion-badge>
+            {{zona.ZONA}}
+          </ion-badge>
+        </ion-label>
+        <ion-label >{{zona.NOMBRE}}</ion-label>
+        <ion-radio  slot="end" color="success" [value]="zona.ZONA"></ion-radio>
+       
+        
+   
+  
+      </ion-item>
+    </ion-radio-group>
+            </ion-col>
+          </ion-row>
+  
+       
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-list>
+</ion-content>

@@ -85,6 +85,18 @@ html,body {
       position: absolute;
     }
   }
+
+  .small-modal{
+    --backdrop-opacity: 0.8 !important;
+  
+    .modal-wrapper {
+      --position:absolute;
+      --left:0;
+      --width: 60% !important;
+      --height: 60%;
+      position: absolute;
+    }
+  }
   .center{
     display: flex;justify-content: center;align-items: center;
   }
@@ -147,3 +159,8 @@ html,body {
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+.center-container{
+  display: flex;
+  justify-content: center;
+}

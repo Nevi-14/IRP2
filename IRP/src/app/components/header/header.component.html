@@ -5,9 +5,12 @@
       <ion-item>
         <ion-title style="color: white;">Distribuidora ISLEÑA</ion-title>
         <ion-label slot="end" color="light" class="medium-font ">{{configuracion.fecha}}</ion-label>
-<ion-buttons slot="end" *ngIf="login.verified">
-  <ion-button (click)="logOut()" fill="solid" shape="round" color="primary" size="small">
-Salir
+<ion-buttons slot="end" >
+  <ion-button   (click)="home()" fill="solid" shape="round" color="dark" size="small">
+    <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+  <ion-button  *ngIf="login.verified" (click)="logOut()" fill="solid" shape="round" color="danger" size="small">
+    <ion-icon name="power-outline"></ion-icon>
   </ion-button>
 </ion-buttons>
       </ion-item>

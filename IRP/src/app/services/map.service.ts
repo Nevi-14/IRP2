@@ -7,7 +7,7 @@ import { ClientesService } from './clientes.service';
 @Injectable({
   providedIn: 'root'
 })
-export class HomeService {
+export class MapService {
   mapa: Mapboxgl.Map;
   currentMarkers = [];
   constructor(private clientes: ClientesService) { }
@@ -19,7 +19,7 @@ export class HomeService {
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     //  MAPBOX  LNG , LAT AND GOOGLE MAPS IS LAT , LNG
     center: [lng,lat], // starting position
-    zoom: 16 // starting zoom
+    zoom: 12 // starting zoom
     
     });
 

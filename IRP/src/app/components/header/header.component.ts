@@ -33,4 +33,8 @@ export class HeaderComponent implements OnInit {
     this.login.verified = false;
     this.route.navigate(['/log-in']);
   }
+  home(){
+  
+    this.route.navigate(['/home']);
+  }
 }

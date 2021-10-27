@@ -35,6 +35,18 @@ const routes: Routes = [
     path: 'rutas',
     loadChildren: () => import('./pages/rutas/rutas.module').then( m => m.RutasPageModule)
   },
+  {
+    path: 'guardar-rutas',
+    loadChildren: () => import('./pages/guardar-rutas/guardar-rutas.module').then( m => m.GuardarRutasPageModule)
+  },
+  {
+    path: 'mantenimiento-rutas',
+    loadChildren: () => import('./pages/mantenimiento-rutas/mantenimiento-rutas.module').then( m => m.MantenimientoRutasPageModule)
+  },
+  {
+    path: 'ruta-zona',
+    loadChildren: () => import('./pages/ruta-zona/ruta-zona.module').then( m => m.RutaZonaPageModule)
+  },
 ];
 
 @NgModule({

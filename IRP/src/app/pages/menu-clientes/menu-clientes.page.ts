@@ -9,7 +9,7 @@ import { Clientes } from 'src/app/models/clientes';
 import { NgForm } from '@angular/forms';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
-import { HomeService } from '../../services/home.service';
+import { MapService } from '../../services/map.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -26,7 +26,7 @@ export class MenuClientesPage implements OnInit {
   textoBuscar = '';
   isChecked = false;
   clientesArray = [];
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private home: HomeService) { }
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private map: MapService) { }
 
 
 
@@ -86,7 +86,7 @@ export class MenuClientesPage implements OnInit {
     
     }
   }
-  this.home.createMap(-84.14123589305028,9.982628288210657);
+  this.map.createMap(-84.14123589305028,9.982628288210657);
 
     this.message('IRP','Se agrego a la lista de RUTAS');
     this.modalCtrl.dismiss();
