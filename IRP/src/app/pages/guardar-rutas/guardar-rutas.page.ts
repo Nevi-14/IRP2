@@ -148,7 +148,7 @@ export class GuardarRutasPage implements OnInit {
         async mostrarRuta() {
           const modal = await this.modalCtrl.create({
             component: RutasPage,
-            cssClass: 'my-custom-class',
+            cssClass: 'right-modal',
           });
           return await modal.present();
         }

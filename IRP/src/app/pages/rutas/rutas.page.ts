@@ -3,6 +3,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
+import { RutaZonaService } from '../../services/ruta-zona.service';
 
 @Component({
   selector: 'app-rutas',
@@ -22,17 +23,21 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController) { }
+  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService) { }
 
   ngOnInit() {
+
   }
   rutaRadioButtuon(ev: any){
     const ruta = ev.target.value;
-    const i = this.rutas.rutas.findIndex( r => r.RUTA === ruta );
+    console.log(ruta)
+    const i = this.rutaZona.rutasZonasArray.findIndex( r => r.Ruta === ruta.Ruta );
     if ( i >= 0 ){
   
-      this.ruta.RUTA = this.rutas.rutas[i].RUTA;
-      this.ruta.DESCRIPCION = this.rutas.rutas[i].DESCRIPCION;
+      this.ruta.RUTA = this.rutaZona.rutasZonasArray[i].Ruta;
+      this.ruta.DESCRIPCION = this.rutaZona.rutasZonasArray[i].Descripcion;
+      this.zona.ZONA = this.rutaZona.rutasZonasArray[i].Zona;
+      this.zona.NOMBRE = this.rutaZona.rutasZonasArray[i].Descripcion;
     } else {
     console.log('no se pudo encontrar la ruta')
     }
@@ -40,19 +45,7 @@ textoBuscarZona = '';
 
     console.log(  'ruta',this.ruta)
   }
-  zonaRadioButtuon(ev: any){
-    const zona = ev.target.value;
-    const i = this.zonas.zonas.findIndex( z => z.ZONA === zona );
-    if ( i >= 0 ){
-  
-      this.zona.ZONA= this.zonas.zonas[i].ZONA;
-      this.zona.NOMBRE = this.zonas.zonas[i].NOMBRE;
-    } else {
-    console.log('no se pudo encontrar la zona')
-    }
 
-    console.log(  'zona',this.zona)
-  }
   salvarConfiguracion(){
 if(this.zona.ZONA === 'Sin definir' || this.rutas.ruta.RUTA === 'Sin definir'){
   this.message('IRP','Verificar Ruta y Zona');
@@ -61,7 +54,6 @@ if(this.zona.ZONA === 'Sin definir' || this.rutas.ruta.RUTA === 'Sin definir'){
   this.zonas.zona = this.zona;
   this.modalCtrl.dismiss();
   this.clienteEspejo.syncRutas(this.ruta.RUTA);
-  console.log(this.rutas.ruta.RUTA)
 }
   }
   

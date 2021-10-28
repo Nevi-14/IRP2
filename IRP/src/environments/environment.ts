@@ -19,6 +19,7 @@ export const environment = {
   cantonesURL: 'Cantones/',
   distritosURL: 'Distritos/',
   rutasURL:'Rutas',
+  rutaZonaURL:'Ruta_Zona',
   zonasURL:'Zonas',
   prdMode: false,
 };

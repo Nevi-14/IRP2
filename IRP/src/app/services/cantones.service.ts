@@ -12,7 +12,12 @@ export class CantonesService {
   constructor(private http: HttpClient) { }
 
   getIRPURL( api: string,provincia: string ){
-    const URL = environment.preURL  + environment.postURL + api + provincia;
+    let test: string = ''
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
+
+    const URL = environment.preURL  + test +environment.postURL + api + provincia;
 console.log(URL);
     return URL;
   }

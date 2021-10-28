@@ -12,7 +12,12 @@ export class DistritosService {
   constructor(private http: HttpClient) { }
 
   getIRPURL( api: string, provincia: string, canton: string ){
-    const URL = environment.preURL  + environment.postURL + api + environment.provinciaID +provincia+ environment.cantonID + canton;
+    let test: string = ''
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
+
+    const URL = environment.preURL  + test + environment.postURL + api + environment.provinciaID +provincia+ environment.cantonID + canton;
 console.log(URL);
     return URL;
   }

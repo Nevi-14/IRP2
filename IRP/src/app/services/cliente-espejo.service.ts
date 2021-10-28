@@ -14,14 +14,20 @@ export class ClienteEspejoService {
   constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController) { }
 rutas: ClienteEspejo[]=[];
   getIRPURL( api: string, id: string ){
-    const URL = environment.preURL  + environment.postURL + api +id;
+    let test: string = '';
+
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
+    const URL = environment.preURL+ test  + environment.postURL + api +id;
 console.log(URL);
 console.log(id)
     return URL;
   }
   loading: HTMLIonLoadingElement;
   private getRutas(ruta){
-    const URL = this.getIRPURL( environment.postCLienteEspejoURL , ruta);
+
+    const URL = this.getIRPURL( environment.clientesURL , ruta);
     console.log('URL',URL)
     return this.http.get<ClienteEspejo[]>( URL );
   }

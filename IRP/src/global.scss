@@ -58,7 +58,17 @@ html,body {
     }
   }
   .scroll-sm {
-    max-height: 280px;
+    max-height: 210px;
+    position: relative;
+    overflow: hidden;
+    overflow-y: auto;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+    .scroll-menu {
+    max-height: 500px;
     position: relative;
     overflow: hidden;
     overflow-y: auto;
@@ -86,15 +96,14 @@ html,body {
     }
   }
 
-  .small-modal{
+  .right-modal{
     --backdrop-opacity: 0.8 !important;
   
     .modal-wrapper {
-      --position:absolute;
-      --left:0;
-      --width: 60% !important;
-      --height: 60%;
       position: absolute;
+      height: 100%;
+      top: 0;
+      right: 0 !important;
     }
   }
   .center{

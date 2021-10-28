@@ -44,16 +44,49 @@
 
     <ion-col size="12" class="scroll">
       <ion-list lines="none">
-        <ion-item >
-          <ion-label slot="start">Clientes En Ruta</ion-label>
         
-          <ion-buttons slot="start">
-            <ion-button  id="circle" fill="solid" color="warning">
-             <ion-label>{{clientes?.clientesRutas?.length}}</ion-label> 
-            </ion-button>
-          </ion-buttons>  
+   <ion-item-divider>
+    <ion-label slot="start">Clientes Actuales</ion-label>
+        
+          <ion-buttons slot="end">
+            <ion-label>{{clienteEspejo?.rutas?.length}}</ion-label> 
+          </ion-buttons>
+   </ion-item-divider>
 
+
+        <ion-item *ngFor="let cliente of clienteEspejo.rutas | filtroClientes: textoBuscar:'NOMBRE' ; let i = index;">
+  
+
+          <ion-label>{{cliente.NOMBRE}}</ion-label>
+          <ion-buttons slot="end">
+          
+            <ion-button >
+     
+             
+            </ion-button>
+            <ion-button (click)="detalleClientes(cliente)" color="secondary" fill="solid" shape="round" class="btn-sm">
+              <ion-icon  name="eye"></ion-icon>
+             
+            </ion-button>
+            <ion-button (click)="home.irpMarcador(i)" color="warning" fill="solid" shape="round" clas  s="btn-sm">
+              <ion-icon  name="navigate"></ion-icon>
+             
+            </ion-button>
+            <ion-button (click)="delete(cliente.Idcliente)" color="danger" fill="solid" shape="round" clas  s="btn-sm">
+              <ion-icon  name="trash"></ion-icon>
+             
+            </ion-button>
+            
+            
+          </ion-buttons>
         </ion-item>
+<ion-item-divider>
+  <ion-label slot="start">Clientes En Ruta</ion-label>
+        
+  <ion-buttons slot="end">
+    <ion-label>{{clientes?.clientesRutas?.length}}</ion-label>
+  </ion-buttons> 
+</ion-item-divider>
         <ion-item *ngFor="let cliente of clientes.clientesRutas | filtroClientes: textoBuscar:'NOMBRE' ; let i = index;">
   
 
@@ -79,6 +112,7 @@
          
             
           </ion-buttons>
+          
         </ion-item>
       </ion-list>
     </ion-col>

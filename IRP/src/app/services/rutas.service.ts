@@ -21,6 +21,10 @@ currentMarkers=[];
 
   
   getIRPURL( api: string,id: string ){
+    let test: string = ''
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
     const URL = environment.preURL  + environment.postURL + api + id;
 console.log(URL);
     return URL;
