@@ -11,7 +11,8 @@ import { RutaZonaService } from '../../services/ruta-zona.service';
 })
 export class MantenimientoRutasPage implements OnInit {
   constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private rutaZonas : RutaZonaService) { }
-  textoBuscar = '';
+  textoBuscarZona = '';
+  textoBuscarRuta = '';
 zonaRuta ={
   rutaID : '',
   rutaDes:'',
@@ -24,10 +25,15 @@ zonaRuta ={
   }
   onSearchChange(event){
     console.log(event.detail.value);
-    this.textoBuscar = event.detail.value;
+    this.textoBuscarRuta = event.detail.value;
   }
 
     
+    
+  onSearchChangeZona(event){
+    console.log(event.detail.value);
+    this.textoBuscarZona = event.detail.value;
+  }
 
 
   async  rutaRadioButtuon(ev: any){

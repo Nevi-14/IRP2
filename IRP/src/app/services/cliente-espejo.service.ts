@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { Rutas } from '../models/rutas';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { MapService } from './map.service';
+import { Clientes } from '../models/clientes';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +13,10 @@ import { AlertController, LoadingController } from '@ionic/angular';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController) { }
-rutas: ClienteEspejo[]=[];
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private mapa: MapService) { }
+
+  
+rutas: Clientes[]=[];
   getIRPURL( api: string, id: string ){
     let test: string = '';
 
@@ -29,15 +33,18 @@ console.log(id)
 
     const URL = this.getIRPURL( environment.clientesURL , ruta);
     console.log('URL',URL)
-    return this.http.get<ClienteEspejo[]>( URL );
+    return this.http.get<Clientes[]>( URL );
   }
 
   syncRutas(ruta){
     this.getRutas(ruta).subscribe(
       resp =>{
         this.rutas = resp.slice(0);
-       console.log(this.rutas)
+       console.log(this.rutas,'rutas nuevagdgd')
+
       }
+     
+
 
     );
   }

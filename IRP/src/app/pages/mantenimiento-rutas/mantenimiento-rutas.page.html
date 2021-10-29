@@ -76,7 +76,7 @@
             <ion-row>
               <ion-col size="12" class="scroll-sm">
                 <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)" >
-                  <ng-template ngFor let-item [ngForOf]="rutas.rutas  | filtro : textoBuscar:'DESCRIPCION'" let-i="index" >
+                  <ng-template ngFor let-item [ngForOf]="rutas.rutas  | filtro : textoBuscarRuta:'DESCRIPCION'" let-i="index" >
                     <ion-item     >
                       
                       <ion-label  slot="start" >{{ item.DESCRIPCION }}</ion-label> 

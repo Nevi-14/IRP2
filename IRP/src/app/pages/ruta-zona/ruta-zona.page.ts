@@ -11,6 +11,7 @@ export class RutaZonaPage implements OnInit {
   @Input() rutaItem: Rutas;
   constructor(private zonas: ZonasService) { }
   textoBuscarZona = '';
+  textoBuscarRuta = '';
   ngOnInit() {
     console.log(this.rutaItem)
   }
@@ -18,6 +19,11 @@ export class RutaZonaPage implements OnInit {
     console.log(event.detail.value);
     this.textoBuscarZona = event.detail.value;
  
+  }
+
+    onSearchChangeRuta(event){
+    console.log(event.detail.value);
+    this.textoBuscarRuta = event.detail.value;
   }
   zonaRadioButtuon(ev: any){
     const zona = ev.target.value;

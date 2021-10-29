@@ -9,6 +9,7 @@ import { GuardarRutasPageRoutingModule } from './guardar-rutas-routing.module';
 import { GuardarRutasPage } from './guardar-rutas.page';
 import { ComponentsModule } from '../../components/components.module';
 import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
+import { RutasPipe } from '../../pipes/rutas.pipe';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
     GuardarRutasPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [GuardarRutasPage, FiltroClientesPipe]
+  declarations: [GuardarRutasPage, FiltroClientesPipe,RutasPipe]
 })
 export class GuardarRutasPageModule {}

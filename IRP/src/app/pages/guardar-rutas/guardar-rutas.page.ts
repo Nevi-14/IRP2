@@ -30,6 +30,7 @@ export class GuardarRutasPage implements OnInit {
     constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService,private loadingCtrl: LoadingController, private map: MapService) {}
   
     ngOnInit(){
+     
       this.map.createMap(-84.14123589305028,9.982628288210657);
     }
   
@@ -181,6 +182,7 @@ export class GuardarRutasPage implements OnInit {
   this.clientes.clientesRutas = [];
   this.map.currentMarkers = [];
   this.clienteEspejo.ClienteEspejoArray = [];
+  this.clienteEspejo.rutas = [];
         }
   
   

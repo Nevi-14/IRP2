@@ -12,7 +12,7 @@ export class RutasPipe implements PipeTransform {
     if ( ruta !== undefined){
       return ruta.DESCRIPCION;
     } else {
-      return 'ND';
+      return 'Sin definir';
     }
   }
 }

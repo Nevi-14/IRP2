@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { MapService } from 'src/app/services/map.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutaZonaService } from '../../services/ruta-zona.service';
@@ -23,7 +24,7 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService) { }
+  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService) { }
 
   ngOnInit() {
 
@@ -35,7 +36,7 @@ textoBuscarZona = '';
     if ( i >= 0 ){
   
       this.ruta.RUTA = this.rutaZona.rutasZonasArray[i].Ruta;
-      this.ruta.DESCRIPCION = this.rutaZona.rutasZonasArray[i].Descripcion;
+      this.ruta.DESCRIPCION = ruta.Ruta;
       this.zona.ZONA = this.rutaZona.rutasZonasArray[i].Zona;
       this.zona.NOMBRE = this.rutaZona.rutasZonasArray[i].Descripcion;
     } else {
@@ -50,6 +51,7 @@ textoBuscarZona = '';
 if(this.zona.ZONA === 'Sin definir' || this.rutas.ruta.RUTA === 'Sin definir'){
   this.message('IRP','Verificar Ruta y Zona');
 }else{
+
   this.rutas.ruta = this.ruta;
   this.zonas.zona = this.zona;
   this.modalCtrl.dismiss();

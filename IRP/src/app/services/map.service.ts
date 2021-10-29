@@ -37,9 +37,11 @@ export class MapService {
     }));
     this.createMarker('01',lng,lat);
     for(let i =0;  i < this.clientes.clientesRutas.length; i++){
-      console.log(this.clientes.clientesRutas[i].cliente)
+      console.log(this.clientes.clientesRutas[i].IdCliente)
         this.createMarker(this.clientes.clientesRutas[i].cliente.IdCliente,this.clientes.clientesRutas[i].cliente.LONGITUD,this.clientes.clientesRutas[i].cliente.LATITUD);
       }
+
+    
       
   }
   createMarker(cliente: string ,lng: number, lat: number){
