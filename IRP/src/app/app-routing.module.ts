@@ -28,10 +28,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/log-in/log-in.module').then( m => m.LogInPageModule)
   },
   {
-    path: 'zonas',
-    loadChildren: () => import('./pages/zonas/zonas.module').then( m => m.ZonasPageModule)
-  },
-  {
     path: 'rutas',
     loadChildren: () => import('./pages/rutas/rutas.module').then( m => m.RutasPageModule)
   },
@@ -42,11 +38,7 @@ const routes: Routes = [
   {
     path: 'mantenimiento-rutas',
     loadChildren: () => import('./pages/mantenimiento-rutas/mantenimiento-rutas.module').then( m => m.MantenimientoRutasPageModule)
-  },
-  {
-    path: 'ruta-zona',
-    loadChildren: () => import('./pages/ruta-zona/ruta-zona.module').then( m => m.RutaZonaPageModule)
-  },
+  }
 ];
 
 @NgModule({

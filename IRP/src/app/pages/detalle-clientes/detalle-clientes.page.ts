@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 })
 export class DetalleClientesPage implements OnInit {
   @Input() detalleCliente: Clientes;
-  array = Array(4);
+  array = Array(3);
   mapa: Mapboxgl.Map;
   constructor( private modalCtrl: ModalController) { }
 

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Clientes } from '../models/clientes';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ConfiguracionService } from './configuracion.service';
 import { ZonasService } from './zonas.service';
 import { RutasService } from './rutas.service';
 import { LoadingController } from '@ionic/angular';
@@ -15,7 +14,10 @@ clientes: Clientes[]=[];
 clientesRutas = [];
 isChecked = false;
 clientesArray = [];
-  constructor(private http: HttpClient, private configurations: ConfiguracionService, private zonas: ZonasService, private rutas: RutasService,private loadingCtrl: LoadingController) { }
+
+
+rutasClientes: Clientes[]=[];
+  constructor(private http: HttpClient, private zonas: ZonasService, private rutas: RutasService,private loadingCtrl: LoadingController) { }
 
 
   getIRPURL( api: string, provincia: string , canton:string , distrito: string ,id: string ){
@@ -28,6 +30,18 @@ clientesArray = [];
 console.log(URL)
     return URL;
   }
+
+
+//
+
+
+
+
+
+
+
+
+
   private getClientes(provincia, canton, distrito  ){
     this.clientes = [];
     const URL = this.getIRPURL( environment.clientesURL, provincia,canton,distrito,'');

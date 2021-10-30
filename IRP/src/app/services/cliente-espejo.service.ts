@@ -4,8 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { Rutas } from '../models/rutas';
 import { AlertController, LoadingController } from '@ionic/angular';
-import { MapService } from './map.service';
 import { Clientes } from '../models/clientes';
+
+import { ClientesService } from './clientes.service';
+import { MapService } from './map.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ import { Clientes } from '../models/clientes';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private mapa: MapService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService) { }
 
   
 rutas: Clientes[]=[];
@@ -39,7 +41,10 @@ console.log(id)
   syncRutas(ruta){
     this.getRutas(ruta).subscribe(
       resp =>{
-        this.rutas = resp.slice(0);
+        this.clientes.rutasClientes = resp.slice(0);
+        this.mapa.createMap(-84.14123589305028,9.982628288210657);
+    
+
        console.log(this.rutas,'rutas nuevagdgd')
 
       }

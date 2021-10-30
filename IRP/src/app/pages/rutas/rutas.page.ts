@@ -5,6 +5,7 @@ import { MapService } from 'src/app/services/map.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutaZonaService } from '../../services/ruta-zona.service';
+import { ClientesService } from '../../services/clientes.service';
 
 @Component({
   selector: 'app-rutas',
@@ -13,18 +14,18 @@ import { RutaZonaService } from '../../services/ruta-zona.service';
 })
 export class RutasPage implements OnInit {
   zona = {
-    ZONA: 'Sin definir', 
-    NOMBRE: 'Sin definir'
+    ZONA: '', 
+    NOMBRE: ''
   }
   ruta= {
-    RUTA: 'Sin definir', 
-  DESCRIPCION: 'Sin definir'
+    RUTA: '', 
+  DESCRIPCION: ''
 }
 textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService) { }
+  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService) { }
 
   ngOnInit() {
 
@@ -48,14 +49,19 @@ textoBuscarZona = '';
   }
 
   salvarConfiguracion(){
-if(this.zona.ZONA === 'Sin definir' || this.rutas.ruta.RUTA === 'Sin definir'){
+if(this.zona.ZONA === '' || this.rutas.ruta.RUTA === ''){
   this.message('IRP','Verificar Ruta y Zona');
 }else{
-
+  console.log(this.zona.ZONA,'zona')
+  console.log(this.rutas.ruta.RUTA,'rutas')
   this.rutas.ruta = this.ruta;
   this.zonas.zona = this.zona;
   this.modalCtrl.dismiss();
   this.clienteEspejo.syncRutas(this.ruta.RUTA);
+
+  this.clienteEspejo.rutas = [];
+  this.clientes.clientesRutas = [];
+
 }
   }
   

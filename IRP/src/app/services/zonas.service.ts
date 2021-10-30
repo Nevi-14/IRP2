@@ -9,8 +9,8 @@ import { Zonas } from '../models/zonas';
 export class ZonasService {
   zonas: Zonas[]=[];
   zona = {
-    ZONA: 'Sin definir', 
-    NOMBRE: 'Sin definir'
+    ZONA: '', 
+    NOMBRE: ''
   }
   constructor(private http: HttpClient) { }
 

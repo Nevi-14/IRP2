@@ -7,11 +7,9 @@ import { ConfiguracionRutaService } from '../../services/configuracionruta.servi
 import { ZonasService } from '../../services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClientesService } from '../../services/clientes.service';
-import { ConfiguracionService } from '../../services/configuracion.service';
 import { ClienteEspejoService } from '../../services/cliente-espejo.service';
 import { MapService } from '../../services/map.service';
-import { ClienteEspejo } from '../../models/clienteEspejo';
-import * as  Mapboxgl from 'mapbox-gl';
+import { GlobalService } from 'src/app/services/global.service';
 @Component({
   selector: 'app-guardar-rutas',
   templateUrl: './guardar-rutas.page.html',
@@ -21,41 +19,26 @@ export class GuardarRutasPage implements OnInit {
 
   mapSvg = '../assets/home/map.svg';
   imagen = '../assets/home/isa.png';
-  mapa: Mapboxgl.Map;
   textoBuscar = '';
-  clienteEspejoP: ClienteEspejo[]=[];
-  loading: HTMLIonLoadingElement;
+
   
-  
-    constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private configuracion: ConfiguracionService, private clienteEspejo: ClienteEspejoService,private loadingCtrl: LoadingController, private map: MapService) {}
+    constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService) {}
   
     ngOnInit(){
-     
       this.map.createMap(-84.14123589305028,9.982628288210657);
+    
     }
   
-  
-    removeMarker(cliente){
-  
-        if (cliente!==null) {
-          for (let i =    this.rutas.currentMarkers.length - 1; i >= 0; i--) {
-           if(cliente ===     this.rutas.currentMarkers[i].id){
-           console.log(    this.rutas.currentMarkers[i].marker.remove());
-           }
-          }
-      }
-    }
-  
+
   
    async menuCliente(){
-     console.log('alert',this.rutas.ruta.RUTA, this.zonas.zona.ZONA)
-     if(this.rutas.ruta.RUTA === 'Sin definir' || this.zonas.zona.ZONA === 'Sin definir'){
-  this.alert('IRP','Seleccionar Ruta y Zona');
-      
+
+if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
+  this.global.alert('IRP','Seleccionar Ruta y Zona');
      }else{
       const modal = await this.modalCtrl.create({
         component: MenuClientesPage,
-        cssClass: 'my-custom-class'
+        cssClass: 'right-modal'
       });
       return await modal.present();
      }
@@ -63,35 +46,20 @@ export class GuardarRutasPage implements OnInit {
     }
   
   
-    async alert(header, message){
-      const alert = await this.alertCtrl.create({
-        cssClass: 'my-custom-class',
-        header: header,
-        message: message,
-        buttons: [
-        {
-            text: 'Okay',
-            handler: () => {
-              console.log('Confirm Okay');
-            }
-          }
-        ]
-      });
+
   
-      await alert.present();
-    }
-  
-    ruta(event){
-      this.config.nombreRuta = event.detail.value;
-    }
+
     onSearchChange(event){
       console.log(event)
       this.textoBuscar = event.detail.value;
     }
+
+
+
     async detalleClientes(cliente){
       const modal = await this.modalCtrl.create({
         component: DetalleClientesPage,
-        cssClass: 'my-custom-class',
+        cssClass: 'modal-md',
         componentProps:{
           detalleCliente: cliente
         }
@@ -99,6 +67,8 @@ export class GuardarRutasPage implements OnInit {
       return await modal.present();
     }
   
+
+
     addValue(e, cliente): void {
   
       const isChecked = !e.currentTarget.checked;
@@ -107,43 +77,31 @@ export class GuardarRutasPage implements OnInit {
     console.log('checcliente',cliente.IdCliente)
     this.config.totalClientesRuta += 1;
     this.map.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD);
-    console.log(this.map.createMarker(cliente.IdCliente,cliente.LONGITUD,cliente.LATITUD))
+
    }else{
-    this.removeMarker(cliente.IdCliente);
+    this.map.removeMarker(cliente.IdCliente);
     this.config.totalClientesRuta -= 1;
    }
   
   
     }
   
-    delete(cliente: string){
-  console.log(cliente)
+    delete(cliente: any){
+      console.log('cliente',cliente)
       for( let index = 0; index < this.clientes.clientesRutas.length ; index++){   
-      if(this.clientes.clientesRutas[index].IdCliente === cliente){
+      if(this.clientes.clientesRutas[index].cliente.IdCliente === cliente.IdCliente){
         this.clientes.clientesRutas.splice(index,1);
+        this.map.createMap(-84.14123589305028,9.982628288210657);
+
+    
+        
        
       }
           }
           
         }
   
-  
-      async  message(header,message){
-      
-            const alert = await this.alertCtrl.create({
-              cssClass: 'my-custom-class',
-              header: header,
-              subHeader: 'IRP',
-              message: message,
-              buttons: ['OK']
-            });
-        
-            await alert.present();
-        
-            const { role } = await alert.onDidDismiss();
-            console.log('onDidDismiss resolved with role', role);
-       
-        }
+
   
   
         async mostrarRuta() {
@@ -154,6 +112,9 @@ export class GuardarRutasPage implements OnInit {
           return await modal.present();
         }
   
+
+
+
         postRutas(){
   
           this.clienteEspejo.presentaLoading('Guardando Rutas...');
@@ -175,9 +136,9 @@ export class GuardarRutasPage implements OnInit {
          
           
   this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
-  this.rutas.ruta.RUTA = 'Sin definir';
+  this.rutas.ruta.RUTA = '';
   this.rutas.ruta.DESCRIPCION = '';
-  this.zonas.zona.ZONA = 'Sin definir';
+  this.zonas.zona.ZONA = '';
   this.zonas.zona.NOMBRE = '';
   this.clientes.clientesRutas = [];
   this.map.currentMarkers = [];

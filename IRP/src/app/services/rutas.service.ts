@@ -11,11 +11,11 @@ import { LoadingController } from '@ionic/angular';
 export class RutasService {
   loading: HTMLIonLoadingElement;
   ruta= {
-    RUTA: 'Sin definir', 
-  DESCRIPCION: 'Sin definir'
+    RUTA: '', 
+  DESCRIPCION: ''
 }
-currentMarkers=[];
   rutas: Rutas[]=[];
+
   constructor(private http: HttpClient,private loadingCtrl: LoadingController) { }
 
 
@@ -55,4 +55,12 @@ console.log(URL);
    loadingDissmiss(){
     this.loading.dismiss();
   }
+
+
+
+
+
+
+
+
 }

@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { MapService } from '../../services/map.service';
+import { ClienteEspejoService } from '../../services/cliente-espejo.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -25,8 +26,7 @@ export class MenuClientesPage implements OnInit {
   myvalue = 'OFF';
   textoBuscar = '';
   isChecked = false;
-  clientesArray = [];
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private map: MapService) { }
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private map: MapService, private clienteEspejo: ClienteEspejoService) { }
 
 
 
@@ -34,22 +34,23 @@ export class MenuClientesPage implements OnInit {
     this.textoBuscar = event.detail.value;
   }
 
+  
   ngOnInit() {
     this.clientes.isChecked = false;
     this.clientes.clientes = [];
     this.clientes.clientesArray = [];
-
-
   }
-  medClicked(event, item) {
-  
-  }
+
   checkAll(e){
 
     const isChecked = !e.currentTarget.checked;
+    
     if(isChecked=== true){
       for(let i =0; i <= this.clientes.clientesArray.length; i++) {
-        this.clientes.clientesArray[i].select  = true;
+        console.log( this.clientes.clientesArray[i].select, 'select')
+        if(this.clientes.clientesArray[i].select  == false){
+          this.clientes.clientesArray[i].select  = true;
+        }
       }
      }else{
       for(let i =0; i <= this.clientes.clientesArray.length; i++) {
@@ -80,12 +81,20 @@ export class MenuClientesPage implements OnInit {
   agregarCliente(){
   for(let i = 0; i < this.clientes.clientesArray.length;i++){
     if(this.clientes.clientesArray[i].select === true){
-      
-      this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
-      console.log(this.clientes.clientesRutas)
-    
+      const duplicate = this.clientes.rutasClientes.findIndex( d => d.IdCliente === this.clientes.clientesArray[i].cliente.IdCliente );
+      console.log('duplicate', duplicate)
+      if ( duplicate >= 0 ){
+        console.log('duplicate elements', this.clientes.clientesArray[i].cliente.IdCliente)
+        this.clientes.clientesArray.splice(duplicate, 1);
+        }else{
+          this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
+        }
+       
+        
     }
   }
+        
+
   this.map.createMap(-84.14123589305028,9.982628288210657);
 
     this.message('IRP','Se agrego a la lista de RUTAS');

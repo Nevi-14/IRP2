@@ -77,15 +77,17 @@ export class MapService {
   removeMarker(cliente){
 console.log('remove marker ', cliente)
 
+for(let i = 0; i < this.currentMarkers.length; i++){
 
-    if (cliente!==null) {
-      for (let i =    this.currentMarkers.length - 1; i >= 0; i--) {
-       if(cliente ===     this.currentMarkers[i].id){
-        this.currentMarkers[i].marker.remove();
+if(this.currentMarkers[i].id === cliente){
+  console.log(this.currentMarkers[i].id , 'id curr' , cliente , 'cliente', 'position', i , 'removed' ,  this.currentMarkers.splice(i, 1))
+  this.currentMarkers.splice(i, 1);
+  this.createMap(-84.14123589305028,9.982628288210657);
+}
+}
 
-       }
-      }
-  }
+
+ 
 }
 
 
