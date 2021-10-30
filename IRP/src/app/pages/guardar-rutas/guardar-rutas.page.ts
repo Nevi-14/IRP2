@@ -142,7 +142,7 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
   this.zonas.zona.NOMBRE = '';
   this.clientes.clientesRutas = [];
   this.map.currentMarkers = [];
-  this.clienteEspejo.ClienteEspejoArray = [];
+  this.clientes.clientesRutas = [];
   this.clienteEspejo.rutas = [];
         }
   

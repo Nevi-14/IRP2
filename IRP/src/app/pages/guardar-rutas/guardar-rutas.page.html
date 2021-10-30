@@ -97,7 +97,7 @@
               <ion-icon  name="eye"></ion-icon>
              
             </ion-button>
-            <ion-button (click)="map.irpMarcador(i)" color="warning" fill="solid" shape="round" clas  s="btn-sm">
+            <ion-button *ngIf="cliente.select" (click)="map.irpMarcador(i)" color="warning" fill="solid" shape="round" clas  s="btn-sm">
               <ion-icon  name="navigate"></ion-icon>
              
             </ion-button>
