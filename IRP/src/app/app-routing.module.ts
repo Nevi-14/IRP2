@@ -38,6 +38,10 @@ const routes: Routes = [
   {
     path: 'mantenimiento-rutas',
     loadChildren: () => import('./pages/mantenimiento-rutas/mantenimiento-rutas.module').then( m => m.MantenimientoRutasPageModule)
+  },
+  {
+    path: 'ruta-facturas',
+    loadChildren: () => import('./pages/ruta-facturas/ruta-facturas.module').then( m => m.RutaFacturasPageModule)
   }
 ];
 

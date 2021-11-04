@@ -44,16 +44,17 @@ export class MenuClientesPage implements OnInit {
   checkAll(e){
 
     const isChecked = !e.currentTarget.checked;
+
+   
     
-    if(isChecked=== true){
-      for(let i =0; i <= this.clientes.clientesArray.length; i++) {
-        console.log( this.clientes.clientesArray[i].select, 'select')
-        if(this.clientes.clientesArray[i].select  == false){
-          this.clientes.clientesArray[i].select  = true;
-        }
+    if(isChecked){
+      for(let i =0; i < this.clientes.clientesArray.length; i++) {
+        console.log( i, 'select' , this.clientes.clientesArray.length)
+     this.clientes.clientesArray[i].select  = true;
+
       }
      }else{
-      for(let i =0; i <= this.clientes.clientesArray.length; i++) {
+      for(let i =0; i < this.clientes.clientesArray.length; i++) {
         this.clientes.clientesArray[i].select  = false;
       }
      }

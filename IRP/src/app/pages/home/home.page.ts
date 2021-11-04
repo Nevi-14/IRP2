@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class HomePage implements OnInit {
   maintenance = '../assets/home/maintenance.png'
   routes = '../assets/home/route.png'
+  receipts = '../assets/png/receipt.png'
   constructor(private route: Router) {}
 
   ngOnInit(){
@@ -21,6 +22,9 @@ export class HomePage implements OnInit {
   }
   guardarRutas(){
     this.route.navigate(['/guardar-rutas']);
+  }
+rutaFacturas(){
+    this.route.navigate(['/ruta-facturas']);
   }
 
 

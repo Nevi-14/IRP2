@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { MapService } from 'src/app/services/map.service';
@@ -6,6 +6,7 @@ import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutaZonaService } from '../../services/ruta-zona.service';
 import { ClientesService } from '../../services/clientes.service';
+import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 
 @Component({
   selector: 'app-rutas',
@@ -13,6 +14,7 @@ import { ClientesService } from '../../services/clientes.service';
   styleUrls: ['./rutas.page.scss'],
 })
 export class RutasPage implements OnInit {
+  @Input() rutaFacturas:Boolean;
   zona = {
     ZONA: '', 
     NOMBRE: ''
@@ -25,7 +27,7 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService) { }
+  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService) { }
 
   ngOnInit() {
 
@@ -56,12 +58,19 @@ if(this.zona.ZONA === '' || this.rutas.ruta.RUTA === ''){
   console.log(this.rutas.ruta.RUTA,'rutas')
   this.rutas.ruta = this.ruta;
   this.zonas.zona = this.zona;
+
+if(this.rutaFacturas){
+this.rutasFacturas.syncRutaFacturas(this.ruta.RUTA);
+alert('Rutas Facturas '+ this.ruta.RUTA)
+}else{
+
   this.modalCtrl.dismiss();
   this.clienteEspejo.syncRutas(this.ruta.RUTA);
 
   this.clienteEspejo.rutas = [];
   this.clientes.clientesRutas = [];
 
+}
 }
   }
   

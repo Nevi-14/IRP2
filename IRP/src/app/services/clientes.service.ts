@@ -51,7 +51,7 @@ console.log(URL)
   syncClientes(provincia, canton, distrito ){
     this.getClientes(provincia, canton, distrito).subscribe(
       resp =>{
-        this.clientes = resp.slice(0);
+        this.clientes = resp
        console.log(this.clientes)
        this.syncClientesArray();
       }

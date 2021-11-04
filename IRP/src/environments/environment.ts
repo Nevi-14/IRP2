@@ -20,6 +20,7 @@ export const environment = {
   distritosURL: 'Distritos/',
   rutasURL:'Rutas',
   rutaZonaURL:'Ruta_Zona',
+  rutaFacturasURL:'',
   zonasURL:'Zonas',
   prdMode: false,
 };
