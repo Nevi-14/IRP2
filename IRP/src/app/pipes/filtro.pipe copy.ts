@@ -9,21 +9,30 @@ export class FiltroPipe implements PipeTransform {
   transform(arreglo: any[],
     texto: string = '',
     columna: string = ''): any[] {
-      console.log(texto,columna)
+
    if(texto === ''){
      return arreglo;
    }
+
    if(!arreglo){
      return arreglo;
    }
    // todas las busquedas de javascript son case sentisive
 texto = texto.toLocaleLowerCase();
  //  return null;
- return arreglo.filter(
- //  item=> item.title.toLocaleLowerCase().includes(texto)
- item=> item[columna].toLocaleLowerCase().includes(texto) 
- );
+  let filteredArrayLength = arreglo.filter(
+  (element, index, array) =>{
 
+      element[columna].toLocaleLowerCase().includes(texto) 
+  }
+
+ );
+console.log('length' , filteredArrayLength.length)
+
+
+Array.length === filteredArrayLength.length;
+
+return arreglo;
 
  }
 

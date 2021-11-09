@@ -32,13 +32,14 @@
 
     <ion-col size="12" class="scroll">
     <ion-list lines="none">
-      <ion-item>
+
+      <ion-item *ngFor="let cliente of rutaFacturas.rutaFacturasArray; let i = index;"> 
         <ion-chip>
-          <ion-label>Cliente 1</ion-label>
+          <ion-label>Cliente {{cliente.CLIENTE}}</ion-label>
         </ion-chip>
         
         <ion-buttons slot="end">
-          <ion-button (click)="onClick()" color="primary">
+          <ion-button (click)="clienteFactura(cliente.CLIENTE)" color="primary">
             <ion-icon name="eye"></ion-icon>
           </ion-button>
           <ion-button (click)="map.irpMarcadorClientesRutas(i)" color="dark" fill="soild"  clas s="btn-sm">
@@ -48,37 +49,7 @@
 
         </ion-buttons>
       </ion-item>
-      <ion-item>
-        <ion-chip>
-          <ion-label>Cliente 2</ion-label>
-        </ion-chip>
-        
-        <ion-buttons slot="end">
-          <ion-button (click)="onClick()" color="primary">
-            <ion-icon name="eye"></ion-icon>
-          </ion-button>
-          <ion-button (click)="map.irpMarcadorClientesRutas(i)" color="dark" fill="soild"  clas s="btn-sm">
-            <ion-icon  name="navigate"></ion-icon>
-           
-          </ion-button>
-
-        </ion-buttons>
-      </ion-item>
-      <ion-item>
-        <ion-chip>
-          <ion-label>Cliente 3</ion-label>
-        </ion-chip>
-        <ion-buttons slot="end">
-          <ion-button (click)="onClick()" color="primary">
-            <ion-icon name="eye"></ion-icon>
-          </ion-button>
-          <ion-button (click)="map.irpMarcadorClientesRutas(i)" color="dark" fill="soild"  clas s="btn-sm">
-            <ion-icon  name="navigate"></ion-icon>
-           
-          </ion-button>
-
-        </ion-buttons>
-      </ion-item>
+    
     </ion-list>
     </ion-col>
   </ion-row>

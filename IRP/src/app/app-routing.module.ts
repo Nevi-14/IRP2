@@ -42,6 +42,10 @@ const routes: Routes = [
   {
     path: 'ruta-facturas',
     loadChildren: () => import('./pages/ruta-facturas/ruta-facturas.module').then( m => m.RutaFacturasPageModule)
+  },
+  {
+    path: 'cliente-factura',
+    loadChildren: () => import('./pages/cliente-factura/cliente-factura.module').then( m => m.ClienteFacturaPageModule)
   }
 ];
 

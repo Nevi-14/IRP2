@@ -27,7 +27,7 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService) { }
+  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapService) { }
 
   ngOnInit() {
 
@@ -60,8 +60,11 @@ if(this.zona.ZONA === '' || this.rutas.ruta.RUTA === ''){
   this.zonas.zona = this.zona;
 
 if(this.rutaFacturas){
-this.rutasFacturas.syncRutaFacturas(this.ruta.RUTA);
-alert('Rutas Facturas '+ this.ruta.RUTA)
+  this.clienteEspejo.syncRutas(this.ruta.RUTA);
+this.rutasFacturas.syncRutaFacturas('08', new Date('2021-11-04'));
+this.map.createMapRutaFacturas(-84.14123589305028,9.982628288210657);
+this.modalCtrl.dismiss();
+//alert('Rutas Facturas '+ this.ruta.RUTA)
 }else{
 
   this.modalCtrl.dismiss();

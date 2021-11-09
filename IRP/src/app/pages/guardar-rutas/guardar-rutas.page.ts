@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { RutasPage } from '../rutas/rutas.page';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
@@ -10,6 +10,7 @@ import { ClientesService } from '../../services/clientes.service';
 import { ClienteEspejoService } from '../../services/cliente-espejo.service';
 import { MapService } from '../../services/map.service';
 import { GlobalService } from 'src/app/services/global.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-guardar-rutas',
   templateUrl: './guardar-rutas.page.html',
@@ -22,13 +23,21 @@ export class GuardarRutasPage implements OnInit {
   textoBuscar = '';
 
   
-    constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService) {}
-  
-    ngOnInit(){
-      this.map.createMap(-84.14123589305028,9.982628288210657);
-    
+    constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService  , route:ActivatedRoute) {
+      route.params.subscribe(val => {
+        this.ngOnInit();
+        this.map.createMap(-84.14123589305028,9.982628288210657);
+        console.log('hello guardar rutas')
+       });
+
     }
   
+    ngOnInit(){
+ 
+     //alert('hello')
+    
+    }
+ 
 
   
    async menuCliente(){

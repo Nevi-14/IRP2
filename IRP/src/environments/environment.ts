@@ -19,8 +19,10 @@ export const environment = {
   cantonesURL: 'Cantones/',
   distritosURL: 'Distritos/',
   rutasURL:'Rutas',
+  entregaParam:'&entrega=',
+  rutaParam:'?ruta=',
   rutaZonaURL:'Ruta_Zona',
-  rutaFacturasURL:'',
+  rutaFacturasURL:'Facturas/',
   zonasURL:'Zonas',
   prdMode: false,
 };

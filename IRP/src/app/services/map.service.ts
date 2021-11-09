@@ -3,15 +3,17 @@ import * as  Mapboxgl from 'mapbox-gl';
 import { environment } from '../../environments/environment.prod';
 
 import { ClientesService } from './clientes.service';
+import { RutaFacturasService } from './ruta-facturas.service';
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
   mapa: Mapboxgl.Map;
   currentMarkers = [];
-  constructor(private clientes: ClientesService) { }
+  constructor(private clientes: ClientesService , private rutasFacturas:RutaFacturasService) { }
 
   createMap(lng: number, lat: number){
+
     this.currentMarkers = [];
     (Mapboxgl as any).accessToken = environment.mapboxKey;
     this.mapa = new Mapboxgl.Map({
@@ -22,6 +24,7 @@ export class MapService {
     zoom: 12 // starting zoom
     
     });
+
 
     this.mapa.on('load', () => {
       this.mapa.resize();
@@ -47,6 +50,50 @@ export class MapService {
     for(let i =0;  i < this.clientes.clientesRutas.length; i++){
       console.log(this.clientes.clientesRutas[i].IdCliente)
         this.createMarker(this.clientes.clientesRutas[i].cliente.IdCliente,this.clientes.clientesRutas[i].cliente.LONGITUD,this.clientes.clientesRutas[i].cliente.LATITUD);
+      }
+
+    
+      
+  }
+
+  createMapRutaFacturas(lng: number, lat: number){
+
+    this.currentMarkers = [];
+    (Mapboxgl as any).accessToken = environment.mapboxKey;
+    this.mapa = new Mapboxgl.Map({
+    container: 'mapa', // container ID
+    style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    //  MAPBOX  LNG , LAT AND GOOGLE MAPS IS LAT , LNG
+    center: [lng,lat], // starting position
+    zoom: 12 // starting zoom
+    
+    });
+
+
+    this.mapa.on('load', () => {
+      this.mapa.resize();
+    });
+
+    this.mapa.addControl(new Mapboxgl.NavigationControl());
+    this.mapa.addControl(new Mapboxgl.FullscreenControl());
+    this.mapa.addControl(new Mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }));
+    this.createMarker('01',lng,lat);
+
+    for(let i =0;  i < this.rutasFacturas.rutaFacturasArray.length; i++){
+      
+    for(let j =0;  j < this.clientes.clientesRutas.length; j++){
+if(this.rutasFacturas.rutaFacturasArray[i].CLIENTE === this.clientes.clientesRutas[j].IdCliente){
+        this.createMarker(this.clientes.rutasClientes[i].IdCliente,this.clientes.rutasClientes[i].LONGITUD,this.clientes.rutasClientes[i].LATITUD);
+
+}
+      }
+
+    
       }
 
     
