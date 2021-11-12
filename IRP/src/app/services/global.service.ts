@@ -6,6 +6,8 @@ import { AlertController } from '@ionic/angular';
 })
 export class GlobalService {
   
+
+  mapMenu = false;
   fecha = new Date().toLocaleDateString();
 
   constructor(private alertCtrl: AlertController) { }

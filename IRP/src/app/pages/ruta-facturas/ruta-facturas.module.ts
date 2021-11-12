@@ -9,6 +9,7 @@ import { RutaFacturasPageRoutingModule } from './ruta-facturas-routing.module';
 import { RutaFacturasPage } from './ruta-facturas.page';
 import { ComponentsModule } from '../../components/components.module';
 import { RutasPipe } from 'src/app/pipes/rutas.pipe';
+import { FiltroPipe } from '../../pipes/filtro.pipe copy';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { RutasPipe } from 'src/app/pipes/rutas.pipe';
     RutaFacturasPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [RutaFacturasPage,RutasPipe]
+  declarations: [RutaFacturasPage,RutasPipe,FiltroPipe]
 })
 export class RutaFacturasPageModule {}

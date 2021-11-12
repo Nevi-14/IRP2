@@ -1,0 +1,76 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title> <ion-badge color="dark" mode="ios">{{cliente.NOMBRE_CLIENTE}} -  {{cliente.CLIENTE}}</ion-badge>  </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
+        <ion-icon  name="close"></ion-icon>
+      </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-padding">
+
+<ion-grid >
+  <ion-row>
+
+    
+    <ion-col size="6">
+
+<ion-row>
+  <ion-col size="12"  class="ion-margin-bottom" >
+    <ion-label class=" ion-text-center">- Lng,Lat: [{{cliente.LONGITUD | number:'2.4-4' }},{{cliente.LATITUD| number:'2.4-4' }}]</ion-label>
+  </ion-col>
+  <ion-col size="12">
+    <app-mini-mapa [height]="'250px'"   [interactive]="'true'"   [lngLat]="[cliente.LONGITUD,cliente.LATITUD]"></app-mini-mapa>
+  </ion-col>
+
+</ion-row>
+    </ion-col>
+    <ion-col size="6">
+
+<ion-list lines="none">
+
+  <ion-item>
+    <ion-label>TIPO DOCUMENTO: {{cliente.TIPO_DOCUMENTO}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>FACTURA: {{cliente.FACTURA}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>FECHA PEDIDO: {{cliente.FECHA_PEDIDO | date: 'shortDate'}}</ion-label>
+  </ion-item>
+  <ion-item>
+  <ion-item>
+    <ion-label>FECHA ENTREGA: {{cliente.FECHA_ENTREGA | date: 'shortDate'}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>FECHA RECIBIDO: {{cliente.FECHA_RECIBIDO | date: 'shortDate'}}</ion-label>
+  </ion-item>
+  <ion-item>
+
+      <ion-item>
+    <ion-label>FECHA RECIBIDO: {{cliente.FECHA_RECIBIDO | date: 'shortDate'}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>ESTA DESPACHADO: {{cliente.ESTA_DESPACHADO}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>MONEDA FACTURA: {{cliente.MONEDA_FACTURA}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Cliente: {{cliente.CLIENTE}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>OBSERVACIONES: {{cliente.OBSERVACIONES}}</ion-label>
+  </ion-item>
+</ion-list>
+
+
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+</ion-content>

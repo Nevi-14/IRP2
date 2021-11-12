@@ -1,8 +1,9 @@
-import {  Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import * as  mapboxgl from 'mapbox-gl';
 import { RutasPage } from '../rutas/rutas.page';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
-import { AlertController, LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../../services/configuracionruta.service';
 import { ZonasService } from '../../services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
@@ -11,24 +12,34 @@ import { ClienteEspejoService } from '../../services/cliente-espejo.service';
 import { MapService } from '../../services/map.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
+
+
+
+interface MarcadorColor {
+  color: string,
+  nombre?: string,
+  marker?: mapboxgl.Marker,
+  centro?:[number,number]
+}
+
+
 @Component({
   selector: 'app-guardar-rutas',
   templateUrl: './guardar-rutas.page.html',
   styleUrls: ['./guardar-rutas.page.scss'],
 })
-export class GuardarRutasPage implements OnInit {
+export class GuardarRutasPage implements OnInit ,AfterViewInit{
 
   mapSvg = '../assets/home/map.svg';
   imagen = '../assets/home/isa.png';
   textoBuscar = '';
+  lngLat: [number,number] = [-84.14123589305028,9.982628288210657];
+  mapa!: mapboxgl.Map;
+  @ViewChild('mapa') divMapa!: ElementRef;
+  @Input() markers:any;
+  marcadores: MarcadorColor[]=[];
+    constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService  , route:ActivatedRoute, private popOverCrtl: PopoverController) {
 
-  
-    constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService  , route:ActivatedRoute) {
-      route.params.subscribe(val => {
-        this.ngOnInit();
-        this.map.createMap(-84.14123589305028,9.982628288210657);
-        console.log('hello guardar rutas')
-       });
 
     }
   
@@ -37,7 +48,38 @@ export class GuardarRutasPage implements OnInit {
      //alert('hello')
     
     }
- 
+   
+    ngAfterViewInit(){
+      this.marcadores = [];
+      this.mapa = new mapboxgl.Map({
+        container:this.divMapa.nativeElement,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: this.lngLat,
+        zoom:10,
+        interactive:true
+        });
+    
+        console.log(this.lngLat)
+        new mapboxgl.Marker()
+        .setLngLat(this.lngLat)
+        .addTo(this.mapa);   
+        
+        this.mapa.on('load', () => {
+          this.mapa.resize();
+        });
+
+     this.mapa.addControl(new mapboxgl.NavigationControl());
+     this.mapa.addControl(new mapboxgl.FullscreenControl());
+     this.mapa.addControl(new mapboxgl.GeolocateControl({
+         positionOptions: {
+             enableHighAccuracy: true
+         },
+         trackUserLocation: true
+     }));
+
+     this.leerMarcador();
+     }
+    
 
   
    async menuCliente(){
@@ -49,7 +91,12 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
         component: MenuClientesPage,
         cssClass: 'right-modal'
       });
-      return await modal.present();
+       await modal.present();
+
+       const { data } = await modal.onDidDismiss();
+       if(data.statement === true){
+        this.ngAfterViewInit();
+       }
      }
      
     }
@@ -113,12 +160,28 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
 
   
   
-        async mostrarRuta() {
-          const modal = await this.modalCtrl.create({
+        async mostrarRuta(evento) {
+
+          const popover = await this.popOverCrtl.create({
             component: RutasPage,
-            cssClass: 'right-modal',
+            cssClass: 'menu-map-popOver',
+            event: evento,
+            translucent: true,
+            mode:'ios',
+            componentProps:{
+              rutaFacturas: false
+            }
+           // backdropDismiss:false
           });
-          return await modal.present();
+      
+
+          await popover.present();
+      
+          const { data } = await popover.onDidDismiss();
+          if(data.statement === true){
+            this.ngAfterViewInit();
+          }
+         //alert(data.statement)
         }
   
 
@@ -149,11 +212,65 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
   this.rutas.ruta.DESCRIPCION = '';
   this.zonas.zona.ZONA = '';
   this.zonas.zona.NOMBRE = '';
-  this.clientes.clientesRutas = [];
-  this.map.currentMarkers = [];
+  this.clientes.rutasClientes = [];
   this.clientes.clientesRutas = [];
   this.clienteEspejo.rutas = [];
         }
   
-  
+        leerMarcador(){
+       //')
+   //    alert(this.clientes.rutasClientes.length)
+
+   this.marcadores = [];
+                for(let i =0; i< this.clientes.rutasClientes.length ;i++)
+              {
+                const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
+                const newMarker= new mapboxgl.Marker({
+                  color:color,
+                  draggable: true
+              
+                }).setLngLat([this.clientes.rutasClientes[i].LONGITUD,this.clientes.rutasClientes[i].LATITUD]!)
+                .addTo(this.mapa);
+                this.marcadores.push({
+                  nombre:this.clientes.rutasClientes[i].NOMBRE,
+                  marker:newMarker,
+                  color:color
+                })
+              
+              
+              }  
+
+              //alert(this.clientes.clientesRutas.length)
+            //  console.log(this.clientes.clientesRutas.length)
+              for(let i =0; i< this.clientes.clientesRutas.length ;i++)
+              {
+                const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
+                const newMarker= new mapboxgl.Marker({
+                  color:color,
+                  draggable: false
+              
+                }).setLngLat([this.clientes.clientesRutas[i].LONGITUD,this.clientes.clientesRutas[i].LATITUD]!)
+                .addTo(this.mapa);
+                this.marcadores.push({
+                  nombre:this.clientes.clientesRutas[i].NOMBRE,
+                  marker:newMarker,
+                  color:this.clientes.clientesRutas[i].color
+                })
+              
+              
+              }  
+
+
+              
+              console.log(this.marcadores)
+              }
+
+
+              irMarcador( i: number ){
+                this.mapa.flyTo({
+                  center: [ this.clientes.rutasClientes[i].LONGITUD,  this.clientes.rutasClientes[i].LATITUD ],
+                  zoom: 16,
+                });
+              }
+                
 }

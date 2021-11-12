@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { ClienteFacturaPageRoutingModule } from './cliente-factura-routing.module';
 
 import { ClienteFacturaPage } from './cliente-factura.page';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ClienteFacturaPageRoutingModule
+    ClienteFacturaPageRoutingModule,
+    ComponentsModule
   ],
-  declarations: [ClienteFacturaPage]
+  declarations: [ClienteFacturaPage,DatePipe]
 })
 export class ClienteFacturaPageModule {}

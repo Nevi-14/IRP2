@@ -1,0 +1,40 @@
+
+
+
+
+
+
+<ion-list lines="none" >
+
+  <ion-header class="ion-no-border">
+    <ion-toolbar >
+      <ion-title>Lista de Clientes</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
+          <ion-icon  name="close"></ion-icon>
+        </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ng-template ngFor let-item [ngForOf]="marcadores" let-i="index">
+    <ion-item >
+      <ion-label>{{item.nombre}}</ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="irMarcador( item.marker! )">
+          <ion-icon name="location" [ngStyle]="{
+            'color': item.color
+        }"></ion-icon>
+  
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ng-template>
+
+
+
+</ion-list>
+
+<div #mapa class="mapa-container"></div>
+

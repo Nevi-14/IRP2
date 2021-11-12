@@ -5,7 +5,7 @@ import { ClientesService } from '../services/clientes.service';
   name: 'filtro'
 })
 export class FiltroPipe implements PipeTransform {
-  constructor(private clientes: ClientesService){}
+  constructor(){}
   transform(arreglo: any[],
     texto: string = '',
     columna: string = ''): any[] {
@@ -19,9 +19,10 @@ export class FiltroPipe implements PipeTransform {
    }
    // todas las busquedas de javascript son case sentisive
 texto = texto.toLocaleLowerCase();
+//alert(texto)
  //  return null;
   let filteredArrayLength = arreglo.filter(
-  (element, index, array) =>{
+  (element) =>{
 
       element[columna].toLocaleLowerCase().includes(texto) 
   }

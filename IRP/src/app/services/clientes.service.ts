@@ -63,13 +63,17 @@ console.log(URL)
     this.clientesArray = [];
     this.isChecked = false;
     for(let i = 0; i < this.clientes.length; i++){
+      const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
       const objectElement = {
+        color: color,
         Fecha: new Date().toISOString(),
         Zona: this.zonas.zona.ZONA,
         Ruta: this.rutas.ruta.RUTA,
         Usuario: 'IRP',
         TRADE_CLIENTE: this.clientes[i].TRADE_CLIENTE,
         NOMBRE:this.clientes[i].NOMBRE,
+        LATITUD:this.clientes[i].LATITUD,
+        LONGITUD:this.clientes[i].LONGITUD,
         cliente:this.clientes[i],
         select:this.isChecked
       }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { MapService } from '../../services/map.service';
 import { RutasPage } from '../rutas/rutas.page';
 import { RutasService } from '../../services/rutas.service';
@@ -8,6 +8,7 @@ import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteFacturaPage } from '../cliente-factura/cliente-factura.page';
 import { ClientesService } from '../../services/clientes.service';
+import { MarcadoresComponent } from 'src/app/mapas/pages/marcadores/marcadores.component';
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -15,14 +16,9 @@ import { ClientesService } from '../../services/clientes.service';
   styleUrls: ['./ruta-facturas.page.scss'],
 })
 export class RutaFacturasPage implements OnInit {
-
-  constructor(private map: MapService, private modalCtrl: ModalController, private rutas:RutasService, private zonas:ZonasService, private rutaFacturas: RutaFacturasService , route:ActivatedRoute, private clientes: ClientesService, private clienteEspejo: ClientesService) {
-
-    route.params.subscribe(val => {
-      this.ngOnInit();
-      this.map.createMapRutaFacturas(-84.14123589305028,9.982628288210657);
-      console.log('hello ruta facturas')
-     });
+  lngLat: [number,number] = [-75.92722289474008, 45.280015511264466];
+  textoBuscar = '';
+  constructor(private map: MapService, private modalCtrl: ModalController, private rutas:RutasService, private zonas:ZonasService, private rutaFacturas: RutaFacturasService , route:ActivatedRoute, private clientes: ClientesService, private clienteEspejo: ClientesService, private popOverCrtl: PopoverController) {
 
 
    }
@@ -47,12 +43,54 @@ console.log('rutas ', this.clientes.clientes , 'cliente' , cliente)
   }
 
 
-  async mostrarRuta() {
-    const modal = await this.modalCtrl.create({
+  async mostrarRuta(evento) {
+
+    const popover = await this.popOverCrtl.create({
       component: RutasPage,
-      cssClass: 'right-modal',
+      cssClass: 'menu-map-popOver',
+      event: evento,
+      translucent: true,
+      mode:'ios',
       componentProps:{
         rutaFacturas: true
+      }
+     // backdropDismiss:false
+    });
+
+    
+
+    await popover.present();
+
+    const { role } = await popover.onDidDismiss();
+    console.log('onDidDismiss resolved with role', role);
+  }
+    
+
+  onSearchChange(event){
+   // alert(event.detail.value)
+    this.textoBuscar = event.detail.value;
+    console.log(this.textoBuscar)
+  }
+
+  async mostrarClienteFactura(cliente) {
+ //  alert(cliente.NOMBRE)
+    const modal = await this.modalCtrl.create({
+      component: ClienteFacturaPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        cliente: cliente
+      }
+    });
+    return await modal.present();
+  }
+
+  async mapaCompleto(){
+    const modal = await this.modalCtrl.create({
+      component: MarcadoresComponent,
+      cssClass: 'map-markers',
+      componentProps: {
+        markers: this.rutaFacturas.rutaFacturasArray,
+        height:'100%'
       }
     });
     return await modal.present();

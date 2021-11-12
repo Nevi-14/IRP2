@@ -22,7 +22,7 @@
     </ion-col>
     <ion-col size="4" style="display: grid; place-content: center;">
       <ion-buttons   class="margin-rignt" style="margin: 0 auto;">
-        <ion-button  shape="round" fill="solid" color="dark" (click)="mostrarRuta()">
+        <ion-button  shape="round" fill="solid" color="dark" (click)="mostrarRuta($event)">
           <ion-icon class="spin-element"  name="settings"></ion-icon>
         </ion-button>
         <ion-button  shape="round" fill="solid" color="primary" (click)="menuCliente()">
@@ -62,7 +62,7 @@
               <ion-icon  name="eye"></ion-icon>
              
             </ion-button>
-            <ion-button (click)="map.irpMarcadorClientesRutas(i)" color="warning" fill="solid" shape="round" clas  s="btn-sm">
+            <ion-button (click)="irMarcador(i)" color="warning" >
               <ion-icon  name="navigate"></ion-icon>
              
             </ion-button>
@@ -97,10 +97,7 @@
               <ion-icon  name="eye"></ion-icon>
              
             </ion-button>
-            <ion-button *ngIf="cliente.select" (click)="map.irpMarcador(i)" color="warning" fill="solid" shape="round" clas  s="btn-sm">
-              <ion-icon  name="navigate"></ion-icon>
-             
-            </ion-button>
+         
             <ion-button (click)="delete(cliente.cliente)" color="danger" fill="solid" shape="round" clas  s="btn-sm">
               <ion-icon  name="trash"></ion-icon>
              
@@ -114,9 +111,12 @@
     </ion-col>
   </ion-row>
 </ion-col>
-<ion-col size="8" >
-  <section id='mapa'></section>
-  
+<ion-col size="8"  class="ion-no-padding">
+ 
+<div  #mapa  [ngStyle]="{
+  'height': '100%'
+}"></div>
+
 
 
 

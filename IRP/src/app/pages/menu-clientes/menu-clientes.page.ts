@@ -66,7 +66,9 @@ export class MenuClientesPage implements OnInit {
   }
   
   cerrarModal(){
-    this.modalCtrl.dismiss();
+    this.modalCtrl.dismiss({
+    statement:true
+    });
   }
 
   async detalleClientes(cliente: any){
@@ -79,7 +81,7 @@ export class MenuClientesPage implements OnInit {
     });
     return await modal.present();
   }
-  agregarCliente(){
+  async agregarCliente(){
   for(let i = 0; i < this.clientes.clientesArray.length;i++){
     if(this.clientes.clientesArray[i].select === true){
       const duplicate = this.clientes.rutasClientes.findIndex( d => d.IdCliente === this.clientes.clientesArray[i].cliente.IdCliente );
@@ -91,15 +93,15 @@ export class MenuClientesPage implements OnInit {
           this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
         }
        
-        
+         // this.map.createMap(-84.14123589305028,9.982628288210657);
+
+
     }
   }
-        
+  this.message('IRP','Se agrego a la lista de RUTAS');
 
-  this.map.createMap(-84.14123589305028,9.982628288210657);
 
-    this.message('IRP','Se agrego a la lista de RUTAS');
-    this.modalCtrl.dismiss();
+
   }
   async onSubmit(formulario: NgForm){
     this.clientes.presentaLoading('Cargando clientes');
@@ -141,9 +143,9 @@ this.isChecked = !this.isChecked;
       });
   
       await alert.present();
-  
-      const { role } = await alert.onDidDismiss();
-      console.log('onDidDismiss resolved with role', role);
+      this.modalCtrl.dismiss({
+        statement:true
+      });
  
   }
 

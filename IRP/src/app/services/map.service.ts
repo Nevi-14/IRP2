@@ -70,9 +70,6 @@ export class MapService {
     });
 
 
-    this.mapa.on('load', () => {
-      this.mapa.resize();
-    });
 
     this.mapa.addControl(new Mapboxgl.NavigationControl());
     this.mapa.addControl(new Mapboxgl.FullscreenControl());
@@ -97,6 +94,9 @@ if(this.rutasFacturas.rutaFacturasArray[i].CLIENTE === this.clientes.clientesRut
       }
 
     
+      this.mapa.on('load', () => {
+        this.mapa.resize();
+      });
       
   }
   createMarker(cliente: string ,lng: number, lat: number){

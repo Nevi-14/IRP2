@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { Rutas } from '../models/rutas';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, PopoverController } from '@ionic/angular';
 import { Clientes } from '../models/clientes';
 
 import { ClientesService } from './clientes.service';
@@ -15,7 +15,7 @@ import { MapService } from './map.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService, private popOverCtrl: PopoverController) { }
 
   
 rutas: Clientes[]=[];
@@ -26,7 +26,7 @@ rutas: Clientes[]=[];
       test = environment.TestURL;
     }
     const URL = environment.preURL+ test  + environment.postURL + api +id;
-console.log(URL);
+//alert(URL);
 console.log(id)
     return URL;
   }
@@ -42,11 +42,14 @@ console.log(id)
     this.getRutas(ruta).subscribe(
       resp =>{
         this.clientes.rutasClientes = resp.slice(0);
-        this.mapa.createMap(-84.14123589305028,9.982628288210657);
+   //     this.mapa.createMap(-84.14123589305028,9.982628288210657);
     
 
        console.log(this.rutas,'rutas nuevagdgd')
 
+       this.popOverCtrl.dismiss({
+        statement:true
+      });
       }
      
 

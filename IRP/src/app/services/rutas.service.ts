@@ -25,7 +25,7 @@ export class RutasService {
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
-    const URL = environment.preURL  + environment.postURL + api + id;
+    const URL = environment.preURL  + test + environment.postURL + api + id;
 console.log(URL);
     return URL;
   }

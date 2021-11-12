@@ -25,7 +25,8 @@ export class Clientes {
         public ACTIVO: string,
         public LONGITUD: number,
         public LATITUD: number,
-        public FECHA_ACTUALIZACION_UBICACION: Date
+        public FECHA_ACTUALIZACION_UBICACION: Date,
+        public direccion: string
     ){}
 }
 

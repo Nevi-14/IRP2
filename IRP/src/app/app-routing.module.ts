@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { FullScreenComponent } from './mapas/pages/full-screen/full-screen.component';
+import { MarcadoresComponent } from './mapas/pages/marcadores/marcadores.component';
+import { PropiedadesComponent } from './mapas/pages/propiedades/propiedades.component';
+import { ZoomRangeComponent } from './mapas/pages/zoom-range/zoom-range.component';
 
 const routes: Routes = [
   {
@@ -36,6 +40,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/guardar-rutas/guardar-rutas.module').then( m => m.GuardarRutasPageModule)
   },
   {
+    path:'**',
+    redirectTo: 'mapas'
+  },
+  {
     path: 'mantenimiento-rutas',
     loadChildren: () => import('./pages/mantenimiento-rutas/mantenimiento-rutas.module').then( m => m.MantenimientoRutasPageModule)
   },
@@ -46,7 +54,11 @@ const routes: Routes = [
   {
     path: 'cliente-factura',
     loadChildren: () => import('./pages/cliente-factura/cliente-factura.module').then( m => m.ClienteFacturaPageModule)
-  }
+  },
+  {path:'fullscreen', component: FullScreenComponent},
+  {path:'zoom-range', component: ZoomRangeComponent},
+  {path:'marcadores', component: MarcadoresComponent},
+  {path:'propiedades', component: PropiedadesComponent},
 ];
 
 @NgModule({
