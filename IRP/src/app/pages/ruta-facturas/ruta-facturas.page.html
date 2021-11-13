@@ -50,10 +50,10 @@
 <ion-grid style="margin-top: 180px ;">
   <ion-row >
 
-    <ion-col size="12" size-md="3" *ngFor="let cliente of rutaFacturas.rutaFacturasArray | filtro : textoBuscar:'NOMBRE_CLIENTE'; let i = index;">
+    <ion-col size="12" size-md="4" *ngFor="let cliente of rutaFacturas.rutaFacturasArray | filtro : textoBuscar:'NOMBRE_CLIENTE'; let i = index;">
       <ion-card style="height: 280px;">
        
-        <app-mini-mapa [height]="'180px'"   [lngLat]="[cliente.LONGITUD,cliente.LATITUD]"></app-mini-mapa>
+        <app-mini-mapa [height]="'180px'" [width]="'100%'"   [lngLat]="[cliente.LONGITUD,cliente.LATITUD]"></app-mini-mapa>
         <ion-card-header>
           <ion-card-subtitle>{{cliente.NOMBRE_CLIENTE}}</ion-card-subtitle>
         </ion-card-header>

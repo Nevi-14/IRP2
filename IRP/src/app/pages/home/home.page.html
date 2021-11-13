@@ -1,82 +1,71 @@
-<app-header></app-header>
+
+<ion-header id="header" class="ion-no-border" color="primary" style="margin-top:50px">
+
+  
+  <ion-grid  >
+
+    <ion-row >
+
+  
+  <ion-col size="12" size-md="6" style="margin: 0 auto;">
+
+   <ion-card-header>
+     <ion-card-title class="ion-text-center">Gestor de Modulos IRP</ion-card-title>
+   </ion-card-header>
+   <ion-searchbar mode="ios" placeholder="Buscar modulo" inputmode="text"  (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+  </ion-col>
+
+
+    </ion-row>
+  </ion-grid>
+</ion-header>
 
 <ion-content class="ion-padding">
 
 
 <ion-list lines="none">
   <ion-grid >
-    <ion-row >
-      <ion-col size="12">
-        
-      </ion-col>
-      <ion-col size="12">
-        <ion-text color="dark">
-          <h1 class="ion-text-center">Gestor de Modulos del Sistema</h1>
-        </ion-text>
-      </ion-col>
-      <ion-col size="6" style="display: flex; justify-content: center; align-items: center;">
-        <img height="150" width="150" style="margin: 20px;"  src="{{maintenance}}" />
-        <ion-card style="width: 400px; height: 150px;">
-          <ion-card-header>
-            <ion-card-title>Configuracion de Rutas</ion-card-title>
-          </ion-card-header>
-        
-          <ion-card-content>
-    Permite gestionar la relación de Rutas y Zonas
-   <ion-item>
-    <ion-buttons slot="end">
-      <ion-button (click)="mantenimientoRutas()" fill="solid" shape="round" color="dark">
-        Visitar
-      </ion-button>
-    </ion-buttons>
-   </ion-item>
-          </ion-card-content>
-        </ion-card>
-        
-      </ion-col>
-      <ion-col size="6" style="display: flex; justify-content: center; align-items: center;">
-        <img height="150" width="150" style="margin: 20px;"  src="{{routes}}" />
-        <ion-card style="width: 400px; height: 150px;">
-          <ion-card-header>
-            <ion-card-title>Planificacion de Rutas</ion-card-title>
-          </ion-card-header>
-        
-          <ion-card-content>
-   Permite definir la configuracion de Rutas - Clientes
+    <ion-row style="display: flex;justify-content: center;">
 
-            <ion-item>
+  
+        <ng-template ngFor let-module [ngForOf]="modulosArray | filtro : textoBuscar:'titulo'" let-i="index" let-odd="odd" >
+
+
+
+
+          <ion-col size="8">
+
+            <ion-item  (click)="enrutador(module.ruta)">
+              <ion-avatar slot="start">
+                <img [src]="module.imagen">
+              </ion-avatar>
+              <ion-label>
+                <h3>{{module.titulo}}</h3>
+                <p>{{module.descripcion}}</p>
+              </ion-label>
+
               <ion-buttons slot="end">
-                <ion-button (click)="guardarRutas()" fill="solid" shape="round" color="dark">
-                  Visitar
+                <ion-button>
+                  <ion-icon color="primary" name="chevron-forward-outline"></ion-icon>
+        
                 </ion-button>
               </ion-buttons>
-             </ion-item>
-          </ion-card-content>
-        </ion-card>
-        
-      </ion-col>
+              
+            </ion-item>
 
-      <ion-col size="6" style="display: flex; justify-content: center; align-items: center;">
-        <img height="150" width="150" style="margin: 20px;"  src="{{receipts}}" />
-        <ion-card style="width: 400px; height: 150px;">
-          <ion-card-header>
-            <ion-card-title>Planificacion de Entregas</ion-card-title>
-          </ion-card-header>
-        
-          <ion-card-content>
-            Permite gestionar la factura por cliente de cada ruta
+ 
+          </ion-col>
 
-            <ion-item>
-              <ion-buttons slot="end">
-                <ion-button (click)="rutaFacturas()" fill="solid" shape="round" color="dark">
-                  Visitar
-                </ion-button>
-              </ion-buttons>
-             </ion-item>
-          </ion-card-content>
-        </ion-card>
-        
-      </ion-col>
+         
+        </ng-template>
+      
+             
+      
+      
+      
+ 
+
+
     </ion-row>
   </ion-grid>
 </ion-list>

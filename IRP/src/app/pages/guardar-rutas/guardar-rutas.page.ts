@@ -1,17 +1,18 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {  Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as  mapboxgl from 'mapbox-gl';
 import { RutasPage } from '../rutas/rutas.page';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../../services/configuracionruta.service';
-import { ZonasService } from '../../services/zonas.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ClientesService } from '../../services/clientes.service';
-import { ClienteEspejoService } from '../../services/cliente-espejo.service';
-import { MapService } from '../../services/map.service';
+import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
+import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
+import { ClientesService } from '../../services/paginas/clientes/clientes.service';
+import { ClienteEspejoService } from '../../services/paginas/clientes/cliente-espejo.service';
+import { MapService } from '../../services/componentes/mapas/map.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
+import { MarcadoresComponent } from '../../components/mapas/pages/marcadores/marcadores.component';
 
 
 
@@ -28,13 +29,13 @@ interface MarcadorColor {
   templateUrl: './guardar-rutas.page.html',
   styleUrls: ['./guardar-rutas.page.scss'],
 })
-export class GuardarRutasPage implements OnInit ,AfterViewInit{
+export class GuardarRutasPage implements OnInit {
 
   mapSvg = '../assets/home/map.svg';
   imagen = '../assets/home/isa.png';
   textoBuscar = '';
   lngLat: [number,number] = [-84.14123589305028,9.982628288210657];
-  mapa!: mapboxgl.Map;
+  mapa: any;
   @ViewChild('mapa') divMapa!: ElementRef;
   @Input() markers:any;
   marcadores: MarcadorColor[]=[];
@@ -48,39 +49,21 @@ export class GuardarRutasPage implements OnInit ,AfterViewInit{
      //alert('hello')
     
     }
-   
-    ngAfterViewInit(){
-      this.marcadores = [];
-      this.mapa = new mapboxgl.Map({
-        container:this.divMapa.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: this.lngLat,
-        zoom:10,
-        interactive:true
-        });
-    
-        console.log(this.lngLat)
-        new mapboxgl.Marker()
-        .setLngLat(this.lngLat)
-        .addTo(this.mapa);   
-        
-        this.mapa.on('load', () => {
-          this.mapa.resize();
-        });
-
-     this.mapa.addControl(new mapboxgl.NavigationControl());
-     this.mapa.addControl(new mapboxgl.FullscreenControl());
-     this.mapa.addControl(new mapboxgl.GeolocateControl({
-         positionOptions: {
-             enableHighAccuracy: true
-         },
-         trackUserLocation: true
-     }));
-
-     this.leerMarcador();
-     }
-    
-
+  
+    async mapaCompleto(){
+      const modal = await this.modalCtrl.create({
+        component: MarcadoresComponent,
+        cssClass: 'map-markers',
+        componentProps: {
+          markers: this.clientes.rutasClientes,
+          height:'100%',
+          nombre:'NOMBRE',
+          id:'IdCliente'
+        }
+      });
+      return await modal.present();
+    }
+  
   
    async menuCliente(){
 
@@ -95,7 +78,7 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
 
        const { data } = await modal.onDidDismiss();
        if(data.statement === true){
-        this.ngAfterViewInit();
+    //  this.leerMarcador();
        }
      }
      
@@ -179,7 +162,7 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
       
           const { data } = await popover.onDidDismiss();
           if(data.statement === true){
-            this.ngAfterViewInit();
+      //   this.leerMarcador();
           }
          //alert(data.statement)
         }

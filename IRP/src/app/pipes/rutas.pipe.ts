@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { RutasService } from '../services/rutas.service';
+import { RutasService } from '../services/paginas/rutas/rutas.service';
 
 @Pipe({
   name: 'rutas'

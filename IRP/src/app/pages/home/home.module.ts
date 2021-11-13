@@ -6,6 +6,7 @@ import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { ComponentsModule } from '../../components/components.module';
+import { FiltroPipe } from '../../pipes/filtro.pipe copy';
 
 
 @NgModule({
@@ -16,6 +17,6 @@ import { ComponentsModule } from '../../components/components.module';
     HomePageRoutingModule,
     ComponentsModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, FiltroPipe]
 })
 export class HomePageModule {}

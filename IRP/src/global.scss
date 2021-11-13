@@ -234,3 +234,17 @@ font-size: 10px;
       position: absolute;
     }
   }
+
+
+.mapboxgl-popup {
+    max-width: 400px;
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+
+    .mapboxgl-popup-close-button{
+        display: none;
+    }
+
+    .mapboxgl-popup-content-wrapper{
+     padding: 1%;
+    }

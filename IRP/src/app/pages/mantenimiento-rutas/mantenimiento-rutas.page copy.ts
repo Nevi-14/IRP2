@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ZonasService } from '../../services/zonas.service';
+import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
+import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
 import { RutaZonaPage } from '../ruta-zona/ruta-zona.page';
 
 @Component({

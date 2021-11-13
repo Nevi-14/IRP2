@@ -4,11 +4,11 @@ import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../../services/configuracionruta.service';
-import { ZonasService } from '../../services/zonas.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ClientesService } from '../../services/clientes.service';
-import { ClienteEspejoService } from '../../services/cliente-espejo.service';
-import { MapService } from '../../services/map.service';
+import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
+import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
+import { ClientesService } from '../../services/paginas/clientes/clientes.service';
+import { ClienteEspejoService } from '../../services/paginas/clientes/cliente-espejo.service';
+import { MapService } from '../../services/componentes/mapas/map.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
 @Component({

@@ -5,17 +5,7 @@
 <ion-grid >
   <ion-row>
     <ion-col size="5">
-      <ion-row>
-    
-
-
-        <ion-col size="12" id="mapaCliente" >
-  
-
-        </ion-col>
-
-
-      </ion-row>
+      <app-mini-mapa [height]="'400px'" [width]="'100%'"   [lngLat]="[detalleCliente.LONGITUD,detalleCliente.LATITUD]"></app-mini-mapa>
     </ion-col>
     <ion-col size="7">
 <ion-row>

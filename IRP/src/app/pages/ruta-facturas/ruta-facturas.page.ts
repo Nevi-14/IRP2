@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { MapService } from '../../services/map.service';
+import { MapService } from '../../services/componentes/mapas/map.service';
 import { RutasPage } from '../rutas/rutas.page';
-import { RutasService } from '../../services/rutas.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
+import { RutasService } from '../../services/paginas/rutas/rutas.service';
+import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
+import { RutaFacturasService } from 'src/app/services/paginas/rutas/ruta-facturas.service';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteFacturaPage } from '../cliente-factura/cliente-factura.page';
-import { ClientesService } from '../../services/clientes.service';
-import { MarcadoresComponent } from 'src/app/mapas/pages/marcadores/marcadores.component';
+import { ClientesService } from '../../services/paginas/clientes/clientes.service';
+import { MarcadoresComponent } from 'src/app/components/mapas/pages/marcadores/marcadores.component';
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -90,7 +90,9 @@ console.log('rutas ', this.clientes.clientes , 'cliente' , cliente)
       cssClass: 'map-markers',
       componentProps: {
         markers: this.rutaFacturas.rutaFacturasArray,
-        height:'100%'
+        height:'100%',
+        nombre:'NOMBRE_CLIENTE',
+        id:'CLIENTE'
       }
     });
     return await modal.present();

@@ -1,12 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
-import { MapService } from 'src/app/services/map.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutaZonaService } from '../../services/ruta-zona.service';
-import { ClientesService } from '../../services/clientes.service';
-import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
+import { MapService } from 'src/app/services/componentes/mapas/map.service';
+import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
+import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
+
+import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
+
+import { RutaFacturasService } from 'src/app/services/paginas/rutas/ruta-facturas.service';
+import { RutaZonaService } from 'src/app/services/paginas/rutas/ruta-zona.service';
+import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
 
 @Component({
   selector: 'app-rutas',

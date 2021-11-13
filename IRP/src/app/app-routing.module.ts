@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { FullScreenComponent } from './mapas/pages/full-screen/full-screen.component';
-import { MarcadoresComponent } from './mapas/pages/marcadores/marcadores.component';
-import { PropiedadesComponent } from './mapas/pages/propiedades/propiedades.component';
-import { ZoomRangeComponent } from './mapas/pages/zoom-range/zoom-range.component';
+import { FullScreenComponent } from './components/mapas/pages/full-screen/full-screen.component';
+import { MarcadoresComponent } from './components/mapas/pages/marcadores/marcadores.component';
+import { PropiedadesComponent } from './components/mapas/pages/propiedades/propiedades.component';
+import { ZoomRangeComponent } from './components/mapas/pages/zoom-range/zoom-range.component';
 
 const routes: Routes = [
   {
