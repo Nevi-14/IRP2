@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
+import { ClientesService } from '../../services/paginas/clientes/clientes.service';
 import { CantonesService } from '../../services/paginas/organizacion territorial/cantones.service';
 import { ProvinciasService } from '../../services/paginas/organizacion territorial/provincias.service';
 import { DistritosService } from '../../services/paginas/organizacion territorial/distritos.service';
 import { Clientes } from 'src/app/models/clientes';
 import { NgForm } from '@angular/forms';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
-import { MapService } from 'src/app/services/componentes/mapas/map.service';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
 import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
+import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
+import { MapService } from '../../services/componentes/mapas/map.service';
+import { ClienteEspejoService } from '../../services/paginas/clientes/cliente-espejo.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -91,7 +91,6 @@ export class MenuClientesPage implements OnInit {
         this.clientes.clientesArray.splice(duplicate, 1);
         }else{
           this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
-          this.clientes.nuevosClientes.push(this.clientes.clientesArray[i].cliente)
         }
        
          // this.map.createMap(-84.14123589305028,9.982628288210657);
@@ -143,10 +142,10 @@ this.isChecked = !this.isChecked;
         buttons: ['OK']
       });
   
+      await alert.present();
       this.modalCtrl.dismiss({
         statement:true
       });
-      await alert.present();
  
   }
 

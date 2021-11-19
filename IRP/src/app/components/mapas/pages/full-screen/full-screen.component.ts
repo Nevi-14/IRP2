@@ -50,7 +50,7 @@ export class FullScreenComponent implements AfterViewInit {
   
  ngAfterViewInit(){
   this.mapa = new mapboxgl.Map({
-    container:this.divMapa.nativeElement,
+    container:'mapa',
     style: 'mapbox://styles/mapbox/streets-v11',
     center: this.lngLat,
     zoom:10,

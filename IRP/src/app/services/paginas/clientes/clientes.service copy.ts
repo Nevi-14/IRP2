@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-
+import { Clientes } from '../../../models/clientes';
+import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-
-import { LoadingController } from '@ionic/angular';
-import { Clientes } from 'src/app/models/clientes';
 import { ZonasService } from '../organizacion territorial/zonas.service';
 import { RutasService } from '../rutas/rutas.service';
-import { environment } from 'src/environments/environment';
+import { LoadingController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,13 +15,8 @@ clientesRutas = [];
 isChecked = false;
 clientesArray = [];
 
-//clientes actuales
 
 rutasClientes: Clientes[]=[];
-nuevosClientes: Clientes[]=[];
-
-
-
   constructor(private http: HttpClient, private zonas: ZonasService, private rutas: RutasService,private loadingCtrl: LoadingController) { }
 
 
@@ -84,13 +77,10 @@ console.log(URL)
         cliente:this.clientes[i],
         select:this.isChecked
       }
-    this.clientesArray.push(objectElement)
-
+    this.clientesArray.push(this.clientes[i])
     console.log('cleintes array',this.clientesArray);
     this.loadingDissmiss()
     }
-
-
   }
   async presentaLoading( mensaje: string ){
     this.loading = await this.loadingCtrl.create({

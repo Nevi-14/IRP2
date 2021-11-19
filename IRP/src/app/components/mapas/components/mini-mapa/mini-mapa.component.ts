@@ -28,10 +28,14 @@ export class MiniMapaComponent implements AfterViewInit {
         interactive:this.interactive
       });
   
-      new mapboxgl.Marker()
+      mapa.on('load', () => {
+        mapa.resize();
+        });
+        
+     new mapboxgl.Marker()
       .setLngLat(this.lngLat)
       .addTo(mapa);   
-  
+
    }
 
 }

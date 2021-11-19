@@ -76,7 +76,7 @@ console.log('rutas ', this.clientes.clientes , 'cliente' , cliente)
  //  alert(cliente.NOMBRE)
     const modal = await this.modalCtrl.create({
       component: ClienteFacturaPage,
-      cssClass: 'my-custom-class',
+      cssClass: 'modal-detalle',
       componentProps: {
         cliente: cliente
       }
@@ -89,10 +89,11 @@ console.log('rutas ', this.clientes.clientes , 'cliente' , cliente)
       component: MarcadoresComponent,
       cssClass: 'map-markers',
       componentProps: {
-        markers: this.rutaFacturas.rutaFacturasArray,
+        markers: [{nombre:'NOMBRE_CLIENTE',id:'CLIENTE',arreglo:this.rutaFacturas.rutaFacturasArray,funcion:'mostrarClienteFactura',}],
         height:'100%',
         nombre:'NOMBRE_CLIENTE',
-        id:'CLIENTE'
+        id:'CLIENTE',
+        menu: true
       }
     });
     return await modal.present();

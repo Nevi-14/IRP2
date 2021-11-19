@@ -50,27 +50,38 @@
 <ion-grid style="margin-top: 180px ;">
   <ion-row >
 
-    <ion-col size="12" size-md="4" *ngFor="let cliente of rutaFacturas.rutaFacturasArray | filtro : textoBuscar:'NOMBRE_CLIENTE'; let i = index;">
-      <ion-card style="height: 280px;">
+    <ion-col size="12" size-md="3" *ngFor="let cliente of rutaFacturas.rutaFacturasArray | filtro : textoBuscar:'NOMBRE_CLIENTE'; let i = index;">
+      <ion-card>
        
-        <app-mini-mapa [height]="'180px'" [width]="'100%'"   [lngLat]="[cliente.LONGITUD,cliente.LATITUD]"></app-mini-mapa>
-        <ion-card-header>
-          <ion-card-subtitle>{{cliente.NOMBRE_CLIENTE}}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
+<ion-grid >
+  <ion-row>
+    <ion-col size="12">
+      <app-mini-mapa [height]="'180px'" [width]="'100%'"   [lngLat]="[cliente.LONGITUD,cliente.LATITUD]"></app-mini-mapa>
 
 
-  
+    </ion-col>
+    <ion-col size="12">
+      <ion-card-header>
+        <ion-card-subtitle>{{cliente.NOMBRE_CLIENTE}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
 
-      <ion-buttons slot="secondary" style="display: flex; justify-content: end;">
-        <ion-button color="dark" (click)="mostrarClienteFactura(cliente)">
-          <ion-icon slot="icon-only" name="eye"></ion-icon>
-        </ion-button>
-        <ion-button color="danger">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-        </ion-card-content>
+
+
+
+    <ion-buttons slot="secondary" style="display: flex; justify-content: end;">
+      <ion-button color="dark" (click)="mostrarClienteFactura(cliente)">
+        <ion-icon slot="icon-only" name="eye"></ion-icon>
+      </ion-button>
+      <ion-button color="danger">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+      </ion-card-content>
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
       </ion-card>
     

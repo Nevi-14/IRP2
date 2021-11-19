@@ -44,7 +44,7 @@ html,body {
     }
   }
   .scroll {
-    max-height: 600px;
+    max-height: 250px;
     position: relative;
     overflow: hidden;
     overflow-y: auto;
@@ -107,6 +107,18 @@ html,body {
       --left:0;
       --width: 85% !important;
       --height: 85%;
+      position: absolute;
+    }
+  }
+
+  .modal-detalle{
+    --backdrop-opacity: 0.8 !important;
+  
+    .modal-wrapper {
+      --position:absolute;
+      --left:0;
+      --width: 70% !important;
+      --height: 60%;
       position: absolute;
     }
   }
@@ -247,4 +259,17 @@ font-size: 10px;
 
     .mapboxgl-popup-content-wrapper{
      padding: 1%;
+    }
+
+    .zoom{
+      position: fixed;
+      bottom: 10px;
+      left: 30px;
+      z-index: 99999;
+  
+      overflow: hidden;
+      overflow-y: auto;
+      ::-webkit-scrollbar {
+        display: none;
+      }
     }

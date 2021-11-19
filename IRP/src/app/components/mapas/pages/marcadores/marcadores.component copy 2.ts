@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
 import { MarcadoresService } from 'src/app/services/componentes/mapas/marcadores.service';
@@ -35,13 +35,13 @@ arreglo:any
   
     }
 
-    .ion-list{
+    ion-list{
       position: fixed;
       top: 0px;
       right: 0px;
       z-index: 99999;
       height:100%;
-      width:220px;
+      width:180px;
       overflow: hidden;
       overflow-y: auto;
       ::-webkit-scrollbar {
@@ -51,7 +51,7 @@ arreglo:any
     `
   ]
 })
-export class MarcadoresComponent implements AfterViewInit, OnInit, OnDestroy {
+export class MarcadoresComponent implements AfterViewInit, OnInit {
   @ViewChild('mapa') divMapa!: ElementRef;
   mapa!: mapboxgl.Map;
   marcadores: Marcadores[]=[];
@@ -64,11 +64,7 @@ export class MarcadoresComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() menu:boolean;
   constructor(private modalCtrl:ModalController, private marcadoresService: MarcadoresService) { }
 
-  ngOnDestroy(){
-    this.mapa.off('zoom', ()=>{});
-    this.mapa.off('zoomend', ()=>{});
-    this.mapa.off('move', ()=>{});
-  }
+  
 ngOnInit(){
   this.leerMarcador(this.markers);
 }
@@ -97,20 +93,24 @@ if(this.marcadores){
       draggable: false
   
     })
-    console.log(item)
+
+
     const miniPopup = new  mapboxgl.Popup();
     const nombre = item.nombre;
     miniPopup.setText(  item.id + ' ' + nombre )
     newMarker.setPopup(miniPopup);
     newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+    
     .addTo(this.mapa);
+    this.mapa.on('load', () => {
+      this.mapa.resize();
+    });
+
   })
 }
 
-this.mapa.on('load', () => {
-  this.mapa.resize();
-});
 
+   
 
 
 
@@ -151,7 +151,14 @@ console.log(arreglo,'dhdhdh')
    
     defaultMarker.setLngLat(this.center)
 
-    
+    this.marcadores.push({
+      id:'ISLEÑA',
+      funcion:'',
+      cliente:'ISLEÑA',
+      nombre:'ISLEÑA',
+      marker:defaultMarker,
+      color:'#DDD'
+    })
 if(arreglo){
   for(let i =0; i < arreglo.length ;i++)
   {
@@ -212,23 +219,5 @@ enrutador(expression, id){
 cerrarModal(){
 this.modalCtrl.dismiss();
 }
-
-zoomCambio(valor: string){
-  this.mapa.zoomTo(Number(valor));
-}
-
-zoomIn(){
-  this.mapa.zoomIn();
-  this.zoomLevel = this.mapa.getZoom();
-  console.log('zoom in')
-
-}
-zoomOut(){
-  this.mapa.zoomOut();
-  this.zoomLevel = this.mapa.getZoom();
-  console.log('zoom out')
-}
-
-
-
+ 
 }

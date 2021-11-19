@@ -4,25 +4,45 @@
 
 
 
-<ion-list lines="none" >
+<ion-list lines="none" *ngIf="menu" class="ion-list">
 
   <ion-header class="ion-no-border">
+    
     <ion-toolbar >
-      <ion-title><ion-badge color="dark" mode="ios">Clientes</ion-badge></ion-title>
+      <ion-title slot="start"><ion-badge color="dark" mode="ios">Clientes</ion-badge></ion-title>
       <ion-buttons slot="end">
+
+        <ion-buttons slot="start">
+          <ion-button (click)="zoomOut()">
+         <ion-icon name="remove-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button (click)="zoomIn()">
+              <ion-icon  name="add"></ion-icon>
+              
+          </ion-button>
+      </ion-buttons>
+
         <ion-button (click)="cerrarModal()" >
-          <ion-icon name="chevron-back-outline"></ion-icon>
+          <ion-icon name="close-outline"></ion-icon>
         </ion-button>
         </ion-buttons>
     </ion-toolbar>
+
+
+    
   </ion-header>
 
 
+
     <ion-item   *ngFor="let item of marcadores; let i = index">
-      <ion-label slot="start">{{item.id}}</ion-label>
+ 
       <ion-buttons slot="end">
-        <ion-button (click)="detalleClientes(item.cliente)" >
-          <ion-icon  name="eye"></ion-icon>
+        <ion-label slot="start">{{item.id}}</ion-label>
+        <ion-button (click)="detalleClientes(item.cliente)" [ngStyle]="{
+          'color': item.color
+      }" >
+        <ion-img style="height: 30px; width: 30px;" src="../assets/icons/user-info.svg"></ion-img>
          
         </ion-button>
         <ion-button (click)="irMarcador( item.marker! )">
@@ -30,6 +50,8 @@
             'color': item.color
         }"></ion-icon>
   
+
+        
         </ion-button>
       </ion-buttons>
     </ion-item>

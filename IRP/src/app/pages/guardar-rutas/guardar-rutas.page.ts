@@ -13,7 +13,20 @@ import { MapService } from '../../services/componentes/mapas/map.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
 import { MarcadoresComponent } from '../../components/mapas/pages/marcadores/marcadores.component';
+interface Marcadores{
+  id:string,
+  cliente:any,
+  color: string,
+  nombre: string,
+  marker?: mapboxgl.Marker,
+  centro?:[number,number]
+}
 
+interface objectoArreglo{
+nombre:string,
+id:string,
+arreglo:any
+}
 
 
 interface MarcadorColor {
@@ -28,17 +41,28 @@ interface MarcadorColor {
   selector: 'app-guardar-rutas',
   templateUrl: './guardar-rutas.page.html',
   styleUrls: ['./guardar-rutas.page.scss'],
+  styles: [
+    `
+  
+    #mapa {
+      height:100%;
+     width:100%;
+  
+    }
+
+    `
+  ]
 })
 export class GuardarRutasPage implements OnInit {
 
   mapSvg = '../assets/home/map.svg';
   imagen = '../assets/home/isa.png';
   textoBuscar = '';
-  lngLat: [number,number] = [-84.14123589305028,9.982628288210657];
-  mapa: any;
   @ViewChild('mapa') divMapa!: ElementRef;
-  @Input() markers:any;
-  marcadores: MarcadorColor[]=[];
+  mapa!: mapboxgl.Map;
+  marcadores: Marcadores[]=[];
+  zoomLevel: number =12;
+  center: [number,number] = [ -84.12216755918627, 10.003022709670836 ];
     constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService  , route:ActivatedRoute, private popOverCrtl: PopoverController) {
 
 
@@ -46,24 +70,134 @@ export class GuardarRutasPage implements OnInit {
   
     ngOnInit(){
  
-     //alert('hello')
+      this.generarMapa(true);
+    
     
     }
+   generarMapa(marcadores){
+    this.marcadores= [];
+      this.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
+      
+       this.mapa = new mapboxgl.Map({
+         container: 'mapa',
+         style: 'mapbox://styles/mapbox/streets-v11?optimize=true',
+         center: this.center,
+         zoom: this.zoomLevel
+         });
+   
+         const defaultMarker = new mapboxgl.Marker()
+         const miniPopupDe = new  mapboxgl.Popup();
+         miniPopupDe.setText('ISLEÑA')
+         defaultMarker.setPopup(miniPopupDe);
+        
+         defaultMarker.setLngLat(this.center)
+        .addTo(this.mapa)
+        .togglePopup();
+        
+   if(marcadores){
+
+if(this.marcadores){
+  this.marcadores.forEach(item=>{
+    const newMarker= new mapboxgl.Marker({
+      color:item.color,
+      draggable: false
   
-    async mapaCompleto(){
-      const modal = await this.modalCtrl.create({
-        component: MarcadoresComponent,
-        cssClass: 'map-markers',
-        componentProps: {
-          markers: this.clientes.rutasClientes,
-          height:'100%',
-          nombre:'NOMBRE',
-          id:'IdCliente'
+    })
+    console.log(item)
+    const miniPopup = new  mapboxgl.Popup();
+    const nombre = item.nombre;
+    miniPopup.setText(  item.id + ' ' + nombre )
+    newMarker.setPopup(miniPopup);
+    newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+    .addTo(this.mapa);
+  })
+}
+   }
+   this.mapa.addControl(new mapboxgl.NavigationControl());
+   this.mapa.addControl(new mapboxgl.FullscreenControl());
+   this.mapa.addControl(new mapboxgl.GeolocateControl({
+       positionOptions: {
+           enableHighAccuracy: true
+       },
+       trackUserLocation: true
+   }));
+   this.mapa.on('load', () => {
+     this.mapa.resize();
+   });
+   
+ 
+   
+   
+     }
+
+     borrarMarcador(id){
+
+      const i =   this.marcadores.findIndex( m => m.id === id);
+    
+      if(i > 0){
+        this.marcadores[i].marker?.remove();
+        this.marcadores.splice(i, 1);
+  
+    
         }
-      });
-      return await modal.present();
+      }
+     borrarMarcadores(){
+       console.log(this.marcadores,'marcadores')
+      this.marcadores = [];
+      console.log(this.marcadores,'borrados')
+      this.generarMapa(false);
+     }
+     leerMarcador(arreglo:objectoArreglo[]){
+      console.log('before marcadores',this.marcadores)
+      this.marcadores = [];
+      console.log('after reset marcadores',this.marcadores)
+  if(arreglo){
+    for(let i =0; i < arreglo.length ;i++)
+    {
+        
+      for(let index = 0 ; index < arreglo[i].arreglo.length; index ++){
+
+     //   alert(arreglo[0].arreglo[index][arreglo[i].nombre])
+        const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
+        const newMarker= new mapboxgl.Marker({
+          color:color,
+          draggable: false 
+        })
+        newMarker.setLngLat([arreglo[i].arreglo[index].LONGITUD,arreglo[i].arreglo[index].LATITUD]!)
+        this.marcadores.push({
+          id:arreglo[i].arreglo[index][arreglo[i].id],
+          cliente:arreglo[i].arreglo[index],
+          nombre:arreglo[i].arreglo[index][arreglo[i].nombre],
+          marker:newMarker,
+          color:color
+        })
+      }
+
+    
+    } 
+    console.log('after new marcadores',this.marcadores)
+  } 
+
+  if(this.marcadores){
+
+
+    this.marcadores.forEach(item=>{
+      const newMarker= new mapboxgl.Marker({
+        color:item.color,
+        draggable: false
+    
+      })
+      console.log(item)
+      const miniPopup = new  mapboxgl.Popup();
+      const nombre = item.nombre;
+      miniPopup.setText(  item.id + ' ' + nombre )
+      newMarker.setPopup(miniPopup);
+      newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+      .addTo(this.mapa);
+    })
+  }
+
     }
-  
   
    async menuCliente(){
 
@@ -77,8 +211,11 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
        await modal.present();
 
        const { data } = await modal.onDidDismiss();
+       
        if(data.statement === true){
-    //  this.leerMarcador();
+   
+        this.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
+      
        }
      }
      
@@ -98,7 +235,7 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
     async detalleClientes(cliente){
       const modal = await this.modalCtrl.create({
         component: DetalleClientesPage,
-        cssClass: 'modal-md',
+        cssClass: 'modal-detalle',
         componentProps:{
           detalleCliente: cliente
         }
@@ -130,7 +267,8 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
       for( let index = 0; index < this.clientes.clientesRutas.length ; index++){   
       if(this.clientes.clientesRutas[index].cliente.IdCliente === cliente.IdCliente){
         this.clientes.clientesRutas.splice(index,1);
-        this.map.createMap(-84.14123589305028,9.982628288210657);
+        this.borrarMarcador( cliente.IdCliente);
+   //     this.map.createMap(-84.14123589305028,9.982628288210657);
 
     
         
@@ -141,6 +279,30 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
         }
   
 
+        irMarcador(id){
+
+        const i =   this.marcadores.findIndex( m => m.id === id);
+        console.log(id , i)
+        if(i >= 0){
+
+console.log(this.marcadores[i].marker.getLngLat())
+this.mapa.flyTo(
+  {center: this.marcadores[i].marker.getLngLat(),zoom:18}
+  )
+          if(this.marcadores[i].marker.getLngLat()){
+            this.mapa.flyTo(
+              {center: this.marcadores[i].marker.getLngLat(),zoom:18}
+              )
+          }else{
+            alert('el usuario no tiene longitud ni atirud')
+          }
+         
+        }
+     
+          }
+      
+      
+      
   
   
         async mostrarRuta(evento) {
@@ -162,7 +324,9 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
       
           const { data } = await popover.onDidDismiss();
           if(data.statement === true){
-      //   this.leerMarcador();
+     
+            this.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
+      
           }
          //alert(data.statement)
         }
@@ -200,60 +364,22 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
   this.clienteEspejo.rutas = [];
         }
   
-        leerMarcador(){
-       //')
-   //    alert(this.clientes.rutasClientes.length)
-
-   this.marcadores = [];
-                for(let i =0; i< this.clientes.rutasClientes.length ;i++)
-              {
-                const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
-                const newMarker= new mapboxgl.Marker({
-                  color:color,
-                  draggable: true
-              
-                }).setLngLat([this.clientes.rutasClientes[i].LONGITUD,this.clientes.rutasClientes[i].LATITUD]!)
-                .addTo(this.mapa);
-                this.marcadores.push({
-                  nombre:this.clientes.rutasClientes[i].NOMBRE,
-                  marker:newMarker,
-                  color:color
-                })
-              
-              
-              }  
-
-              //alert(this.clientes.clientesRutas.length)
-            //  console.log(this.clientes.clientesRutas.length)
-              for(let i =0; i< this.clientes.clientesRutas.length ;i++)
-              {
-                const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
-                const newMarker= new mapboxgl.Marker({
-                  color:color,
-                  draggable: false
-              
-                }).setLngLat([this.clientes.clientesRutas[i].LONGITUD,this.clientes.clientesRutas[i].LATITUD]!)
-                .addTo(this.mapa);
-                this.marcadores.push({
-                  nombre:this.clientes.clientesRutas[i].NOMBRE,
-                  marker:newMarker,
-                  color:this.clientes.clientesRutas[i].color
-                })
-              
-              
-              }  
-
-
-              
-              console.log(this.marcadores)
-              }
-
-
-              irMarcador( i: number ){
-                this.mapa.flyTo({
-                  center: [ this.clientes.rutasClientes[i].LONGITUD,  this.clientes.rutasClientes[i].LATITUD ],
-                  zoom: 16,
-                });
-              }
+ 
+        async mapaCompleto(){
+          console.log('rutas dsfwd',this.clientes.rutasClientes,this.clientes.clientesRutas)
+          const modal = await this.modalCtrl.create({
+            component: MarcadoresComponent,
+            cssClass: 'map-markers',
+            componentProps: {
+              markers: [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes ,     funcion:'detalleClientes',},{nombre:'NOMBRE_CLIENTE',id:'CLIENTE',arreglo:this.clientes.nuevosClientes,   funcion:'detalleClientes',}],
+              height:'100%',
+              nombre:'NOMBRE_CLIENTE',
+              id:'CLIENTE',
+              menu: true
+            }
+          });
+          return await modal.present();
+        }
+  
                 
 }
