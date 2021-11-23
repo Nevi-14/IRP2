@@ -8,6 +8,7 @@ import { Clientes } from '../../../models/clientes';
 
 import { ClientesService } from './clientes.service';
 import { MapService } from '../../componentes/mapas/map.service';
+import { MapaService } from '../../componentes/mapas/mapa.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ import { MapService } from '../../componentes/mapas/map.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService, private popOverCtrl: PopoverController) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService, private popOverCtrl: PopoverController, private map: MapaService) { }
 
   
 rutas: Clientes[]=[];
@@ -38,18 +39,23 @@ console.log(id)
     return this.http.get<Clientes[]>( URL );
   }
 
-  syncRutas(ruta){
+  syncRutas(mapa, ruta){
     this.getRutas(ruta).subscribe(
       resp =>{
+        this.clientes.rutasClientes = [];
+        console.log(resp,'re')
         this.clientes.rutasClientes = resp.slice(0);
-   //     this.mapa.createMap(-84.14123589305028,9.982628288210657);
-    
 
-       console.log(this.rutas,'rutas nuevagdgd')
+    if(mapa){
+      this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
+      console.log(this.clientes.rutasClientes,'rutas consulta')
+      this.map.crearMapa(mapa);
+    }
+   
 
-       this.popOverCtrl.dismiss({
-        statement:true
-      });
+     //  this.popOverCtrl.dismiss({
+       // statement:true
+      //});
       }
      
 

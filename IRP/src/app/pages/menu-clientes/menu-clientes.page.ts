@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { CantonesService } from '../../services/paginas/organizacion territorial/cantones.service';
@@ -11,6 +11,7 @@ import { MapService } from 'src/app/services/componentes/mapas/map.service';
 import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
 import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
+import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -26,7 +27,8 @@ export class MenuClientesPage implements OnInit {
   myvalue = 'OFF';
   textoBuscar = '';
   isChecked = false;
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private map: MapService, private clienteEspejo: ClienteEspejoService) { }
+  @Input() mapa :any
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private map: MapaService, private clienteEspejo: ClienteEspejoService) { }
 
 
 
@@ -95,7 +97,7 @@ export class MenuClientesPage implements OnInit {
         }
        
          // this.map.createMap(-84.14123589305028,9.982628288210657);
-
+         this.map.crearMapa(this.mapa);
 
     }
   }
@@ -110,6 +112,7 @@ this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes
 this.borrarFiltro();
 this.clientes.clientesArray = [];
 this.isChecked = !this.isChecked; 
+
  
   }
 

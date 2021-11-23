@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Clientes } from 'src/app/models/clientes';
 import { ZonasService } from '../organizacion territorial/zonas.service';
 import { RutasService } from '../rutas/rutas.service';
 import { environment } from 'src/environments/environment';
+import { DetalleClientesPage } from 'src/app/pages/detalle-clientes/detalle-clientes.page';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,7 +26,7 @@ nuevosClientes: Clientes[]=[];
 
 
 
-  constructor(private http: HttpClient, private zonas: ZonasService, private rutas: RutasService,private loadingCtrl: LoadingController) { }
+  constructor(private http: HttpClient, private zonas: ZonasService, private rutas: RutasService,private loadingCtrl: LoadingController, private modalCtrl: ModalController) { }
 
 
   getIRPURL( api: string, provincia: string , canton:string , distrito: string ,id: string ){
@@ -61,6 +63,8 @@ console.log(URL)
         this.clientes = resp
        console.log(this.clientes)
        this.syncClientesArray();
+       
+
       }
 
     );
@@ -101,6 +105,26 @@ console.log(URL)
    loadingDissmiss(){
     this.loading.dismiss();
   }
+
+
+
+  
+
+  async detalleClientes(cliente){
+    const modal = await this.modalCtrl.create({
+      component: DetalleClientesPage,
+      cssClass: 'medium-modal',
+      componentProps:{
+        detalleCliente: cliente
+      }
+    });
+    return await modal.present();
+  }
+
+
+
+
+  
 
 }
 

@@ -12,7 +12,8 @@ import { ClienteEspejoService } from '../../services/paginas/clientes/cliente-es
 import { MapService } from '../../services/componentes/mapas/map.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
-import { MarcadoresComponent } from '../../components/mapas/pages/marcadores/marcadores.component';
+import { MapaComponent } from 'src/app/components/mapa/mapa.component';
+
 interface Marcadores{
   id:string,
   cliente:any,
@@ -38,9 +39,9 @@ interface MarcadorColor {
 
 
 @Component({
-  selector: 'app-guardar-rutas',
-  templateUrl: './guardar-rutas.page.html',
-  styleUrls: ['./guardar-rutas.page.scss'],
+  selector: 'app-planificacion-rutas',
+  templateUrl: './planificacion-rutas.page.html',
+  styleUrls: ['./planificacion-rutas.page.scss'],
   styles: [
     `
   
@@ -53,7 +54,7 @@ interface MarcadorColor {
     `
   ]
 })
-export class GuardarRutasPage implements OnInit {
+export class PlanificacionRutasPage implements OnInit {
 
   mapSvg = '../assets/home/map.svg';
   imagen = '../assets/home/isa.png';
@@ -232,18 +233,6 @@ if(this.rutas.ruta.RUTA === '' || this.zonas.zona.ZONA === ''){
 
 
 
-    async detalleClientes(cliente){
-      const modal = await this.modalCtrl.create({
-        component: DetalleClientesPage,
-        cssClass: 'modal-detalle',
-        componentProps:{
-          detalleCliente: cliente
-        }
-      });
-      return await modal.present();
-    }
-  
-
 
     addValue(e, cliente): void {
   
@@ -368,14 +357,13 @@ this.mapa.flyTo(
         async mapaCompleto(){
           console.log('rutas dsfwd',this.clientes.rutasClientes,this.clientes.clientesRutas)
           const modal = await this.modalCtrl.create({
-            component: MarcadoresComponent,
+            component: MapaComponent,
             cssClass: 'map-markers',
             componentProps: {
               markers: [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes ,     funcion:'detalleClientes',},{nombre:'NOMBRE_CLIENTE',id:'CLIENTE',arreglo:this.clientes.nuevosClientes,   funcion:'detalleClientes',}],
               height:'100%',
-              nombre:'NOMBRE_CLIENTE',
-              id:'CLIENTE',
-              menu: true
+              titulo:'Planificación Rutas IRP'
+
             }
           });
           return await modal.present();

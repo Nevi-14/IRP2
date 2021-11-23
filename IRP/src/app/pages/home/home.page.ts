@@ -5,6 +5,7 @@ import { RutasService } from '../../services/paginas/rutas/rutas.service';
 import { ClientesService } from '../../services/paginas/clientes/clientes.service';
 import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
 import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
+import { MapaService } from '../../services/componentes/mapas/mapa.service';
 
 interface Modulos {
   imagen: string,
@@ -21,7 +22,7 @@ interface Modulos {
 export class HomePage implements OnInit {
   modulosArray:Modulos[]=[];
   textoBuscar = '';
-  constructor(private route: Router, private map: MapService, private rutas: RutasService, private clientes:ClientesService, private zonas: ZonasService, private clienteEspejo: ClienteEspejoService) {}
+  constructor(private route: Router, private mapa: MapaService, private rutas: RutasService, private clientes:ClientesService, private zonas: ZonasService, private clienteEspejo: ClienteEspejoService) {}
 
   ngOnInit(){
 
@@ -36,7 +37,7 @@ export class HomePage implements OnInit {
         imagen: '../assets/home/route.png',
         titulo: 'Planificacion de Rutas',
         descripcion: 'Permite definir la configuracion de Rutas - Clientes',
-        ruta: '/guardar-rutas',
+        ruta: '/planificacion-rutas',
       },
       {
         imagen: '../assets/png/receipt.png',
@@ -49,20 +50,26 @@ export class HomePage implements OnInit {
   }
 
   enrutador(ruta){
-    this.route.navigate([ruta]);
+    switch(ruta) {
+      case 'planificacion-rutas':
+        this.guardarRutas();
+        // code block
+        break;
+      case 'ruta-facturas':
+        
+      this.rutaFacturas();
+        break;
+      default:
+        // code block
+    }
   }
 
+
+
   guardarRutas(){
-    this.rutas.ruta.RUTA = '';
-    this.rutas.ruta.DESCRIPCION = '';
-    this.zonas.zona.ZONA = '';
-    this.zonas.zona.NOMBRE = '';
-    this.clientes.clientesRutas = [];
-    this.map.currentMarkers = [];
-    this.clientes.clientesRutas = [];
-    this.clientes.rutasClientes=[];
-    this.clienteEspejo.rutas = [];
-    this.route.navigate(['/guardar-rutas']);
+
+   
+    this.route.navigate(['/planificacion-rutas']);
 
 
   }

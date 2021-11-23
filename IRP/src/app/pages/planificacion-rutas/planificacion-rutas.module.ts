@@ -4,21 +4,22 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GuardarRutasPageRoutingModule } from './guardar-rutas-routing.module';
 
-import { GuardarRutasPage } from './guardar-rutas.page';
+
 import { ComponentsModule } from '../../components/components.module';
 import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
-import { RutasPipe } from '../../pipes/rutas.pipe';
+import { PlanificacionRutasPage } from './planificacion-rutas.page';
+import { PlanificacionPageRoutingModule } from './planificacion-rutas-routing.module';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GuardarRutasPageRoutingModule,
+    PlanificacionPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [GuardarRutasPage, FiltroClientesPipe,RutasPipe]
+  declarations: [PlanificacionRutasPage, FiltroClientesPipe]
 })
-export class GuardarRutasPageModule {}
+export class PlanificacionRutasPageModule {}

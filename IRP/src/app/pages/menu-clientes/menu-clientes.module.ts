@@ -7,17 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { MenuClientesPageRoutingModule } from './menu-clientes-routing.module';
 
 import { MenuClientesPage } from './menu-clientes.page';
-import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
-import { FiltroPipe } from '../../pipes/filtro.pipe';
-import { RutasPipe } from '../../pipes/rutas.pipe';
+import { ComponentsModule } from '../../components/components.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MenuClientesPageRoutingModule
+    ComponentsModule,
+    PipesModule
+
   ],
-  declarations: [MenuClientesPage, FiltroClientesPipe, FiltroPipe, RutasPipe]
+  declarations: [MenuClientesPage]
 })
 export class MenuClientesPageModule {}

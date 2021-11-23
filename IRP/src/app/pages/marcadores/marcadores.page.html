@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Lista de Clientes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-searchbar placeholder="Buscar Cliente" mode="ios" (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list lines="none">
+    <ion-item   *ngFor="let item of marcadores; let i = index">
+
+      <ion-label slot="start">{{item.id}} - {{item.nombre}}</ion-label>
+      <ion-buttons slot="end">
+  
+        <ion-button (click)="clientes.detalleClientes(item.cliente)" [ngStyle]="{
+          'color': item.color
+      }" >
+        <ion-img style="height: 30px; width: 30px;" src="../assets/icons/user-info.svg"></ion-img>
+         
+        </ion-button>
+        <ion-button (click)="mapa.irMarcador( item.marker! )">
+          <ion-icon name="location" [ngStyle]="{
+            'color': item.color
+        }"></ion-icon>
+  
+  
+        
+        </ion-button>
+  
+  
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+  
+
+</ion-content>

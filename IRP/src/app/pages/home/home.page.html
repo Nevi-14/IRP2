@@ -35,7 +35,7 @@
 
           <ion-col size="8">
 
-            <ion-item  (click)="enrutador(module.ruta)">
+            <ion-item [routerLink]="module.ruta">
               <ion-avatar slot="start">
                 <img [src]="module.imagen">
               </ion-avatar>

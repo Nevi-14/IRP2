@@ -8,7 +8,8 @@ import { RutaFacturasService } from 'src/app/services/paginas/rutas/ruta-factura
 import { ActivatedRoute } from '@angular/router';
 import { ClienteFacturaPage } from '../cliente-factura/cliente-factura.page';
 import { ClientesService } from '../../services/paginas/clientes/clientes.service';
-import { MarcadoresComponent } from 'src/app/components/mapas/pages/marcadores/marcadores.component';
+import { MapaComponent } from 'src/app/components/mapa/mapa.component';
+
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -86,7 +87,7 @@ console.log('rutas ', this.clientes.clientes , 'cliente' , cliente)
 
   async mapaCompleto(){
     const modal = await this.modalCtrl.create({
-      component: MarcadoresComponent,
+      component: MapaComponent,
       cssClass: 'map-markers',
       componentProps: {
         markers: [{nombre:'NOMBRE_CLIENTE',id:'CLIENTE',arreglo:this.rutaFacturas.rutaFacturasArray,funcion:'mostrarClienteFactura',}],

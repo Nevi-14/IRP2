@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './encabezados/header.component';
 import { FullScreenComponent } from './mapas/pages/full-screen/full-screen.component';
 import { MiniMapaComponent } from './mapas/components/mini-mapa/mini-mapa.component';
-import { MarcadoresComponent } from './mapas/pages/marcadores/marcadores.component';
+import { MapaComponent } from './mapa/mapa.component';
 
 
 
 @NgModule({
-  declarations: [HeaderComponent,FullScreenComponent,MiniMapaComponent,MarcadoresComponent],
+  declarations: [HeaderComponent,FullScreenComponent,MiniMapaComponent,MapaComponent],
   imports: [
     CommonModule
   ],
   exports: [
-    HeaderComponent,FullScreenComponent,MiniMapaComponent,FullScreenComponent,MarcadoresComponent
+    HeaderComponent,FullScreenComponent,MiniMapaComponent,FullScreenComponent,MapaComponent
 
   ]
 })

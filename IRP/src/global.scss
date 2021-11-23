@@ -211,8 +211,9 @@ app-menu{
 }
 
 .menu-map-popOver{
-
-  --min-width: 350px;
+width: 100%;
+  --min-width: 250px;
+  --min-width: 450px;
   --max-height: 100%;
 
 
@@ -272,4 +273,9 @@ font-size: 10px;
       ::-webkit-scrollbar {
         display: none;
       }
+    }
+
+    ion-toolbar {
+      --background-color: transparent;
+      --ion-color-base: transparent !important;
     }
