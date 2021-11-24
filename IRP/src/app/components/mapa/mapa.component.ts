@@ -61,6 +61,8 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(){
   
     this.map.reset(this.divMapa);
+    this.marcadores = [];
+    this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
     
   }
 ngOnInit(){
