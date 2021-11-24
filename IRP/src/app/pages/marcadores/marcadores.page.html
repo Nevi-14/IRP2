@@ -18,7 +18,7 @@
       <ion-label slot="start">{{item.id}} - {{item.nombre}}</ion-label>
       <ion-buttons slot="end">
   
-        <ion-button (click)="clientes.detalleClientes(item.cliente)" [ngStyle]="{
+        <ion-button (click)="clientes.switchModaldetalle(funcion,item.cliente)" [ngStyle]="{
           'color': item.color
       }" >
         <ion-img style="height: 30px; width: 30px;" src="../assets/icons/user-info.svg"></ion-img>

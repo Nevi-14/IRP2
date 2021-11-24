@@ -19,13 +19,13 @@
       <ion-badge color="dark">Ruta</ion-badge>
     </ion-col>
     <ion-col size="3">
-      <ion-label class="ion-text-left">{{map.ruta.DESCRIPCION}}</ion-label>
+      <ion-label class="ion-text-left">{{rutaZonaData.ruta}}</ion-label>
     </ion-col>
     <ion-col size="3">
       <ion-badge color="dark">Zona</ion-badge>
     </ion-col>
     <ion-col size="3">
-      <ion-label>{{map.zona.NOMBRE}}</ion-label>
+      <ion-label>{{rutaZonaData.zona}}</ion-label>
     </ion-col>
   </ion-row>
 </ion-col>
@@ -40,11 +40,11 @@
       <ion-button  shape="round" fill="solid" color="dark" (click)="informacionMarcadores($event)">
         <ion-icon name="location"></ion-icon>
       </ion-button>
-      <ion-button  shape="round" fill="solid" color="primary" (click)="menuCliente()">
+      <ion-button *ngIf="funcion === 'planificacion-rutas'" shape="round" fill="solid" color="primary" (click)="menuCliente()">
         <ion-icon  name="person-add"></ion-icon>
       </ion-button>
 
-      <ion-button *ngIf="clientes?.clientesRutas?.length > 0"  (click)="postRutas()"  shape="round" fill="solid" color="secondary">
+      <ion-button   *ngIf="funcion === 'planificacion-rutas' && clientes?.clientesRutas?.length > 0" (click)="postRutas()"  shape="round" fill="solid" color="secondary">
     <ion-icon  name="save"></ion-icon>
       </ion-button>
  

@@ -39,19 +39,12 @@ console.log(id)
     return this.http.get<Clientes[]>( URL );
   }
 
-  syncRutas(mapa, ruta){
+  syncRutas(ruta){
     this.getRutas(ruta).subscribe(
       resp =>{
         this.clientes.rutasClientes = [];
         console.log(resp,'re')
         this.clientes.rutasClientes = resp.slice(0);
-
-    if(mapa){
-      this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
-      console.log(this.clientes.rutasClientes,'rutas consulta')
-      this.map.crearMapa(mapa);
-    }
-   
 
      //  this.popOverCtrl.dismiss({
        // statement:true

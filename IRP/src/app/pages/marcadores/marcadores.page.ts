@@ -11,6 +11,8 @@ interface Marcadores{
   marker?: mapboxgl.Marker,
   centro?:[number,number]
 }
+
+
 @Component({
   selector: 'app-marcadores',
   templateUrl: './marcadores.page.html',
@@ -19,6 +21,8 @@ interface Marcadores{
 
 export class MarcadoresPage implements OnInit {
   @Input() marcadores:Marcadores[];
+  
+@Input() funcion:string;
   constructor(private clientes: ClientesService, private mapa: MapaService, private modalCtrl: ModalController) { }
 
   ngOnInit() {

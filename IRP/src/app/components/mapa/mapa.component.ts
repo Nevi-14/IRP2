@@ -53,10 +53,10 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
   zoomLevel: number =12;
   center: [number,number] = [ -84.12216755918627, 10.003022709670836 ];
   // Arreglo de marcadores
-  @Input() markers:any;
+  @Input() marcadores:any;
   @Input() titulo:any;
-
-
+  @Input() funcion: string;
+   rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
   constructor(private modalCtrl:ModalController, private marcadoresService: MarcadoresService, private popOverCrtl:PopoverController, private rutaZona: RutaZonaService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapaService) { }
 
   ngOnDestroy(){
@@ -71,24 +71,13 @@ ngOnInit(){
 
 }
   ngAfterViewInit(): void {
-  this.map.crearMapa(this.divMapa);
+  this.map.crearMapa(this.divMapa, this.marcadores);
 
   }
 
 
 
 
-  async mostrarClienteFactura(cliente) {
-    //  alert(cliente.NOMBRE)
-       const modal = await this.modalCtrl.create({
-         component: ClienteFacturaPage,
-         cssClass: 'modal-detalle',
-         componentProps: {
-           cliente: cliente
-         }
-       });
-       return await modal.present();
-     }
 
 
 
@@ -114,10 +103,6 @@ async configuracionZonaRuta(evento) {
     event: evento,
     translucent: true,
     mode:'ios',
-    componentProps:{
-      rutaFacturas: true,
-      mapa:  this.divMapa
-    },
    backdropDismiss:true
   });
 
@@ -128,23 +113,25 @@ async configuracionZonaRuta(evento) {
   
   if(data.ruta != ''){
 
+  
     const i = this.rutaZona.rutasZonasArray.findIndex( r => r.Ruta === data.ruta );
+    
+   
     if ( i >= 0 ){
-   const  z = this.zonas.zonas.findIndex( z => z.ZONA === this.rutaZona.rutasZonasArray[i].Zona);
-      this.map.ruta.RUTA = this.rutaZona.rutasZonasArray[i].Ruta;
-      this.map.ruta.DESCRIPCION =this.rutaZona.rutasZonasArray[i].Descripcion;
-      this.map.zona.ZONA =  this.zonas.zonas[z].ZONA;
-      this.map.zona.NOMBRE = this.zonas.zonas[z].NOMBRE;
-      this.syncRutas('guardar-rutas')
- 
+      const  z = this.zonas.zonas.findIndex( z => z.ZONA === this.rutaZona.rutasZonasArray[i].Zona);
+         this.rutaZonaData.rutaID = this.rutaZona.rutasZonasArray[i].Ruta;
+         this.rutaZonaData.ruta =this.rutaZona.rutasZonasArray[i].Descripcion;
+         this.rutaZonaData.zonaId =  this.zonas.zonas[z].ZONA;
+         this.rutaZonaData.zona = this.zonas.zonas[z].NOMBRE;
       
-    } else {
-    alert('no se pudo encontrar la ruta'+''+this.rutaZona.rutasZonasArray[i].Descripcion)
-    }
+       }  
 
+    
+    this.syncRutas(this.funcion)
+
+    //this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
   }
 
- return  this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
 
 }
 
@@ -154,7 +141,8 @@ async informacionMarcadores(evento) {
     component: MarcadoresPage,
     cssClass: 'medium-modal',
     componentProps:{
-      marcadores: this.map.marcadores
+      marcadores: this.map.marcadores,
+      funcion: this.funcion
     }
    // backdropDismiss:false
   });
@@ -163,41 +151,37 @@ async informacionMarcadores(evento) {
 
 }
 
-async configuracionMapa() {
-  const modal = await this.modalCtrl.create({
-    component: ConfiguracionMapaPage,
-    cssClass: 'my-custom-class'
-  });
-  return await modal.present();
-}
 
 
 
+  async syncRutas(expression){
 
+ switch(expression){
+    case 'planificacion-rutas':
 
-
-
-  syncRutas(expression){
-
-  switch(expression){
-    case 'guardar-rutas':
-      
-      this.clienteEspejo.syncRutas(this.divMapa, this.map.ruta.RUTA);
+       this.clienteEspejo.syncRutas( this.rutaZonaData.rutaID);
     
-      this.clienteEspejo.rutas = [];
-      this.clientes.clientesRutas = [];
       break;
     case 'rutas-facturas':
-      this.clienteEspejo.syncRutas('',this.map.ruta.RUTA);
+    //  this.clienteEspejo.syncRutas('',this.rutaZonaData.rutaID, this.marcadores);
       this.rutasFacturas.syncRutaFacturas('30', new Date('2021-11-04'));
       break;
     default:
       // code block
   }
+  const result = await this.waitSecondFunction(1);
+
 }
 
 
-
+ waitSecondFunction(seconds:number) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+      this.map.crearMapa(this.divMapa,this.marcadores);
+    }, seconds*1000);
+  });
+}
 
 async menuCliente(){
 

@@ -1,6 +1,19 @@
 #header{
     position: fixed;
-    top: 50px;
+    top: 40px;
     background-color: #FFF;
+    height: 70px;
 
+}
+
+.postcard-container {
+ display: table;
+    position: absolute;
+    background-color: yellow;
+    height: 100%;
+    width: 100%;
+}
+
+.full-screen{
+    height: calc(100vh - 160px);
 }

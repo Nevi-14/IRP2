@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { MapService } from 'src/app/services/componentes/mapas/map.service';
+import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
 
@@ -22,17 +23,17 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapService,private popOverCtrl: PopoverController) { }
+  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapaService,private popOverCtrl: PopoverController) { }
 
   ngOnInit() {
 
   }
   rutaRadioButtuon(ev: any){
     const ruta = ev.target.value;
-     console.log(ruta)
-    this.popOverCtrl.dismiss({
-      ruta:ruta
-    });
+
+       this.popOverCtrl.dismiss({
+        ruta:ruta
+       });
  
   }
 

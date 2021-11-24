@@ -8,6 +8,7 @@ import { ZonasService } from '../organizacion territorial/zonas.service';
 import { RutasService } from '../rutas/rutas.service';
 import { environment } from 'src/environments/environment';
 import { DetalleClientesPage } from 'src/app/pages/detalle-clientes/detalle-clientes.page';
+import { ClienteFacturaPage } from '../../../pages/cliente-factura/cliente-factura.page';
 
 @Injectable({
   providedIn: 'root'
@@ -108,6 +109,21 @@ console.log(URL)
 
 
 
+
+  switchModaldetalle(expression,cliente){
+    switch(expression){
+      case 'planificacion-rutas':
+  
+         this.detalleClientes(cliente);
+      
+        break;
+      case 'rutas-facturas':
+this.mostrarClienteFactura(cliente);
+        break;
+      default:
+        // code block
+    }
+  }
   
 
   async detalleClientes(cliente){
@@ -121,6 +137,17 @@ console.log(URL)
     return await modal.present();
   }
 
+  async mostrarClienteFactura(cliente) {
+    //  alert(cliente.NOMBRE)
+       const modal = await this.modalCtrl.create({
+         component: ClienteFacturaPage,
+         cssClass: 'modal-detalle',
+         componentProps: {
+           cliente: cliente
+         }
+       });
+       return await modal.present();
+     }
 
 
 

@@ -29,22 +29,15 @@ export class MapaService {
   zoomLevel: number =12;
   center: [number,number] = [ -84.12216755918627, 10.003022709670836 ];
 marcadores: Marcadores[]=[];
-zona = {
-  ZONA: '', 
-  NOMBRE: ''
-}
-ruta= {
-  RUTA: '', 
-DESCRIPCION: ''
-}
+
   constructor(private modalCtrl: ModalController, private clientes: ClientesService) { }
 
 
 
 
-  crearMapa(element:ElementRef){
+  crearMapa(element:ElementRef, marcadores){
 
-    
+    console.log(marcadores,'mapa create')
 
     this.mapa = new mapboxgl.Map({
       container: element.nativeElement,
@@ -61,10 +54,10 @@ DESCRIPCION: ''
      .addTo(this.mapa)
      .togglePopup();
      
-if(this.marcadores){
-this.cargarMarcadoresMapa();
+if(marcadores){
+this.leerMarcador(marcadores);
 }
-console.log('marcadores mapa service', this.marcadores)
+console.log('marcadores mapa service', marcadores)
 const extra_options = true;
 
 if(extra_options){
@@ -92,11 +85,7 @@ this.mapa.on('load', () => {
 
     this.clientes.rutasClientes = []
     this.marcadores= [];
-    this.zona.NOMBRE = '';
-    this.zona.ZONA = '';
-  this.ruta.DESCRIPCION ='';
-  this.ruta.RUTA ='';
-this.crearMapa(mapa);
+this.crearMapa(mapa,'');
   console.log(this.marcadores,'mark')
   
   
@@ -104,22 +93,6 @@ this.crearMapa(mapa);
 
 
 
-cargarMarcadoresMapa(){
-  this.marcadores.forEach(item=>{
-    const newMarker= new mapboxgl.Marker({
-      color:item.color,
-      draggable: true
-  
-    })
-    console.log(item)
-    const miniPopup = new  mapboxgl.Popup();
-    const nombre = item.nombre;
-    miniPopup.setText(  item.id + ' ' + nombre )
-    newMarker.setPopup(miniPopup);
-    newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
-    .addTo(this.mapa);
-  })
-}
 
 
 
@@ -157,11 +130,27 @@ if(arreglo){
     }
 
     console.log(this.marcadores,'marcadores array')
+
   
   } 
+
+  
 } 
 
-this.cargarMarcadoresMapa();
+this.marcadores.forEach(item=>{
+  const newMarker= new mapboxgl.Marker({
+    color:item.color,
+    draggable: true
+
+  })
+  console.log(item)
+  const miniPopup = new  mapboxgl.Popup();
+  const nombre = item.nombre;
+  miniPopup.setText(  item.id + ' ' + nombre )
+  newMarker.setPopup(miniPopup);
+  newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+  .addTo(this.mapa);
+})
   }
 
 
@@ -174,10 +163,12 @@ this.cargarMarcadoresMapa();
       }
     
       irMarcador(marker: mapboxgl.Marker){
+       if(marker){
         this.mapa.flyTo(
           {center: marker.getLngLat(),zoom:18}
           )
           this.modalCtrl.dismiss();
+       }
         }
     
       zoomCambio(valor: string){
