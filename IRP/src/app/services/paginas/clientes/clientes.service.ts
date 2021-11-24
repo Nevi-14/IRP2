@@ -141,7 +141,7 @@ this.mostrarClienteFactura(cliente);
     //  alert(cliente.NOMBRE)
        const modal = await this.modalCtrl.create({
          component: ClienteFacturaPage,
-         cssClass: 'modal-detalle',
+         cssClass: 'medium-modal',
          componentProps: {
            cliente: cliente
          }
