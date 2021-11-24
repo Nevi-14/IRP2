@@ -66,9 +66,6 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 ngOnInit(){
 
-
-
-
 }
   ngAfterViewInit(): void {
   this.map.crearMapa(this.divMapa, this.marcadores);
@@ -77,21 +74,9 @@ ngOnInit(){
 
 
 
-
-
-
-
-
-
-
-  
-
-
 cerrarModal(){
 this.modalCtrl.dismiss();
 }
-
-
 
 
 
@@ -132,7 +117,6 @@ async configuracionZonaRuta(evento) {
     //this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
   }
 
-
 }
 
 async informacionMarcadores(evento) {
@@ -146,7 +130,7 @@ async informacionMarcadores(evento) {
     }
    // backdropDismiss:false
   });
-
+  
   await modal.present();
 
 }

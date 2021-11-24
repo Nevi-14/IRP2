@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { FullScreenComponent } from './components/mapas/pages/full-screen/full-screen.component';
 import { MapaComponent } from './components/mapa/mapa.component';
 
-import { PropiedadesComponent } from './components/mapas/pages/propiedades/propiedades.component';
-import { ZoomRangeComponent } from './components/mapas/pages/zoom-range/zoom-range.component';
 
 const routes: Routes = [
   {
@@ -56,10 +53,7 @@ const routes: Routes = [
     path: 'cliente-factura',
     loadChildren: () => import('./pages/cliente-factura/cliente-factura.module').then( m => m.ClienteFacturaPageModule)
   },
-  {path:'fullscreen', component: FullScreenComponent},
-  {path:'zoom-range', component: ZoomRangeComponent},
-  {path:'mapa', component: MapaComponent},
-  {path:'propiedades', component: PropiedadesComponent},
+  
   {
     path: 'marcadores',
     loadChildren: () => import('./pages/marcadores/marcadores.module').then( m => m.MarcadoresPageModule)
