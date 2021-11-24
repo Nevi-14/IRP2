@@ -17,7 +17,7 @@ export class LogInPage implements OnInit {
 
   loginMethod(){
     this.login.verified = true;
-    this.route.navigate(['/home']);
+    this.route.navigate(['/inicio']);
   }
 
 }

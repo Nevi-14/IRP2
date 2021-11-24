@@ -6,7 +6,6 @@ import { DetalleClientesPage } from '../../pages/detalle-clientes/detalle-client
 import { ClienteFacturaPage } from '../../pages/cliente-factura/cliente-factura.page';
 import { RutasPage } from 'src/app/pages/rutas/rutas.page';
 import { MarcadoresPage } from 'src/app/pages/marcadores/marcadores.page';
-import { ConfiguracionMapaPage } from 'src/app/pages/configuracion-mapa/configuracion-mapa.page';
 import { RutaZonaService } from 'src/app/services/paginas/rutas/ruta-zona.service';
 import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
 import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MapaComponent } from './components/mapa/mapa.component';
+import { InicioPageModule } from './pages/inicio/inicio.module';
 
 
 const routes: Routes = [
@@ -14,8 +15,8 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+    path: 'inicio',
+    loadChildren: () => import('./pages/inicio/inicio.module').then( m => m.InicioPageModule)
   },
   {
     path: 'menu-clientes',
@@ -58,10 +59,7 @@ const routes: Routes = [
     path: 'marcadores',
     loadChildren: () => import('./pages/marcadores/marcadores.module').then( m => m.MarcadoresPageModule)
   },
-  {
-    path: 'configuracion-mapa',
-    loadChildren: () => import('./pages/configuracion-mapa/configuracion-mapa.module').then( m => m.ConfiguracionMapaPageModule)
-  },
+ 
 ];
 
 @NgModule({

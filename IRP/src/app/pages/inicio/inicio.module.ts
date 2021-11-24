@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { HomePage } from './home.page';
+import { InicioPage } from './inicio.page';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { InicioPageRoutingModule } from './inicio-routing.module';
 import { ComponentsModule } from '../../components/components.module';
 import { FiltroPipe } from '../../pipes/filtro.pipe copy';
 
@@ -14,9 +14,9 @@ import { FiltroPipe } from '../../pipes/filtro.pipe copy';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
+    InicioPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [HomePage, FiltroPipe]
+  declarations: [InicioPage, FiltroPipe]
 })
-export class HomePageModule {}
+export class InicioPageModule {}
