@@ -88,7 +88,7 @@ async configuracionZonaRuta(evento) {
     event: evento,
     translucent: true,
     mode:'ios',
-   backdropDismiss:true
+   backdropDismiss:false
   });
 
    popover.present();

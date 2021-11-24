@@ -36,7 +36,7 @@ console.log(URL);
    
     this.getRutasZonas().subscribe(
       resp =>{
-     
+     console.log(resp)
         this.rutasZonasArray = resp;
         console.log('rutas',this.rutasZonasArray.length)
       }
