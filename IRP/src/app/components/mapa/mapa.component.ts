@@ -164,12 +164,12 @@ async informacionMarcadores(evento) {
       break;
     case 'rutas-facturas':
     //  this.clienteEspejo.syncRutas('',this.rutaZonaData.rutaID, this.marcadores);
-      this.rutasFacturas.syncRutaFacturas('30', new Date('2021-11-04'));
+      this.rutasFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, new Date());
       break;
     default:
       // code block
   }
-  const result = await this.waitSecondFunction(1);
+  const result = await this.waitSecondFunction(2);
 
 }
 

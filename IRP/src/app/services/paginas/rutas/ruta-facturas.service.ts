@@ -18,7 +18,7 @@ export class RutaFacturasService {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + formatYmd(fecha);
+    const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + formatYmd(fecha);
     console.log(URL);
     return URL;
 
