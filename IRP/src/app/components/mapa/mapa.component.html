@@ -39,12 +39,21 @@
       </ion-button>
       <ion-button  shape="round" fill="solid" color="dark" (click)="informacionMarcadores($event)">
         <ion-icon name="location"></ion-icon>
+        <ion-badge color="primary" mode="ios">{{ map?.marcadores?.length }}</ion-badge>
       </ion-button>
-      <ion-button *ngIf="funcion === 'planificacion-rutas'" shape="round" fill="solid" color="primary" (click)="menuCliente()">
+
+
+      <ion-button   *ngIf="funcion === 'planificacion-rutas'" shape="round" fill="solid" color="dark" (click)="dragMarcadores()"> 
+        <ion-icon name="locate-outline"></ion-icon>
+      </ion-button>
+
+
+
+      <ion-button *ngIf="funcion === 'planificacion-rutas' && rutaZonaData.rutaID !== ''" shape="round" fill="solid" color="dark" (click)="menuCliente()">
         <ion-icon  name="person-add"></ion-icon>
       </ion-button>
 
-      <ion-button   *ngIf="funcion === 'planificacion-rutas' && clientes?.clientesRutas?.length > 0" (click)="postRutas()"  shape="round" fill="solid" color="secondary">
+      <ion-button   *ngIf="funcion === 'planificacion-rutas' && clientes?.nuevosClientes?.length > 0" (click)="postRutas()"  shape="round" fill="solid" color="secondary">
     <ion-icon  name="save"></ion-icon>
       </ion-button>
  

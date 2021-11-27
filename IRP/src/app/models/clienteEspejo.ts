@@ -4,6 +4,8 @@ export class ClienteEspejo{
         public Fecha: Date,
         public Usuario: string,
         public Zona: string,
-        public Ruta: string
+        public Ruta: string,
+        public Latitud: number,
+        public Longitud: number
     ){}
 }

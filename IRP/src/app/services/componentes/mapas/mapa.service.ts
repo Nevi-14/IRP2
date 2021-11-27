@@ -35,7 +35,7 @@ marcadores: Marcadores[]=[];
 
 
 
-  crearMapa(element:ElementRef, marcadores){
+  crearMapa(element:ElementRef, marcadores,dragable){
 
     console.log(marcadores,'mapa create')
 
@@ -54,9 +54,7 @@ marcadores: Marcadores[]=[];
      .addTo(this.mapa)
      .togglePopup();
      
-if(marcadores){
-this.leerMarcador(marcadores);
-}
+     this.leerMarcador(marcadores, dragable);
 console.log('marcadores mapa service', marcadores)
 const extra_options = true;
 
@@ -85,7 +83,7 @@ this.mapa.on('load', () => {
 
     this.clientes.rutasClientes = []
     this.marcadores= [];
-this.crearMapa(mapa,'');
+this.crearMapa(mapa,'',false);
   console.log(this.marcadores,'mark')
   
   
@@ -96,20 +94,19 @@ this.crearMapa(mapa,'');
 
 
 
+  leerMarcador(arreglo:objectoArreglo[],dragable){
 
-  leerMarcador(arreglo:objectoArreglo[]){
 
-    this.marcadores = [];
-console.log(arreglo)
-    const defaultMarker = new mapboxgl.Marker()
-    const miniPopupDe = new  mapboxgl.Popup();
-    miniPopupDe.setText('ISLEÑA')
-    defaultMarker.setPopup(miniPopupDe);
-   
-    defaultMarker.setLngLat(this.center)
 
     
 if(arreglo){
+  this.marcadores = [];
+  const defaultMarker = new mapboxgl.Marker()
+  const miniPopupDe = new  mapboxgl.Popup();
+  miniPopupDe.setText('ISLEÑA')
+  defaultMarker.setPopup(miniPopupDe);
+ 
+  defaultMarker.setLngLat(this.center)
   for(let i =0; i < arreglo.length ;i++)
   {
       
@@ -140,18 +137,41 @@ if(arreglo){
 this.marcadores.forEach(item=>{
   const newMarker= new mapboxgl.Marker({
     color:item.color,
-    draggable: true
+    draggable: dragable
 
   })
   console.log(item)
   const miniPopup = new  mapboxgl.Popup();
   const nombre = item.nombre;
+  const { lng, lat } = item.marker!.getLngLat();
   miniPopup.setText(  item.id + ' ' + nombre )
   newMarker.setPopup(miniPopup);
-  newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+ // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+  newMarker.setLngLat([ lng, lat]!)
   .addTo(this.mapa);
+
+  newMarker.on('dragend', ()=>{
+
+    const  i = this.marcadores.findIndex(m => m.id === item.id);
+
+    const { lng, lat } = newMarker!.getLngLat();
+
+      this.marcadores[i].marker.setLngLat([lng, lat]);
+
+  })
+
 })
+
+
+
+
+
+
+
+
   }
+
+
 
 
 

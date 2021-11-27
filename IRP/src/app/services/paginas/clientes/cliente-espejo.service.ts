@@ -9,6 +9,7 @@ import { Clientes } from '../../../models/clientes';
 import { ClientesService } from './clientes.service';
 import { MapService } from '../../componentes/mapas/map.service';
 import { MapaService } from '../../componentes/mapas/mapa.service';
+import { GlobalService } from '../../global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ import { MapaService } from '../../componentes/mapas/mapa.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService, private popOverCtrl: PopoverController, private map: MapaService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService, private popOverCtrl: PopoverController, private map: MapaService, private global: GlobalService) { }
 
   
 rutas: Clientes[]=[];
@@ -45,7 +46,7 @@ console.log(id)
         this.clientes.rutasClientes = [];
         console.log(resp,'re')
         this.clientes.rutasClientes = resp.slice(0);
-
+   
      //  this.popOverCtrl.dismiss({
        // statement:true
       //});
@@ -66,12 +67,13 @@ console.log(id)
           'Access-Control-Allow-Origin': '*'
       }
     };
-    console.log(JSON.stringify(this.clienteEspejo));
+    console.log(JSON.stringify(ruta));
     return this.http.post( URL, JSON.stringify(ruta), options );
   //  return this.http.post( URL, JSON.stringify(this.clienteEspejo), options );
   }
 
   insertarClienteEspejo(ruta){
+    console.log(ruta,'ss')
     this.postClienteEspejo(ruta).subscribe(
       
       resp => {
@@ -80,7 +82,8 @@ console.log(id)
       this.loadingDissmiss();
       this.message('IRP','Las rutas se guardaron con exito');
       }, error => {
-        console.log('ruta', ruta);
+        console.log('Rerror', error);
+
         this.message('IRP','Error guardados las rutas');
       }
     )

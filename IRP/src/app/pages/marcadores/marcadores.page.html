@@ -7,14 +7,15 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar placeholder="Buscar Cliente" mode="ios" (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
+  <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
 </ion-header>
 
 <ion-content>
 
   <ion-list lines="none">
-    <ion-item   *ngFor="let item of marcadores; let i = index">
+    <ion-item   *ngFor="let item of marcadores | filtro : textoBuscar:'id'; let i = index">
 
+ 
       <ion-label slot="start">{{item.id}} - {{item.nombre}}</ion-label>
       <ion-buttons slot="end">
   

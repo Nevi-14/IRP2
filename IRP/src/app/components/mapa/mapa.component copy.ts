@@ -223,7 +223,7 @@ async menuCliente(){
       dragMarcadores(){
         this.drag=!this.drag;
         
-        this.map.crearMapa(this.divMapa, '', this.drag)
+        this.map.dd(this.drag)
       }
 
       postRutas(){

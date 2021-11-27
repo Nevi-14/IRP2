@@ -59,6 +59,10 @@ const routes: Routes = [
     path: 'marcadores',
     loadChildren: () => import('./pages/marcadores/marcadores.module').then( m => m.MarcadoresPageModule)
   },
+  {
+    path: 'fecha',
+    loadChildren: () => import('./pages/fecha/fecha.module').then( m => m.FechaPageModule)
+  },
  
 ];
 

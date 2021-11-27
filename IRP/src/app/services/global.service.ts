@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,9 @@ export class GlobalService {
 
   mapMenu = false;
   fecha = new Date().toLocaleDateString();
+  loading: HTMLIonLoadingElement;
 
-  constructor(private alertCtrl: AlertController) { }
+  constructor(private alertCtrl: AlertController, private loadingCtrl: LoadingController) { }
 
 
 // ALERTAS
@@ -32,6 +33,16 @@ export class GlobalService {
 
     await alert.present();
   }
+   async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+
+   loadingDissmiss(){
+    this.loading.dismiss();
+  }
 
 
 
@@ -50,8 +61,7 @@ export class GlobalService {
 
     await alert.present();
 
-    const { role } = await alert.onDidDismiss();
-    console.log('onDidDismiss resolved with role', role);
+
 
 }
 

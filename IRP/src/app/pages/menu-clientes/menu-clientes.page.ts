@@ -97,7 +97,7 @@ export class MenuClientesPage implements OnInit {
         }
        
          // this.map.createMap(-84.14123589305028,9.982628288210657);
-         this.map.crearMapa(this.mapa, this.map.marcadores);
+         this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}], false);
 
     }
   }

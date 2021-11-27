@@ -12,19 +12,31 @@ export class RutaFacturasService {
   constructor(private http: HttpClient) { }
 
   getIrpUrl(api: string, id: string, fecha: Date){
-    const formatYmd = date => date.toISOString().slice(0, 10);
+
     let test = '';
     if(!environment.prdMode){
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + formatYmd(fecha);
+    const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + this.formatDate(fecha);
     console.log(URL);
     return URL;
 
   }
 
+   formatDate(date) {
+    let d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
 
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+    return [year, month, day].join('-');
+}
+ 
   getRutaFacturas(ruta: string, fecha:Date){
     const URL = this.getIrpUrl(environment.rutaFacturasURL,ruta, fecha);
     return this.http.get<RutaFacturas[]>(URL);

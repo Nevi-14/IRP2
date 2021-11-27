@@ -23,6 +23,7 @@ export class MarcadoresPage implements OnInit {
   @Input() marcadores:Marcadores[];
   
 @Input() funcion:string;
+textoBuscar = '';
   constructor(private clientes: ClientesService, private mapa: MapaService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
@@ -31,4 +32,13 @@ export class MarcadoresPage implements OnInit {
   cerrarModal(){
     this.modalCtrl.dismiss();
   }
+
+  onSearchChange(event){
+
+    // alert('h')
+     //console.log(event.detail.value);
+     this.textoBuscar = event.detail.value;
+   }
+
+   
 }
