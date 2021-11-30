@@ -43,6 +43,7 @@ import { async } from '@angular/core/testing';
       overflow-y: auto;
       ::-webkit-scrollbar {
         display: none;
+        
       }
     }
     `
@@ -62,10 +63,12 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(private modalCtrl:ModalController, private marcadoresService: MarcadoresService, private popOverCrtl:PopoverController, private rutaZona: RutaZonaService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapaService, private global: GlobalService) { }
 
   ngOnDestroy(){
-  
-    this.map.reset(this.divMapa);
+    this.clientes.rutasClientes = [];
+    this.clientes.nuevosClientes = [];
     this.marcadores = [];
     this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
+    this.map.reset(this.divMapa);
+  
     
   }
 ngOnInit(){
@@ -229,34 +232,44 @@ async menuCliente(){
       postRutas(){
   
       //  this.clienteEspejo.presentaLoading('Guardando Rutas...');
-        for(let i =0; i < this.clientes.clientesRutas.length; i++){
-           if(this.clientes.clientesRutas[i].select === true){
-            const espejo = {
-              IdCliente:this.clientes.clientesRutas[i].cliente.IdCliente,
-              Fecha: this.clientes.clientesRutas[i].Fecha,
-              Usuario: this.clientes.clientesRutas[i].Usuario,
-              Zona: this.rutaZonaData.zonaId ,
-              Ruta:this.rutaZonaData.rutaID   ,
-              Latitud: this.clientes.clientesRutas[i].cliente.LATITUD ? this.clientes.clientesRutas[i].cliente.LATITUD : null  ,
-              Longitud: this.clientes.clientesRutas[i].cliente.LOGITUD ? this.clientes.clientesRutas[i].cliente.LOGITUD  :  null,
-                      }
-      
-            this.clienteEspejo.ClienteEspejoArray.push(espejo)
-           }
+        for(let i =0; i < this.clientes.rutasClientes.length; i++){
+
+          const rutasClientes = {
+            IdCliente:this.clientes.rutasClientes[i].IdCliente,
+            Fecha: new Date(),
+            Usuario: 'IRP',
+            Zona: this.rutaZonaData.zonaId ,
+            Ruta:this.rutaZonaData.rutaID   ,
+            Latitud: this.clientes.rutasClientes[i].LATITUD ? this.clientes.rutasClientes[i].LATITUD : null  ,
+            Longitud: this.clientes.rutasClientes[i].LONGITUD ? this.clientes.rutasClientes[i].LONGITUD  :  null,
+                    }
+    
+                    this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
           
         }
+        for(let i =0; i < this.clientes.nuevosClientes.length; i++){
+
+          const nuevosClientes = {
+            IdCliente:this.clientes.nuevosClientes[i].IdCliente,
+            Fecha: new Date(),
+            Usuario: 'IRP',
+            Zona: this.rutaZonaData.zonaId ,
+            Ruta:this.rutaZonaData.rutaID   ,
+            Latitud: this.clientes.nuevosClientes[i].LATITUD ? this.clientes.nuevosClientes[i].LATITUD : null  ,
+            Longitud: this.clientes.nuevosClientes[i].LONGITUD ? this.clientes.nuevosClientes[i].LONGITUD  :  null,
+                    }
+    
+                    this.clienteEspejo.ClienteEspejoArray.push(nuevosClientes)
+          
+        }
+  
+
         console.log(this.clienteEspejo.ClienteEspejoArray, 'cliente espejo')
 
         
 this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
-this.rutas.ruta.RUTA = '';
-this.rutas.ruta.DESCRIPCION = '';
-this.zonas.zona.ZONA = '';
-this.zonas.zona.NOMBRE = '';
-this.clientes.clientesRutas = [];
-this.map.marcadores = [];
-this.clientes.clientesRutas = [];
-this.clienteEspejo.rutas = [];
+
+this.ngOnDestroy();
       }
 
 

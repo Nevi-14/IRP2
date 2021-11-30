@@ -6,6 +6,7 @@ import { ClientesService } from '../../paginas/clientes/clientes.service';
 interface Marcadores{
   id:string,
   cliente:any,
+  identificador:string,
   color: string,
   nombre: string,
   marker?: mapboxgl.Marker,
@@ -14,6 +15,7 @@ interface Marcadores{
 
 interface objectoArreglo{
 nombre:string,
+identificador:string,
 id:string,
 arreglo:any
 }
@@ -96,11 +98,12 @@ this.crearMapa(mapa,'',false);
 
   leerMarcador(arreglo:objectoArreglo[],dragable){
 
-
+  
 
     
-if(arreglo){
+if(arreglo && !dragable){
   this.marcadores = [];
+  
   const defaultMarker = new mapboxgl.Marker()
   const miniPopupDe = new  mapboxgl.Popup();
   miniPopupDe.setText('ISLEÑA')
@@ -121,6 +124,7 @@ if(arreglo){
         id:arreglo[i].arreglo[index][arreglo[i].id],
         cliente:arreglo[i].arreglo[index],
         nombre:arreglo[i].arreglo[index][arreglo[i].nombre],
+        identificador:arreglo[i].arreglo[index][arreglo[i].identificador],
         marker:newMarker,
         color:color
       })
@@ -140,6 +144,9 @@ this.marcadores.forEach(item=>{
     draggable: dragable
 
   })
+
+
+
   console.log(item)
   const miniPopup = new  mapboxgl.Popup();
   const nombre = item.nombre;
@@ -153,12 +160,24 @@ this.marcadores.forEach(item=>{
   newMarker.on('dragend', ()=>{
 
     const  i = this.marcadores.findIndex(m => m.id === item.id);
-
+ 
     const { lng, lat } = newMarker!.getLngLat();
+    console.log([lng, lat],'l')
 
+  const c    =   this.clientes.rutasClientes.findIndex(c => c.IdCliente  === item.id)  ;
+  const n    =   this.clientes.nuevosClientes.findIndex(n => n.IdCliente  === item.id)  ;
+ 
+  this.clientes.rutasClientes[c].LONGITUD = lng;
+  this.clientes.rutasClientes[c].LATITUD = lat;
+  this.clientes.nuevosClientes[n].LONGITUD = lng;
+  this.clientes.nuevosClientes[n].LATITUD = lat;
+  console.log(this.clientes.rutasClientes[c],'after', lng , lat)
       this.marcadores[i].marker.setLngLat([lng, lat]);
 
   })
+
+  
+
 
 })
 

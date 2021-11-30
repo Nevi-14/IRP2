@@ -79,7 +79,7 @@ console.log(id)
       resp => {
         console.log('Rutas guardadas con exito', resp);
       //  this.depositos = [];
-      this.loadingDissmiss();
+     // this.loadingDissmiss();
       this.message('IRP','Las rutas se guardaron con exito');
       }, error => {
         console.log('Rerror', error);

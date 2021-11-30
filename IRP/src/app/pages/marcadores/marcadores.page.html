@@ -16,7 +16,8 @@
     <ion-item   *ngFor="let item of marcadores | filtro : textoBuscar:'id'; let i = index">
 
  
-      <ion-label slot="start">{{item.id}} - {{item.nombre}}</ion-label>
+      <ion-label slot="start">{{item.id}} - {{item.nombre}} </ion-label>
+      <ion-badge color="dark" mode="ios">{{item.identificador}}</ion-badge>
       <ion-buttons slot="end">
   
         <ion-button (click)="clientes.switchModaldetalle(funcion,item.cliente)" [ngStyle]="{
