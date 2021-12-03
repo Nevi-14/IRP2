@@ -1,7 +1,7 @@
 export class ClienteEspejo{
     constructor(
        public IdCliente: string,
-        public Fecha: Date,
+        public Fecha: string,
         public Usuario: string,
         public Zona: string,
         public Ruta: string,

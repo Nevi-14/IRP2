@@ -7,9 +7,8 @@ import { AlertController, LoadingController, PopoverController } from '@ionic/an
 import { Clientes } from '../../../models/clientes';
 
 import { ClientesService } from './clientes.service';
-import { MapService } from '../../componentes/mapas/map.service';
-import { MapaService } from '../../componentes/mapas/mapa.service';
 import { GlobalService } from '../../global.service';
+import { MapaService } from '../../componentes/mapas/mapa.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ import { GlobalService } from '../../global.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private mapa: MapService, private popOverCtrl: PopoverController, private map: MapaService, private global: GlobalService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private mapa: MapaService, private global: GlobalService) { }
 
   
 rutas: Clientes[]=[];
@@ -40,16 +39,14 @@ console.log(id)
     return this.http.get<Clientes[]>( URL );
   }
 
-  syncRutas(ruta){
+  syncRutas(ruta, mapa, arreglo, drag){
     this.getRutas(ruta).subscribe(
       resp =>{
         this.clientes.rutasClientes = [];
-        console.log(resp,'re')
         this.clientes.rutasClientes = resp.slice(0);
-   
-     //  this.popOverCtrl.dismiss({
-       // statement:true
-      //});
+        console.log(arreglo)
+       // this.mapa.crearMapa(mapa,arreglo, drag  );
+     //   this.global.loadingDissmiss();
       }
      
 
@@ -73,7 +70,7 @@ console.log(id)
   }
 
   insertarClienteEspejo(ruta){
-    console.log(ruta,'ss')
+
     this.postClienteEspejo(ruta).subscribe(
       
       resp => {

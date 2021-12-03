@@ -157,7 +157,7 @@ async syncRutas(expression){
   switch(expression){
     case 'planificacion-rutas':
       this.global.presentaLoading('Cargando Rutas');
-       this.clienteEspejo.syncRutas( this.rutaZonaData.rutaID,this.divMapa,this.marcadores, false);
+       this.clienteEspejo.syncRutas( this.rutaZonaData.rutaID);
     
       break;
     case 'rutas-facturas':
@@ -192,7 +192,7 @@ async syncRutas(expression){
   }
 
   
- const result =  await this.waitSecondFunction(5);
+  const result =  await this.waitSecondFunction(2);
 
 }
 
@@ -230,9 +230,9 @@ async menuCliente(){
       dragMarcadores(){
         this.drag=!this.drag;
         if(this.drag === true){
-this.modo = 'Modo edición';
+this.modo = 'Editando Mapa';
         }else{
-          this.modo = ''
+          this.modo = '';
         }
         this.map.crearMapa(this.divMapa, '', this.drag)
       }
@@ -249,8 +249,9 @@ this.modo = 'Modo edición';
             Usuario: 'IRP',
             Zona: this.rutaZonaData.zonaId ,
             Ruta:this.rutaZonaData.rutaID   ,
-            Latitud: this.map.marcadores[i].cliente.LATITUD ? this.map.marcadores[i].cliente.LATITUD : null  ,
-            Longitud: this.map.marcadores[i].cliente.LONGITUD  ? this.map.marcadores[i].cliente.LONGITUD  :  null,
+            Latitud: 1 ,
+            Longitud: 1
+            ,
                     }
     
                     this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)

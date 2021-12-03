@@ -38,7 +38,7 @@ marcadores: Marcadores[]=[];
 
 
   crearMapa(element:ElementRef, marcadores,dragable){
-
+//alert('hello')
     console.log(marcadores,'mapa create')
 
     this.mapa = new mapboxgl.Map({
@@ -166,12 +166,22 @@ this.marcadores.forEach(item=>{
 
   const c    =   this.clientes.rutasClientes.findIndex(c => c.IdCliente  === item.id)  ;
   const n    =   this.clientes.nuevosClientes.findIndex(n => n.IdCliente  === item.id)  ;
- 
-  this.clientes.rutasClientes[c].LONGITUD = lng;
-  this.clientes.rutasClientes[c].LATITUD = lat;
-  this.clientes.nuevosClientes[n].LONGITUD = lng;
-  this.clientes.nuevosClientes[n].LATITUD = lat;
-  console.log(this.clientes.rutasClientes[c],'after', lng , lat)
+
+  if(c >= 0){
+    this.marcadores[i].cliente.LONGITUD = lng;
+    this.marcadores[i].cliente.LATITUD = lat;
+  }
+  if(c >= 0){
+    this.clientes.rutasClientes[c].LONGITUD = lng;
+    this.clientes.rutasClientes[c].LATITUD = lat;
+  }
+  if(n >= 0){
+    this.clientes.nuevosClientes[n].LONGITUD = lng;
+    this.clientes.nuevosClientes[n].LATITUD = lat;
+  }
+
+
+
       this.marcadores[i].marker.setLngLat([lng, lat]);
 
   })
