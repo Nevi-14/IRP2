@@ -7,10 +7,9 @@
   <ion-col size="12"  style="display: flex; margin-bottom: 100px;" >
 
     <ion-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Gestor de Modulos IRP</ion-title>
-    <ion-searchbar mode="ios" placeholder="Buscar modulo" inputmode="text"  (ionChange)="onSearchChange($event)" debounce="250"  style="width: 50%;"></ion-searchbar>
-   </ion-col>
- 
-    <ion-col size="4"  mode="ios"  *ngFor="let modulo of modulosArray">
+    <ion-searchbar mode="ios" palceholder="Buscar modulo" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+  </ion-col>
+    <ion-col size="4"  mode="ios"  *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'">
       <ion-card [routerLink]="modulo.ruta" >
         <img [src]="modulo.imagen" class="slide-image" alt="">
         <ion-card-header>
