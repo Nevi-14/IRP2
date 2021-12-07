@@ -24,7 +24,7 @@ export class InicioPage implements OnInit {
   textoBuscar = '';
 
 
-  constructor(private route: Router, private mapa: MapaService, private rutas: RutasService, private clientes:ClientesService, private zonas: ZonasService, private clienteEspejo: ClienteEspejoService) {}
+  constructor(public route: Router, public mapa: MapaService, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService) {}
 
   ngOnInit(){
 

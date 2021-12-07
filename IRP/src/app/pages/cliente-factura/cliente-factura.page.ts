@@ -8,8 +8,8 @@ import { RutaFacturas } from '../../models/rutaFacturas';
   styleUrls: ['./cliente-factura.page.scss'],
 })
 export class ClienteFacturaPage implements OnInit {
-@Input() cliente:RutaFacturas;
-  constructor(private modalCtrl: ModalController) { }
+@Input() cliente;
+  constructor(public modalCtrl: ModalController) { }
 
   ngOnInit() {
     console.log(this.cliente)

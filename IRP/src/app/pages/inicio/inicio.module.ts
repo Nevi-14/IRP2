@@ -6,7 +6,6 @@ import { InicioPage } from './inicio.page';
 
 import { InicioPageRoutingModule } from './inicio-routing.module';
 import { ComponentsModule } from '../../components/components.module';
-import { FiltroPipe } from '../../pipes/filtro.pipe copy';
 
 
 @NgModule({
@@ -17,6 +16,6 @@ import { FiltroPipe } from '../../pipes/filtro.pipe copy';
     InicioPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [InicioPage, FiltroPipe]
+  declarations: [InicioPage]
 })
 export class InicioPageModule {}

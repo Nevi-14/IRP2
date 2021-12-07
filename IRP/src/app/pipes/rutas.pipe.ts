@@ -5,7 +5,7 @@ import { RutasService } from '../services/paginas/rutas/rutas.service';
   name: 'rutas'
 })
 export class RutasPipe implements PipeTransform {
-  constructor(private rutas: RutasService) { }
+  constructor(public rutas: RutasService) { }
   transform(value: any): any {
 
     const ruta = this.rutas.rutas.find( d => d.RUTA === value );

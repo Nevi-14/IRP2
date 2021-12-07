@@ -35,7 +35,7 @@ import { MapaComponent } from 'src/app/components/mapa/mapa.component';
 export class PlanificacionRutasPage implements OnInit {
 
 
-    constructor(private global: GlobalService,private modalCtrl: ModalController, private alertCtrl: AlertController, private config: ConfiguracionRutaService, private clientes: ClientesService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private map: MapService  , route:ActivatedRoute, private popOverCrtl: PopoverController) {
+    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public config: ConfiguracionRutaService, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public map: MapService  , route:ActivatedRoute, public popOverCrtl: PopoverController) {
 
 
     }

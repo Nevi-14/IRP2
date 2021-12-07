@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 
 
 import { ComponentsModule } from '../../components/components.module';
-import { FiltroClientesPipe } from '../../pipes/filtro-clientes.pipe';
 import { PlanificacionRutasPage } from './planificacion-rutas.page';
 import { PlanificacionPageRoutingModule } from './planificacion-rutas-routing.module';
 
@@ -20,6 +19,6 @@ import { PlanificacionPageRoutingModule } from './planificacion-rutas-routing.mo
     PlanificacionPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [PlanificacionRutasPage, FiltroClientesPipe]
+  declarations: [PlanificacionRutasPage]
 })
 export class PlanificacionRutasPageModule {}

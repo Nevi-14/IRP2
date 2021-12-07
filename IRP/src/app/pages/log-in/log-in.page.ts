@@ -10,7 +10,8 @@ import { LoginService } from '../../services/login.service';
 export class LogInPage implements OnInit {
   image = '../assets/login/islena.png';
   truck = '../assets/login/track.svg';
-  constructor(private route: Router, private login: LoginService) { }
+  showPass = false;
+  constructor(public route: Router, public login: LoginService) { }
 
   ngOnInit() {
   }

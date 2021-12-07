@@ -9,7 +9,7 @@ import { Clientes } from '../../models/clientes';
 export class DetalleClientesPage implements OnInit {
   @Input() detalleCliente: Clientes;
 
-  constructor( private modalCtrl: ModalController) { }
+  constructor( public modalCtrl: ModalController) { }
 
   ngOnInit() {
 

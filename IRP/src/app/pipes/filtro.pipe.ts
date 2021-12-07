@@ -5,7 +5,7 @@ import { ClientesService } from '../services/paginas/clientes/clientes.service';
   name: 'filtro'
 })
 export class FiltroPipe implements PipeTransform {
-  constructor(private clientes: ClientesService){}
+  constructor(public clientes: ClientesService){}
   transform(arreglo: any[],
     texto: string = '',
     columna: string = ''): any[] {

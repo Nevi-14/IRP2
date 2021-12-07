@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
@@ -17,6 +17,6 @@ import { ComponentsModule } from '../../components/components.module';
     ClienteFacturaPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [ClienteFacturaPage,DatePipe]
+  declarations: [ClienteFacturaPage]
 })
 export class ClienteFacturaPageModule {}

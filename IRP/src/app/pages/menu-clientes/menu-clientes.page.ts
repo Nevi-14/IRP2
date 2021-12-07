@@ -28,7 +28,7 @@ export class MenuClientesPage implements OnInit {
   textoBuscar = '';
   isChecked = false;
   @Input() mapa :any
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private clientes: ClientesService, private provincias: ProvinciasService, private cantones: CantonesService, private distritos: DistritosService, private zonas: ZonasService, private rutas: RutasService, private map: MapaService, private clienteEspejo: ClienteEspejoService) { }
+  constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public map: MapaService, public clienteEspejo: ClienteEspejoService) { }
 
 
 
@@ -106,7 +106,7 @@ export class MenuClientesPage implements OnInit {
 
 
   }
-  async onSubmit(formulario: NgForm){
+  async onSubmit(){
     this.clientes.presentaLoading('Cargando clientes');
 this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
 this.borrarFiltro();

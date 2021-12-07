@@ -23,7 +23,7 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private clienteEspejo: ClienteEspejoService,private alertCtrl: AlertController, private rutaZona: RutaZonaService, private mapa: MapService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapaService,private popOverCtrl: PopoverController) { }
+  constructor(public rutas: RutasService, public zonas: ZonasService, public modalCtrl: ModalController, public clienteEspejo: ClienteEspejoService,public alertCtrl: AlertController, public rutaZona: RutaZonaService, public mapa: MapService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService, public map: MapaService,public popOverCtrl: PopoverController) { }
 
   ngOnInit() {
 

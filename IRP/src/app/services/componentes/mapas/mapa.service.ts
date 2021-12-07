@@ -72,11 +72,11 @@ if(extra_options){
       trackUserLocation: true
   }));
   this.mapa.addControl(
-    new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl
-    })
-  )
+  new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl
+  })
+)
 }
 
 this.mapa.on('load', () => {

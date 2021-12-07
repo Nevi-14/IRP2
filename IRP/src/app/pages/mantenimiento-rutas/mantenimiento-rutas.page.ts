@@ -10,7 +10,7 @@ import { RutaZonaService } from '../../services/paginas/rutas/ruta-zona.service'
   styleUrls: ['./mantenimiento-rutas.page.scss'],
 })
 export class MantenimientoRutasPage implements OnInit {
-  constructor(private rutas: RutasService, private zonas: ZonasService, private modalCtrl: ModalController, private rutaZonas : RutaZonaService) { }
+  constructor(public rutas: RutasService, public zonas: ZonasService, public modalCtrl: ModalController, public rutaZonas : RutaZonaService) { }
   textoBuscarZona = '';
   textoBuscarRuta = '';
 zonaRuta ={

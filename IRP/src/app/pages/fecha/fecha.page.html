@@ -1,10 +1,8 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title>Fecha Factura</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-toolbar>
+  <ion-title  style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Ingresar Fecha Factura</ion-title>
+</ion-toolbar>
+<div class="inner-content">
 
-<ion-content>
 
   <form #formulario="ngForm" (ngSubmit)="submit(formulario)">
     <ion-list lines="none" >
@@ -13,24 +11,17 @@
 
 
                   <ion-col size="12">
-                    <ion-item>
-                      <input type="date" placeholder="Fecha" name ="fecha" [(ngModel)]="fecha">
+                <ion-item>
+                  <input type="date" class="form-control" placeholder="Fecha" name ="fecha" [(ngModel)]="fecha">
                 
-                    </ion-item>
+                </ion-item>
                   </ion-col>
                   
                  
-                <ion-col size="12">
-                  <ion-item >
-                
-                      <ion-button fill="solid" class="ion-text-center" shape="round" type="submit"  color="primary" >
-                        Guardar
-                      </ion-button>
-
-
-               
-             
-                  </ion-item>
+                <ion-col size="12" class="ion-text-center">
+                  <ion-button fill="solid" class="ion-text-center" shape="round" type="submit"  color="dark" >
+                    Continuar
+                  </ion-button>
                 </ion-col>
                 
         </ion-row>
@@ -38,4 +29,7 @@
     </ion-list>
     
 </form>
-</ion-content>
+
+
+</div>
+

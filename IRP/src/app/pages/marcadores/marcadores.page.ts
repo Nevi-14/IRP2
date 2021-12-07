@@ -24,7 +24,7 @@ export class MarcadoresPage implements OnInit {
   
 @Input() funcion:string;
 textoBuscar = '';
-  constructor(private clientes: ClientesService, private mapa: MapaService, private modalCtrl: ModalController) { }
+  constructor(public clientes: ClientesService, public mapa: MapaService, public modalCtrl: ModalController) { }
 
   ngOnInit() {
   console.log(this.marcadores)

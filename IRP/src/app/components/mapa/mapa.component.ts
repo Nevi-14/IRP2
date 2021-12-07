@@ -63,7 +63,7 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
   modo = 'off'
-  constructor(private modalCtrl:ModalController, private marcadoresService: MarcadoresService, private popOverCrtl:PopoverController, private rutaZona: RutaZonaService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapaService, private global: GlobalService) { }
+  constructor(public modalCtrl:ModalController, public marcadoresService: MarcadoresService, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService, public map: MapaService, public global: GlobalService) { }
 
   ngOnDestroy(){
     this.clientes.rutasClientes = [];
@@ -163,16 +163,15 @@ async syncRutas(expression){
     case 'rutas-facturas':
      // POPOVER DE FECHA
 
-     const popover = await this.popOverCrtl.create({
+     const modal = await this.modalCtrl.create({
       component: FechaPage,
-      cssClass: 'my-custom-class',
-      translucent: true
+      cssClass: 'custom-modal'
     });
-    popover.present();
+    modal.present();
   
     
   
-    const { data } = await popover.onDidDismiss();
+    const { data } = await modal.onDidDismiss();
   console.log(data)
     if(data !== undefined){
     

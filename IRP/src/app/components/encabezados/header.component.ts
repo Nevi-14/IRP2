@@ -10,7 +10,7 @@ import { GlobalService } from '../../services/global.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private route: Router, private login: LoginService, private global: GlobalService) { }
+  constructor(public route: Router, public login: LoginService, public global: GlobalService) { }
 
   ngOnInit() {
   }

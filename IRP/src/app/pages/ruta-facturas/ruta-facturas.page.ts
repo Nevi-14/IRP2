@@ -14,7 +14,7 @@ import { ClientesService } from '../../services/paginas/clientes/clientes.servic
 })
 export class RutaFacturasPage implements OnInit {
 
-  constructor(private map: MapService, private modalCtrl: ModalController, private rutas:RutasService, private zonas:ZonasService, private rutaFacturas: RutaFacturasService , private clientes: ClientesService, private clienteEspejo: ClientesService, private popOverCrtl: PopoverController) {
+  constructor(public map: MapService, public modalCtrl: ModalController, public rutas:RutasService, public zonas:ZonasService, public rutaFacturas: RutaFacturasService , public clientes: ClientesService, public clienteEspejo: ClientesService, public popOverCrtl: PopoverController) {
 
 
    }

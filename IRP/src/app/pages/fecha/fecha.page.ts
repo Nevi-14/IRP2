@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { PopoverController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-fecha',
@@ -12,7 +12,7 @@ export class FechaPage implements OnInit {
   pickerOptions = {
     mode: 'md'
   };
-  constructor(private popOverCtrl: PopoverController) { }
+  constructor(public modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -20,7 +20,7 @@ export class FechaPage implements OnInit {
   
   submit(formulario: NgForm){
 
-    this.popOverCtrl.dismiss({
+    this.modalCtrl.dismiss({
 
       data:  this.fecha
      });
