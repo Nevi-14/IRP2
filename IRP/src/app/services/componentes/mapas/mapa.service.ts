@@ -1,6 +1,8 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
+import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { ClientesService } from '../../paginas/clientes/clientes.service';
 
 interface Marcadores{
@@ -69,6 +71,12 @@ if(extra_options){
       },
       trackUserLocation: true
   }));
+  this.mapa.addControl(
+    new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+    })
+  )
 }
 
 this.mapa.on('load', () => {

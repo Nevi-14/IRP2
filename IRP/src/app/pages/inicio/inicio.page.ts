@@ -22,6 +22,8 @@ interface Modulos {
 export class InicioPage implements OnInit {
   modulosArray:Modulos[]=[];
   textoBuscar = '';
+
+
   constructor(private route: Router, private mapa: MapaService, private rutas: RutasService, private clientes:ClientesService, private zonas: ZonasService, private clienteEspejo: ClienteEspejoService) {}
 
   ngOnInit(){

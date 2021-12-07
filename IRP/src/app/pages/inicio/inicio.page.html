@@ -1,73 +1,29 @@
 
-<ion-header id="header" class="ion-no-border" color="primary" style="margin-top:50px">
+<ion-content >
+<ion-grid >
+  <ion-row  style="padding: 4rem;">
+      
+  <ion-col size="12"  style="display: flex; margin-bottom: 100px;" >
 
-  
-  <ion-grid  >
-
-    <ion-row >
-
-  
-  <ion-col size="12" size-md="6" style="margin: 0 auto;">
-
-   <ion-card-header>
-     <ion-card-title class="ion-text-center">Gestor de Modulos IRP</ion-card-title>
-   </ion-card-header>
-   <ion-searchbar mode="ios" placeholder="Buscar modulo" inputmode="text"  (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-  </ion-col>
-
-
-    </ion-row>
-  </ion-grid>
-</ion-header>
-
-<ion-content class="ion-padding">
-
-
-<ion-list lines="none">
-  <ion-grid >
-    <ion-row style="display: flex;justify-content: center;">
-
-  
-        <ng-template ngFor let-module [ngForOf]="modulosArray | filtro : textoBuscar:'titulo'" let-i="index" let-odd="odd" >
-
-
-
-
-          <ion-col size="8">
-
-            <ion-item [routerLink]="module.ruta">
-              <ion-avatar slot="start">
-                <img [src]="module.imagen">
-              </ion-avatar>
-              <ion-label>
-                <h3>{{module.titulo}}</h3>
-                <p>{{module.descripcion}}</p>
-              </ion-label>
-
-              <ion-buttons slot="end">
-                <ion-button>
-                  <ion-icon color="primary" name="chevron-forward-outline"></ion-icon>
+    <ion-title class="ion-text-left" style="font-size: 1.5rem;letter-spacing: 0.5rem; text-transform: uppercase;">Gestor de Modulos IRP</ion-title>
+    <ion-searchbar mode="ios" placeholder="Buscar modulo" inputmode="text"  (ionChange)="onSearchChange($event)" debounce="250"  style="width: 50%;"></ion-searchbar>
+   </ion-col>
+ 
+    <ion-col size="4"  mode="ios"  *ngFor="let modulo of modulosArray">
+      <ion-card [routerLink]="modulo.ruta" >
+        <img [src]="modulo.imagen" class="slide-image" alt="">
+        <ion-card-header>
+          <ion-card-subtitle>{{modulo.titulo}}</ion-card-subtitle>
         
-                </ion-button>
-              </ion-buttons>
-              
-            </ion-item>
-
- 
-          </ion-col>
-
+        </ion-card-header>
+        <ion-card-content>
+          {{modulo.descripcion}}
          
-        </ng-template>
-      
-             
-      
-      
-      
- 
+        </ion-card-content>
+    
+      </ion-card>
+    </ion-col>
 
-
-    </ion-row>
-  </ion-grid>
-</ion-list>
-
+  </ion-row>
+</ion-grid>
 </ion-content>

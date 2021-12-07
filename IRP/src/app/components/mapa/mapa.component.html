@@ -43,10 +43,11 @@
       </ion-button>
 
 
-      <ion-button   *ngIf="funcion === 'planificacion-rutas'" shape="round" fill="solid" color="dark" (click)="dragMarcadores()"> 
-        <ion-icon name="locate-outline"></ion-icon>
-        <ion-label>{{modo}}</ion-label>
+      <ion-button   *ngIf="funcion === 'planificacion-rutas' && funcion === 'planificacion-rutas' && clientes?.rutasClientes?.length > 0" shape="round" fill="solid" color="dark" (click)="dragMarcadores()"> 
+        <ion-icon slot="start" name="locate-outline"></ion-icon>
+        <ion-badge color="warning" mode="ios" >{{modo}}</ion-badge>
       </ion-button>
+ 
 
 
 

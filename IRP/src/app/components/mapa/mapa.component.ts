@@ -62,7 +62,7 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
    rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
 
 
-  modo = ''
+  modo = 'off'
   constructor(private modalCtrl:ModalController, private marcadoresService: MarcadoresService, private popOverCrtl:PopoverController, private rutaZona: RutaZonaService, private zonas: ZonasService, private rutas: RutasService, private clienteEspejo: ClienteEspejoService, private clientes: ClientesService, private rutasFacturas: RutaFacturasService, private map: MapaService, private global: GlobalService) { }
 
   ngOnDestroy(){
@@ -230,9 +230,9 @@ async menuCliente(){
       dragMarcadores(){
         this.drag=!this.drag;
         if(this.drag === true){
-this.modo = 'Modo edición';
+this.modo = 'on'
         }else{
-          this.modo = ''
+          this.modo = 'off'
         }
         this.map.crearMapa(this.divMapa, '', this.drag)
       }
