@@ -9,9 +9,8 @@
   <ion-button   (click)="home()" fill="solid" shape="round" color="dark" size="small">
     <ion-icon name="home-outline"></ion-icon>
       </ion-button>
-  <ion-button   (click)="logOut()" fill="solid" shape="round" color="danger" size="small">
-    <ion-label slot="start">Salir</ion-label>
-    <ion-icon name="close" slot="end"> </ion-icon>
+  <ion-button  *ngIf="login.verified" (click)="logOut()" fill="solid" shape="round" color="danger" size="small">
+    <ion-icon name="power-outline"></ion-icon>
   </ion-button>
 </ion-buttons>
       </ion-item>
