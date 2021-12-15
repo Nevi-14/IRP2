@@ -76,6 +76,7 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
     
   }
 ngOnInit(){
+  
   this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
 //LOADER, COUNT, INDICADOR DE MAPA, SWITCH DE DRAGGABLE, INDICADOR CLIENTE NUEVO O EXISTENTE (TITULO NUEVO), AJUSTAR VISTAS, CAMBIAR NOMBRE PLANIFICACION ENTREGAS
 }
@@ -252,7 +253,10 @@ this.modo = 'on'
             Longitud: this.map.marcadores[i].cliente.LONGITUD  ? this.map.marcadores[i].cliente.LONGITUD  :  null,
                     }
     
-                    this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
+                    if(this.map.marcadores[i].modificado){
+                      this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
+                    }
+                   
           
         }
         
@@ -260,8 +264,13 @@ this.modo = 'on'
 
         console.log(this.clienteEspejo.ClienteEspejoArray, 'cliente espejo con marcadores', this.clienteEspejo.ClienteEspejoArray.length)
 
+        if(this.clienteEspejo.insertarClienteEspejo.length > 0){
+          this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
+
+        }else{
+          this.global.message('Planificacion Rutas','No se efectuaron cambios');
+        }
         
-this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
 
 this.ngOnDestroy();
       }

@@ -4,10 +4,14 @@ import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { ClientesService } from '../../paginas/clientes/clientes.service';
+import { BusquedaMapaPage } from 'src/app/pages/busqueda-mapa/busqueda-mapa.page';
 
 interface Marcadores{
   id:string,
   cliente:any,
+  modificado: boolean,
+  clienteExistente:boolean,
+  nuevoCliente:boolean,
   identificador:string,
   color: string,
   nombre: string,
@@ -29,7 +33,7 @@ arreglo:any
 })
 export class MapaService {
   mapa!: mapboxgl.Map;
-
+  geocoder: any;
   zoomLevel: number =12;
   center: [number,number] = [ -84.12216755918627, 10.003022709670836 ];
 marcadores: Marcadores[]=[];
@@ -39,7 +43,7 @@ marcadores: Marcadores[]=[];
 
 
 
-  crearMapa(element:ElementRef, marcadores,dragable){
+async  crearMapa(element:ElementRef, marcadores,dragable){
 //alert('hello')
     console.log(marcadores,'mapa create')
 
@@ -71,19 +75,35 @@ if(extra_options){
       },
       trackUserLocation: true
   }));
-  this.mapa.addControl(
-  new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken,
-  mapboxgl: mapboxgl
-  })
-)
+
+  this.geocoder =   new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+    })
+
+    this.mapa.addControl(this.geocoder);
+
 }
+this.geocoder.on('result', function(e) {
+  console.log(e.result)
+
+
+  
+})
+
 
 this.mapa.on('load', () => {
   this.mapa.resize();
 });
   }
 
+  async busquedaMapa() {
+    const modal = await this.modalCtrl.create({
+      component: BusquedaMapaPage,
+      cssClass: 'my-custom-class'
+    });
+    return await modal.present();
+  }
 
   reset(mapa){
     this.mapa.off('zoom', ()=>{});
@@ -131,6 +151,9 @@ if(arreglo && !dragable){
       this.marcadores.push({
         id:arreglo[i].arreglo[index][arreglo[i].id],
         cliente:arreglo[i].arreglo[index],
+        modificado: false,
+        clienteExistente:false,
+        nuevoCliente: false,
         nombre:arreglo[i].arreglo[index][arreglo[i].nombre],
         identificador:arreglo[i].arreglo[index][arreglo[i].identificador],
         marker:newMarker,
@@ -189,7 +212,7 @@ this.marcadores.forEach(item=>{
   }
 
 
-
+  this.marcadores[i].modificado = true;
       this.marcadores[i].marker.setLngLat([lng, lat]);
 
   })
