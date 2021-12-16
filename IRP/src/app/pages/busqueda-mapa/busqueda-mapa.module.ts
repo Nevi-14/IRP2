@@ -7,13 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { BusquedaMapaPageRoutingModule } from './busqueda-mapa-routing.module';
 
 import { BusquedaMapaPage } from './busqueda-mapa.page';
+import { ComponentsModule } from 'src/app/components/components.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    BusquedaMapaPageRoutingModule
+    BusquedaMapaPageRoutingModule,
+    ComponentsModule,
+    PipesModule
   ],
   declarations: [BusquedaMapaPage]
 })

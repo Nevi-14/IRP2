@@ -1,9 +1,53 @@
-<ion-header>
+
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>busqueda-mapa</ion-title>
+    <ion-title>{{data.place_name}}</ion-title>
+  <ion-buttons slot="end">
+  
+      <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
+        <ion-icon  name="close"></ion-icon>
+      </ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
+<ion-grid >
+  <ion-row>
+    <ion-col size="6" >
+      <app-mini-mapa [height]="'400px'" [width]="'100%'"   [lngLat]="data.geometry.coordinates"></app-mini-mapa>
 
+    </ion-col>
+    <ion-col size="6">
+
+      <ion-list lines="none">
+        <ion-item   *ngFor="let item of mapaService.marcadores | filtro : textoBuscar:'id'; let i = index">
+    
+     
+          <ion-label slot="start">{{item.id}} - {{item.nombre}} </ion-label>
+          <ion-badge color="dark" mode="ios">{{item.identificador}}</ion-badge>
+          <ion-buttons slot="end">
+      
+            <ion-button (click)="clientesService.switchModaldetalle(funcion,item.cliente)" [ngStyle]="{
+              'color': item.color
+          }" >
+            <ion-img style="height: 30px; width: 30px;" src="../assets/icons/user-info.svg"></ion-img>
+             
+            </ion-button>
+            <ion-button  (click)="actualizarCordenadas(item.id)">
+              <ion-icon name="location" [ngStyle]="{
+                'color': item.color
+            }"></ion-icon>
+      
+      
+            
+            </ion-button>
+      
+      
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
 </ion-content>

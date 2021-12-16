@@ -1,4 +1,14 @@
-
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Detalle cliente</ion-title>
+  <ion-buttons slot="end">
+  
+      <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
+        <ion-icon  name="close"></ion-icon>
+      </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content >
   <ion-list lines="none">
     
@@ -15,11 +25,7 @@
       <ion-label class="title-2">{{detalleCliente.NOMBRE}} Canal</ion-label>
   
 <ion-badge  color="primary" mode="ios">{{detalleCliente.CANAL}}</ion-badge>
-<ion-buttons style="position: absolute;top: 0; right: 0;">
-<ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
-  <ion-icon  name="close"></ion-icon>
-</ion-button>
-</ion-buttons>
+
   </ion-col>
 
   

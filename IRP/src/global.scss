@@ -248,6 +248,16 @@ font-size: 10px;
     }
   }
 
+  .medium-modal-center{
+    .modal-wrapper {
+      --position:absolute;
+      --left:0;
+      --width: 75% !important;
+      --height: 75%;
+      position: absolute;
+    }
+  }
+
 
 .mapboxgl-popup {
     max-width: 400px;

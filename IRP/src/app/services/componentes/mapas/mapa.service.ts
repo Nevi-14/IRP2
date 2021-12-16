@@ -32,9 +32,11 @@ arreglo:any
   providedIn: 'root'
 })
 export class MapaService {
+  result: any;
   mapa!: mapboxgl.Map;
   geocoder: any;
   zoomLevel: number =12;
+  array :any;
   center: [number,number] = [ -84.12216755918627, 10.003022709670836 ];
 marcadores: Marcadores[]=[];
 
@@ -78,18 +80,27 @@ if(extra_options){
 
   this.geocoder =   new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl
+    mapboxgl: mapboxgl,
+    placeholder: 'Buscar zona',
     })
 
     this.mapa.addControl(this.geocoder);
 
 }
-this.geocoder.on('result', function(e) {
-  console.log(e.result)
 
+
+ this.geocoder.on('result', (e) =>{
+  console.log(e.result);
+  this.array = e.result
+  this.busquedaMapa(e.result,element, marcadores,dragable);
+console.log(this.array)
 
   
 })
+
+//this.result = this.geocoder;
+
+console.log(this.geocoder)
 
 
 this.mapa.on('load', () => {
@@ -97,12 +108,27 @@ this.mapa.on('load', () => {
 });
   }
 
-  async busquedaMapa() {
+  async busquedaMapa(data,element, marcadores,dragable) {
     const modal = await this.modalCtrl.create({
       component: BusquedaMapaPage,
-      cssClass: 'my-custom-class'
+      cssClass: 'medium-modal',
+      componentProps:{
+        data:data
+      }
     });
-    return await modal.present();
+ if(this.marcadores.length > 0){
+   modal.present();
+
+
+ const { data } = await modal.onDidDismiss();
+ console.log(data)
+   if(data !== undefined){
+   
+    this.crearMapa(element, marcadores,dragable)
+   }
+ }
+ 
+ 
   }
 
   reset(mapa){

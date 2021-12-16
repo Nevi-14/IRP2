@@ -13,6 +13,7 @@ import { MapService } from '../../services/componentes/mapas/map.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
 import { MapaComponent } from 'src/app/components/mapa/mapa.component';
+import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 
 
 
@@ -35,7 +36,7 @@ import { MapaComponent } from 'src/app/components/mapa/mapa.component';
 export class PlanificacionRutasPage implements OnInit {
 
 
-    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public config: ConfiguracionRutaService, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public map: MapService  , route:ActivatedRoute, public popOverCrtl: PopoverController) {
+    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public config: ConfiguracionRutaService, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public map: MapService  , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService) {
 
 
     }
@@ -45,5 +46,5 @@ export class PlanificacionRutasPage implements OnInit {
   
     
     }
-                
+          
 }
