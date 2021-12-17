@@ -22,12 +22,14 @@ funcion = 'planificacion-rutas';
   }
 
   actualizarCordenadas(id){
+    
     const  i = this.mapaService.marcadores.findIndex(m => m.id === id);
-
-  
+    console.log(    this.mapaService.marcadores[i], 'before')
+    this.mapaService.marcadores[i].modificado = true;
     this.mapaService.marcadores[i].cliente.LONGITUD = this.data.geometry.coordinates[0];
     this.mapaService.marcadores[i].cliente.LATITUD = this.data.geometry.coordinates[1];
     this.mapaService.marcadores[i].centro = [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]
+    console.log(    this.mapaService.marcadores[i], 'after')
     this.modalCtrl.dismiss({
       data:  true
      });

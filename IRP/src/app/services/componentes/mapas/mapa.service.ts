@@ -18,7 +18,7 @@ interface Marcadores{
   marker?: mapboxgl.Marker,
   centro?:[number,number]
 }
-
+marker: mapboxgl.Marker
 interface objectoArreglo{
 nombre:string,
 identificador:string,
@@ -45,7 +45,7 @@ marcadores: Marcadores[]=[];
 
 
 
-async  crearMapa(element:ElementRef, marcadores,dragable){
+async  crearMapa(element:ElementRef, marcadores,dragable,reload){
 //alert('hello')
     console.log(marcadores,'mapa create')
 
@@ -64,7 +64,7 @@ async  crearMapa(element:ElementRef, marcadores,dragable){
      .addTo(this.mapa)
      .togglePopup();
      
-     this.leerMarcador(marcadores, dragable);
+     this.leerMarcador(marcadores, dragable, reload);
 console.log('marcadores mapa service', marcadores)
 const extra_options = true;
 
@@ -92,7 +92,7 @@ if(extra_options){
  this.geocoder.on('result', (e) =>{
   console.log(e.result);
   this.array = e.result
-  this.busquedaMapa(e.result,element, marcadores,dragable);
+  this.busquedaMapa(e.result,element, marcadores,dragable,reload);
 console.log(this.array)
 
   
@@ -108,7 +108,17 @@ this.mapa.on('load', () => {
 });
   }
 
-  async busquedaMapa(data,element, marcadores,dragable) {
+  async detalleCliente(){
+    const modal = await this.modalCtrl.create({
+      component: BusquedaMapaPage,
+      cssClass: 'medium-modal',
+  
+    });
+
+    
+    modal.present();
+  }
+  async busquedaMapa(data,element, marcadores,dragable,reload) {
     const modal = await this.modalCtrl.create({
       component: BusquedaMapaPage,
       cssClass: 'medium-modal',
@@ -124,7 +134,7 @@ this.mapa.on('load', () => {
  console.log(data)
    if(data !== undefined){
    
-    this.crearMapa(element, marcadores,dragable)
+    this.crearMapa(element, marcadores,dragable,!reload)
    }
  }
  
@@ -139,7 +149,7 @@ this.mapa.on('load', () => {
 
     this.clientes.rutasClientes = []
     this.marcadores= [];
-this.crearMapa(mapa,'',false);
+this.crearMapa(mapa,'',false,true);
   console.log(this.marcadores,'mark')
   
   
@@ -150,20 +160,56 @@ this.crearMapa(mapa,'',false);
 
 
 
-  leerMarcador(arreglo:objectoArreglo[],dragable){
+  leerMarcador(arreglo:objectoArreglo[],dragable,reload){
 
   
 
     
 if(arreglo && !dragable){
-  this.marcadores = [];
-  
+
   const defaultMarker = new mapboxgl.Marker()
   const miniPopupDe = new  mapboxgl.Popup();
   miniPopupDe.setText('ISLEÑA')
-  defaultMarker.setPopup(miniPopupDe);
- 
+  defaultMarker.setPopup(miniPopupDe)
+
   defaultMarker.setLngLat(this.center)
+  if(reload){
+  
+const cloneArray = [...this.marcadores]
+this.marcadores = [];
+
+for(let i =0; i < cloneArray .length;i++)
+{
+    
+  const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
+  const newMarker= new mapboxgl.Marker({
+    color:color,
+    draggable: false 
+  })
+  newMarker.setLngLat([cloneArray[i].cliente.LONGITUD,cloneArray[i].cliente.LATITUD]!)
+  newMarker.on('click', () => {})
+
+  this.marcadores.push({
+    id:cloneArray[i].id,
+    cliente:cloneArray[i].cliente,
+    modificado: cloneArray[i].modificado,
+    clienteExistente:cloneArray[i].clienteExistente,
+    nuevoCliente: cloneArray[i].nuevoCliente,
+    nombre:cloneArray[i].nombre,
+    identificador:cloneArray[i].identificador,
+    marker:newMarker,
+    color:color
+  })
+
+
+
+
+} 
+
+console.log(cloneArray,'clone',this.marcadores,'this.marcadores')
+  }else{
+    this.marcadores = [];
+      
   for(let i =0; i < arreglo.length ;i++)
   {
       
@@ -174,6 +220,8 @@ if(arreglo && !dragable){
         draggable: false 
       })
       newMarker.setLngLat([arreglo[i].arreglo[index].LONGITUD,arreglo[i].arreglo[index].LATITUD]!)
+
+
       this.marcadores.push({
         id:arreglo[i].arreglo[index][arreglo[i].id],
         cliente:arreglo[i].arreglo[index],
@@ -192,6 +240,11 @@ if(arreglo && !dragable){
   
   } 
 
+  }
+
+  
+
+
   
 } 
 
@@ -209,6 +262,10 @@ this.marcadores.forEach(item=>{
   const nombre = item.nombre;
   const { lng, lat } = item.marker!.getLngLat();
   miniPopup.setText(  item.id + ' ' + nombre )
+  miniPopup.on('open', () => {
+    console.log('popup was opened');
+    this.clientes.switchModaldetalle('planificacion-rutas',item.cliente)
+    })
   newMarker.setPopup(miniPopup);
  // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
   newMarker.setLngLat([ lng, lat]!)
