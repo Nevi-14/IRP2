@@ -257,7 +257,7 @@ this.modo = 'on'
             Longitud: this.map.marcadores[i].cliente.LONGITUD  ? this.map.marcadores[i].cliente.LONGITUD  :  null,
                     }
     
-                    if(this.map.marcadores[i].modificado){
+                    if(this.map.marcadores[i].modificado || this.map.marcadores[i].nuevoCliente){
                       this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
                     }
                    

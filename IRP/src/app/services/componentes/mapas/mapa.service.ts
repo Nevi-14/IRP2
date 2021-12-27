@@ -20,6 +20,7 @@ interface Marcadores{
 }
 marker: mapboxgl.Marker
 interface objectoArreglo{
+nuevoCliente:boolean,
 nombre:string,
 identificador:string,
 id:string,
@@ -131,10 +132,10 @@ this.mapa.on('load', () => {
 
 
  const { data } = await modal.onDidDismiss();
- console.log(data)
+
    if(data !== undefined){
-   
-    this.crearMapa(element, marcadores,dragable,!reload)
+    console.log(data)
+    this.crearMapa(element, marcadores,dragable, true)
    }
  }
  
@@ -221,13 +222,13 @@ console.log(cloneArray,'clone',this.marcadores,'this.marcadores')
       })
       newMarker.setLngLat([arreglo[i].arreglo[index].LONGITUD,arreglo[i].arreglo[index].LATITUD]!)
 
-
+      
       this.marcadores.push({
         id:arreglo[i].arreglo[index][arreglo[i].id],
         cliente:arreglo[i].arreglo[index],
         modificado: false,
         clienteExistente:false,
-        nuevoCliente: false,
+        nuevoCliente: arreglo[i].nuevoCliente ? true  : false,
         nombre:arreglo[i].arreglo[index][arreglo[i].nombre],
         identificador:arreglo[i].arreglo[index][arreglo[i].identificador],
         marker:newMarker,

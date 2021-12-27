@@ -178,8 +178,9 @@ html,body {
 
   #circle{
     --border-radius: 100%;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
 }
 .spin-element {
 
@@ -555,4 +556,28 @@ ion-modal.custom-modal {
           padding: 10px;
       }
   }
+}
+
+.color-modal{
+  .modal-wrapper{
+    --position:absolute;
+    --left:0;
+    --width: 75% !important;
+    --height: 75%;
+    position: absolute;
+   
+}
+
+}
+
+.table-title{
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.table-text{
+text-transform: capitalize;
+font-size: 12px;
 }
