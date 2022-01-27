@@ -92,12 +92,13 @@ export class MenuClientesPage implements OnInit {
         console.log('duplicate elements', this.clientes.clientesArray[i].cliente.IdCliente)
         this.clientes.clientesArray.splice(duplicate, 1);
         }else{
+          
           this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
           this.clientes.nuevosClientes.push(this.clientes.clientesArray[i].cliente)
         }
        
          // this.map.createMap(-84.14123589305028,9.982628288210657);
-         this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}], false);
+         this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes,nuevoCliente:true}], false, false);
 
     }
   }

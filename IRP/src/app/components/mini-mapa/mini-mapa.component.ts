@@ -6,7 +6,7 @@ import * as  mapboxgl from 'mapbox-gl';
   styles: [
     
     `
-  
+
     `
   ]
 })
@@ -24,7 +24,7 @@ export class MiniMapaComponent implements AfterViewInit {
       container: this.divMapa.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: this.lngLat,
-      zoom:10,
+      zoom:14,
         interactive:this.interactive
       });
   

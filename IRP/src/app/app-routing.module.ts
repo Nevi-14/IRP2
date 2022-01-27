@@ -63,6 +63,10 @@ const routes: Routes = [
     path: 'fecha',
     loadChildren: () => import('./pages/fecha/fecha.module').then( m => m.FechaPageModule)
   },
+  {
+    path: 'busqueda-mapa',
+    loadChildren: () => import('./pages/busqueda-mapa/busqueda-mapa.module').then( m => m.BusquedaMapaPageModule)
+  },
  
 ];
 

@@ -1,0 +1,12 @@
+
+.button-message {
+    display: none;
+  }
+
+  ion-button:hover .button-message{
+   display: block;
+  }
+
+  ion-toggle {
+    zoom: 1.5;
+  }

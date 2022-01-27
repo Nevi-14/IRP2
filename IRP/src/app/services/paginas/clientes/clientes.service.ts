@@ -129,7 +129,7 @@ this.mostrarClienteFactura(cliente);
   async detalleClientes(cliente){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
-      cssClass: 'medium-modal',
+      cssClass: 'color-modal',
       componentProps:{
         detalleCliente: cliente
       }

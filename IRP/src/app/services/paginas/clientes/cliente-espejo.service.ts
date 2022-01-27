@@ -71,12 +71,14 @@ console.log(id)
 
   insertarClienteEspejo(ruta){
 
+    this.presentaLoading('Guardando cambios')
     this.postClienteEspejo(ruta).subscribe(
       
       resp => {
         console.log('Rutas guardadas con exito', resp);
       //  this.depositos = [];
      // this.loadingDissmiss();
+     this.loadingDissmiss();
       this.message('IRP','Las rutas se guardaron con exito');
       }, error => {
         console.log('Rerror', error);

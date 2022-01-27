@@ -76,11 +76,12 @@ export class MapaComponent implements AfterViewInit, OnInit, OnDestroy {
     
   }
 ngOnInit(){
+  
   this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
 //LOADER, COUNT, INDICADOR DE MAPA, SWITCH DE DRAGGABLE, INDICADOR CLIENTE NUEVO O EXISTENTE (TITULO NUEVO), AJUSTAR VISTAS, CAMBIAR NOMBRE PLANIFICACION ENTREGAS
 }
   ngAfterViewInit(): void {
-  this.map.crearMapa(this.divMapa, this.marcadores,false);
+  this.map.crearMapa(this.divMapa, this.marcadores,false, false);
 
   }
 
@@ -102,34 +103,35 @@ async configuracionZonaRuta(evento) {
     event: evento,
     translucent: true,
     mode:'ios',
-   backdropDismiss:false
   });
 
    popover.present();
 
 
   const { data } = await popover.onDidDismiss();
-  
-  if(data.ruta != ''){
 
-  
-    const i = this.rutaZona.rutasZonasArray.findIndex( r => r.Ruta === data.ruta );
+    if(data !== undefined && data.ruta != ''){
+      
+      const i = this.rutaZona.rutasZonasArray.findIndex( r => r.Ruta === data.ruta );
     
    
-    if ( i >= 0 ){
-      const  z = this.zonas.zonas.findIndex( z => z.ZONA === this.rutaZona.rutasZonasArray[i].Zona);
-         this.rutaZonaData.rutaID = this.rutaZona.rutasZonasArray[i].Ruta;
-         this.rutaZonaData.ruta =this.rutaZona.rutasZonasArray[i].Descripcion;
-         this.rutaZonaData.zonaId =  this.zonas.zonas[z].ZONA;
-         this.rutaZonaData.zona = this.zonas.zonas[z].NOMBRE;
-      
-       }  
+      if ( i >= 0 ){
+        const  z = this.zonas.zonas.findIndex( z => z.ZONA === this.rutaZona.rutasZonasArray[i].Zona);
+           this.rutaZonaData.rutaID = this.rutaZona.rutasZonasArray[i].Ruta;
+           this.rutaZonaData.ruta =this.rutaZona.rutasZonasArray[i].Descripcion;
+           this.rutaZonaData.zonaId =  this.zonas.zonas[z].ZONA;
+           this.rutaZonaData.zona = this.zonas.zonas[z].NOMBRE;
+        
+         }  
+  
+  
+      this.syncRutas(this.funcion)
+  
+      //this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
+  
+    }
 
 
-    this.syncRutas(this.funcion)
-
-    //this.map.leerMarcador([{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes}]);
-  }
 
 }
 
@@ -149,6 +151,9 @@ async informacionMarcadores(evento) {
 
 }
 
+limpiarDatos(){
+  this.map.reset(this.divMapa);
+}
 
 
 
@@ -203,7 +208,7 @@ async syncRutas(expression){
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
-      this.map.crearMapa(this.divMapa,this.marcadores, false  );
+      this.map.crearMapa(this.divMapa,this.marcadores, false , false );
       this.global.loadingDissmiss();
     }, seconds*1000);
   });
@@ -233,7 +238,7 @@ this.modo = 'on'
         }else{
           this.modo = 'off'
         }
-        this.map.crearMapa(this.divMapa, '', this.drag)
+        this.map.crearMapa(this.divMapa, '', this.drag, false)
       }
 
       postRutas(){
@@ -252,7 +257,10 @@ this.modo = 'on'
             Longitud: this.map.marcadores[i].cliente.LONGITUD  ? this.map.marcadores[i].cliente.LONGITUD  :  null,
                     }
     
-                    this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
+                    if(this.map.marcadores[i].modificado || this.map.marcadores[i].nuevoCliente){
+                      this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
+                    }
+                   
           
         }
         
@@ -260,8 +268,13 @@ this.modo = 'on'
 
         console.log(this.clienteEspejo.ClienteEspejoArray, 'cliente espejo con marcadores', this.clienteEspejo.ClienteEspejoArray.length)
 
+        if(this.clienteEspejo.insertarClienteEspejo.length > 0){
+          this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
+
+        }else{
+          this.global.message('Planificacion Rutas','No se efectuaron cambios');
+        }
         
-this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
 
 this.ngOnDestroy();
       }

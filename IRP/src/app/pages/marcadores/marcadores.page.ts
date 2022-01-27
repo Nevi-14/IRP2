@@ -21,7 +21,8 @@ interface Marcadores{
 
 export class MarcadoresPage implements OnInit {
   @Input() marcadores:Marcadores[];
-  
+  filtroToggle = true;
+  toggleValue = 'id';
 @Input() funcion:string;
 textoBuscar = '';
   constructor(public clientes: ClientesService, public mapa: MapaService, public modalCtrl: ModalController) { }
@@ -33,6 +34,17 @@ textoBuscar = '';
     this.modalCtrl.dismiss();
   }
 
+  cambio(){
+    console.log(this.toggleValue,' toggle value')
+    if(this.toggleValue === 'id' ){
+      this.toggleValue = 'nombre'
+      this.filtroToggle = false;
+    }else{
+      this.toggleValue = 'id'
+      this.filtroToggle = true;
+    }
+ 
+  }
   onSearchChange(event){
 
     // alert('h')
