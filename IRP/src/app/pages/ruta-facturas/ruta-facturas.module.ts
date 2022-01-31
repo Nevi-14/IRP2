@@ -7,7 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { RutaFacturasPageRoutingModule } from './ruta-facturas-routing.module';
 
 import { RutaFacturasPage } from './ruta-facturas.page';
-import { ComponentsModule } from '../../components/components.module';
+import { ComponentsModule } from 'src/app/components/components.module';
+
 
 
 @NgModule({
@@ -17,6 +18,8 @@ import { ComponentsModule } from '../../components/components.module';
     IonicModule,
     RutaFacturasPageRoutingModule,
     ComponentsModule
+
+    
   ],
   declarations: [RutaFacturasPage]
 })

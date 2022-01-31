@@ -2,22 +2,103 @@
 
 
 
-<ion-content class="ion-padding" >
 
-  <ion-grid>
-    <ion-row   class="full-screen">
+
+<ion-toolbar class="ion-padding">
+
+  <ion-grid >
+    <ion-row>
+      <ion-col size="6">
+
+        <ion-card-header>
+          <ion-card-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Planificación de entregas</ion-card-title>
+        </ion-card-header>
    
-          
-  <ion-col size="12">
-    <app-mapa titulo="Rutas Facturas IRP" funcion="rutas-facturas" [marcadores]="[{nombre:'NOMBRE_CLIENTE',id:'CLIENTE',arreglo:rutaFacturas.rutaFacturasArray,identificador:'cliente factura'}]"></app-mapa>
+       </ion-col>
+<ion-col size="6">
+<ion-row>
+  <ion-col size="3">
+    <ion-badge color="dark">Ruta</ion-badge>
   </ion-col>
-  
-  
-               
-  
-  
+  <ion-col size="3">
+    <ion-label class="ion-text-left">{{rutaZonaData.ruta}}</ion-label>
+  </ion-col>
+  <ion-col size="3">
+    <ion-badge color="dark">Zona</ion-badge>
+  </ion-col>
+  <ion-col size="3">
+    <ion-label>{{rutaZonaData.zona}}</ion-label>
+  </ion-col>
+</ion-row>
+</ion-col>
     </ion-row>
   </ion-grid>
+  <ion-buttons  slot="end">
+    <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+      <ion-icon class="spin-element"  name="settings"></ion-icon>
+    </ion-button>
+    <ion-button  shape="round" fill="solid" color="dark" (click)="listaClientesRutaFacturas()">
+      <ion-icon   name="people-outline"></ion-icon>
+    </ion-button>
+    <ion-badge color="dark" mode="ios" *ngIf="rutaFacturas.rutaFacturasArray.length > 0">{{rutaFacturas.rutaFacturasArray.length}}</ion-badge>
+
+
+  </ion-buttons>
+</ion-toolbar>
+
+
+
+<ion-content  >
+
+  <ion-grid >
+    <ion-row>
+      <ion-col class="cell-class"  size="4">Peso Total : {{pesoTotalBultosFactura}} </ion-col>
+      <ion-col class="cell-class"  size="4">Total Bultos:   {{totalBultosFactura}}</ion-col>
+      <ion-col class="cell-class" size="4">Fecha de entrega  {{fechaEntrega}}</ion-col>
+    </ion-row>
+    <ion-row>
+
+      <ion-col size="4" class="cell-class" >
+
+        Cliente
+      </ion-col>
+      <ion-col class="cell-class"   size="1">Frio</ion-col>
+      <ion-col class="cell-class"   size="1">Seco</ion-col>
+      <ion-col class="cell-class"   size="2">Bultos</ion-col>
+      <ion-col class="cell-class"  size="2">Peso</ion-col>
+      <ion-col class="cell-class"  size="2">Camion</ion-col>
+      <ng-template ngFor let-factura [ngForOf]="rutaFacturas.rutaFacturasArray" let-i="index" let-odd="odd" >
+
+        <ion-col size="4"  class="cell-class" >
+          {{factura.NOMBRE_CLIENTE}}
+        
+        </ion-col>
+        <ion-col class="cell-class"   size="1">
+          <ion-checkbox></ion-checkbox>
+        </ion-col>
+        <ion-col class="cell-class"   size="1">
+          <ion-checkbox></ion-checkbox>
+        </ion-col>
+        <ion-col class="cell-class"   size="2">
+{{factura.RUBRO1}}
+        </ion-col>
+        <ion-col class="cell-class"   size="2">
+          {{factura.TOTAL_PESO_NETO}}
+        </ion-col>
+        <ion-col class="cell-class"   size="2">
+
+        </ion-col>
+     
+
+      </ng-template>
+
+
+        
+      
+    </ion-row>
+  </ion-grid>
+
+
   
   </ion-content>
   

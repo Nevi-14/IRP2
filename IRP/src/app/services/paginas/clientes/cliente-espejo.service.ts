@@ -9,6 +9,7 @@ import { Clientes } from '../../../models/clientes';
 import { ClientesService } from './clientes.service';
 import { GlobalService } from '../../global.service';
 import { MapaService } from '../../componentes/mapas/mapa.service';
+import { MapboxGLService } from '../../mapbox-gl.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ import { MapaService } from '../../componentes/mapas/mapa.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private mapa: MapaService, private global: GlobalService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private mapa: MapaService, private global: GlobalService, public MapboxGlService: MapboxGLService) { }
 
   
 rutas: Clientes[]=[];
@@ -39,12 +40,13 @@ console.log(id)
     return this.http.get<Clientes[]>( URL );
   }
 
-  syncRutas(ruta, mapa, arreglo, drag){
+  syncRutas(ruta){
     this.getRutas(ruta).subscribe(
       resp =>{
         this.clientes.rutasClientes = [];
         this.clientes.rutasClientes = resp.slice(0);
-        console.log(arreglo)
+        this.MapboxGlService.createmapa(false);
+     
        // this.mapa.crearMapa(mapa,arreglo, drag  );
      //   this.global.loadingDissmiss();
       }

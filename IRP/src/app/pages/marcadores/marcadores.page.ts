@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
+import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
 interface Marcadores{
   id:string,
@@ -25,7 +26,7 @@ export class MarcadoresPage implements OnInit {
   toggleValue = 'id';
 @Input() funcion:string;
 textoBuscar = '';
-  constructor(public clientes: ClientesService, public mapa: MapaService, public modalCtrl: ModalController) { }
+  constructor(public clientes: ClientesService, public mapa: MapaService, public modalCtrl: ModalController, public MapboxGlService: MapboxGLService) { }
 
   ngOnInit() {
   console.log(this.marcadores)
@@ -50,6 +51,11 @@ textoBuscar = '';
     // alert('h')
      //console.log(event.detail.value);
      this.textoBuscar = event.detail.value;
+   }
+
+   irMarcador(item){
+     this.modalCtrl.dismiss();
+     this.MapboxGlService.irMarcador( item )
    }
 
    

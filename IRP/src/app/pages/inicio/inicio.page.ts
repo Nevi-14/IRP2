@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MapService } from '../../services/componentes/mapas/map.service';
 import { RutasService } from '../../services/paginas/rutas/rutas.service';
 import { ClientesService } from '../../services/paginas/clientes/clientes.service';
 import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
@@ -26,7 +25,7 @@ export class InicioPage implements OnInit {
 
   constructor(public route: Router, public mapa: MapaService, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService) {}
 
-  ngOnInit(){
+  ngOnInit(){   
 
     this.modulosArray.push(
       {
@@ -42,10 +41,16 @@ export class InicioPage implements OnInit {
         ruta: '/planificacion-rutas',
       },
       {
+        imagen: '../assets/home/delivery.svg',
+        titulo: 'Gestion de camiones',
+        descripcion: 'Permite gestionar los camiones en ruta',
+        ruta: '/gestion-camiones',
+      },
+      {
         imagen: '../assets/png/receipt.png',
         titulo: 'Planificacion de Entregas',
         descripcion: 'Permite gestionar la factura por cliente de cada ruta',
-        ruta: '/ruta-facturas',
+        ruta: '/planificacion-entregas',
       }
     )
 

@@ -36,7 +36,7 @@
 <ion-label>  Distrito : {{detalleCliente.DISTRITO}}</ion-label>
 </ion-col>
 <ion-col  size="12">
-<ion-label>Barrio : {{detalleCliente.barrio}}</ion-label>
+<ion-label>Barrio : {{detalleCliente.BARRIO}}</ion-label>
 
 </ion-col>
 <ion-col >
@@ -54,7 +54,7 @@
         </ion-row>
      
 
-        <app-mini-mapa class="ion-margin" [height]="'80%'" [width]="'100%'"  [interactive]="'true'" [lngLat]="[detalleCliente.LONGITUD,detalleCliente.LATITUD]"></app-mini-mapa>
+        <app-mini-mapa class="ion-margin" [height]="'80%'" [width]="'100%'"  [interactive]="true" [lngLat]="[detalleCliente.LONGITUD,detalleCliente.LATITUD]"></app-mini-mapa>
  
 
       </ion-col>

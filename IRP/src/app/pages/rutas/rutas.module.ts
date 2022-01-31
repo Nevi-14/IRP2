@@ -18,7 +18,8 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     RutasPageRoutingModule,
     PipesModule
   ],
-  declarations: [RutasPage]
+  declarations: [RutasPage],
+  exports: [PipesModule]
 })
 export class RutasPageModule {}
 
