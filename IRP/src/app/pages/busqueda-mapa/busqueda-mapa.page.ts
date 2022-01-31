@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
+import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 
 @Component({
   selector: 'app-busqueda-mapa',
@@ -9,16 +10,17 @@ import { ClientesService } from 'src/app/services/paginas/clientes/clientes.serv
   styleUrls: ['./busqueda-mapa.page.scss'],
 })
 export class BusquedaMapaPage implements OnInit {
-@Input() data: any;
+@Input() data;
 funcion = 'planificacion-rutas';
 filtroToggle = true;
 toggleValue = 'id';
 longLat = '';
 textoBuscar = '';
 
-  constructor(public mapaService: MapaService, public clientesService: ClientesService, public modalCtrl: ModalController) { }
+  constructor(public mapaService: MapaService, public clientesService: ClientesService, public modalCtrl: ModalController, public mapboxGLService: MapboxGLService) { }
 
   ngOnInit() {
+    console.log(this.data)
 this.longLat = '[ ' + this.data.geometry.coordinates + ' ]'
   }
 
@@ -28,14 +30,15 @@ this.longLat = '[ ' + this.data.geometry.coordinates + ' ]'
 
   actualizarCordenadas(id){
     
-    const  i = this.mapaService.marcadores.findIndex(m => m.id === id);
+    const  i = this.mapboxGLService.marcadores.findIndex(m => m.id === id);
+    console.log(id, 'actualiza')
 if(i >= 0){
-  console.log(    this.mapaService.marcadores[i], 'before')
-  this.mapaService.marcadores[i].modificado = true;
-  this.mapaService.marcadores[i].cliente.LONGITUD = this.data.geometry.coordinates[0];
-  this.mapaService.marcadores[i].cliente.LATITUD = this.data.geometry.coordinates[1];
-  this.mapaService.marcadores[i].centro = [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]
-  console.log(    this.mapaService.marcadores[i], 'after')
+  console.log(    this.mapboxGLService.marcadores[i], 'before')
+  this.mapboxGLService.marcadores[i].modificado = true;
+  this.mapboxGLService.marcadores[i].cliente.LONGITUD = this.data.geometry.coordinates[0];
+  this.mapboxGLService.marcadores[i].cliente.LATITUD = this.data.geometry.coordinates[1];
+  this.mapboxGLService.marcadores[i].centro = [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]
+  console.log(    this.mapboxGLService.marcadores[i], 'after')
 }
     this.modalCtrl.dismiss({
       data:  true

@@ -49,7 +49,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
   
     ngOnInit(){
      this.clientes.rutasClientes = [];
- 
+     this.clientes.nuevosClientes = [];
   console.log('planificacion Rutas')
     
     }
@@ -93,14 +93,17 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
           Usuario: 'IRP',
           Zona: this.rutaZonaData.zonaId ,
           Ruta:this.rutaZonaData.rutaID   ,
-          Latitud: this.mapboxLgService.marcadores[i].cliente.LATITUD ? this.mapboxLgService.marcadores[i].cliente.LATITUD : null  ,
-          Longitud: this.mapboxLgService.marcadores[i].cliente.LONGITUD  ? this.mapboxLgService.marcadores[i].cliente.LONGITUD  :  null,
+          Latitud: this.mapboxLgService.marcadores[i].cliente.LATITUD,
+          Longitud: this.mapboxLgService.marcadores[i].cliente.LONGITUD
                   }
+                  console.log(this.mapboxLgService.marcadores, 'post')
   
-                  if(this.mapboxLgService.marcadores[i].modificado || this.mapboxLgService.marcadores[i].nuevoCliente){
+              /**
+               *     if(this.mapboxLgService.marcadores[i].modificado || this.mapboxLgService.marcadores[i].nuevoCliente){
                     this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
                   }
-                 
+               */
+                  this.clienteEspejo.ClienteEspejoArray.push(rutasClientes) 
         
       }
       
@@ -110,13 +113,15 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
       if(this.clienteEspejo.insertarClienteEspejo.length > 0){
         this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
-
+        this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
+        this.clientes.rutasClientes = [];
+        this.clientes.nuevosClientes = [];
       }else{
         this.global.message('Planificacion Rutas','No se efectuaron cambios');
       }
       
 
-      this.mapboxLgService.createmapa(false);
+     
     }
 
     
