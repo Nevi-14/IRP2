@@ -59,6 +59,7 @@ console.log(URL)
   }
 
   syncClientes(provincia, canton, distrito ){
+    //   this.clientes.presentaLoading('Cargando clientes');
     this.getClientes(provincia, canton, distrito).subscribe(
       resp =>{
         this.clientes = resp
@@ -92,7 +93,7 @@ console.log(URL)
     this.clientesArray.push(objectElement)
 
     console.log('cleintes array',this.clientesArray);
-    this.loadingDissmiss()
+    //this.loadingDissmiss()
     }
 
 

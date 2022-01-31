@@ -67,6 +67,26 @@ const routes: Routes = [
     path: 'busqueda-mapa',
     loadChildren: () => import('./pages/busqueda-mapa/busqueda-mapa.module').then( m => m.BusquedaMapaPageModule)
   },
+  {
+    path: 'lista-clientes-ruta-facturas',
+    loadChildren: () => import('./pages/lista-clientes-ruta-facturas/lista-clientes-ruta-facturas.module').then( m => m.ListaClientesRutaFacturasPageModule)
+  },
+  {
+    path: 'planificacion-entregas',
+    loadChildren: () => import('./pages/planificacion-entregas/planificacion-entregas.module').then( m => m.PlanificacionEntregasPageModule)
+  },
+  {
+    path: 'camiones',
+    loadChildren: () => import('./pages/camiones/camiones.module').then( m => m.CamionesPageModule)
+  },
+  {
+    path: 'gestion-camiones',
+    loadChildren: () => import('./pages/gestion-camiones/gestion-camiones.module').then( m => m.GestionCamionesPageModule)
+  },
+  {
+    path: 'lista-capacidad-camiones',
+    loadChildren: () => import('./pages/lista-capacidad-camiones/lista-capacidad-camiones.module').then( m => m.ListaCapacidadCamionesPageModule)
+  },
  
 ];
 

@@ -24,7 +24,8 @@ export const environment = {
   rutaZonaURL:'Ruta_Zona',
   rutaFacturasURL:'Facturas/',
   zonasURL:'Zonas',
-  prdMode: false,
+  camionesURL:'Camiones',
+  prdMode: true,
 };
 
 

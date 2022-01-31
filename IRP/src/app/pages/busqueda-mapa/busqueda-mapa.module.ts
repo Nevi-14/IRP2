@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { BusquedaMapaPageRoutingModule } from './busqueda-mapa-routing.module';
 
 import { BusquedaMapaPage } from './busqueda-mapa.page';
-import { ComponentsModule } from 'src/app/components/components.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -16,8 +16,8 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     FormsModule,
     IonicModule,
     BusquedaMapaPageRoutingModule,
-    ComponentsModule,
-    PipesModule
+    PipesModule,
+    ComponentsModule
   ],
   declarations: [BusquedaMapaPage]
 })

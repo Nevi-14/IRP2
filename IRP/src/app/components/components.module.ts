@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './encabezados/header.component';
 import { MiniMapaComponent } from './mini-mapa/mini-mapa.component';
 import { MapaComponent } from './mapa/mapa.component';
 import { IonicModule } from '@ionic/angular';
 import { PipesModule } from '../pipes/pipes.module';
+import { HeaderComponent } from './header/header.component';
 
 
 
 @NgModule({
-  declarations: [HeaderComponent,MiniMapaComponent,MapaComponent],
+  declarations: [MiniMapaComponent,MapaComponent,HeaderComponent],
   imports: [
     CommonModule,
     IonicModule,
     PipesModule
   ],
   exports: [
-    HeaderComponent,MiniMapaComponent,MapaComponent
+  MiniMapaComponent,MapaComponent,
+  HeaderComponent
 
   ]
 })

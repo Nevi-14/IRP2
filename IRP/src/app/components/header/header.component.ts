@@ -1,19 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../../services/login.service';
-import { GlobalService } from '../../services/global.service';
+import { GlobalService } from 'src/app/services/global.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
-
+export class HeaderComponent  {
+  fecha = new Date().toLocaleDateString();
   constructor(public route: Router, public login: LoginService, public global: GlobalService) { }
 
-  ngOnInit() {
-  }
 
   myChangeEvent(event){
     if(this.login.loginToggle === false){

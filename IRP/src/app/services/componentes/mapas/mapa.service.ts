@@ -289,7 +289,7 @@ this.marcadores.forEach(item=>{
   if(c >= 0){
     this.clientes.rutasClientes[c].LONGITUD = lng;
     this.clientes.rutasClientes[c].LATITUD = lat;
-  }
+  } 
   if(n >= 0){
     this.clientes.nuevosClientes[n].LONGITUD = lng;
     this.clientes.nuevosClientes[n].LATITUD = lat;

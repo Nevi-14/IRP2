@@ -12,6 +12,7 @@ import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
 import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
+import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -28,7 +29,7 @@ export class MenuClientesPage implements OnInit {
   textoBuscar = '';
   isChecked = false;
   @Input() mapa :any
-  constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public map: MapaService, public clienteEspejo: ClienteEspejoService) { }
+  constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public map: MapaService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService) { }
 
 
 
@@ -98,8 +99,10 @@ export class MenuClientesPage implements OnInit {
         }
        
          // this.map.createMap(-84.14123589305028,9.982628288210657);
-         this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes,nuevoCliente:true}], false, false);
-
+     //    this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes,nuevoCliente:true}], false, false);
+     this.modalCtrl.dismiss();
+         this.MapboxGLService.createmapa(false);
+      
     }
   }
   this.message('IRP','Se agrego a la lista de RUTAS');
@@ -108,7 +111,7 @@ export class MenuClientesPage implements OnInit {
 
   }
   async onSubmit(){
-    this.clientes.presentaLoading('Cargando clientes');
+ 
 this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
 this.borrarFiltro();
 this.clientes.clientesArray = [];
@@ -147,9 +150,7 @@ this.isChecked = !this.isChecked;
         buttons: ['OK']
       });
   
-      this.modalCtrl.dismiss({
-        statement:true
-      });
+
       await alert.present();
  
   }

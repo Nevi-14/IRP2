@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ClienteFacturaPageRoutingModule } from './cliente-factura-routing.module';
 
 import { ClienteFacturaPage } from './cliente-factura.page';
-import { ComponentsModule } from '../../components/components.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -16,6 +16,7 @@ import { ComponentsModule } from '../../components/components.module';
     IonicModule,
     ClienteFacturaPageRoutingModule,
     ComponentsModule
+
   ],
   declarations: [ClienteFacturaPage]
 })

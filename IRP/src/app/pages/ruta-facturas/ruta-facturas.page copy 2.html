@@ -1,0 +1,396 @@
+<app-header></app-header>
+
+
+
+
+
+<ion-toolbar class="ion-padding">
+
+  <ion-grid >
+    <ion-row>
+      <ion-col size="6">
+
+        <ion-card-header>
+          <ion-card-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Planificación de entregas</ion-card-title>
+        </ion-card-header>
+   
+       </ion-col>
+<ion-col size="6">
+<ion-row>
+  <ion-col size="3">
+    <ion-badge color="dark">Ruta</ion-badge>
+  </ion-col>
+  <ion-col size="3">
+    <ion-label class="ion-text-left">{{rutaZonaData.ruta}}</ion-label>
+  </ion-col>
+  <ion-col size="3">
+    <ion-badge color="dark">Zona</ion-badge>
+  </ion-col>
+  <ion-col size="3">
+    <ion-label>{{rutaZonaData.zona}}</ion-label>
+  </ion-col>
+</ion-row>
+</ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-buttons  slot="end">
+    <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+      <ion-icon class="spin-element"  name="settings"></ion-icon>
+    </ion-button>
+    <ion-button  shape="round" fill="solid" color="dark" (click)="listaClientesRutaFacturas()">
+      <ion-icon   name="people-outline"></ion-icon>
+    </ion-button>
+    <ion-badge color="dark" mode="ios" *ngIf="rutaFacturas.rutaFacturasArray.length > 0">{{rutaFacturas.rutaFacturasArray.length}}</ion-badge>
+
+
+  </ion-buttons>
+</ion-toolbar>
+
+
+
+<ion-content  >
+  <ion-list>
+    
+    <ion-grid >
+      <ion-row>
+        <ion-col size="12" >
+
+          <ion-row>
+
+
+            <ion-col size="6">
+
+              <ion-row>
+                <ion-col size="12">
+          <ion-item-divider>
+        <ion-label class="ion-text-uppercase">Detalles Generales</ion-label>
+          </ion-item-divider>
+                
+                </ion-col>
+  
+
+                <ion-col size="6">
+          
+                  <ion-label><h3>
+                    Fecha de pedido
+                  </h3>
+                <p *ngIf="factura">
+{{factura.FECHA_PEDIDO}}
+                 </p>
+                
+                </ion-label>
+            
+               
+              </ion-col>
+
+              <ion-col size="6">
+          
+                <ion-label><h3>
+                  Fecha de entrega
+                </h3>
+              <p *ngIf="factura">
+{{factura.FECHA_ENTREGA}}
+               </p>
+              
+              </ion-label>
+          
+             
+            </ion-col>
+
+            
+            <ion-col size="6">
+          
+              <ion-label><h3>
+               Cliente
+              </h3>
+            <p *ngIf="factura">
+{{factura.NOMBRE_CLIENTE}}
+             </p>
+            
+            </ion-label>
+        
+           
+          </ion-col>
+          <ion-col size="6">
+          
+            <ion-label><h3>
+             Observaciones
+            </h3>
+          <p *ngIf="factura">
+{{factura.OBSERVACIONES}}
+           </p>
+          
+          </ion-label>
+      
+         
+        </ion-col>
+
+          
+              </ion-row>
+
+              
+            </ion-col>
+            <ion-col size="6" >
+
+              <ion-row>
+                <ion-col size="12">
+          <ion-item-divider>
+        <ion-label class="ion-text-uppercase">Detalle Factura</ion-label>
+          </ion-item-divider>
+                
+                </ion-col>
+  
+
+                <ion-col size="6">
+          
+                  <ion-label><h3>
+                    Factura
+                  </h3>
+                <p *ngIf="factura">{{factura.FACTURA}}</p>
+                
+                </ion-label>
+            
+               
+              </ion-col>
+
+                <ion-col size="6">
+          
+                    <ion-label><h3>
+                      Pedido
+                    </h3>
+                  <p *ngIf="factura">{{factura.PEDIDO}}</p>
+                  
+                  </ion-label>
+              
+                 
+                </ion-col>
+
+                <ion-col size="6">
+            
+                    <ion-label>
+                      <h3>
+                      Vendedor
+                    </h3>
+                  <p *ngIf="factura">{{factura.VENDEDOR}}</p>
+                  </ion-label>
+                 
+              
+                </ion-col>
+                <ion-col size="6">
+
+                  <ion-label>
+                    <h3>
+                      Condicion de pago
+                  </h3>
+                <p *ngIf="factura">{{factura.CONDICION_PAGO}}</p>
+                </ion-label>
+
+                </ion-col>
+                <ion-col size="6">
+
+
+
+                  <ion-label>
+                    <h3>
+                      Tipo de moneda
+                  </h3>
+                <p *ngIf="factura">{{factura.MONEDA_FACTURA}}</p>
+                </ion-label>
+
+                </ion-col>
+                <ion-col size="6">
+
+                  <ion-label>
+                    <h3>
+                      Tipo de cambio
+                  </h3>
+                <p *ngIf="factura">{{factura.TIPO_CAMBIO}}</p>
+                </ion-label>
+
+
+            
+                </ion-col>
+                <ion-col size="6">
+
+                  <ion-label>
+                    <h3>
+                      Factura nivel precio
+                  </h3>
+                <p *ngIf="factura">{{factura.NIVEL_PRECIO}}</p>
+                </ion-label>
+
+
+
+               
+                </ion-col>
+                <ion-col size="6">
+                  
+                  <ion-label>
+                    <h3>
+                      Total mercaderia
+                  </h3>
+                <p *ngIf="factura">{{factura.TOTAL_MERCADERIA}}</p>
+                </ion-label>
+
+
+
+        
+                </ion-col>
+                <ion-col size="6">
+
+                  <ion-label>
+                    <h3>
+                      Total impuesto 1
+                  </h3>
+                <p *ngIf="factura">{{factura.TOTAL_IMPUESTO1}}</p>
+                </ion-label>
+
+
+                </ion-col>
+                <ion-col size="6">
+                  <ion-label>
+                    <h3>
+                      Base impuesto 1
+                  </h3>
+                <p *ngIf="factura">{{factura.BASE_IMPUESTO1}}</p>
+                </ion-label>
+
+           
+                </ion-col>
+              </ion-row>
+
+              
+            </ion-col>
+      
+            <ion-col size="6" >
+
+              <ion-row>
+                <ion-col size="12">
+          <ion-item-divider>
+        <ion-label class="ion-text-uppercase">Detalle de Volumen y Peso</ion-label>
+          </ion-item-divider>
+                
+                </ion-col>
+  
+
+                <ion-col size="6">
+          
+                  <ion-label><h3>
+                    Total de unidades
+                  </h3>
+                <p *ngIf="factura">
+{{factura.TOTAL_UNIDADES}}
+                 </p>
+                
+                </ion-label>
+            
+               
+              </ion-col>
+
+              <ion-col size="6">
+          
+                <ion-label><h3>
+                  Total de peso
+                </h3>
+              <p *ngIf="factura">
+{{factura.TOTAL_PESO}}
+               </p>
+              
+              </ion-label>
+          
+             
+            </ion-col>
+
+            
+            <ion-col size="6">
+          
+              <ion-label><h3>
+               Total Volumen
+              </h3>
+            <p *ngIf="factura">
+{{factura.TOTAL_VOLUMEN}}
+             </p>
+            
+            </ion-label>
+        
+           
+          </ion-col>
+          <ion-col size="6">
+          
+            <ion-label><h3>
+             Total peso neto
+            </h3>
+          <p *ngIf="factura">
+{{factura.TOTAL_PESO_NETO}}
+           </p>
+          
+          </ion-label>
+      
+         
+        </ion-col>
+              </ion-row>
+
+              
+            </ion-col>
+            <ion-col size="6" >
+
+              <ion-row>
+                <ion-col size="12">
+          <ion-item-divider>
+        <ion-label class="ion-text-uppercase">Detalle de Ubicacion y entrega</ion-label>
+          </ion-item-divider>
+                
+                </ion-col>
+  
+                <ion-col size="6" >
+          
+                  <ion-label><h3>
+                  Direccion
+                  </h3>
+                <p *ngIf="factura">
+      {{factura.DIRECCION_FACTURA}}
+                 </p>
+                
+                </ion-label>
+            
+               
+              </ion-col>
+
+              <ion-col size="6">
+          
+                <ion-label><h3>
+               Embarcar a
+                </h3>
+              <p *ngIf="factura">
+    {{factura.EMBARCAR_A}}
+               </p>
+              
+              </ion-label>
+          
+             
+            </ion-col>
+              
+                <ion-col size="12">
+          
+                  <div  #mapa  Style="height: 45vh;"></div>
+            
+              </ion-col>
+
+          
+              </ion-row>
+
+              
+            </ion-col>
+
+          </ion-row>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+
+
+
+  
+  </ion-content>
+  

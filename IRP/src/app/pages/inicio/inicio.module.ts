@@ -5,8 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { InicioPage } from './inicio.page';
 
 import { InicioPageRoutingModule } from './inicio-routing.module';
-import { ComponentsModule } from '../../components/components.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { ComponentsModule } from 'src/app/components/components.module';
+
 
 
 @NgModule({
@@ -15,8 +16,8 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     FormsModule,
     IonicModule,
     InicioPageRoutingModule,
-    ComponentsModule,
-    PipesModule
+    PipesModule,
+    ComponentsModule
   ],
   declarations: [InicioPage]
 })
