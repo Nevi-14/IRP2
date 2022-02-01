@@ -51,7 +51,7 @@
       <ion-row class="ion-margin">
    
   
-        <ng-template ngFor let-item [ngForOf]="mapaService.marcadores | filtro : textoBuscar:toggleValue" let-i="index" >
+        <ng-template ngFor let-item [ngForOf]="mapboxGLService.marcadores | filtro : textoBuscar:toggleValue" let-i="index" >
           <ion-col size="6">
             <ion-label class="table-text">{{item.id}} - {{item.nombre}} </ion-label>
           </ion-col>

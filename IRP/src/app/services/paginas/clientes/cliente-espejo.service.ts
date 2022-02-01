@@ -17,7 +17,7 @@ import { MapboxGLService } from '../../mapbox-gl.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private mapa: MapaService, private global: GlobalService, public MapboxGlService: MapboxGLService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private mapa: MapaService, private global: GlobalService, public mapboxLgService: MapboxGLService) { }
 
   
 rutas: Clientes[]=[];
@@ -45,7 +45,7 @@ console.log(id)
       resp =>{
         this.clientes.rutasClientes = [];
         this.clientes.rutasClientes = resp.slice(0);
-        this.MapboxGlService.createmapa(false);
+        this.mapboxLgService.createmapa(false);
      
        // this.mapa.crearMapa(mapa,arreglo, drag  );
      //   this.global.loadingDissmiss();
@@ -72,15 +72,17 @@ console.log(id)
   }
 
   insertarClienteEspejo(ruta){
-
-    this.presentaLoading('Guardando cambios')
+console.log(ruta,'post')
+  //  this.presentaLoading('Guardando cambios')
     this.postClienteEspejo(ruta).subscribe(
       
       resp => {
+       this.mapboxLgService.marcadores = [];
+        this.mapboxLgService.createmapa(false);
         console.log('Rutas guardadas con exito', resp);
       //  this.depositos = [];
      // this.loadingDissmiss();
-     this.loadingDissmiss();
+    // this.loadingDissmiss();
       this.message('IRP','Las rutas se guardaron con exito');
       }, error => {
         console.log('Rerror', error);
