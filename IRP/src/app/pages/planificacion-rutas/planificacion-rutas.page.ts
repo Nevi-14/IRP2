@@ -17,6 +17,7 @@ import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 import { RutaZonaService } from '../../services/paginas/rutas/ruta-zona.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
+import { BusquedaClienteService } from '../../services/busqueda-cliente.service';
 
 
 
@@ -57,7 +58,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
       //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
       //Add 'implements AfterViewInit' to the class.
       this.mapboxLgService.divMapa = this.divMapa;
-      this.mapboxLgService.createmapa(false)
+      this.mapboxLgService.createmapa(false, false)
     }
          
     limpiarDatos(){
@@ -98,12 +99,12 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
                   }
                   console.log(this.mapboxLgService.marcadores, 'post')
   
-              /**
-               *     if(this.mapboxLgService.marcadores[i].modificado || this.mapboxLgService.marcadores[i].nuevoCliente){
+             
+                  if(this.mapboxLgService.marcadores[i].modificado || this.mapboxLgService.marcadores[i].nuevoCliente){
                     this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
                   }
-               */
-                  this.clienteEspejo.ClienteEspejoArray.push(rutasClientes) 
+               
+               //   this.clienteEspejo.ClienteEspejoArray.push(rutasClientes) 
         
       }
       
@@ -116,6 +117,8 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
         this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
         this.clientes.rutasClientes = [];
         this.clientes.nuevosClientes = [];
+        this.drag=false;
+        this.modo = 'off'
       }else{
         this.global.message('Planificacion Rutas','No se efectuaron cambios');
       }
@@ -134,7 +137,12 @@ this.modo = 'on'
         this.modo = 'off'
       }
 
-      this.mapboxLgService.createmapa(this.drag);
+      this.mapboxLgService.createmapa(this.drag, true);
+    }
+
+
+    busquedaCliente(){
+
     }
 async configuracionZonaRuta(evento) {
 

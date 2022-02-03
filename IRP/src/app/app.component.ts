@@ -6,6 +6,7 @@ import { RutaZonaService } from './services/paginas/rutas/ruta-zona.service';
 import * as  mapboxgl from 'mapbox-gl';
 import { environment } from 'src/environments/environment';
 import { GlobalService } from './services/global.service';
+import { BusquedaClienteService } from './services/busqueda-cliente.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
     this.rutas.syncRutas();
     this.zonas.syncZonas();
     this.rutaZona.syncRutas();
+
   
    }
 }

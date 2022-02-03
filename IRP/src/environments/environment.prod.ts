@@ -11,6 +11,7 @@ export const environment = {
   cantonID: '&IdC=',
   distritoID: '&IdD=',
   clientesURL: 'Clientes/',
+  busquedaCliente: 'Clientes2/',
   provinciasURL: 'Provincias/',
   cantonesURL: 'Cantones/',
   distritosURL: 'Distritos/',

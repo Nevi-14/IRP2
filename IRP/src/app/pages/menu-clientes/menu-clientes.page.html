@@ -18,9 +18,17 @@
     <ion-list lines="none">
       <ion-grid >
         <ion-row>
-          <ion-col size="12">
-        
+          <ion-col size="12" style="display: flex;justify-content: space-around;">
+            <ion-label>Buscar Cliente        <ion-checkbox [(ngModel)]="busqueda"></ion-checkbox></ion-label>
+ 
+      
             <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+            <ion-buttons >
+              <ion-button (click)="onSearchChange2()" color="dark" shape="round" fill="outline">
+              
+               Buscar
+              </ion-button>
+            </ion-buttons>
               </ion-col>
     
           <ion-col size="12">
@@ -90,14 +98,14 @@
     <ion-buttons slot="start">
     <ion-label >Clientes</ion-label>
     <ion-button   fill="solid" color="warning">
-      <ion-label>{{clientes?.clientesArray?.length}}</ion-label> 
+      <ion-label>{{clientesService?.clientesArray?.length}}</ion-label> 
      </ion-button>
     </ion-buttons>
     <ion-label slot="end" >Trade</ion-label>
     <ion-toggle color="dark" slot="end" name="filtro" (ionChange)="myChange($event)" value="myvalue"></ion-toggle>
     <ion-label slot="end" >{{myvalue}}</ion-label>
     
-                <ion-checkbox (click)="checkAll($event)"  name="clientes" [(ngModel)]="clientes.isChecked"   slot="end"></ion-checkbox>
+                <ion-checkbox (click)="checkAll($event)"  name="clientes" [(ngModel)]="clientesService.isChecked"   slot="end"></ion-checkbox>
                 <ion-label slot="end">Todos</ion-label>
                 <ion-buttons slot="end">
     
@@ -123,7 +131,7 @@
       
       <ion-col size="12" >
 
-          <ion-item *ngFor="let cliente of clientes.clientesArray | filtro: textoBuscar:'NOMBRE'| filtro: myvalue:'TRADE_CLIENTE';  let i = index;">
+          <ion-item *ngFor="let cliente of clientesService.clientesArray | filtro: textoBuscar:'NOMBRE'| filtro: myvalue:'TRADE_CLIENTE';  let i = index;">
             
             <ion-label>{{cliente.cliente.NOMBRE}}</ion-label>
             <ion-buttons slot="end">
@@ -147,7 +155,7 @@
             
            
           </ion-item>
-          <ion-item *ngIf="clientes?.clientesArray?.length === 0" color="light">
+          <ion-item *ngIf="clientesService?.clientesArray?.length === 0" color="light">
             <ion-label class="ion-text-center">Lista de clientes vacia, por favor efectuar una busqueda</ion-label>
           </ion-item>
      
