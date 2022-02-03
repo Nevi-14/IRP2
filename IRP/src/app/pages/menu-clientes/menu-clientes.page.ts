@@ -6,13 +6,14 @@ import { ProvinciasService } from '../../services/paginas/organizacion territori
 import { DistritosService } from '../../services/paginas/organizacion territorial/distritos.service';
 import { Clientes } from 'src/app/models/clientes';
 import { NgForm } from '@angular/forms';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
 import { MapService } from 'src/app/services/componentes/mapas/map.service';
 import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
 import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
+import { BusquedaClienteService } from 'src/app/services/busqueda-cliente.service';
+import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
 
 @Component({
   selector: 'app-menu-clientes',
@@ -29,19 +30,39 @@ export class MenuClientesPage implements OnInit {
   textoBuscar = '';
   isChecked = false;
   @Input() mapa :any
-  constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public map: MapaService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService) { }
-
+  busqueda = false;
+  clienteId : string;
+  constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientesService: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public map: MapaService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService,public busquedaClienteService: BusquedaClienteService) { }
 
 
   onSearchChange(event){
-    this.textoBuscar = event.detail.value;
+    if(this.busqueda){
+      this.busquedaClienteService.syncClientes(event.detail.value)
+      this.borrarFiltro();
+this.clientesService.clientesArray = [];
+this.isChecked = !this.isChecked; 
+    }else{
+      if(this.clientesService.clientesArray.length == 1){
+        this.clientesService.clientesArray = [];
+      }
+      this.textoBuscar = event.detail.value;
+    }
+    
+  }
+  onSearchChange2(){
+
+   
+    this.busquedaClienteService.syncClientes(this.clienteId)
+    this.borrarFiltro();
+this.clientesService.clientesArray = [];
+this.isChecked = !this.isChecked; 
   }
 
   
   ngOnInit() {
-    this.clientes.isChecked = false;
-    this.clientes.clientes = [];
-    this.clientes.clientesArray = [];
+    this.clientesService.isChecked = false;
+    this.clientesService.clientes = [];
+    this.clientesService.clientesArray = [];
   }
 
   checkAll(e){
@@ -51,14 +72,14 @@ export class MenuClientesPage implements OnInit {
    
     
     if(isChecked){
-      for(let i =0; i < this.clientes.clientesArray.length; i++) {
-        console.log( i, 'select' , this.clientes.clientesArray.length)
-     this.clientes.clientesArray[i].select  = true;
+      for(let i =0; i < this.clientesService.clientesArray.length; i++) {
+        console.log( i, 'select' , this.clientesService.clientesArray.length)
+     this.clientesService.clientesArray[i].select  = true;
 
       }
      }else{
-      for(let i =0; i < this.clientes.clientesArray.length; i++) {
-        this.clientes.clientesArray[i].select  = false;
+      for(let i =0; i < this.clientesService.clientesArray.length; i++) {
+        this.clientesService.clientesArray[i].select  = false;
       }
      }
 
@@ -85,23 +106,23 @@ export class MenuClientesPage implements OnInit {
     return await modal.present();
   }
   async agregarCliente(){
-  for(let i = 0; i < this.clientes.clientesArray.length;i++){
-    if(this.clientes.clientesArray[i].select === true){
-      const duplicate = this.clientes.rutasClientes.findIndex( d => d.IdCliente === this.clientes.clientesArray[i].cliente.IdCliente );
+  for(let i = 0; i < this.clientesService.clientesArray.length;i++){
+    if(this.clientesService.clientesArray[i].select === true){
+      const duplicate = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
       console.log('duplicate', duplicate)
       if ( duplicate >= 0 ){
-        console.log('duplicate elements', this.clientes.clientesArray[i].cliente.IdCliente)
-        this.clientes.clientesArray.splice(duplicate, 1);
+        console.log('duplicate elements', this.clientesService.clientesArray[i].cliente.IdCliente)
+        this.clientesService.clientesArray.splice(duplicate, 1);
         }else{
           
-          this.clientes.clientesRutas.push(this.clientes.clientesArray[i]);
-          this.clientes.nuevosClientes.push(this.clientes.clientesArray[i].cliente)
+          this.clientesService.clientesRutas.push(this.clientesService.clientesArray[i]);
+          this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
         }
        
          // this.map.createMap(-84.14123589305028,9.982628288210657);
      //    this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes,nuevoCliente:true}], false, false);
      this.modalCtrl.dismiss();
-         this.MapboxGLService.createmapa(false);
+         this.MapboxGLService.createmapa(false,false);
       
     }
   }
@@ -110,11 +131,14 @@ export class MenuClientesPage implements OnInit {
 
 
   }
+
+  
+
   async onSubmit(){
  
-this.clientes.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
+this.clientesService.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
 this.borrarFiltro();
-this.clientes.clientesArray = [];
+this.clientesService.clientesArray = [];
 this.isChecked = !this.isChecked; 
 
  

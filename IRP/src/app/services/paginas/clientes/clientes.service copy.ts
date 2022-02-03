@@ -60,8 +60,10 @@ console.log(URL)
   }
 
   syncClientesArray(){
-    this.clientesArray = [];
+
     this.isChecked = false;
+
+    console.log('jsjsjs', this.clientes)
     for(let i = 0; i < this.clientes.length; i++){
       const color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
       const objectElement = {
@@ -79,7 +81,7 @@ console.log(URL)
       }
     this.clientesArray.push(this.clientes[i])
     console.log('cleintes array',this.clientesArray);
-    this.loadingDissmiss()
+    //this.loadingDissmiss()
     }
   }
   async presentaLoading( mensaje: string ){

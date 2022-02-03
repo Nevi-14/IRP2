@@ -45,7 +45,9 @@ console.log(id)
       resp =>{
         this.clientes.rutasClientes = [];
         this.clientes.rutasClientes = resp.slice(0);
-        this.mapboxLgService.createmapa(false);
+
+        console.log(   this.clientes.rutasClientes)
+        this.mapboxLgService.createmapa(false,false);
      
        // this.mapa.crearMapa(mapa,arreglo, drag  );
      //   this.global.loadingDissmiss();
@@ -78,7 +80,7 @@ console.log(ruta,'post')
       
       resp => {
        this.mapboxLgService.marcadores = [];
-        this.mapboxLgService.createmapa(false);
+        this.mapboxLgService.createmapa(false,false);
         console.log('Rutas guardadas con exito', resp);
       //  this.depositos = [];
      // this.loadingDissmiss();
