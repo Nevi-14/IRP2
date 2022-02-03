@@ -1,70 +1,108 @@
-<app-header></app-header>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="dark">
+
+    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
+      <ion-item>
+        <ion-title style="color: white;">Distribuidora ISLEÑA</ion-title>
+
+<ion-buttons slot="end" >
+  <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
+    <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+  <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
+    <ion-label slot="start">Salir</ion-label>
+    <ion-icon name="close" slot="end"> </ion-icon>
+  </ion-button>
+</ion-buttons>
+      </ion-item>
+    
+    </ion-list>
+  </ion-toolbar>
 
 
+</ion-header>
 
 
+  <ion-toolbar class="ion-padding">
 
-<ion-toolbar class="ion-padding">
-
-  <ion-grid >
-    <ion-row>
-      <ion-col size="6">
-
-        <ion-card-header>
-          <ion-card-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Planificación de entregas</ion-card-title>
-        </ion-card-header>
-   
-       </ion-col>
-<ion-col size="6">
-<ion-row>
-  <ion-col size="3">
-    <ion-badge color="dark">Ruta</ion-badge>
+    <ion-grid >
+      <ion-row>
+        <ion-col size="6">
+  
+          <ion-card-header>
+            <ion-card-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Planificación de entregas</ion-card-title>
+          </ion-card-header>
+     
+         </ion-col>
+  <ion-col size="6">
+  <ion-row>
+    <ion-col size="3">
+      <ion-badge color="dark">Ruta</ion-badge>
+    </ion-col>
+    <ion-col size="3">
+      <ion-label class="ion-text-left">{{rutaZonaData.ruta}}</ion-label>
+    </ion-col>
+    <ion-col size="3">
+      <ion-badge color="dark">Zona</ion-badge>
+    </ion-col>
+    <ion-col size="3">
+      <ion-label>{{rutaZonaData.zona}}</ion-label>
+    </ion-col>
+  </ion-row>
   </ion-col>
-  <ion-col size="3">
-    <ion-label class="ion-text-left">{{rutaZonaData.ruta}}</ion-label>
-  </ion-col>
-  <ion-col size="3">
-    <ion-badge color="dark">Zona</ion-badge>
-  </ion-col>
-  <ion-col size="3">
-    <ion-label>{{rutaZonaData.zona}}</ion-label>
-  </ion-col>
-</ion-row>
-</ion-col>
-    </ion-row>
-
-  </ion-grid>
-  <ion-buttons  slot="end">
-    <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
-      <ion-icon class="spin-element"  name="settings"></ion-icon>
-    </ion-button>
-
-
-
-  </ion-buttons>
-</ion-toolbar>
+      </ion-row>
+  
+    </ion-grid>
+    <ion-buttons  slot="end">
+      <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+        <ion-icon class="spin-element"  name="settings"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="rutaZonaData.rutaID"  shape="round" fill="solid" color="dark" (click)="calendar()">
+        <ion-icon   name="calendar"></ion-icon>
+      </ion-button>
+  
+  
+  
+    </ion-buttons>
+  </ion-toolbar>
+  
 
 
 
 <ion-content  >
-
-  <ion-grid >
+  <ion-grid *ngIf="rutaFacturas.rutaFacturasArray.length == 0">
     <ion-row>
-      <ion-col size="12"  class="cell-class">
-      <ion-label class="ion-text-uppercase">Lista de camiones disponibles</ion-label>
+      <ion-col size="5" style="margin: 0 auto;">
+       
+          <img  class="slide-image" src="../assets/icons/delivery-truck.svg" />
+     <ion-card-content>
+     <h2 class="ion-text-uppercase"> Gestiona la planificacion de entregas presionando el boton de configuracion en la parte superior derecha</h2>
+     </ion-card-content>
+          
+    
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid  *ngIf="rutaFacturas.rutaFacturasArray.length > 0"> 
+    <ion-row >
+      <ion-col size="12"  class="cell-class" style="display: flex;justify-content:space-between;">
+   
+
+         <ion-label class="ion-text-uppercase">Lista de camiones disponibles</ion-label>
+         <ion-chip size="large" color="primary" mode="ios" outline="true"  color="dark" (click)="listaCamiones()">
+       <ion-avatar >
+         <img   [src]="image" />
+       </ion-avatar>
+       <ion-label>Camiones</ion-label>
+         </ion-chip>
+    
+
+      
       </ion-col>
 <ion-col size="12" class="cell-class">
   <ion-row>
-    <ion-col size="4"    *ngFor="let camion of camionesService.camiones">
-      <ion-item lines="none">
-        <ion-label>
-          Placa : {{camion.idCamion}}  {{camion.descripcion}}  / Volumen: {{camion.capacidadVolumen}} / Peso : {{camion.capacidadPeso}}
-      
-      
-        </ion-label>
-        
-      </ion-item>
-            </ion-col>
+camion
   </ion-row>
 </ion-col>
     </ion-row>
@@ -94,10 +132,12 @@
         
         </ion-col>
         <ion-col class="cell-class"   size="1">
-          <ion-checkbox></ion-checkbox>
+ 
+          <ion-checkbox   [(ngModel)]="factura.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
         <ion-col class="cell-class"   size="1">
-          <ion-checkbox></ion-checkbox>
+  
+          <ion-checkbox  [(ngModel)]="factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
         <ion-col class="cell-class"   size="2">
 {{factura.RUBRO1}}
@@ -107,9 +147,7 @@
         </ion-col>
         <ion-col class="cell-class"   size="2" >
 
-    <ion-button (click)="listaCamiones()" shape="round" color="dark" fill="outline">
-Camiones
-    </ion-button>
+   
 
         </ion-col>
      

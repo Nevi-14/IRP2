@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
-import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
-import { RutaFacturasService } from 'src/app/services/paginas/rutas/ruta-facturas.service';
-import { RutaZonaService } from 'src/app/services/paginas/rutas/ruta-zona.service';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
+import { ZonasService } from 'src/app/services/zonas.service';
+
 import { FechaPage } from '../fecha/fecha.page';
 import { RutasPage } from '../rutas/rutas.page';
-import { async } from '@angular/core/testing';
-import { ListaCapacidadCamionesPageModule } from '../lista-capacidad-camiones/lista-capacidad-camiones.module';
 import { ListaCapacidadCamionesPage } from '../lista-capacidad-camiones/lista-capacidad-camiones.page';
+import { RutasService } from 'src/app/services/rutas.service';
+import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
+import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 
 @Component({
   selector: 'app-planificacion-entregas',
@@ -17,9 +16,11 @@ import { ListaCapacidadCamionesPage } from '../lista-capacidad-camiones/lista-ca
   styleUrls: ['./planificacion-entregas.page.scss'],
 })
 export class PlanificacionEntregasPage implements OnInit {
-
- fechaEntrega:Date;
+  image = '../assets/icons/delivery-truck.svg'
+ fechaEntrega:string;
  ruta: any;
+ verdadero = true;
+ falso = false;
 rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
 factura = null;
 totalBultosFactura: number;
@@ -41,14 +42,48 @@ pesoTotalBultosFactura: number;
   ) { }
 
   ngOnInit() {
+    console.log('test')
+    this.rutaFacturas.rutaFacturasArray = [];
     
     this.camionesService.syncCamiones();
 
-    console.log('test')
-    this.rutaFacturas.rutaFacturasArray = [];
+
   }
 
+  stringToBoolean(value){
+    switch(value){
+        case "F": 
+        case "S": 
+          return true;
+        default: 
+          return false;
+    }
+}
 
+  async calendar(){
+    
+    const modal = await this.modalCtrl.create({
+      component: FechaPage,
+      cssClass: 'custom-modal',
+    });
+    modal.present();
+  
+    
+  
+    const { data } = await modal.onDidDismiss();
+  console.log(data)
+    if(data !== undefined){
+    
+     this.fechaEntrega = new Date(data.data).toLocaleDateString()
+     this.totalBultosFactura == 0;
+     this.pesoTotalBultosFactura == 0;
+     this.rutaFacturas.syncRutaFacturas(this.rutaZonaData.rutaID, data.data)
+
+ 
+
+
+    }
+  }
 
   async syncRutas(){
 
@@ -58,7 +93,7 @@ pesoTotalBultosFactura: number;
 
     const popover = await this.popOverCrtl.create({
       component: FechaPage,
-      cssClass: 'my-custom-class',
+      cssClass: 'auto-size-modal',
       translucent: true
     });
     popover.present();
@@ -128,8 +163,9 @@ async listaCamiones(){
         const { data } = await modal.onDidDismiss();
       console.log(data)
         if(data !== undefined){
-        
-         this.fechaEntrega = data.data;
+          this.totalBultosFactura == 0;
+  this.pesoTotalBultosFactura == 0;
+         this.fechaEntrega = new Date(data.data).toLocaleDateString()
 
          this.rutaFacturas.rutaFacturasArray.forEach( factura =>{
   this.totalBultosFactura  +=Number( factura.RUBRO1);

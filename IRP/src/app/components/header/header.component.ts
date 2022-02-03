@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/services/global.service';
 import { LoginService } from 'src/app/services/login.service';
-
+import { NgZone } from '@angular/core';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -10,29 +10,37 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class HeaderComponent  {
   fecha = new Date().toLocaleDateString();
-  constructor(public route: Router, public login: LoginService, public global: GlobalService) { }
+  constructor(public _router: Router, public login: LoginService, public global: GlobalService,private ngZone:NgZone,) { }
 
 
   myChangeEvent(event){
     if(this.login.loginToggle === false){
       this.login.loginToggle = true;
       this.login.color = 'primary';
-      this.route.navigate(['/home']);
+   
+  this.redirect('inicio')
       this.login.loginText = 'Cerrar Sección';
       console.log(event.detail.value);
     }else{
       this.login.loginToggle = false;
       this.login.color = 'light';
-      this.route.navigate(['/log-in']);
+      this.redirect('log-in')
       this.login.loginText = 'Iniciar Sección';
     }
   }
+
+  redirect(to) {
+    // call with ngZone, so that ngOnOnit of component is called
+    this.ngZone.run(()=>this._router.navigate([to]));
+  }
+
+
   logOut(){
     this.login.verified = false;
-    this.route.navigate(['/log-in']);
+    this.redirect('log-in')
   }
   home(){
   
-    this.route.navigate(['/inicio']);
+  this.redirect('inicio')
   }
 }

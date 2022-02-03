@@ -6,17 +6,18 @@ import { DetalleClientesPage } from '../../pages/detalle-clientes/detalle-client
 import { ClienteFacturaPage } from '../../pages/cliente-factura/cliente-factura.page';
 import { RutasPage } from 'src/app/pages/rutas/rutas.page';
 import { MarcadoresPage } from 'src/app/pages/marcadores/marcadores.page';
-import { RutaZonaService } from 'src/app/services/paginas/rutas/ruta-zona.service';
-import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
-import { RutaFacturasService } from '../../services/paginas/rutas/ruta-facturas.service';
+import { RutaZonaService } from 'src/app/services/ruta-zona.service';
+import { ZonasService } from 'src/app/services/zonas.service';
+
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 import { MenuClientesPage } from 'src/app/pages/menu-clientes/menu-clientes.page';
 import { GlobalService } from 'src/app/services/global.service';
 import { FechaPage } from 'src/app/pages/fecha/fecha.page';
 import { async } from '@angular/core/testing';
+import { RutasService } from 'src/app/services/rutas.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 
 
 @Component({

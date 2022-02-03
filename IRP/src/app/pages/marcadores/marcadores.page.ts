@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ClientesService } from 'src/app/services/clientes.service';
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
 interface Marcadores{
   id:string,
   funcion: string,

@@ -1,7 +1,26 @@
-<app-header></app-header>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="dark">
+
+    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
+      <ion-item>
+        <ion-title style="color: white;">Distribuidora ISLEÑA</ion-title>
+
+<ion-buttons slot="end" >
+  <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
+    <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+  <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
+    <ion-label slot="start">Salir</ion-label>
+    <ion-icon name="close" slot="end"> </ion-icon>
+  </ion-button>
+</ion-buttons>
+      </ion-item>
+    
+    </ion-list>
+  </ion-toolbar>
 
 
-
+</ion-header>
 
 
 <ion-toolbar class="ion-padding">

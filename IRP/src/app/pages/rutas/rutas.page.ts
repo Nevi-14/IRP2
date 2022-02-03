@@ -1,15 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
-import { MapService } from 'src/app/services/componentes/mapas/map.service';
-import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
-import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
+import { RutaZonaService } from 'src/app/services/ruta-zona.service';
+import { RutasService } from 'src/app/services/rutas.service';
 
-import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
+import { ZonasService } from 'src/app/services/zonas.service';
 
-import { RutaFacturasService } from 'src/app/services/paginas/rutas/ruta-facturas.service';
-import { RutaZonaService } from 'src/app/services/paginas/rutas/ruta-zona.service';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
+
 
 @Component({
   selector: 'app-rutas',
@@ -23,7 +22,7 @@ textoBuscar = '';
 textoBuscarZona = '';
 
 
-  constructor(public rutas: RutasService, public zonas: ZonasService, public modalCtrl: ModalController, public clienteEspejo: ClienteEspejoService,public alertCtrl: AlertController, public rutaZona: RutaZonaService, public mapa: MapService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService, public map: MapaService,public popOverCtrl: PopoverController) { }
+  constructor(public rutas: RutasService, public zonas: ZonasService, public modalCtrl: ModalController, public clienteEspejo: ClienteEspejoService,public alertCtrl: AlertController, public rutaZona: RutaZonaService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService,public popOverCtrl: PopoverController) { }
 
   ngOnInit() {
 

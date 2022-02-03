@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Clientes } from '../models/clientes';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
+import { ClientesService } from './clientes.service';
 
 @Injectable({
   providedIn: 'root'

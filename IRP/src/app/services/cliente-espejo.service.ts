@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ClienteEspejo } from '../../../models/clienteEspejo';
-import { Rutas } from '../../../models/rutas';
-import { AlertController, LoadingController, PopoverController } from '@ionic/angular';
-import { Clientes } from '../../../models/clientes';
+import { Injectable } from '@angular/core';
 
+import { AlertController, LoadingController, PopoverController } from '@ionic/angular';
+import { environment } from '../../environments/environment.prod';
+import { ClienteEspejo } from '../models/clienteEspejo';
+import { Clientes } from '../models/clientes';
 import { ClientesService } from './clientes.service';
-import { GlobalService } from '../../global.service';
-import { MapaService } from '../../componentes/mapas/mapa.service';
-import { MapboxGLService } from '../../mapbox-gl.service';
+import { GlobalService } from './global.service';
+import { MapboxGLService } from './mapbox-gl.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ import { MapboxGLService } from '../../mapbox-gl.service';
 export class ClienteEspejoService {
   clienteEspejo: ClienteEspejo;
   ClienteEspejoArray: ClienteEspejo[]=[];
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private mapa: MapaService, private global: GlobalService, public mapboxLgService: MapboxGLService) { }
+  constructor(private http: HttpClient,private loadingCtrl: LoadingController, private alertCtrl: AlertController, private clientes: ClientesService, private popOverCtrl: PopoverController, private global: GlobalService, public mapboxLgService: MapboxGLService) { }
 
   
 rutas: Clientes[]=[];

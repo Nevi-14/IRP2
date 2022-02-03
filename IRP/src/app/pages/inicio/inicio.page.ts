@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RutasService } from '../../services/paginas/rutas/rutas.service';
-import { ClientesService } from '../../services/paginas/clientes/clientes.service';
-import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
-import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { RutasService } from 'src/app/services/rutas.service';
+import { ZonasService } from 'src/app/services/zonas.service';
 import { MapaService } from '../../services/componentes/mapas/mapa.service';
-
+import { NgZone } from '@angular/core';
 interface Modulos {
   imagen: string,
   titulo: string,
@@ -23,9 +23,24 @@ export class InicioPage implements OnInit {
   textoBuscar = '';
 
 
-  constructor(public route: Router, public mapa: MapaService, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService) {}
+  constructor(public _router: Router, public mapa: MapaService, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService,  private ngZone:NgZone,) {}
 
-  ngOnInit(){   
+
+  redirect(to) {
+    // call with ngZone, so that ngOnOnit of component is called
+    this.ngZone.run(()=>this._router.navigate([to]));
+  }
+    
+  logOut(){
+
+    this.redirect('log-in')
+  }
+  home(){
+  
+  this.redirect('inicio')
+  }
+  ngOnInit(){  
+    console.log('0s') 
 
     this.modulosArray.push(
       {
@@ -56,34 +71,8 @@ export class InicioPage implements OnInit {
 
   }
 
-  enrutador(ruta){
-    switch(ruta) {
-      case 'planificacion-rutas':
-        this.guardarRutas();
-        // code block
-        break;
-      case 'ruta-facturas':
-        
-      this.rutaFacturas();
-        break;
-      default:
-        // code block
-    }
-  }
 
 
-
-  guardarRutas(){
-
-   
-    this.route.navigate(['/planificacion-rutas']);
-
-
-  }
-rutaFacturas(){
-    this.route.navigate(['/ruta-facturas']);
- 
-  }
 
 
   onSearchChange(event){

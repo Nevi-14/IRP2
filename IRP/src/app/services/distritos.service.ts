@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Distritos } from '../../../models/distritos';
-import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Distritos } from '../models/distritos';
 
 @Injectable({
   providedIn: 'root'

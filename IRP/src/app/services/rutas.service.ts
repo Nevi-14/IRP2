@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Rutas } from '../../../models/rutas';
 import { LoadingController } from '@ionic/angular';
+import { Rutas } from '../models/rutas';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({

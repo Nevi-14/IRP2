@@ -76,10 +76,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/planificacion-entregas/planificacion-entregas.module').then( m => m.PlanificacionEntregasPageModule)
   },
   {
-    path: 'camiones',
-    loadChildren: () => import('./pages/camiones/camiones.module').then( m => m.CamionesPageModule)
-  },
-  {
     path: 'gestion-camiones',
     loadChildren: () => import('./pages/gestion-camiones/gestion-camiones.module').then( m => m.GestionCamionesPageModule)
   },

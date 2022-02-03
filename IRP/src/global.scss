@@ -33,7 +33,33 @@ html,body {
     
     }
 
-        
+    ion-modal.auto-size-modal {
+      &.bottom {
+          align-items: flex-end;
+      }
+      ion-label{
+        font-size: 14px;
+        letter-spacing: 2px;
+        font-weight: 400;
+      }
+    
+      --height: auto;
+      color: #000!important;
+      --color: #000!important;
+      .ion-page {
+          position: relative;
+          display: block;
+          contain: content;
+    
+          .inner-content {
+              max-height: 80vh;
+              overflow: auto;
+              padding: 10px;
+              color: #000!important;
+              --color: #000!important;
+          }
+      }
+    } 
 .scroll-modal {
     max-height:400px;
     position: relative;

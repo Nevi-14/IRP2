@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RutaZonas } from '../../../models/rutazonas';
+import { RutaZonas } from '../models/rutazonas';
 import { environment } from 'src/environments/environment';
 
 

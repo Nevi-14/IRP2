@@ -9,15 +9,14 @@ import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
-  declarations: [MiniMapaComponent,MapaComponent,HeaderComponent],
+  declarations: [MiniMapaComponent,MapaComponent],
   imports: [
     CommonModule,
     IonicModule,
     PipesModule
   ],
   exports: [
-  MiniMapaComponent,MapaComponent,
-  HeaderComponent
+  MiniMapaComponent,MapaComponent
 
   ]
 })

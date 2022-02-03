@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { RutaFacturasPageRoutingModule } from './ruta-facturas-routing.module';
 
 import { RutaFacturasPage } from './ruta-facturas.page';
-import { ComponentsModule } from 'src/app/components/components.module';
 
 
 
@@ -16,8 +15,8 @@ import { ComponentsModule } from 'src/app/components/components.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    RutaFacturasPageRoutingModule,
-    ComponentsModule
+    RutaFacturasPageRoutingModule
+
 
     
   ],

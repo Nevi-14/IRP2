@@ -7,17 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { PlanificacionEntregasPageRoutingModule } from './planificacion-entregas-routing.module';
 
 import { PlanificacionEntregasPage } from './planificacion-entregas.page';
-import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PlanificacionEntregasPageRoutingModule,
-    ComponentsModule
+    PlanificacionEntregasPageRoutingModule
+
   ],
-  declarations: [PlanificacionEntregasPage],
-  exports:[]
+  declarations: [PlanificacionEntregasPage]
 })
 export class PlanificacionEntregasPageModule {}

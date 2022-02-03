@@ -10,7 +10,7 @@
     <ion-searchbar mode="ios" palceholder="Buscar modulo" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
   </ion-col>
     <ion-col size="4"  mode="ios"  *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'">
-      <ion-card [routerLink]="modulo.ruta" >
+      <ion-card (click)="redirect(modulo.ruta)" >
         <img [src]="modulo.imagen" class="slide-image" alt="">
         <ion-card-header>
           <ion-card-subtitle>{{modulo.titulo}}</ion-card-subtitle>

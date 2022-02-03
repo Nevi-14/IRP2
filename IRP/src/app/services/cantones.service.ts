@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { Cantones } from '../../../models/cantones';
+import { environment } from '../../environments/environment';
+import { Cantones } from '../models/cantones';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

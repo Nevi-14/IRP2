@@ -1,23 +1,18 @@
 import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import * as  mapboxgl from 'mapbox-gl';
 import { RutasPage } from '../rutas/rutas.page';
-import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
-import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
+import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { ConfiguracionRutaService } from '../../services/configuracionruta.service';
-import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
-import { ClientesService } from '../../services/paginas/clientes/clientes.service';
-import { ClienteEspejoService } from '../../services/paginas/clientes/cliente-espejo.service';
-import { MapService } from '../../services/componentes/mapas/map.service';
+import { ZonasService } from '../../services/zonas.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
-import { MapaComponent } from 'src/app/components/mapa/mapa.component';
 import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
-import { RutaZonaService } from '../../services/paginas/rutas/ruta-zona.service';
+import { RutaZonaService } from '../../services/ruta-zona.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
-import { BusquedaClienteService } from '../../services/busqueda-cliente.service';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { RutasService } from 'src/app/services/rutas.service';
 
 
 
@@ -43,12 +38,13 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
   
   modo = 'off'
   @ViewChild('mapa') divMapa!:ElementRef;
-    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public config: ConfiguracionRutaService, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public map: MapService  , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService) {
+    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public config: ConfiguracionRutaService, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService) {
 
 
     }
   
     ngOnInit(){
+      this.mapboxLgService.divMapa = null;
      this.clientes.rutasClientes = [];
      this.clientes.nuevosClientes = [];
   console.log('planificacion Rutas')

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -6,8 +6,7 @@ import { InicioPage } from './inicio.page';
 
 import { InicioPageRoutingModule } from './inicio-routing.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { ComponentsModule } from 'src/app/components/components.module';
-
+import { AppHeaderModule } from '../../components/app-header.module';
 
 
 @NgModule({
@@ -17,8 +16,15 @@ import { ComponentsModule } from 'src/app/components/components.module';
     IonicModule,
     InicioPageRoutingModule,
     PipesModule,
-    ComponentsModule
+    AppHeaderModule
   ],
-  declarations: [InicioPage]
+  declarations: [InicioPage],
+
 })
-export class InicioPageModule {}
+export class InicioPageModule {
+
+
+
+
+}
+

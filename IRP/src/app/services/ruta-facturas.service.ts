@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { RutaFacturas } from '../../../models/rutaFacturas';
+import { RutaFacturas } from '../models/rutaFacturas';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +62,8 @@ syncRutaFacturas(ruta:string, fecha:Date){
  const data =  this.getRutaFacturas(ruta, fecha).subscribe(
     resp =>{
       this.rutaFacturasArray = resp;
+      this.totalBultosFactura == 0;
+      this.pesoTotalBultosFactura == 0;
       resp.slice(0).forEach(factura =>{
         console.log(typeof( Number(factura.RUBRO1)), Number(factura.RUBRO1)  + factura.TOTAL_PESO_NETO , 'rubri1',typeof( factura.TOTAL_PESO_NETO),'pepso t')
 
