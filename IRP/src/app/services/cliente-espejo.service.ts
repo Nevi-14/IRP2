@@ -32,6 +32,8 @@ console.log(id)
     return URL;
   }
   loading: HTMLIonLoadingElement;
+
+  
   private getRutas(ruta){
 
     const URL = this.getIRPURL( environment.clientesURL , ruta);
@@ -39,18 +41,24 @@ console.log(id)
     return this.http.get<Clientes[]>( URL );
   }
 
+  
   syncRutas(ruta){
+    this.presentaLoading('Cargando clientes')
     this.getRutas(ruta).subscribe(
       resp =>{
+
+
+        this.loadingDissmiss();
         this.clientes.rutasClientes = [];
         this.clientes.rutasClientes = resp.slice(0);
 
         console.log(   this.clientes.rutasClientes)
         this.mapboxLgService.createmapa(false,false);
-     
+  
        // this.mapa.crearMapa(mapa,arreglo, drag  );
      //   this.global.loadingDissmiss();
       }
+      
      
 
 

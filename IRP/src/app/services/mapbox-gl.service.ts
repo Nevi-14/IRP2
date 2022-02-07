@@ -56,7 +56,9 @@ export class MapboxGLService {
 
   createmapa(dragable, reload) {
 
-
+if(this.mapa){
+  this.mapa.remove();
+}
 
     this.mapa = new mapboxgl.Map({
       container: this.divMapa.nativeElement,

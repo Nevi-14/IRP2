@@ -2,15 +2,29 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { RutaFacturas } from '../models/rutaFacturas';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RutaFacturasService {
+  loading: HTMLIonLoadingElement;
+
   totalBultosFactura: number = 0;
   pesoTotalBultosFactura: number = 0;
   rutaFacturasArray: RutaFacturas[]=[];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private loadingCtrl: LoadingController) { }
+
+  async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+
+   loadingDissmiss(){
+    this.loading.dismiss();
+  }
 
 
 
@@ -59,7 +73,7 @@ export class RutaFacturasService {
 syncRutaFacturas(ruta:string, fecha:Date){
 
   
- const data =  this.getRutaFacturas(ruta, fecha).subscribe(
+  this.getRutaFacturas(ruta, fecha).subscribe(
     resp =>{
       this.rutaFacturasArray = resp;
       this.totalBultosFactura == 0;
