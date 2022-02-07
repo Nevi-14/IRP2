@@ -70,10 +70,10 @@
 
 
 
-    <ion-button shape="round" fill="solid" color="dark" (click)="menuCliente()" *ngIf="clientes.rutasClientes?.length > 0 || clientes.nuevosClientes?.length > 0">
+    <ion-button shape="round" fill="solid" color="dark" (click)="menuCliente()" *ngIf="rutaZonaData.ruta">
       <ion-icon  name="person-add"></ion-icon>
     </ion-button>
-    <ion-button   *ngIf="clientes.rutasClientes?.length > 0 || clientes.nuevosClientes?.length > 0" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
+    <ion-button   *ngIf="rutaZonaData.ruta" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
       <ion-icon  name="refresh"></ion-icon>
         </ion-button>
     <ion-button   *ngIf="clientes.rutasClientes?.length > 0 || clientes.nuevosClientes?.length > 0" (click)="postRutas()"  shape="round" fill="solid" color="dark">
