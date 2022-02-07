@@ -43,13 +43,14 @@ console.log(id)
 
   
   syncRutas(ruta){
-    this.presentaLoading('Cargando clientes')
+   // this.presentaLoading('Cargando clientes')
     this.getRutas(ruta).subscribe(
       resp =>{
 
 
-        this.loadingDissmiss();
+       // this.loadingDissmiss();
         this.clientes.rutasClientes = [];
+        this.clientes.nuevosClientes = [];
         this.clientes.rutasClientes = resp.slice(0);
 
         console.log(   this.clientes.rutasClientes)

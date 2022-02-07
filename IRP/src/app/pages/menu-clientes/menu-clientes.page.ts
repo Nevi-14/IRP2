@@ -98,27 +98,19 @@ this.isChecked = !this.isChecked;
   }
   async agregarCliente(){
   for(let i = 0; i < this.clientesService.clientesArray.length;i++){
-    if(this.clientesService.clientesArray[i].select === true){
-      const duplicate = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
-      console.log('duplicate', duplicate)
-      if ( duplicate >= 0 ){
-        console.log('duplicate elements', this.clientesService.clientesArray[i].cliente.IdCliente)
-        this.clientesService.clientesArray.splice(duplicate, 1);
-        }else{
-          
-          this.clientesService.clientesRutas.push(this.clientesService.clientesArray[i]);
-          this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
-        }
-       
-         // this.map.createMap(-84.14123589305028,9.982628288210657);
-     //    this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes,nuevoCliente:true}], false, false);
-     this.modalCtrl.dismiss();
-         this.MapboxGLService.createmapa(false,false);
-      
+    const clienteExistenteDuplicado = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
+    const clienteNuevoDuplicado = this.clientesService.nuevosClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
+    if ( clienteExistenteDuplicado >= 0){ 
+        this.clientesService.clientesArray.splice(clienteExistenteDuplicado, 1);
+    }else if ( clienteNuevoDuplicado >=0){
+      this.clientesService.nuevosClientes.splice(clienteNuevoDuplicado, 1);
     }
+    console.log(this.clientesService.clientesArray[i])
+    this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
   }
   this.message('IRP','Se agrego a la lista de RUTAS');
-
+  this.modalCtrl.dismiss();
+  this.MapboxGLService.createmapa(false,false);
 
 
   }
