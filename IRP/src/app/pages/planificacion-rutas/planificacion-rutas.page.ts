@@ -66,7 +66,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
       const modal = await this.modalCtrl.create({
         component: MarcadoresPage,
-        cssClass: 'medium-modal',
+        cssClass: 'auto-size-modal',
         componentProps:{
           marcadores: this.mapboxLgService.marcadores,
         }

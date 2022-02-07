@@ -44,6 +44,7 @@ html,body {
       }
     
       --height: auto;
+      --width: 90vw!important;
       color: #000!important;
       --color: #000!important;
       .ion-page {
@@ -53,9 +54,8 @@ html,body {
     
           .inner-content {
               max-height: 80vh;
-              overflow: auto;
-              padding: 10px;
-              color: #000!important;
+       overflow-y: scroll;
+                 color: #000!important;
               --color: #000!important;
           }
       }
