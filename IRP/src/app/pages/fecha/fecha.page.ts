@@ -13,7 +13,7 @@ export class FechaPage implements OnInit {
   pickerOptions = {
     mode: 'md'
   };
-  dateValue = format(new Date(), 'yyyy-MM-dd') + 'T00:00:00';
+    dateValue = format(new Date(), 'yyyy-MM-dd') + 'T00:00:00';
   constructor(public modalCtrl: ModalController) { }
 
   ngOnInit() {

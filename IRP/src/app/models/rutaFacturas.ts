@@ -47,8 +47,9 @@ public FECHA_RIGE: Date,
 public BASE_IMPUESTO1: number,
 public BASE_IMPUESTO2: number,
 public NOMBRE_CLIENTE: string,
-public FRIO_SECO: string
-
+public FRIO_SECO: string,
+public CAMION: string,
+public CONSECUTIVO:  string
 
 
 

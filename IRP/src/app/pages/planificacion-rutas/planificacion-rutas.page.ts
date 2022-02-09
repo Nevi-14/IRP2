@@ -33,6 +33,11 @@ import { RutasService } from 'src/app/services/rutas.service';
   ]
 })
 export class PlanificacionRutasPage implements OnInit, AfterViewInit {
+
+
+
+
+
   rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
   drag = false;
   
@@ -42,7 +47,9 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
 
     }
-  
+
+
+
     ngOnInit(){
       this.mapboxLgService.divMapa = null;
      this.clientes.rutasClientes = [];

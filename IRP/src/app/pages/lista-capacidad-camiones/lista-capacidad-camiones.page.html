@@ -18,23 +18,24 @@
 <ion-content>
 
   <ion-list>
-    <ion-item *ngFor="let camion of camionesService.camiones">
-      <ion-label>
-        <h2>Placa : {{camion.idCamion}}  {{camion.descripcion}}
-        </h2>
-        <p>Chofer : {{camion.chofer}}</p>
-        <p>Capacidad Volumen: {{camion.capacidadVolumen}}</p>
-        <p>Capacidad Peso : {{camion.capacidadPeso}}</p>
+ 
 
-      </ion-label>
-          
-      <ion-buttons slot="end">
-        <ion-button color="dark" shape="round" fill="outline">
+      <ion-item  *ngFor="let camion of camionesService.camiones" (click)="actualizar(camion.idCamion)" detail>
+        <ion-label>
+          <h2>Placa : {{camion.idCamion}}  {{camion.descripcion}}
+          </h2>
+          <p>Chofer : {{camion.chofer}}</p>
+          <p>Capacidad Volumen: {{camion.capacidadVolumen}}</p>
+          <p>Capacidad Peso : {{camion.capacidadPeso}}</p>
+  
+        </ion-label>
+            
+      </ion-item>
+  
 
-        <ion-label>Asignar</ion-label>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
+    
+
+    
   </ion-list>
 
 </ion-content>

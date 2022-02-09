@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { RutaFacturas } from '../models/rutaFacturas';
 import { LoadingController } from '@ionic/angular';
+import { RutasPageModule } from '../pages/rutas/rutas.module';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class RutaFacturasService {
   totalBultosFactura: number = 0;
   pesoTotalBultosFactura: number = 0;
   rutaFacturasArray: RutaFacturas[]=[];
+  paginationArray:RutaFacturas[]=[];
   constructor(private http: HttpClient, private loadingCtrl: LoadingController) { }
 
   async presentaLoading( mensaje: string ){
@@ -45,7 +47,7 @@ export class RutaFacturasService {
 
 
 
-  getIrpUrl(api: string, id: string, fecha: Date){
+  getIrpUrl(api: string, id: string, fecha: string){
 
 
     let test = '';
@@ -62,15 +64,22 @@ export class RutaFacturasService {
 
 
  
-  getRutaFacturas(ruta: string, fecha:Date){
+  getRutaFacturas(ruta: string, fecha:string){
     const URL = this.getIrpUrl(environment.rutaFacturasURL,ruta, fecha);
     return this.http.get<RutaFacturas[]>(URL);
   }
 
 
+  paginate(array, page_size, page_number) {
+    this.paginationArray = [];
+    // human-readable page numbers usually start with 1, so we reduce 1 in the first argument
+    console.log( array.slice((page_number - 1) * page_size, page_number * page_size), ' agination')
+    this.paginationArray = array.slice((page_number - 1) * page_size, page_number * page_size);
+    console.log(this.paginationArray)
+  }
+  
 
-
-syncRutaFacturas(ruta:string, fecha:Date){
+syncRutaFacturas(ruta:string, fecha:string, page_size: number, page_number: number){
 
   
   this.getRutaFacturas(ruta, fecha).subscribe(
@@ -78,16 +87,23 @@ syncRutaFacturas(ruta:string, fecha:Date){
       this.rutaFacturasArray = resp;
       this.totalBultosFactura == 0;
       this.pesoTotalBultosFactura == 0;
-      resp.slice(0).forEach(factura =>{
+      this.rutaFacturasArray.forEach(factura =>{
+
+
         console.log(typeof( Number(factura.RUBRO1)), Number(factura.RUBRO1)  + factura.TOTAL_PESO_NETO , 'rubri1',typeof( factura.TOTAL_PESO_NETO),'pepso t')
 
         this.pesoTotalBultosFactura +=factura.TOTAL_PESO_NETO;
         this.totalBultosFactura += Number(factura.RUBRO1);
+        const timeStamp = Math.floor(Date.now() / 1000);
+
+        const consecutivo = factura.FACTURA + timeStamp;
+        factura.CONSECUTIVO = consecutivo
         
       })
 
       console.log(this.pesoTotalBultosFactura, 'peso bultos')
       console.log(this.totalBultosFactura, 'total bultos')
+      this.paginate( this.rutaFacturasArray, page_size, page_number)
     }
   )
 

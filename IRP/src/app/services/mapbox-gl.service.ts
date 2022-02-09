@@ -310,6 +310,7 @@ this.leerMarcador(dragable,reload)
             this.marcadores[i].modificado = true;
             this.marcadores[i].marker.setLngLat([lng, lat]);
             this.createmapa(dragable, true);
+            this.irMarcador( this.marcadores[i].marker);
     
           })
     

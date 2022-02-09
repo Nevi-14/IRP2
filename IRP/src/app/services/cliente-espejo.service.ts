@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { AlertController, LoadingController, PopoverController } from '@ionic/angular';
-import { environment } from '../../environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { Clientes } from '../models/clientes';
 import { ClientesService } from './clientes.service';
@@ -21,9 +21,8 @@ export class ClienteEspejoService {
   
 rutas: Clientes[]=[];
   getIRPURL( api: string, id: string ){
-    let test: string = '';
-
-    if ( !environment.prdMode ) {
+    let test = '';
+    if(!environment.prdMode){
       test = environment.TestURL;
     }
     const URL = environment.preURL+ test  + environment.postURL + api +id;
@@ -76,15 +75,17 @@ console.log(id)
           'Access-Control-Allow-Origin': '*'
       }
     };
-    console.log(JSON.stringify(ruta));
+    console.log(URL, ' url cliente espejo pines')
     return this.http.post( URL, JSON.stringify(ruta), options );
-  //  return this.http.post( URL, JSON.stringify(this.clienteEspejo), options );
+  //return this.http.post( URL, JSON.stringify(this.clienteEspejo), options );
   }
 
   insertarClienteEspejo(ruta){
-console.log(ruta,'post')
+
+
   //  this.presentaLoading('Guardando cambios')
-    this.postClienteEspejo(ruta).subscribe(
+  
+   this.postClienteEspejo(ruta).subscribe(
       
       resp => {
        this.mapboxLgService.marcadores = [];
@@ -100,6 +101,7 @@ console.log(ruta,'post')
         this.message('IRP','Error guardados las rutas');
       }
     )
+    
   }
 
 
