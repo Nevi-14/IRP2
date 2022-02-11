@@ -8,7 +8,6 @@ import { MantenimientoRutasPageRoutingModule } from './mantenimiento-rutas-routi
 
 import { MantenimientoRutasPage } from './mantenimiento-rutas.page';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -16,9 +15,8 @@ import { ComponentsModule } from 'src/app/components/components.module';
     FormsModule,
     IonicModule,
     MantenimientoRutasPageRoutingModule,
-    PipesModule,
-    ComponentsModule
-  ],
+    PipesModule
+    ],
   declarations: [MantenimientoRutasPage]
 })
 export class MantenimientoRutasPageModule {}

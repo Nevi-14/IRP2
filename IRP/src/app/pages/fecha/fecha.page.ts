@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-fecha',
@@ -12,17 +13,28 @@ export class FechaPage implements OnInit {
   pickerOptions = {
     mode: 'md'
   };
+    dateValue = format(new Date(), 'yyyy-MM-dd') + 'T00:00:00';
   constructor(public modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
 
-  
-  submit(formulario: NgForm){
+  cerrarModal(){
+    this.modalCtrl.dismiss();
+  }
 
+  dateChanged($event){
+    this.dateValue = $event.detail.value;
+
+  
+  
+    console.log(this.dateValue, 'date value', $event.detail.value)
+  }
+  submit(){
+    console.log(this.dateValue)
     this.modalCtrl.dismiss({
 
-      data:  this.fecha
+      data:  this.dateValue ? this.dateValue  : new Date()
      });
 
   }

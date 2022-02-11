@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
-import { ZonasService } from '../../services/paginas/organizacion territorial/zonas.service';
-import { RutaZonaService } from '../../services/paginas/rutas/ruta-zona.service';
+import { ZonasService } from '../../services/zonas.service';
+import { RutaZonaService } from '../../services/ruta-zona.service';
+import { RutasService } from 'src/app/services/rutas.service';
 
 @Component({
   selector: 'app-mantenimiento-rutas',

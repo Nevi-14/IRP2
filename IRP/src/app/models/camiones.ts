@@ -10,7 +10,7 @@ export class Camiones{
         public activo: number,
         public frio: number,
         public seco: number,
-        public chofer: number,
+        public chofer: string,
 
     ){}
 }

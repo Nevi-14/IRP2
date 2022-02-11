@@ -8,15 +8,13 @@ import { IonicModule } from '@ionic/angular';
 
 import { PlanificacionRutasPage } from './planificacion-rutas.page';
 import { PlanificacionPageRoutingModule } from './planificacion-rutas-routing.module';
-import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PlanificacionPageRoutingModule,
-    ComponentsModule
+    PlanificacionPageRoutingModule
   ],
   declarations: [PlanificacionRutasPage]
 })

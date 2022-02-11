@@ -5,6 +5,7 @@ import { FiltroPipe } from './filtro.pipe';
 
 import { Rutas } from '../models/rutas';
 import { RutasPipe } from './rutas.pipe';
+import { BarraBusquedaPipe } from './barra-busqueda.pipe';
 
 
 
@@ -12,7 +13,8 @@ import { RutasPipe } from './rutas.pipe';
   declarations: [
     FiltroClientesPipe,
     FiltroPipe,
-    RutasPipe
+    RutasPipe,
+    BarraBusquedaPipe
   ],
   imports: [
     CommonModule
@@ -20,7 +22,8 @@ import { RutasPipe } from './rutas.pipe';
   exports:[
     FiltroClientesPipe,
     FiltroPipe,
-    RutasPipe
+    RutasPipe,
+    BarraBusquedaPipe
   ]
 })
 export class PipesModule { }

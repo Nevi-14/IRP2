@@ -1,35 +1,20 @@
 <ion-toolbar>
   <ion-title  style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Ingresar Fecha Factura</ion-title>
 </ion-toolbar>
-<div class="inner-content">
+
+  <ion-datetime presentation="date" mode="ios" required  #dateTime [value]="dateValue" size="cover" (ionChange)="dateChanged($event)"  >
+  </ion-datetime>
+
+<ion-item>
+  <ion-buttons slot="end">
+    <ion-button (click)="submit()"  color="dark"
+    shape="round"     
+    fill="outline">Guardar</ion-button>
+    <ion-button (click)="cerrarModal()"  color="dark"
+    shape="round"     
+    fill="outline">Cancelar</ion-button>
+  </ion-buttons>
+</ion-item>
 
 
-  <form #formulario="ngForm" (ngSubmit)="submit(formulario)">
-    <ion-list lines="none" >
-      <ion-grid >
-        <ion-row >
-
-
-                  <ion-col size="12">
-                <ion-item>
-                  <input type="date" class="form-control" placeholder="Fecha" name ="fecha" [(ngModel)]="fecha">
-                
-                </ion-item>
-                  </ion-col>
-                  
-                 
-                <ion-col size="12" class="ion-text-center">
-                  <ion-button fill="solid" class="ion-text-center" shape="round" type="submit"  color="dark" >
-                    Continuar
-                  </ion-button>
-                </ion-col>
-                
-        </ion-row>
-      </ion-grid>
-    </ion-list>
-    
-</form>
-
-
-</div>
 

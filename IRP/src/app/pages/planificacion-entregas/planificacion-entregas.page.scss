@@ -4,3 +4,30 @@
     border-style:solid; margin-bottom : -1px;
     background-color: lightgrey
   }
+  ion-card {
+    overflow: unset !important;
+}
+
+ion-card {
+    height: 250px;
+    width: 80%;
+}
+  .slide-image {
+    width: 150px;
+    text-align: center;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    position: relative;
+    top: -50px;
+}
+.header-row{
+
+  font-weight: 500;
+  border-bottom: 2px solid black;
+}
+.data-row{
+  border-bottom: 1px solid black;
+}

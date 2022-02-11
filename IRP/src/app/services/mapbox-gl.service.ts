@@ -2,9 +2,9 @@ import { ElementRef, Injectable, ViewChild } from '@angular/core';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { ClientesService } from './paginas/clientes/clientes.service';
 import { BusquedaMapaPage } from '../pages/busqueda-mapa/busqueda-mapa.page';
 import { ModalController } from '@ionic/angular';
+import { ClientesService } from './clientes.service';
 
 interface Marcadores {
   id: string,
@@ -56,7 +56,9 @@ export class MapboxGLService {
 
   createmapa(dragable, reload) {
 
-
+if(this.mapa){
+  this.mapa.remove();
+}
 
     this.mapa = new mapboxgl.Map({
       container: this.divMapa.nativeElement,
@@ -308,6 +310,7 @@ this.leerMarcador(dragable,reload)
             this.marcadores[i].modificado = true;
             this.marcadores[i].marker.setLngLat([lng, lat]);
             this.createmapa(dragable, true);
+            this.irMarcador( this.marcadores[i].marker);
     
           })
     

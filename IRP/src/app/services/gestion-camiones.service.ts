@@ -2,12 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Camiones } from '../models/camiones';
 import { environment } from 'src/environments/environment';
+import { GuiaEntrega } from '../models/guiaEntrega';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GestionCamionesService {
   camiones: Camiones[]=[];
+
+
 
   constructor(private http: HttpClient) { }
 
@@ -31,6 +34,7 @@ console.log(URL);
     this.getCamiones().subscribe(
       resp =>{
         this.camiones = resp.slice(0);
+
 
         console.log(this.camiones, 'camiones')
 

@@ -1,0 +1,50 @@
+
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+  
+
+    <ion-title class="title">
+      
+      <ion-label>Gestion de volument - peso camiones </ion-label> 
+</ion-title>
+    <ion-buttons  slot="end">
+      <ion-button (click)="cerrarModal()" fill="solid" color="danger" shape="round">
+        <ion-icon  name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+ 
+
+      <ion-item   *ngFor="let camion of   actualizaFacturaService.listaCamionesGuia" (click)="actualizar(camion)" detail>
+        <ion-chip  style="background: transparent!important; height: 40px;" >
+          <ion-avatar >
+            <img   [src]="image" />
+          </ion-avatar>
+
+            </ion-chip>
+
+        <ion-label>
+          <h2>Placa : {{camion.idCamion}}  
+          </h2>
+          <p>Chofer : {{camion.chofer}}</p>
+          <p>Capacidad Total : {{camion.capacidad}}</p>
+          <p>Capacidad Restante : {{camion.pesoRestante}}</p>
+
+  
+        </ion-label>
+            
+      </ion-item>
+  
+
+    
+
+    
+  </ion-list>
+
+</ion-content>

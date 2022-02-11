@@ -1,19 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
-import { CantonesService } from '../../services/paginas/organizacion territorial/cantones.service';
-import { ProvinciasService } from '../../services/paginas/organizacion territorial/provincias.service';
-import { DistritosService } from '../../services/paginas/organizacion territorial/distritos.service';
-import { Clientes } from 'src/app/models/clientes';
-import { NgForm } from '@angular/forms';
-import { MapService } from 'src/app/services/componentes/mapas/map.service';
-import { RutasService } from 'src/app/services/paginas/rutas/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/paginas/clientes/cliente-espejo.service';
-import { ZonasService } from 'src/app/services/paginas/organizacion territorial/zonas.service';
-import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
+import { CantonesService } from '../../services/cantones.service';
+import { ZonasService } from 'src/app/services/zonas.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { BusquedaClienteService } from 'src/app/services/busqueda-cliente.service';
-import { ClientesService } from 'src/app/services/paginas/clientes/clientes.service';
+import { DistritosService } from 'src/app/services/distritos.service';
+import { RutasService } from 'src/app/services/rutas.service';
+import { ProvinciasService } from 'src/app/services/provincias.service';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+
 
 @Component({
   selector: 'app-menu-clientes',
@@ -32,7 +29,8 @@ export class MenuClientesPage implements OnInit {
   @Input() mapa :any
   busqueda = false;
   clienteId : string;
-  constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientesService: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public map: MapaService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService,public busquedaClienteService: BusquedaClienteService) { }
+  constructor(
+    public modalCtrl: ModalController, public alertCtrl: AlertController, public clientesService: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService,public busquedaClienteService: BusquedaClienteService) { }
 
 
   onSearchChange(event){
@@ -49,14 +47,7 @@ this.isChecked = !this.isChecked;
     }
     
   }
-  onSearchChange2(){
 
-   
-    this.busquedaClienteService.syncClientes(this.clienteId)
-    this.borrarFiltro();
-this.clientesService.clientesArray = [];
-this.isChecked = !this.isChecked; 
-  }
 
   
   ngOnInit() {
@@ -107,27 +98,19 @@ this.isChecked = !this.isChecked;
   }
   async agregarCliente(){
   for(let i = 0; i < this.clientesService.clientesArray.length;i++){
-    if(this.clientesService.clientesArray[i].select === true){
-      const duplicate = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
-      console.log('duplicate', duplicate)
-      if ( duplicate >= 0 ){
-        console.log('duplicate elements', this.clientesService.clientesArray[i].cliente.IdCliente)
-        this.clientesService.clientesArray.splice(duplicate, 1);
-        }else{
-          
-          this.clientesService.clientesRutas.push(this.clientesService.clientesArray[i]);
-          this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
-        }
-       
-         // this.map.createMap(-84.14123589305028,9.982628288210657);
-     //    this.map.crearMapa(this.mapa, [{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.rutasClientes},{nombre:'NOMBRE',id:'IdCliente',arreglo:this.clientes.nuevosClientes,nuevoCliente:true}], false, false);
-     this.modalCtrl.dismiss();
-         this.MapboxGLService.createmapa(false,false);
-      
+    const clienteExistenteDuplicado = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
+    const clienteNuevoDuplicado = this.clientesService.nuevosClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
+    if ( clienteExistenteDuplicado >= 0){ 
+        this.clientesService.clientesArray.splice(clienteExistenteDuplicado, 1);
+    }else if ( clienteNuevoDuplicado >=0){
+      this.clientesService.nuevosClientes.splice(clienteNuevoDuplicado, 1);
     }
+    console.log(this.clientesService.clientesArray[i])
+    this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
   }
   this.message('IRP','Se agrego a la lista de RUTAS');
-
+  this.modalCtrl.dismiss();
+  this.MapboxGLService.createmapa(false,false);
 
 
   }
