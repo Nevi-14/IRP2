@@ -108,7 +108,7 @@ mapa.addControl(new mapboxgl.GeolocateControl({
         if(data !== undefined){
         
          
-           this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, data.data,10, 1);
+           this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, data.data);
 
   
           
@@ -198,7 +198,7 @@ mapa.addControl(new mapboxgl.GeolocateControl({
   console.log(this.totalBultosFactura, 'total bultos', this.pesoTotalBultosFactura, 'total peso')
 
          })
-   this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, data.data, 10, 1 );
+   this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, data.data );
  console.log('test await ')
             
         }else{

@@ -1,3 +1,4 @@
+
 <ion-header class="ion-no-border">
   <ion-toolbar>
   
@@ -20,13 +21,21 @@
   <ion-list>
  
 
-      <ion-item  *ngFor="let camion of camionesService.camiones" (click)="actualizar(camion)" detail>
+      <ion-item   *ngFor="let camion of   actualizaFacturaService.listaCamionesGuia" (click)="actualizar(camion)" detail>
+        <ion-chip  style="background: transparent!important; height: 40px;" >
+          <ion-avatar >
+            <img   [src]="image" />
+          </ion-avatar>
+
+            </ion-chip>
+
         <ion-label>
-          <h2>Placa : {{camion.idCamion}}  {{camion.descripcion}}
+          <h2>Placa : {{camion.idCamion}}  
           </h2>
           <p>Chofer : {{camion.chofer}}</p>
-          <p>Capacidad Volumen: {{camion.capacidadVolumen}}</p>
-          <p>Capacidad Peso : {{camion.capacidadPeso}}</p>
+          <p>Capacidad Total : {{camion.capacidad}}</p>
+          <p>Capacidad Restante : {{camion.pesoRestante}}</p>
+
   
         </ion-label>
             

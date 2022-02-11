@@ -83,6 +83,18 @@ const routes: Routes = [
     path: 'lista-capacidad-camiones',
     loadChildren: () => import('./pages/lista-capacidad-camiones/lista-capacidad-camiones.module').then( m => m.ListaCapacidadCamionesPageModule)
   },
+  {
+    path: 'guia-detalles',
+    loadChildren: () => import('./pages/guia-detalles/guia-detalles.module').then( m => m.GuiaDetallesPageModule)
+  },
+  {
+    path: 'lista-guias',
+    loadChildren: () => import('./pages/lista-guias/lista-guias.module').then( m => m.ListaGuiasPageModule)
+  },
+  {
+    path: 'lista-clientes-guias',
+    loadChildren: () => import('./pages/lista-clientes-guias/lista-clientes-guias.module').then( m => m.ListaClientesGuiasPageModule)
+  },
  
 ];
 

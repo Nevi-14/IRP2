@@ -9,7 +9,7 @@ import { ActualizaFacturaGuiasService } from 'src/app/services/actualiza-factura
   styleUrls: ['./lista-capacidad-camiones.page.scss'],
 })
 export class ListaCapacidadCamionesPage implements OnInit {
-@Input() factura:string = '';
+@Input() factura;
 
   constructor(
 
@@ -33,12 +33,23 @@ this.modalCtrl.dismiss();
   }
 
   actualizar(camion){
+
+    this.modalCtrl.dismiss({
+
+      camion:  camion
+     });
+
+
+
+/**
+ * 
     this.cerrarModal();
-    if(this.factura ==''){
-      this.actualizaFacturaGuiasService.asignarCamiones(camion);
+    if(!this.factura){
+      this.actualizaFacturaGuiasService.asignarCamiones(camion.idCamion);
     }else{
       this.actualizaFacturaGuiasService.asignarCamionesFacturaIndividual(this.factura,camion);
     }
+ */
   
   }
 

@@ -584,6 +584,36 @@ ion-modal.custom-modal {
   }
 }
 
+.example-modal {
+  align-items: center;
+  justify-content: center; 
+  &::part(content){
+    min-width: 90%;
+    min-height: 60%; 
+  }
+}
+
+
+ion-modal.large-modal {
+  &.bottom {
+      align-items: flex-end;
+  }
+
+  --height: auto;
+  --width: 80vw;
+  .ion-page {
+      position: relative;
+      display: block;
+      contain: content;
+
+      .inner-content {
+      
+          max-height: 80vh;
+          overflow: auto;
+          padding: 10px;
+      }
+  }
+}
 .color-modal{
   .modal-wrapper{
     --position:absolute;

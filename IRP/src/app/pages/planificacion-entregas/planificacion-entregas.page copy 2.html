@@ -70,16 +70,21 @@
 
   <ion-grid  *ngIf="rutaFacturas.rutaFacturasArray.length > 0"> 
     <ion-row class="header-row">
-      <ion-col size="12" size-md="8"   >
+      <ion-col size="12" size-md="8"   style="display: flex;justify-content:space-between;">
 
 <ion-item lines="none">
    
 
   <ion-label class="ion-text-uppercase">Lista de clientes</ion-label>
-  <ion-label slot="end">Total Guias <ion-badge color="dark" mode="ios">{{actualizaFacturaGuiasService.listaCamionesGuia.length}}</ion-badge></ion-label>
   <ion-buttons  slot="end">
            
-
+    <ion-button (click)="datableService.toggleBulkEdit()"  shape="round"  fill="outline"  color="dark">
+      Editar conjunto
+        </ion-button>
+    
+        <ion-button (click)="datableService.bulkDelete()"  shape="round"  fill="outline" color="danger" *ngIf="datableService.bulkEdit">
+          Eliminar conjunto
+            </ion-button>
             <ion-button (click)="listaCamiones()" shape="round"  fill="outline"  color="dark">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
@@ -88,16 +93,9 @@
                 <ion-label>Camiones</ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="dark">
-              <ion-chip  style="background: transparent!important;">
-                <ion-avatar >
-                  <img   [src]="image" />
-                </ion-avatar>
-              <ion-label>  <ion-icon  color="danger" slot="icon-only" name="close"></ion-icon></ion-label>
-                  </ion-chip>
-            </ion-button>
+      
            </ion-buttons>
-           
+   
 </ion-item>
     
 
@@ -109,58 +107,41 @@
       </ion-col>
 <ion-col size="12" >
 <ion-row>
-  <ion-col size="12" size-md="4"*ngFor="let camion of  actualizaFacturaGuiasService.listaCamionesGuia">
-
-    
+  <ion-col size="12" size-md="3"*ngFor="let camion of  actualizaFacturaGuiasService.listaCamionesGuia">
     <ion-row>
-      <ion-col size="12" size-md="3">
+      <ion-col size="12" size-md="6">
         <ion-avatar >
           <img [src]="image" />
           </ion-avatar>
-          <ion-label>
-            {{camion.idCamion}}</ion-label>
-
+          <ion-label>Placa : {{camion.idCamion}}</ion-label>
+          <ion-buttons >
+            <ion-button (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()"  fill="clear" color="danger">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+        
+            </ion-button>
+            <ion-button (click)="listaCamiones()"  fill="clear" color="primary">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+        
+            </ion-button>
+          </ion-buttons>
       </ion-col>
 
-      <ion-col size="12" size-md="9">
-      
-    
-<ion-card style="width: 100%; height: auto;">
-  <ion-card-content>
-    <ion-label>
-
-      <p> {{camion.chofer}}</p>
-      <p>Placa : {{camion.idCamion}}</p>
-      <p>Total Clientes : <ion-badge (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)" color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
-      <p>Capacidad Total : {{camion.capacidad }}</p>
-      <p>Capacidad Actual : {{camion.peso }}</p>
-      <p>Capacidad Restante : {{camion.pesoRestante}}</p>
-
-
-    </ion-label>
-    <ion-item lines="none">
-        
-      <ion-buttons slot="end">
-        <ion-button  fill="clear" color="danger">
-          <ion-icon slot="start" name="close"></ion-icon>
-          <ion-label>Eliminar</ion-label>
-    
-        </ion-button>
-        <ion-button   fill="clear" color="primary">
-          <ion-icon slot="start" name="create"></ion-icon>
-          <ion-label>Editar</ion-label>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-card-content>
-
-
-</ion-card>
-       
-    
+      <ion-col size="12" size-md="6">
+<ion-row>
+  <ion-col size="12">Estado : {{camion.estado }}</ion-col>
+  <ion-col size="12">Total Clientes : {{camion.numClientes }}</ion-col>
+  <ion-col size="12">Capacidad : {{camion.capacidad }}</ion-col>
+  <ion-col size="12">Peso Actual : {{camion.peso }}</ion-col>
+  <ion-col size="12">Peso Restante: {{camion.pesoRestante }}</ion-col>
+  <ion-col size="12">Volumen : {{camion.volumen }}</ion-col>
+</ion-row>
       </ion-col>
     </ion-row>
+    <ion-item lines="none">
+ 
+      </ion-item>
 
+      
   </ion-col>
 </ion-row>
   
@@ -178,7 +159,9 @@
 
     <ion-row class="header-row">
 
-
+<ion-col size="2" *ngIf="bulkEdit">
+  Seleccionar
+</ion-col>
 
       <ion-col size="4" tappable (click)="datableService.sortBy('FACTURA')">
 
@@ -192,10 +175,10 @@
 
       </ion-col>
       <ion-col   size="1">Seco</ion-col>
-      <ion-col    size="2">Bultos</ion-col>
-      <ion-col   size="2">Peso</ion-col>
+      <ion-col    size="1">Bultos</ion-col>
+      <ion-col   size="1">Peso</ion-col>
       <ion-col   size="2">Camion</ion-col>
-     
+      <ion-col  size="2" *ngIf="!datableService.bulkEdit">Action</ion-col>
     </ion-row>
 
    
@@ -220,10 +203,10 @@
   
           <ion-checkbox  [(ngModel)]="factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
-        <ion-col    size="2">
+        <ion-col    size="1">
 {{factura.RUBRO1}}
         </ion-col>
-        <ion-col    size="2" >
+        <ion-col    size="1" >
           {{factura.TOTAL_PESO_NETO}}
         </ion-col>
         <ion-col    size="2" style="display: flex;" >
@@ -238,20 +221,26 @@
       <ion-icon slot="icon-only" name="close"></ion-icon>
 
     </ion-button>
-    <ion-button (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
+    <ion-button (click)="listaCamionesIndividual(factura)" fill="clear" color="primary">
       <ion-icon slot="icon-only" name="create"></ion-icon>
 
     </ion-button>
   </ion-buttons>
   <ion-buttons *ngIf="!factura.CAMION">
-    <ion-button  (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
+    <ion-button  (click)="listaCamionesIndividual(factura)" fill="clear" color="primary">
       <ion-icon slot="icon-only" name="add"></ion-icon>
 
     </ion-button>
   </ion-buttons>
 
         </ion-col>
-      
+        <ion-col  size="2" *ngIf="!datableService.bulkEdit">
+
+          <ion-button size="small" (click)="datableService.removeRow(i)"  color="danger" fill="clear">
+         <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+
+        </ion-col>
       </ion-row>
       </ng-template>
 

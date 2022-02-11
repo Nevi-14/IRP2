@@ -6,9 +6,6 @@ import { GestionCamionesService } from './gestion-camiones.service';
 import { RutaFacturasService } from './ruta-facturas.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ListaCapacidadCamionesPage } from '../pages/lista-capacidad-camiones/lista-capacidad-camiones.page';
-import { GuiaDetallesPage } from '../pages/guia-detalles/guia-detalles.page';
-import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
-import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clientes-guias.page';
 
 @Injectable({
   providedIn: 'root'
@@ -47,65 +44,11 @@ loadData(array, truck, reload){
 }
 
 
-
-loadNewRecord(receipt ){
-
-  let guia = {
-    idGuia: '',
-    chofer: '',
-    fecha: new Date(),
-    zona: '',
-    ruta: '',
-    idCamion: '',
-    capacidad: 0,
-    pesoRestante: 0,
-    numClientes: 0,
-    peso:  0,
-    estado: '',
-    HH:'',
-    volumen:   0,
-    facturas: null
- }
- const i = this.camionesService.camiones.findIndex(c=> c.idCamion == receipt.idCamion)
- if( i >= 0){
-guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-guia.chofer = this.camionesService.camiones[i].chofer;
- }
-
-console.log(this.camionesService.camiones, 'camiones' , 'i', i)
-
-guia.facturas = [];
-
-guia.facturas.push(receipt)
-guia.zona = receipt.ZONA;
-guia.ruta = receipt.RUTA;
-guia.idCamion = receipt.idCamion;
-guia.peso += receipt.TOTAL_PESO;
-guia.estado = 'RUTA';
-guia.HH = 'HH01';
-guia.pesoRestante =   guia.capacidad - receipt.TOTAL_PESO;
-guia.volumen += receipt.TOTAL_VOLUMEN;
-
-guia.numClientes = guia.facturas.length;
-
-if(this.listaCamionesGuia.length > 0 ){
-  this.loadNewRecordAlert(receipt,guia); 
-
-}else{
-  this.listaCamiones(receipt,guia);
-}
-
-
-this.eliminarCamionesFacturaIndividual(receipt);
-
-}
-
 loadNewRecords(array , truck){
 
 
   let guia = {
     idGuia: '',
-    chofer: '',
     fecha: new Date(),
     zona: '',
     ruta: '',
@@ -122,12 +65,11 @@ loadNewRecords(array , truck){
  const i = this.camionesService.camiones.findIndex(c=> c.idCamion == truck.idCamion)
  if( i >= 0){
 guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-guia.chofer = this.camionesService.camiones[i].chofer;
  }
+
 guia.facturas = [];
 
 array.forEach(factura =>{
-  console.log(guia.capacidad , factura.TOTAL_PESO, guia.capacidad - factura.TOTAL_PESO)
 guia.facturas.push(array)
 guia.zona = factura.ZONA;
 guia.ruta = factura.RUTA;
@@ -144,43 +86,10 @@ guia.volumen += factura.TOTAL_VOLUMEN;
 }
 
 
-async loadNewRecordExsiting(factura, camion){
+loadNewRecord(receipt ){
 
-console.log(factura, camion)
-const modal = await this.modalCtrl.create({
-  component: ListaGuiasPage,
-  cssClass: 'my-custom-class'
-});
-modal.present();
-const { data } = await modal.onDidDismiss();
-console.log(data)
-  if(data !== undefined){
-  console.log(data.camion)
-  data.camion.pesoRestante = data.camion.capacidad -   factura.TOTAL_PESO;
-  data.camion.volumen += factura.TOTAL_VOLUMEN;
-  data.camion.peso +=factura.TOTAL_PESO
-  data.camion.facturas.push(factura)
-  data.camion.numClientes = data.camion.facturas.length;
-  }else{
-
-    console.log('false')
-  
-  }
-  this.actualizaCamionesData();
-}
-
-
-actualizaAllCamionesData(truck){
-
-
-  this.listaCamionesGuia = [];
-
-  const camion = this.camionesService.camiones.findIndex(c=> c.idCamion == truck.idCamion)
-   
-  
   let guia = {
     idGuia: '',
-    chofer: '',
     fecha: new Date(),
     zona: '',
     ruta: '',
@@ -194,127 +103,45 @@ actualizaAllCamionesData(truck){
     volumen:   0,
     facturas: null
  }
+ const i = this.camionesService.camiones.findIndex(c=> c.idCamion == receipt.idCamion)
+ if( i >= 0){
+guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
+ }
 
-  if( camion >= 0){
-    guia.capacidad = this.camionesService.camiones[camion].capacidadPeso;
-    guia.chofer = this.camionesService.camiones[camion].chofer;
-  }
-  guia.facturas = [];
-  this.datableService.data.forEach(factura =>{
 
-factura.CAMION = truck.idCamion;
-guia.zona = factura.ZONA;
-guia.ruta = factura.RUTA;
-guia.idCamion = truck.idCamion;
-guia.facturas.push(factura)
 
-guia.peso += factura.TOTAL_PESO;
+guia.facturas = [];
+
+guia.facturas.push(receipt)
+guia.zona = receipt.ZONA;
+guia.ruta = receipt.RUTA;
+guia.idCamion = receipt.idCamion;
+guia.peso += receipt.TOTAL_PESO;
 guia.estado = 'RUTA';
 guia.HH = 'HH01';
-guia.pesoRestante =   guia.capacidad - factura.TOTAL_PESO;
-guia.volumen += factura.TOTAL_VOLUMEN;
-
-})
+guia.pesoRestante =   guia.capacidad - receipt.TOTAL_PESO;
+guia.volumen += receipt.TOTAL_VOLUMEN;
 
 guia.numClientes = guia.facturas.length;
-this.listaCamionesGuia.push(guia)
-console.log( this.camionesService.camiones, 'camiones')
-console.log(this.listaCamionesGuia, 'guia')
-}
-actualizaCamionesData(){
-
-  this.listaCamionesGuia.forEach(camion=>{
-
-    camion.facturas.forEach(factura =>{
-console.log('factura camiones', factura)
-      this.datableService.dataArrayToShow.forEach(data=>{
-
-        if(factura['FACTURA'] == data.FACTURA){
-          console.log('factura camiones w2', factura , factura['FACTURA'], data.FACTURA , factura['CAMION'])
-          data.CAMION = camion.idCamion
-         // this.datableService.loadData();
-        }
-      })
-
-      
-    })
-  })
-}
-
-async listaClientesGuia(facturas){
-  const modal = await this.modalCtrl.create({
-    component: ListaClientesGuiasPage,
-    componentProps:{
-      facturas: facturas
-    },
-    mode: 'ios',
-    cssClass: 'example-modal'
-  });
-  modal.present();
-  const { data } = await modal.onDidDismiss();
-  console.log(data)
-    if(data !== undefined){
 
 
-    }else{
- 
-      console.log('false')
-    
-    }
-console.log(this.listaCamionesGuia , 'huia')
 
-}
-
-async listaCamiones(receipt,guia,){
-  const modal = await this.modalCtrl.create({
-    component: ListaCapacidadCamionesPage,
-    cssClass: 'my-custom-class'
-  });
-  modal.present();
-  const { data } = await modal.onDidDismiss();
-  console.log(data)
-    if(data !== undefined){
-      const i = this.camionesService.camiones.findIndex(c=> c.idCamion == data.camion.idCamion)
-      if( i >= 0){
-       guia.chofer = this.camionesService.camiones[i].chofer;
-       guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-     guia.pesoRestante = guia.capacidad - guia.peso;
-     guia.idCamion = data.camion.idCamion
-     
-     this.listaCamionesGuia.push(guia)
-      }
+this.loadNewRecordAlert(receipt,guia,'nuevo');
 
 
-    }else{
- 
-      console.log('false')
-    
-    }
-console.log(this.listaCamionesGuia , 'huia')
-this.actualizaCamionesData();
 }
 
 
 
-editRecord(receipt){
-
-  this.listaCamionesGuia.forEach(camion=>{
-
-    camion.facturas.forEach(factura=>{
-
-      if(factura['FACTURA'] == receipt.FACTURA){
-        console.log('hello')
-      }
-    })
-  })
-}
 
 
-async loadNewRecordAlert(receipt,guia) {
+
+
+async loadNewRecordAlert(receipt,guia ,action) {
   const alert = await this.alertCtrl.create({
     cssClass: 'my-custom-class',
-    header: 'ISLEÑA',
-    message: 'Desea generar una nueva guia?',
+    header: 'PLANIFICACIÓN DE ENTREGAS',
+    message: 'Desea generar una nueva guia!',
     buttons: [
       {
         text: 'No',
@@ -323,15 +150,32 @@ async loadNewRecordAlert(receipt,guia) {
         id: 'cancel-button',
         handler: (blah) => {
           console.log('Confirm Cancel: blah');
-          this.loadNewRecordExsiting(receipt,guia)
         }
       }, {
         text: 'Si',
         id: 'confirm-button',
-        handler: () => {
-         
+        async   handler ()  {
+          const modal = await this.modalCtrl.create({
+            component: ListaCapacidadCamionesPage,
+            componentProps:{
+              factura: receipt
+            },
+            cssClass: 'my-custom-class'
+          });
+          const { data } = await modal.onDidDismiss();
+          console.log(data)
+            if(data !== undefined){
+              
+              switch(action){
+                case 'nuevo':
+                  break;
+              }
         
-          this.listaCamiones(receipt,guia);
+            }else{
+         
+            
+            
+            }
         }
       }
     ]
@@ -357,7 +201,6 @@ array.forEach(factura =>{
 console.log(factura ,'existentes')
 let guia = {
   idGuia: '',
-  chofer: '',
   fecha: new Date(),
   zona: '',
   ruta: '',
@@ -371,11 +214,11 @@ let guia = {
   volumen:   0,
   facturas: null
 }
+guia.facturas = [];
+
 const i = this.camionesService.camiones.findIndex(c=> c.idCamion == factura.idCamion)
 if( i >= 0){
-  console.log(this.camionesService.camiones[i], 'chofer')
 guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-guia.chofer = this.camionesService.camiones[i].chofer;
 }
 
 
@@ -475,28 +318,28 @@ guia.volumen = factura.volumen;
 
 this.listaCamionesGuia = [];
 
-let guia = {
-  idGuia: '',
-  chofer: '',
-  fecha: new Date(),
-  zona: '',
-  ruta: '',
-  idCamion: '',
-  capacidad: 0,
-  pesoRestante: 0,
-  numClientes: 0,
-  peso:  0,
-  estado: '',
-  HH:'',
-  volumen:   0,
-  facturas: null
-}
-const i = this.camionesService.camiones.findIndex(c=> c.idCamion == idCamion)
-if( i >= 0){
-guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-guia.chofer = this.camionesService.camiones[i].chofer;
-}
+  const camion = this.camionesService.camiones.findIndex(c=> c.idCamion == idCamion)
+   
+  
+  let guia = {
+    idGuia: '',
+    fecha: new Date(),
+    zona: '',
+    ruta: '',
+    idCamion: '',
+    capacidad: 0,
+    pesoRestante: 0,
+    numClientes: 0,
+    peso:  0,
+    estado: '',
+    HH:'',
+    volumen:   0,
+    facturas: null
+ }
 
+  if( camion >= 0){
+    guia.capacidad = this.camionesService.camiones[camion].capacidadPeso;
+  }
   guia.facturas = [];
   this.datableService.data.forEach(factura =>{
 
@@ -524,13 +367,13 @@ console.log(this.listaCamionesGuia, 'guia')
 editarCamionesAsignados(factura,camion){
 
 
-
+  const camionIndex = this.camionesService.camiones.findIndex(c=> c.idCamion == camion.idCamion)
+   
   let guia = {
     idGuia: '',
-    chofer: '',
     fecha: new Date(),
-    zona: '',
-    ruta: '',
+    zona: factura.ZONA,
+    ruta: factura.RUTA,
     idCamion: camion.idCamion,
     capacidad: 0,
     pesoRestante: 0,
@@ -540,13 +383,10 @@ editarCamionesAsignados(factura,camion){
     HH:'',
     volumen:   0,
     facturas: null
-  }
-  const i = this.camionesService.camiones.findIndex(c=> c.idCamion == factura.idCamion)
-  if( i >= 0){
-  guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-  guia.chofer = this.camionesService.camiones[i].chofer;
-  }
-  
+ }
+ if( camionIndex >= 0){
+  guia.capacidad = this.camionesService.camiones[camionIndex].capacidadPeso;
+}
  guia.facturas = [];
 
 
@@ -622,30 +462,6 @@ eliminarCamionesFacturaIndividual(factura){
 
   }
 
-  for( let indexA = 0; indexA <this.listaCamionesGuia.length; indexA++ ){
-    for( let indexB = 0; indexB <this.listaCamionesGuia[indexA].facturas.length; indexB++ ){
-
-      if(this.listaCamionesGuia[indexA].facturas[indexB]['FACTURA']== factura.FACTURA){
-       
-        this.listaCamionesGuia[indexA].peso -= this.listaCamionesGuia[indexA].facturas[indexB]['TOTAL_PESO']
-        this.listaCamionesGuia[indexA].pesoRestante = this.listaCamionesGuia[indexA].capacidad - this.listaCamionesGuia[indexA].peso
-        this.listaCamionesGuia[indexA].facturas.splice(indexB, 1)
-        this.listaCamionesGuia[indexA].numClientes =  this.listaCamionesGuia[indexA].facturas.length;
-        if( this.listaCamionesGuia[indexA].facturas.length == 0){
-          this.listaCamionesGuia = [];
-          this.cargarDatos(this.listaCamionesGuia)
-        }
-      }
-    }
-  }
-
-
-  this.listaCamionesGuia.forEach(camion =>{
-    camion.facturas.forEach(factura=>{
-
-    })
-  })
-
   }
   eliminarTodosCamiones(){
 
@@ -675,7 +491,6 @@ eliminarCamionesFacturaIndividual(factura){
     fecha: new Date(),
     zona: '',
     ruta: '',
-    chofer:'',
     idCamion: '',
     capacidad: 0,
     pesoRestante: 0,
@@ -687,7 +502,6 @@ eliminarCamionesFacturaIndividual(factura){
     facturas: null
  }
   guia.facturas = [];
-  guia.chofer = factura.chofer;
   guia.capacidad = factura.capacidad;
 guia.zona = factura.zona;
 guia.ruta = factura.ruta;

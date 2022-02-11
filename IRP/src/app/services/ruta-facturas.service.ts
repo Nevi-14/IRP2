@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { RutaFacturas } from '../models/rutaFacturas';
 import { LoadingController } from '@ionic/angular';
 import { RutasPageModule } from '../pages/rutas/rutas.module';
+import { DataTableService } from './data-table.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,16 @@ import { RutasPageModule } from '../pages/rutas/rutas.module';
 export class RutaFacturasService {
   loading: HTMLIonLoadingElement;
 
+  // control perso facturas
   totalBultosFactura: number = 0;
   pesoTotalBultosFactura: number = 0;
+
+  //
+
+
   rutaFacturasArray: RutaFacturas[]=[];
   paginationArray:RutaFacturas[]=[];
-  constructor(private http: HttpClient, private loadingCtrl: LoadingController) { }
+  constructor(private http: HttpClient, private loadingCtrl: LoadingController, public datatableService: DataTableService) { }
 
   async presentaLoading( mensaje: string ){
     this.loading = await this.loadingCtrl.create({
@@ -73,20 +79,20 @@ export class RutaFacturasService {
   paginate(array, page_size, page_number) {
     this.paginationArray = [];
     // human-readable page numbers usually start with 1, so we reduce 1 in the first argument
-    console.log( array.slice((page_number - 1) * page_size, page_number * page_size), ' agination')
+    console.log( array.slice((page_number - 1) * page_size, page_number * page_size), ' pagination')
     this.paginationArray = array.slice((page_number - 1) * page_size, page_number * page_size);
-    console.log(this.paginationArray)
+ 
   }
   
 
-syncRutaFacturas(ruta:string, fecha:string, page_size: number, page_number: number){
+syncRutaFacturas(ruta:string, fecha:string){
 
   
   this.getRutaFacturas(ruta, fecha).subscribe(
     resp =>{
       this.rutaFacturasArray = resp;
-      this.totalBultosFactura == 0;
-      this.pesoTotalBultosFactura == 0;
+      this.totalBultosFactura = 0;
+      this.pesoTotalBultosFactura = 0;
       this.rutaFacturasArray.forEach(factura =>{
 
 
@@ -103,7 +109,7 @@ syncRutaFacturas(ruta:string, fecha:string, page_size: number, page_number: numb
 
       console.log(this.pesoTotalBultosFactura, 'peso bultos')
       console.log(this.totalBultosFactura, 'total bultos')
-      this.paginate( this.rutaFacturasArray, page_size, page_number)
+      this.datatableService.paginacion( this.rutaFacturasArray, this.datatableService.resultsCount, this.datatableService.page)
     }
   )
 
