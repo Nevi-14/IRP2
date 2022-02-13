@@ -69,22 +69,17 @@
         </ion-avatar>
         <ion-label>   {{factura.CAMION}}</ion-label>
           </ion-chip>
-  <ion-buttons *ngIf="factura.CAMION">
-  <ion-button  fill="clear" color="danger">
-  <ion-icon slot="icon-only" name="close"></ion-icon>
-  
-  </ion-button>
-  <ion-button  fill="clear" color="primary">
-  <ion-icon slot="icon-only" name="create"></ion-icon>
-  
-  </ion-button>
-  </ion-buttons>
-  <ion-buttons *ngIf="!factura.CAMION">
-  <ion-button  fill="clear" color="primary">
-  <ion-icon slot="icon-only" name="add"></ion-icon>
-  
-  </ion-button>
-  </ion-buttons>
+          <ion-buttons *ngIf="factura.CAMION">
+            <ion-button (click)="eliminarFactura(factura)" fill="clear" color="danger">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+        
+            </ion-button>
+            <ion-button (click)="actualizarFactura(factura)" fill="clear" color="primary">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+        
+            </ion-button>
+          </ion-buttons>
+ 
   
     </ion-col>
   

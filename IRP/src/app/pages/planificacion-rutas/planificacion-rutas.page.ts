@@ -11,8 +11,9 @@ import { RutaZonaService } from '../../services/ruta-zona.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+
 import { RutasService } from 'src/app/services/rutas.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 
 
 
@@ -55,6 +56,8 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
      this.clientes.rutasClientes = [];
      this.clientes.nuevosClientes = [];
   console.log('planificacion Rutas')
+
+
     
     }
     ngAfterViewInit() {
@@ -100,8 +103,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
           Latitud: this.mapboxLgService.marcadores[i].cliente.LATITUD,
           Longitud: this.mapboxLgService.marcadores[i].cliente.LONGITUD
                   }
-                  console.log(this.mapboxLgService.marcadores, 'post')
-  
+                
              
                   if(this.mapboxLgService.marcadores[i].modificado || this.mapboxLgService.marcadores[i].nuevoCliente){
                     this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
@@ -113,15 +115,18 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
       
 
 
-      console.log(this.clienteEspejo.ClienteEspejoArray, 'cliente espejo con marcadores', this.clienteEspejo.ClienteEspejoArray.length)
 
-      if(this.clienteEspejo.insertarClienteEspejo.length > 0){
+      if(this.clienteEspejo.ClienteEspejoArray.length > 0){
+        
+      console.log(this.clienteEspejo.ClienteEspejoArray, 'cliente espejo con marcadores', this.clienteEspejo.ClienteEspejoArray.length)
+      console.log(this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray))
         this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
         this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
         this.clientes.rutasClientes = [];
         this.clientes.nuevosClientes = [];
         this.drag=false;
         this.modo = 'off'
+
       }else{
         this.global.message('Planificacion Rutas','No se efectuaron cambios');
       }
@@ -131,7 +136,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
     }
 
     
-    
+            
     dragMarcadores(){
       this.drag=!this.drag;
       if(this.drag === true){

@@ -24,6 +24,82 @@ export class ActualizaFacturaGuiasService {
  }
 
 
+ // HAY COMO 4 this.listaCamionesGuia.push(guia)  COMENTADOS
+
+
+
+
+ crearGuia(factura) {
+  const dt = new Date();
+  const year  = dt.getFullYear();
+  const month = (dt.getMonth() + 1).toString().padStart(2, "0");
+  const day   = dt.getDate().toString().padStart(2, "0");
+  const newdate = year + "/" + month + "/" + day;
+let consecutivo = year+''+month+''+day+factura.RUTA+'V';
+
+  let guia = {
+    consecutivo:consecutivo ,
+    idGuia: '',
+    chofer: '',
+    fecha: new Date(),
+    zona: '',
+    ruta: '',
+    idCamion: '',
+    capacidad: 0,
+    pesoRestante: 0,
+    numClientes: 0,
+    peso:  0,
+    estado: '',
+    HH:'',
+    volumen:   0,
+    facturas: null
+ }
+
+  console.log(new Date().getDate()      ,    // Return the day as a number (1-31)
+  new Date().getDay() ,          // Return the weekday as a number (0-6)
+  new Date().getFullYear() ,     // Return the four digit year (yyyy)
+  new Date().getHours() ,        // Return the hour (0-23)
+  new Date().getMilliseconds(),  // Return the milliseconds (0-999)
+  new Date().getMinutes()    ,   // Return the minutes (0-59)
+  new Date().getMonth()    ,     // Return the month (0-11)
+  new Date().getSeconds()  ,     // Return the seconds (0-59)
+  new Date().getTime()  ,  )
+
+ if(this.listaCamionesGuia.length == 0){
+  guia.consecutivo=   consecutivo + '01'
+}else if(this.listaCamionesGuia.length >= 1 && this.listaCamionesGuia.length <= 9){
+  guia.consecutivo  =  consecutivo + '0' +(this.listaCamionesGuia.length + 1)
+}else{
+  guia.consecutivo  = consecutivo +  this.listaCamionesGuia.length
+}
+
+ const i = this.camionesService.camiones.findIndex(c=> c.idCamion == factura.idCamion)
+ if( i >= 0){
+guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
+guia.chofer = this.camionesService.camiones[i].chofer;
+ }
+
+
+ guia.facturas = [];
+ guia.facturas.push(factura)
+ guia.zona = factura.ZONA;
+ guia.ruta = factura.RUTA;
+ guia.idCamion = factura.idCamion;
+ guia.peso += factura.TOTAL_PESO;
+ guia.estado = 'RUTA';
+ guia.HH = 'HH01';
+ guia.pesoRestante =   guia.capacidad - factura.TOTAL_PESO;
+ guia.volumen += factura.TOTAL_VOLUMEN;
+ 
+ guia.numClientes = guia.facturas.length;
+
+ console.log(guia)
+	return guia;
+};
+
+
+
+
 // CARGAR GUIAS 
 
 
@@ -50,49 +126,16 @@ loadData(array, truck, reload){
 
 loadNewRecord(receipt ){
 
-  let guia = {
-    idGuia: '',
-    chofer: '',
-    fecha: new Date(),
-    zona: '',
-    ruta: '',
-    idCamion: '',
-    capacidad: 0,
-    pesoRestante: 0,
-    numClientes: 0,
-    peso:  0,
-    estado: '',
-    HH:'',
-    volumen:   0,
-    facturas: null
- }
- const i = this.camionesService.camiones.findIndex(c=> c.idCamion == receipt.idCamion)
- if( i >= 0){
-guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-guia.chofer = this.camionesService.camiones[i].chofer;
- }
-
-console.log(this.camionesService.camiones, 'camiones' , 'i', i)
-
-guia.facturas = [];
-
-guia.facturas.push(receipt)
-guia.zona = receipt.ZONA;
-guia.ruta = receipt.RUTA;
-guia.idCamion = receipt.idCamion;
-guia.peso += receipt.TOTAL_PESO;
-guia.estado = 'RUTA';
-guia.HH = 'HH01';
-guia.pesoRestante =   guia.capacidad - receipt.TOTAL_PESO;
-guia.volumen += receipt.TOTAL_VOLUMEN;
-
-guia.numClientes = guia.facturas.length;
+  const guia = this.crearGuia(receipt);
 
 if(this.listaCamionesGuia.length > 0 ){
   this.loadNewRecordAlert(receipt,guia); 
 
+
 }else{
-  this.listaCamiones(receipt,guia);
+  
+  this.listaCamiones(guia);
+  console.log( this.datableService.data,'giifi')
 }
 
 
@@ -140,7 +183,7 @@ guia.volumen += factura.TOTAL_VOLUMEN;
 
  })
   guia.numClientes = guia.facturas.length;
-  this.listaCamionesGuia.push(guia)
+ // this.listaCamionesGuia.push(guia)
 }
 
 
@@ -190,7 +233,9 @@ actualizaAllCamionesData(truck){
     numClientes: 0,
     peso:  0,
     estado: '',
+    consecutivo:'',
     HH:'',
+    
     volumen:   0,
     facturas: null
  }
@@ -230,8 +275,9 @@ console.log('factura camiones', factura)
       this.datableService.dataArrayToShow.forEach(data=>{
 
         if(factura['FACTURA'] == data.FACTURA){
-          console.log('factura camiones w2', factura , factura['FACTURA'], data.FACTURA , factura['CAMION'])
+          console.log('factura camiones w2', factura , factura['FACTURA'], data.FACTURA , factura['CAMION'],'cons', camion.consecutivo, 'data', data.consecutivo )
           data.CAMION = camion.idCamion
+          //factura['CONSECUTIVO'] = camion.consecutivo
          // this.datableService.loadData();
         }
       })
@@ -265,7 +311,7 @@ console.log(this.listaCamionesGuia , 'huia')
 
 }
 
-async listaCamiones(receipt,guia,){
+async listaCamiones(guia){
   const modal = await this.modalCtrl.create({
     component: ListaCapacidadCamionesPage,
     cssClass: 'my-custom-class'
@@ -331,7 +377,7 @@ async loadNewRecordAlert(receipt,guia) {
         handler: () => {
          
         
-          this.listaCamiones(receipt,guia);
+          this.listaCamiones(guia);
         }
       }
     ]
@@ -398,7 +444,7 @@ guia.volumen = factura.volumen;
     guia.facturas.push(guia.facturas)
     
   }else{
-    this.listaCamionesGuia.push(guia)
+  //  this.listaCamionesGuia.push(guia)
   }
   
 
@@ -462,15 +508,6 @@ guia.volumen = factura.volumen;
 
 
 
- mostrarClientes(guia){
-
-  console.log(guia)
-
-
-
- }
-
-
  asignarCamiones(idCamion){
 
 this.listaCamionesGuia = [];
@@ -515,7 +552,7 @@ guia.volumen += factura.TOTAL_VOLUMEN;
 })
 
 guia.numClientes = guia.facturas.length;
-this.listaCamionesGuia.push(guia)
+//this.listaCamionesGuia.push(guia)
 console.log( this.camionesService.camiones, 'camiones')
 console.log(this.listaCamionesGuia, 'guia')
 
@@ -578,7 +615,7 @@ guia.facturas.forEach(facturas =>{
   
   })
   
-   this.listaCamionesGuia.push(guia)
+   //this.listaCamionesGuia.push(guia)
    for (let i =0; i < this.listaCamionesGuia.length; i++){
 
   
@@ -625,7 +662,7 @@ eliminarCamionesFacturaIndividual(factura){
   for( let indexA = 0; indexA <this.listaCamionesGuia.length; indexA++ ){
     for( let indexB = 0; indexB <this.listaCamionesGuia[indexA].facturas.length; indexB++ ){
 
-      if(this.listaCamionesGuia[indexA].facturas[indexB]['FACTURA']== factura.FACTURA){
+      if(this.listaCamionesGuia[indexA].facturas[indexB]['CAMION']== factura.CAMION){
        
         this.listaCamionesGuia[indexA].peso -= this.listaCamionesGuia[indexA].facturas[indexB]['TOTAL_PESO']
         this.listaCamionesGuia[indexA].pesoRestante = this.listaCamionesGuia[indexA].capacidad - this.listaCamionesGuia[indexA].peso
@@ -706,7 +743,7 @@ factura.facturas.forEach(factura=> {
   guia.numClientes = factura.facturas.length;
 
 
-this.listaCamionesGuia.push(guia)
+//this.listaCamionesGuia.push(guia)
 })
 
 

@@ -82,12 +82,14 @@ console.log(id)
 
   insertarClienteEspejo(ruta){
 
-
+    console.log(ruta, 'rutaaaaaa insertada')
   //  this.presentaLoading('Guardando cambios')
   
    this.postClienteEspejo(ruta).subscribe(
       
+
       resp => {
+        
        this.mapboxLgService.marcadores = [];
         this.mapboxLgService.createmapa(false,false);
         console.log('Rutas guardadas con exito', resp);
@@ -101,7 +103,7 @@ console.log(id)
         this.message('IRP','Error guardados las rutas');
       }
     )
-    
+
   }
 
 

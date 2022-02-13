@@ -106,8 +106,13 @@ this.isChecked = !this.isChecked;
       this.clientesService.nuevosClientes.splice(clienteNuevoDuplicado, 1);
     }
     console.log(this.clientesService.clientesArray[i])
-    if(this.clientesService.clientesArray[i].select){
+    if(this.clientesService.clientesArray[i].isChecked){
+
+      const cliente = this.clientesService.clientesArray[i].cliente;
+  
       this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
+
+      console.log(this.clientesService.nuevosClientes, 'nuevo cli')
     }
  
   }

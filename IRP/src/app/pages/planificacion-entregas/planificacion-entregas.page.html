@@ -131,7 +131,8 @@
 
       <p> {{camion.chofer}}</p>
       <p>Placa : {{camion.idCamion}}</p>
-      <p>Total Clientes : <ion-badge (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)" color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
+      <p>Consecutivo : {{camion.consecutivo}}</p>
+      <p>Total Clientes : <ion-badge  color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
       <p>Capacidad Total : {{camion.capacidad }}</p>
       <p>Capacidad Actual : {{camion.peso }}</p>
       <p>Capacidad Restante : {{camion.pesoRestante}}</p>
@@ -146,7 +147,7 @@
           <ion-label>Eliminar</ion-label>
     
         </ion-button>
-        <ion-button   fill="clear" color="primary">
+        <ion-button  (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)"   fill="clear" color="primary">
           <ion-icon slot="start" name="create"></ion-icon>
           <ion-label>Editar</ion-label>
         </ion-button>
