@@ -23,7 +23,7 @@ falso = false;
   }
 
   actualizarFactura(factura){
-    //this.modalCtrl.dismiss();
+    this.modalCtrl.dismiss();
     this.actualizaFacturaGuiasService.crearGuia(factura);
   }
   

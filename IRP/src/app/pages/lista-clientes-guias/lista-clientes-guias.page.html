@@ -70,11 +70,11 @@
         <ion-label>   {{factura.CAMION}}</ion-label>
           </ion-chip>
           <ion-buttons *ngIf="factura.CAMION">
-            <ion-button (click)="eliminarFactura(factura)" fill="clear" color="danger">
+            <ion-button (click)="actualizaFacturaGuiasService.eliminarFactura(factura)" fill="clear" color="danger">
               <ion-icon slot="icon-only" name="close"></ion-icon>
         
             </ion-button>
-            <ion-button (click)="actualizarFactura(factura)" fill="clear" color="primary">
+            <ion-button (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
               <ion-icon slot="icon-only" name="create"></ion-icon>
         
             </ion-button>
