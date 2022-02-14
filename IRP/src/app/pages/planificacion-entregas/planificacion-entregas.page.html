@@ -80,15 +80,23 @@
   <ion-buttons  slot="end">
            
 
-            <ion-button (click)="listaCamiones()" shape="round"  fill="outline"  color="dark">
+            <ion-button (click)="listaCamiones()" shape="round"  fill="outline"  color="success">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
                 </ion-avatar>
-                <ion-label>Camiones</ion-label>
+                <ion-label color="dark">Camiones</ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="dark">
+            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
+              <ion-chip  style="background: transparent!important;">
+                <ion-avatar >
+                  <img   [src]="image" />
+                </ion-avatar>
+              <ion-label>  <ion-icon  color="primary" slot="icon-only" name="save"></ion-icon></ion-label>
+                  </ion-chip>
+            </ion-button>
+            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="danger">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -96,6 +104,8 @@
               <ion-label>  <ion-icon  color="danger" slot="icon-only" name="close"></ion-icon></ion-label>
                   </ion-chip>
             </ion-button>
+
+
            </ion-buttons>
            
 </ion-item>
