@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActualizaFacturaGuiasService } from 'src/app/services/actualiza-factura-guias.service';
+
 
 import { RutaFacturas } from '../../models/rutaFacturas';
 import { ModalController } from '@ionic/angular';
+import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
 
 @Component({
   selector: 'app-lista-clientes-guias',
@@ -15,7 +16,7 @@ verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
   constructor(
-    public actualizaFacturaGuiasService: ActualizaFacturaGuiasService,
+    public actualizaFacturaGuiasService: CamionesGuiasService,
     public modalCtrl:ModalController
   ) { }
 
@@ -30,5 +31,9 @@ falso = false;
   eliminarFactura(factura){
     this.modalCtrl.dismiss();
     this.actualizaFacturaGuiasService.eliminarCamionesFacturaIndividual(factura)
+  }
+
+  cerrarModal(){
+    this.modalCtrl.dismiss();
   }
 }

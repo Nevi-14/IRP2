@@ -2,11 +2,11 @@ import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '
 import { RutasPage } from '../rutas/rutas.page';
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
-import { ConfiguracionRutaService } from '../../services/configuracionruta.service';
+
 import { ZonasService } from '../../services/zonas.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
-import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
+import { MapaService } from 'src/app/services/mapa.service';
 import { RutaZonaService } from '../../services/ruta-zona.service';
 import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
@@ -44,7 +44,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
   
   modo = 'off'
   @ViewChild('mapa') divMapa!:ElementRef;
-    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public config: ConfiguracionRutaService, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService) {
+    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService) {
 
 
     }
@@ -199,7 +199,7 @@ async menuCliente(){
 
   const modal = await this.modalCtrl.create({
     component: MenuClientesPage,
-    cssClass: 'right-modal'
+    cssClass: 'large-modal'
   });
    await modal.present();
 

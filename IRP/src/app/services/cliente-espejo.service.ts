@@ -77,7 +77,7 @@ console.log(id)
     };
     console.log(URL, ' url cliente espejo pines')
     return this.http.post( URL, JSON.stringify(ruta), options );
-  //return this.http.post( URL, JSON.stringify(this.clienteEspejo), options );
+ 
   }
 
   insertarClienteEspejo(ruta){

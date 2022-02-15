@@ -89,7 +89,7 @@ this.isChecked = !this.isChecked;
   async detalleClientes(cliente: any){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
-      cssClass: 'my-custom-class',
+      cssClass: 'large-modal',
       componentProps:{
         detalleCliente: cliente
       }
