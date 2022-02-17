@@ -42,6 +42,8 @@ export class MapboxGLService {
     public modalCtrl: ModalController,
     public logdingCtrl: LoadingController,
     public alertasService: AlertasService
+
+    
   ) { }
 
 
@@ -217,20 +219,14 @@ if(this.mapa){
 
     this.marcadores.push(marcador)
 
-    
-  
   
    }
-  
   
   
   }
 
 
   agregarMarcadoresExistentes(){
-
-  
-
 
     
     for(let i =0; i < this.marcadores.length ;i++)
@@ -258,7 +254,6 @@ if(this.mapa){
       const index = this.marcadores.findIndex(m => m.id === this.marcadores[i].cliente.IdCliente);
 
       const { lng, lat } = this.marcadores[i].marker!.getLngLat();
-
 
       this.marcadores[i].cliente.LONGITUD = lng;
       this.marcadores[i].cliente.LATITUD = lat;
@@ -298,7 +293,6 @@ generarMarcadorColor(){
 
 })
 
-
     return {newMarker , color}
   }
 
@@ -308,11 +302,9 @@ generarMarcadorColor(){
 
   async busquedaMapa(resultadoBusqueda) {
 
-
-
       const modal = await this.modalCtrl.create({
         component: BusquedaMapaPage,
-        cssClass: 'medium-modal',
+        cssClass: 'large-modal',
         componentProps: {
           data: resultadoBusqueda
         }
@@ -348,217 +340,59 @@ generarMarcadorColor(){
     this.mapa.off('zoom', () => { });
     this.mapa.off('zoomend', () => { });
     this.mapa.off('move', () => { });
-
-
     this.clientes.rutasClientes = []
     this.marcadores = [];
     this.createmapa( this.divMapa,false, false);
     console.log(this.marcadores, 'mark')
 
-
   }
-
 
 
   draggMarkers(array:Marcadores[], draggable){
 
-
   array.forEach(marcador => {
     const newMarker = new mapboxgl.Marker({
       color:marcador.color,
-      draggable: draggable
-    
+      draggable: draggable 
 
     })
+
     marcador.marker = newMarker
 
       })
 
       this.createmapa( this.divMapa,false, false);
 
-
-  
   }
   
-
   
-
-
-  leerMarcador(dragable, reload) {
-
-    const arreglo = [{ nombre: 'NOMBRE', id: 'IdCliente', arreglo: this.clientes.rutasClientes, identificador: 'cliente existente' }, { nombre: 'NOMBRE', id: 'IdCliente', arreglo: this.clientes.nuevosClientes, identificador: 'cliente nuevo' }];
-
-   if (arreglo && !dragable) {
-
-      const defaultMarker = new mapboxgl.Marker()
-      const miniPopupDe = new mapboxgl.Popup();
-      miniPopupDe.setText('ISLEÑA')
-      defaultMarker.setPopup(miniPopupDe)
-
-      defaultMarker.setLngLat(this.lngLat)
-    
-      if (reload) {
-
-        const cloneArray = [...this.marcadores]
-        this.marcadores = [];
-        
-        for (let i = 0; i < cloneArray.length; i++) {
-
- 
-          const newMarker = new mapboxgl.Marker({
-            color: cloneArray[i].color,
-            draggable: false
-          })
-          newMarker.setLngLat([cloneArray[i].cliente.LONGITUD, cloneArray[i].cliente.LATITUD]!)
-         
-
-
-
-        }
-
-        console.log(cloneArray, 'clone', this.marcadores, 'this.marcadores')
-      } else {
-        this.marcadores = [];
-
-        for (let i = 0; i < arreglo.length; i++) {
-
-          for (let index = 0; index < arreglo[i].arreglo.length; index++) {
-            const color = "#xxxxxx".replace(/x/g, y => (Math.random() * 16 | 0).toString(16));
-            const newMarker = new mapboxgl.Marker({
-              color: color,
-              draggable: false
-            })
-            newMarker.setLngLat([arreglo[i].arreglo[index].LONGITUD, arreglo[i].arreglo[index].LATITUD]!)
-
-
-            this.marcadores.push({
-              id: arreglo[i].arreglo[index][arreglo[i].id],
-              cliente: arreglo[i].arreglo[index],
-              modificado: false,
-              nuevoCliente: arreglo[i].identificador == 'cliente nuevo' ? true : false,
-              nombre: arreglo[i].arreglo[index][arreglo[i].nombre],
-              marker: newMarker,
-              color: color
-            })
-          }
-
-
-
-
-        }
-
-      }
-
-
-
-
-
-    }
-
-    
-        this.marcadores.forEach(item => {
-          const newMarker = new mapboxgl.Marker({
-            color: item.color,
-            draggable: dragable
-    
-          })
-    
-    
-    
-          console.log(item)
-          const miniPopup = new mapboxgl.Popup();
-          const nombre = item.nombre;
-          const { lng, lat } = item.marker!.getLngLat();
-          miniPopup.setText(item.id + ' ' + nombre)
-          miniPopup.on('open', () => {
-      
-            this.clientes.switchModaldetalle('planificacion-rutas', item.cliente)
-          })
-          newMarker.setPopup(miniPopup);
-          // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
-          newMarker.setLngLat([lng, lat]!)
-            .addTo(this.mapa);
-    
-          newMarker.on('dragend', () => {
-    
-            const i = this.marcadores.findIndex(m => m.id === item.id);
-    
-            const { lng, lat } = newMarker!.getLngLat();
-   
-    
-            const c = this.clientes.rutasClientes.findIndex(c => c.IdCliente === item.id);
-            const n = this.clientes.nuevosClientes.findIndex(n => n.IdCliente === item.id);
-    
-            if (c >= 0) {
-              this.marcadores[i].cliente.LONGITUD = lng;
-              this.marcadores[i].cliente.LATITUD = lat;
-              this.clientes.rutasClientes[c].LONGITUD = lng;
-              this.clientes.rutasClientes[c].LATITUD = lat;
-            }
-    
-            if (n >= 0) {
-              this.clientes.nuevosClientes[n].LONGITUD = lng;
-              this.clientes.nuevosClientes[n].LATITUD = lat;
-            }
-    
-    
-            this.marcadores[i].modificado = true;
-            this.marcadores[i].marker.setLngLat([lng, lat]);
-            this.createmapa(this.divMapa,dragable, true);
-            this.irMarcador( this.marcadores[i].marker);
-    
-          })
-    
-    
-    
-    
-        })
-    
-
-
-
-
-
-
-
-
-
-
-  }
-
 
   exportarMarcadores(){
 
     const marcadoresExportar = [];
-    
     
         for(let i = 0; i < this.marcadores.length; i ++){     
     
           if(this.marcadores[i].modificado  || this.marcadores[i].nuevoCliente){
     
            marcadoresExportar.push(this.marcadores[i])
-    
+
           }
     
         }
-    
     
         this.marcadores = [];
 
       return marcadoresExportar;
       }
     
-
-      
+ 
   actualizarMarcador(id){
 
     for(let i = 0; i < this.marcadores.length; i ++){     
 
       if(this.marcadores[i].id === id){
-
         this.marcadores[i].modificado = true;
-        this.marcadores[i].modificado = true;
-
       }
 
     }
