@@ -18,15 +18,13 @@
     <ion-list lines="none">
       <ion-grid >
         <ion-row>
-          <ion-col size="12" >
-       <ion-item>
-        <ion-checkbox slot="start"  [(ngModel)]="busqueda"></ion-checkbox>
-        <ion-label  slot="start" >Cliente ID</ion-label>
-        
-
-  
-        <ion-searchbar   mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-       </ion-item>
+          <ion-col size="12" style="display: flex;justify-content: center;align-items: center;">
+            <ion-checkbox style="margin-right: 10px;" [(ngModel)]="busqueda"></ion-checkbox>
+            <ion-label>Cliente ID</ion-label>
+            
+ 
+      
+            <ion-searchbar mode="ios" style="width: 70%;" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
      
               </ion-col>
     
@@ -130,7 +128,7 @@
       
       <ion-col size="12" >
 
-          <ion-item *ngFor="let cliente of clientesService.clientesArray | filtro: textoBuscar:'NOMBRE';  let i = index;">
+          <ion-item *ngFor="let cliente of clientesService.clientesArray | filtro: textoBuscar:'NOMBRE'| filtro: myvalue:'TRADE_CLIENTE';  let i = index;">
             
             <ion-label>{{cliente.cliente.NOMBRE}}</ion-label>
             <ion-buttons slot="end">

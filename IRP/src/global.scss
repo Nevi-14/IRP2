@@ -69,6 +69,13 @@ html,body {
       display: none;
     }
   }
+
+  /* Works - pass "my-custom-class" in cssClass to increase specificity */
+.my-custom-class .alert-wrapper {
+  background: #e5e5e5;
+}
+
+
   .scroll {
     max-height: 250px;
     position: relative;

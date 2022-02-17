@@ -44,6 +44,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
   
   modo = 'off'
   @ViewChild('mapa') divMapa!:ElementRef;
+
     constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService) {
 
 
@@ -52,9 +53,10 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
 
     ngOnInit(){
-      this.mapboxLgService.divMapa = null;
+
      this.clientes.rutasClientes = [];
      this.clientes.nuevosClientes = [];
+     this.mapboxLgService.marcadores = [];
   console.log('planificacion Rutas')
 
 
@@ -63,8 +65,10 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
     ngAfterViewInit() {
       //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
       //Add 'implements AfterViewInit' to the class.
-      this.mapboxLgService.divMapa = this.divMapa;
-      this.mapboxLgService.createmapa(false, false)
+
+      this.mapboxLgService.createmapa(this.divMapa,false, false)
+      
+    this.mapboxLgService.agregarMarcadores(this.clientes.rutasClientes,'NOMBRE','IdCliente',false)
     }
          
     limpiarDatos(){
@@ -89,48 +93,46 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
 
     postRutas(){
-      this.clienteEspejo.ClienteEspejoArray = [];
 
+      const postArray = [];
+
+    const exportarMarcadores =  this.mapboxLgService.exportarMarcadores();
     //  this.clienteEspejo.presentaLoading('Guardando Rutas...');
-      for(let i =0; i < this.mapboxLgService.marcadores.length; i++){
+      for(let i =0; i < exportarMarcadores.length; i++){
 
         const rutasClientes = {
-          IdCliente:this.mapboxLgService.marcadores[i].id,
+          IdCliente:exportarMarcadores[i].id,
           Fecha: new Date().toISOString(),
           Usuario: 'IRP',
           Zona: this.rutaZonaData.zonaId ,
           Ruta:this.rutaZonaData.rutaID   ,
-          Latitud: this.mapboxLgService.marcadores[i].cliente.LATITUD,
-          Longitud: this.mapboxLgService.marcadores[i].cliente.LONGITUD
+          Latitud: exportarMarcadores[i].cliente.LATITUD,
+          Longitud: exportarMarcadores[i].cliente.LONGITUD
                   }
                 
-             
-                  if(this.mapboxLgService.marcadores[i].modificado || this.mapboxLgService.marcadores[i].nuevoCliente){
-                    this.clienteEspejo.ClienteEspejoArray.push(rutasClientes)
-                  }
-               
-               //   this.clienteEspejo.ClienteEspejoArray.push(rutasClientes) 
+                  postArray.push(rutasClientes)
         
       }
       
+      
+      console.log(exportarMarcadores, 'exported array', 'post array', postArray)
 
 
-
-      if(this.clienteEspejo.ClienteEspejoArray.length > 0){
-        
-      console.log(this.clienteEspejo.ClienteEspejoArray, 'cliente espejo con marcadores', this.clienteEspejo.ClienteEspejoArray.length)
-      console.log(this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray))
-        this.clienteEspejo.insertarClienteEspejo(this.clienteEspejo.ClienteEspejoArray);
-        this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
-        this.clientes.rutasClientes = [];
-        this.clientes.nuevosClientes = [];
-        this.drag=false;
-        this.modo = 'off'
+      if(exportarMarcadores.length > 0){
+  
+      this.clienteEspejo.insertarClienteEspejo(postArray);
 
       }else{
+       
         this.global.message('Planificacion Rutas','No se efectuaron cambios');
       }
-      
+      this.mapboxLgService.marcadores = []
+      this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
+      this.clientes.rutasClientes = [];
+      this.clientes.nuevosClientes = [];
+      this.drag=false;
+      this.modo = 'off'
+      this.mapboxLgService.createmapa(this.divMapa,false, false)
 
      
     }
@@ -144,8 +146,9 @@ this.modo = 'on'
       }else{
         this.modo = 'off'
       }
-
-      this.mapboxLgService.createmapa(this.drag, true);
+      
+      this.mapboxLgService.createmapa(this.divMapa,false, false)
+      this.mapboxLgService.draggMarkers(this.mapboxLgService.marcadores, this.drag)
     }
 
 

@@ -29,13 +29,16 @@ export class MenuClientesPage implements OnInit {
   @Input() mapa :any
   busqueda = false;
   clienteId : string;
+  clientesArray = [];
   constructor(
     public modalCtrl: ModalController, public alertCtrl: AlertController, public clientesService: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService,public busquedaClienteService: BusquedaClienteService) { }
 
 
   onSearchChange(event){
     if(this.busqueda){
-      this.busquedaClienteService.syncClientes(event.detail.value)
+
+      this.busquedaClienteService.generateArrayFromComaSeparated(event.detail.value)
+     // this.busquedaClienteService.syncClientes(event.detail.value)
       this.borrarFiltro();
 this.clientesService.clientesArray = [];
 this.isChecked = !this.isChecked; 
@@ -97,7 +100,18 @@ this.isChecked = !this.isChecked;
     return await modal.present();
   }
   async agregarCliente(){
-  for(let i = 0; i < this.clientesService.clientesArray.length;i++){
+const checkedArray = [];
+
+this.clientesService.clientesArray.forEach(cliente =>{
+
+
+  if(cliente.select){
+    checkedArray.push(cliente)
+  }
+})
+    this.MapboxGLService.agregarMarcadorNuevosRegistros(checkedArray,'NOMBRE','IdCliente');
+/**
+ *   for(let i = 0; i < this.clientesService.clientesArray.length;i++){
     const clienteExistenteDuplicado = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
     const clienteNuevoDuplicado = this.clientesService.nuevosClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
     if ( clienteExistenteDuplicado >= 0){ 
@@ -111,9 +125,10 @@ this.isChecked = !this.isChecked;
     }
  
   }
+ */
   this.message('IRP','Se agrego a la lista de RUTAS');
   this.modalCtrl.dismiss();
-  this.MapboxGLService.createmapa(false,false);
+  this.MapboxGLService.createmapa(this.MapboxGLService.divMapa,false,false);
 
 
   }
