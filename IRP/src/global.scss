@@ -69,6 +69,13 @@ html,body {
       display: none;
     }
   }
+
+  /* Works - pass "my-custom-class" in cssClass to increase specificity */
+.my-custom-class .alert-wrapper {
+  background: #e5e5e5;
+}
+
+
   .scroll {
     max-height: 250px;
     position: relative;
@@ -79,7 +86,7 @@ html,body {
     }
   }
   .scroll-sm {
-    max-height: 300px;
+    max-height: 100%;
     position: relative;
     overflow: hidden;
     overflow-y: auto;
@@ -595,24 +602,17 @@ ion-modal.custom-modal {
 
 
 ion-modal.large-modal {
-  &.bottom {
-      align-items: flex-end;
+
+  --backdrop-opacity: 0.8 !important;
+  align-items: center;
+  justify-content: center; 
+  &::part(content){
+    width: 80%;
+    height: 85%; 
   }
 
-  --height: auto;
-  --width: 80vw;
-  .ion-page {
-      position: relative;
-      display: block;
-      contain: content;
-
-      .inner-content {
-      
-          max-height: 80vh;
-          overflow: auto;
-          padding: 10px;
-      }
-  }
+    
+ 
 }
 .color-modal{
   .modal-wrapper{
@@ -637,3 +637,4 @@ ion-modal.large-modal {
 text-transform: capitalize;
 font-size: 12px;
 }
+

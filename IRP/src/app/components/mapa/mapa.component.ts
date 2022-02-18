@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
-import { MarcadoresService } from 'src/app/services/componentes/mapas/marcadores.service';
+import { MarcadoresService } from 'src/app/services/marcadores.service';
 import { DetalleClientesPage } from '../../pages/detalle-clientes/detalle-clientes.page';
 import { ClienteFacturaPage } from '../../pages/cliente-factura/cliente-factura.page';
 import { RutasPage } from 'src/app/pages/rutas/rutas.page';
@@ -9,7 +9,7 @@ import { MarcadoresPage } from 'src/app/pages/marcadores/marcadores.page';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 
-import { MapaService } from 'src/app/services/componentes/mapas/mapa.service';
+import { MapaService } from 'src/app/services/mapa.service';
 import { MenuClientesPage } from 'src/app/pages/menu-clientes/menu-clientes.page';
 import { GlobalService } from 'src/app/services/global.service';
 import { FechaPage } from 'src/app/pages/fecha/fecha.page';

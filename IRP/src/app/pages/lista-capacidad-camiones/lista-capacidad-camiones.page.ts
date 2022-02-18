@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { ModalController } from '@ionic/angular';
-import { ActualizaFacturaGuiasService } from 'src/app/services/actualiza-factura-guias.service';
-
+import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
 @Component({
   selector: 'app-lista-capacidad-camiones',
   templateUrl: './lista-capacidad-camiones.page.html',
@@ -15,7 +14,7 @@ export class ListaCapacidadCamionesPage implements OnInit {
 
 public camionesService: GestionCamionesService,
 public modalCtrl: ModalController,
-public actualizaFacturaGuiasService: ActualizaFacturaGuiasService
+public actualizaFacturaGuiasService: CamionesGuiasService
 
 
   ) { }

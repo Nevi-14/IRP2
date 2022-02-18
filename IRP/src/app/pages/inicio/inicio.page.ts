@@ -4,7 +4,7 @@ import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
-import { MapaService } from '../../services/componentes/mapas/mapa.service';
+import { MapaService } from '../../services/mapa.service';
 import { NgZone } from '@angular/core';
 interface Modulos {
   imagen: string,

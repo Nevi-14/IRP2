@@ -29,16 +29,13 @@ export class MenuClientesPage implements OnInit {
   @Input() mapa :any
   busqueda = false;
   clienteId : string;
-  clientesArray = [];
   constructor(
     public modalCtrl: ModalController, public alertCtrl: AlertController, public clientesService: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService,public busquedaClienteService: BusquedaClienteService) { }
 
 
   onSearchChange(event){
     if(this.busqueda){
-
-      this.busquedaClienteService.generateArrayFromComaSeparated(event.detail.value)
-     // this.busquedaClienteService.syncClientes(event.detail.value)
+      this.busquedaClienteService.syncClientes(event.detail.value)
       this.borrarFiltro();
 this.clientesService.clientesArray = [];
 this.isChecked = !this.isChecked; 
@@ -92,7 +89,7 @@ this.isChecked = !this.isChecked;
   async detalleClientes(cliente: any){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
-      cssClass: 'large-modal',
+      cssClass: 'my-custom-class',
       componentProps:{
         detalleCliente: cliente
       }
@@ -100,18 +97,7 @@ this.isChecked = !this.isChecked;
     return await modal.present();
   }
   async agregarCliente(){
-const checkedArray = [];
-
-this.clientesService.clientesArray.forEach(cliente =>{
-
-
-  if(cliente.select){
-    checkedArray.push(cliente)
-  }
-})
-    this.MapboxGLService.agregarMarcadorNuevosRegistros(checkedArray,'NOMBRE','IdCliente');
-/**
- *   for(let i = 0; i < this.clientesService.clientesArray.length;i++){
+  for(let i = 0; i < this.clientesService.clientesArray.length;i++){
     const clienteExistenteDuplicado = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
     const clienteNuevoDuplicado = this.clientesService.nuevosClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
     if ( clienteExistenteDuplicado >= 0){ 
@@ -120,15 +106,19 @@ this.clientesService.clientesArray.forEach(cliente =>{
       this.clientesService.nuevosClientes.splice(clienteNuevoDuplicado, 1);
     }
     console.log(this.clientesService.clientesArray[i])
-    if(this.clientesService.clientesArray[i].select){
+    if(this.clientesService.clientesArray[i].isChecked){
+
+      const cliente = this.clientesService.clientesArray[i].cliente;
+  
       this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
+
+      console.log(this.clientesService.nuevosClientes, 'nuevo cli')
     }
  
   }
- */
   this.message('IRP','Se agrego a la lista de RUTAS');
   this.modalCtrl.dismiss();
-  this.MapboxGLService.createmapa(this.MapboxGLService.divMapa,false,false);
+  this.MapboxGLService.createmapa(false,false);
 
 
   }

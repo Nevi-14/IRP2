@@ -131,7 +131,7 @@ this.mostrarClienteFactura(cliente);
   async detalleClientes(cliente){
     const modal = await this.modalCtrl.create({
       component: DetalleClientesPage,
-      cssClass: 'color-modal',
+      cssClass: 'large-modal',
       componentProps:{
         detalleCliente: cliente
       }
@@ -143,7 +143,7 @@ this.mostrarClienteFactura(cliente);
     //  alert(cliente.NOMBRE)
        const modal = await this.modalCtrl.create({
          component: ClienteFacturaPage,
-         cssClass: 'medium-modal',
+         cssClass: 'large-modal',
          componentProps: {
            cliente: cliente
          }

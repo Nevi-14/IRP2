@@ -9,3 +9,5 @@ export class ActualizaFacturaGuia{
 
     ){}
 }
+
+// http://api_irp.di-apps.co.cr/api/ActualizaFacturas/00100001010000122852

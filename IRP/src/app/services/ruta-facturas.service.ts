@@ -100,10 +100,7 @@ syncRutaFacturas(ruta:string, fecha:string){
 
         this.pesoTotalBultosFactura +=factura.TOTAL_PESO_NETO;
         this.totalBultosFactura += Number(factura.RUBRO1);
-        const timeStamp = Math.floor(Date.now() / 1000);
 
-        const consecutivo = factura.FACTURA + timeStamp;
-        factura.CONSECUTIVO = consecutivo
         
       })
 

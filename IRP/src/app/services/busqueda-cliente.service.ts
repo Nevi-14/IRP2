@@ -30,12 +30,36 @@ console.log(URL);
     return this.http.get<Clientes[]>( URL );
   }
 
+
+  generateArrayFromComaSeparated(inputString){
+
+    this.cliente = [];
+    this.clientesService.clientes = [];
+
+      let  elementos = inputString.split(',')
+
+    for (let i = 0 ;  i <  elementos.length; i ++){
+
+      console.log(elementos[i], 'jdjd')
+
+
+     if(elementos[i] != ''){
+      this.syncClientes(elementos[i]);
+     }
+    }
+   
+  }
+
   syncClientes(id){
    
     this.getCliente(id).subscribe(
       resp =>{
-        this.cliente = resp
-        this.clientesService.clientes = resp;
+
+        resp.slice(0).forEach(cliente => {
+   this.cliente.push(cliente)
+   this.clientesService.clientes.push(cliente);
+        })
+     
         this.clientesService.syncClientesArray();
 
         console.log(this.clientesService.clientes, 'clientes')

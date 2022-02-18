@@ -80,15 +80,23 @@
   <ion-buttons  slot="end">
            
 
-            <ion-button (click)="listaCamiones()" shape="round"  fill="outline"  color="dark">
+            <ion-button (click)="listaCamiones()" shape="round"  fill="outline"  color="success">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
                 </ion-avatar>
-                <ion-label>Camiones</ion-label>
+                <ion-label color="dark">Camiones</ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="dark">
+            <ion-button (click)="actualizaFacturaGuiasService.generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
+              <ion-chip  style="background: transparent!important;">
+                <ion-avatar >
+                  <img   [src]="image" />
+                </ion-avatar>
+              <ion-label>  <ion-icon  color="primary" slot="icon-only" name="save"></ion-icon></ion-label>
+                  </ion-chip>
+            </ion-button>
+            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="danger">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -96,6 +104,8 @@
               <ion-label>  <ion-icon  color="danger" slot="icon-only" name="close"></ion-icon></ion-label>
                   </ion-chip>
             </ion-button>
+
+
            </ion-buttons>
            
 </ion-item>
@@ -131,7 +141,9 @@
 
       <p> {{camion.chofer}}</p>
       <p>Placa : {{camion.idCamion}}</p>
-      <p>Total Clientes : <ion-badge (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)" color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
+      <p>Consecutivo : {{camion.consecutivo}}</p>
+      <p>Total Clientes : <ion-badge  color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
+      <p>Total Bultos : {{camion.volumen }}</p>
       <p>Capacidad Total : {{camion.capacidad }}</p>
       <p>Capacidad Actual : {{camion.peso }}</p>
       <p>Capacidad Restante : {{camion.pesoRestante}}</p>
@@ -141,12 +153,12 @@
     <ion-item lines="none">
         
       <ion-buttons slot="end">
-        <ion-button  fill="clear" color="danger">
+        <ion-button  fill="clear" color="danger"  (click)="actualizaFacturaGuiasService.eliminarGuia(camion.consecutivo)">
           <ion-icon slot="start" name="close"></ion-icon>
           <ion-label>Eliminar</ion-label>
     
         </ion-button>
-        <ion-button   fill="clear" color="primary">
+        <ion-button  (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)"   fill="clear" color="primary">
           <ion-icon slot="start" name="create"></ion-icon>
           <ion-label>Editar</ion-label>
         </ion-button>
@@ -202,7 +214,7 @@
       <ng-template ngFor let-factura [ngForOf]="datableService.dataArrayToShow " let-i="index" let-odd="odd" >
         <ion-row class="data-row">
           <ion-col size="2" *ngIf="datableService.bulkEdit">
-            <ion-checkbox [(ngModel)]="datableService.edit[i]"></ion-checkbox>
+            <ion-checkbox disabled="true" [(ngModel)]="datableService.edit[i]"></ion-checkbox>
           </ion-col>
         <ion-col size="4"   >
      <ion-label>
@@ -214,11 +226,11 @@
         </ion-col>
         <ion-col    size="1">
  
-          <ion-checkbox   [(ngModel)]="factura.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
+          <ion-checkbox disabled="true"   [(ngModel)]="factura.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
         <ion-col    size="1">
   
-          <ion-checkbox  [(ngModel)]="factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
+          <ion-checkbox disabled="true" [(ngModel)]="factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
         <ion-col    size="2">
 {{factura.RUBRO1}}
