@@ -88,7 +88,7 @@
                 <ion-label color="dark">Camiones</ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button (click)="actualizaFacturaGuiasService.generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
+            <ion-button (click)="generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -96,7 +96,7 @@
               <ion-label>  <ion-icon  color="primary" slot="icon-only" name="save"></ion-icon></ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="danger">
+            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamionesAlert()" shape="round"  fill="outline"  color="danger">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -246,7 +246,7 @@
             <ion-label>   {{factura.CAMION}}</ion-label>
               </ion-chip>
   <ion-buttons *ngIf="factura.CAMION">
-    <ion-button (click)="actualizaFacturaGuiasService.eliminarCamionesFacturaIndividual(factura)" fill="clear" color="danger">
+    <ion-button (click)="actualizaFacturaGuiasService.eliminarCamionesFacturaIndividualAlert(factura)" fill="clear" color="danger">
       <ion-icon slot="icon-only" name="close"></ion-icon>
 
     </ion-button>

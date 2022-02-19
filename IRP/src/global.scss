@@ -638,3 +638,6 @@ text-transform: capitalize;
 font-size: 12px;
 }
 
+ion-checkbox.checkbox-disabled {
+  opacity: 1 !important;
+}

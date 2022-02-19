@@ -73,7 +73,10 @@ loadData(){
 
 
 
-
+generarPost(){
+  this.actualizaFacturaGuiasService.generarPost()
+   this.reset();
+}
 
   async calendar(){
     
@@ -217,7 +220,7 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
 
         }else{
      
-          this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
+          this.reset();
         
         }
 
@@ -226,5 +229,9 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
   }
 
 
+
+  reset(){
+    this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
+  }
 
 }

@@ -512,50 +512,133 @@ this.loadNewRecord(factura)
 
   }
 
-eliminarCamionesFacturaIndividual(factura){
-  const i =  this.datableService.data.findIndex(f=>f.FACTURA == factura.FACTURA);
+  async eliminarCamionesFacturaIndividualAlert(factura){
 
-  if(i >=0){
-    this.datableService.data[i].CAMION = ''
 
-  }
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'PLANIFICACIÓN DE ENTREGAS',
+      message: '¿Desea eliminar todos los elementos de la guia?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          id: 'cancel-button',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Okay',
+          id: 'confirm-button',
+          handler: () => {
+            this.alertCtrl.dismiss();
+         this.eliminarCamionesFacturaIndividual(factura);
+          
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  
+  
+     
+      
+      
+      }
 
-  for( let indexA = 0; indexA <this.listaCamionesGuia.length; indexA++ ){
-    for( let indexB = 0; indexB <this.listaCamionesGuia[indexA].facturas.length; indexB++ ){
 
-      if(this.listaCamionesGuia[indexA].facturas[indexB]['CAMION']== factura.CAMION){
-       
-        this.listaCamionesGuia[indexA].peso -= this.listaCamionesGuia[indexA].facturas[indexB]['TOTAL_PESO']
-        this.listaCamionesGuia[indexA].pesoRestante = this.listaCamionesGuia[indexA].capacidad - this.listaCamionesGuia[indexA].peso
-        this.listaCamionesGuia[indexA].facturas.splice(indexB, 1)
-        this.listaCamionesGuia[indexA].numClientes =  this.listaCamionesGuia[indexA].facturas.length;
-        if( this.listaCamionesGuia[indexA].facturas.length == 0){
-          this.listaCamionesGuia = [];
-          this.cargarDatos(this.listaCamionesGuia)
+
+
+   eliminarCamionesFacturaIndividual(factura){
+
+
+
+    const i =  this.datableService.data.findIndex(f=>f.FACTURA == factura.FACTURA);
+
+    if(i >=0){
+      this.datableService.data[i].CAMION = ''
+  
+    }
+  
+    for( let indexA = 0; indexA <this.listaCamionesGuia.length; indexA++ ){
+      for( let indexB = 0; indexB <this.listaCamionesGuia[indexA].facturas.length; indexB++ ){
+  
+        if(this.listaCamionesGuia[indexA].facturas[indexB]['CAMION']== factura.CAMION){
+         
+          this.listaCamionesGuia[indexA].peso -= this.listaCamionesGuia[indexA].facturas[indexB]['TOTAL_PESO']
+          this.listaCamionesGuia[indexA].pesoRestante = this.listaCamionesGuia[indexA].capacidad - this.listaCamionesGuia[indexA].peso
+          this.listaCamionesGuia[indexA].facturas.splice(indexB, 1)
+          this.listaCamionesGuia[indexA].numClientes =  this.listaCamionesGuia[indexA].facturas.length;
+          if( this.listaCamionesGuia[indexA].facturas.length == 0){
+            this.listaCamionesGuia = [];
+            this.cargarDatos(this.listaCamionesGuia)
+          }
         }
       }
     }
-  }
-
-
-  this.listaCamionesGuia.forEach(camion =>{
-    camion.facturas.forEach(factura=>{
-
+  
+  
+    this.listaCamionesGuia.forEach(camion =>{
+      camion.facturas.forEach(factura=>{
+  
+      })
     })
-  })
+
+
 
   }
-  eliminarTodosCamiones(){
+
+  async eliminarTodosCamionesAlert(){
+
+
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'PLANIFICACIÓN DE ENTREGAS',
+      message: '¿Desea eliminar todos los elementos de la guia?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          id: 'cancel-button',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Okay',
+          id: 'confirm-button',
+          handler: () => {
+
+         this.eliminarTodosCamiones();
+          
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  
+  
+     
+      
+      
+      }
+
+
+   eliminarTodosCamiones(){
 
     this.listaCamionesGuia = [];
-    
-      this.datableService.data.forEach(factura =>{
-        factura.CAMION = '';
-    
-    })
-    
-    
-    }
+      
+    this.datableService.data.forEach(factura =>{
+      factura.CAMION = '';
+  
+  })
+     
+      
+      
+      }
 
 
 

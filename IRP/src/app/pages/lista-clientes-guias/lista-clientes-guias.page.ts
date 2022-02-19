@@ -15,6 +15,7 @@ export class ListaClientesGuiasPage implements OnInit {
 verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
+textoBuscar = '';
   constructor(
     public actualizaFacturaGuiasService: CamionesGuiasService,
     public modalCtrl:ModalController
@@ -28,12 +29,17 @@ falso = false;
     this.actualizaFacturaGuiasService.crearGuia(factura);
   }
   
-  eliminarFactura(factura){
+  eliminarCamionesFacturaIndividualAlert(factura){
+    this.actualizaFacturaGuiasService.eliminarCamionesFacturaIndividualAlert(factura)
     this.modalCtrl.dismiss();
-    this.actualizaFacturaGuiasService.eliminarCamionesFacturaIndividual(factura)
   }
 
   cerrarModal(){
     this.modalCtrl.dismiss();
+  }
+
+  onSearchChange(event){
+
+    this.textoBuscar = event.detail.value;
   }
 }
