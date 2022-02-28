@@ -172,13 +172,14 @@ console.log(arreglo[i], 'arreglo[i]')
   generarMarcadorColor(estado){
 
     let color = null;
+    let primary = '#428cff';
     let success = "#4BB543"
     let warning = "#EED202"
     let danger = "#FF0000"
     let dark = "#010203"
    switch(estado){
      case 'P':
-  color = danger
+  color = primary
      break;
   
      case 'I':
@@ -187,7 +188,10 @@ console.log(arreglo[i], 'arreglo[i]')
       break;
       case 'E':
         color = success
-  
+        break;
+        case 'V':
+          color = danger
+          break;
         default :
   
     
