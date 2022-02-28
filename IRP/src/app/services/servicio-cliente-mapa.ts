@@ -105,7 +105,7 @@ console.log(arreglo,'marcadores 2')
 
      let   lngLat: [number, number] = [arreglo[i].longitud,arreglo[i].latitud];
       
-if(arreglo[i].longitud_Check && arreglo[i].latitud_check){
+if(arreglo[i].estado === 'I'){
        // Add markers to the map.
        new mapboxgl.Marker(el)
        .setLngLat(lngLat)
@@ -178,11 +178,11 @@ console.log(arreglo[i], 'arreglo[i]')
     let dark = "#010203"
    switch(estado){
      case 'P':
-  color = warning
+  color = danger
      break;
   
      case 'I':
-       color = danger
+       color = warning
   
       break;
       case 'E':
