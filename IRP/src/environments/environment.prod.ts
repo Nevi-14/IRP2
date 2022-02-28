@@ -16,6 +16,8 @@ export const environment = {
   cantonesURL: 'Cantones/',
   distritosURL: 'Distritos/',
   rutasURL:'Rutas',
+  ruteroURL:'Rutero/',
+  guiasURLEstadoParam:'?estado=',
   guiasURL:'Guias',
   actualizaFacturasURL:'ActualizaFacturas',
   entregaParam:'&entrega=',

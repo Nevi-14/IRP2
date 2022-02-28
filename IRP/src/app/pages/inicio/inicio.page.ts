@@ -66,6 +66,12 @@ export class InicioPage implements OnInit {
         titulo: 'Planificacion de Entregas',
         descripcion: 'Permite gestionar la factura por cliente de cada ruta',
         ruta: '/planificacion-entregas',
+      },
+      {
+        imagen: '../assets/png/customer-service.svg',
+        titulo: 'Atencion al cliente',
+        descripcion: 'Permite gestionar las entregas en ruta',
+        ruta: '/servicio-cliente',
       }
     )
 

@@ -1,5 +1,5 @@
 
-export class RutaFacturas{
+export class PlanificacionEntregas{
 
     constructor(
  public TIPO_DOCUMENTO:string,

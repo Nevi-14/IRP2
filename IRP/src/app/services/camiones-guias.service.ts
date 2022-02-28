@@ -1,16 +1,37 @@
 import { Injectable } from '@angular/core';
 import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
-import { GuiaEntrega } from '../models/guiaEntrega';
 import { DataTableService } from './data-table.service';
 import { GestionCamionesService } from './gestion-camiones.service';
-import { RutaFacturasService } from './ruta-facturas.service';
 import { AlertController, ModalController } from '@ionic/angular';
-import { ListaCapacidadCamionesPage } from '../pages/lista-capacidad-camiones/lista-capacidad-camiones.page';
-import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
-import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clientes-guias.page';
 import { ActualizarFacturasService } from './actualizar-facturas.service';
 import { GuiasService } from './guias.service';
 import { JavascriptDatesService } from './javascript-dates.service';
+import { RuteroService } from './rutero.service';
+import { PlanificacionEntregas } from '../models/planificacionEntregas';
+import { ListaCamionesModalPage } from '../pages/lista-camiones-modal/lista-camiones-modal.page';
+import { Camiones } from '../models/camiones';
+import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
+import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clientes-guias.page';
+
+interface facturaGuia{
+  cliente:string,
+  idGuia: string,
+  factura: PlanificacionEntregas
+
+}
+
+interface factura{
+
+  id: number,
+  cliente:string,
+  direccion:string,
+  volumenTotal: number,
+  pesoTotal:number,
+  bultosTotales:number,
+  camion:string,
+  facturas: facturaGuia[]
+
+}
 
 
 interface  GuiaEntregaArray{
@@ -30,7 +51,7 @@ interface  GuiaEntregaArray{
        estado: string,
        HH: string,
        volumen: number,
-       facturas: []
+       facturas: facturaGuia[]
 
 }
 
@@ -38,43 +59,48 @@ interface  GuiaEntregaArray{
   providedIn: 'root'
 })
 export class CamionesGuiasService {
-
+  guiaFacturasaActual = []
+   Fecha : null;
   actualizaGuiaFacturaArray : ActualizaFacturaGuia[]=[];
   listaCamionesGuia: GuiaEntregaArray[] = [];
   guia:GuiaEntregaArray;
- constructor( private rutasFacturasService: RutaFacturasService, public datableService:DataTableService, public camionesService:GestionCamionesService, public alertCtrl: AlertController, public modalCtrl: ModalController,
-  
+  rutaZona = null;
+ constructor( 
+   
+  public datableService:DataTableService, 
+  public camionesService:GestionCamionesService, 
+  public alertCtrl: AlertController, public modalCtrl: ModalController,
   public actualizarFacturasService: ActualizarFacturasService,
   public guiasService: GuiasService,
-  public javascriptDateService: JavascriptDatesService
+  public javascriptDateService: JavascriptDatesService,
+  public ruteroService:RuteroService
   ) {
   
 
  }
 
 
- //   CREAR UN MODELO GUIA
+generarGuia(ruta,camion, fecha) {
 
- crearGuia(factura) {
-
-
-  const date               = new Date();  // FECHA HOY
+  const date               = new Date(fecha);  // FECHA HOY
   const year               = date.getFullYear();  // AÑO
   const month              = (date.getMonth() + 1).toString().padStart(2, "0"); // MES ACTUAL FORMATO 2 DIGITOS EJEMPLO 01
   const day                = date.getDate().toString().padStart(2, "0"); // DIA ACTUAL FORMATO FECHA
-  const  consecutivo       = year+''+month+''+day+factura.RUTA+'V';
-
-
+  const hour            =   new Date().getHours();
+  const minutes            =   new Date().getMinutes();
+  const seconds            =    new Date().getSeconds();
+  const  consecutivo       = year+''+month+''+day+ 'H'+hour+minutes+seconds+ruta+'V';
 
   let guia = {
+
     consecutivo:consecutivo ,
     idGuia: '',
-    chofer: '',
-    fecha: new Date(),
+    chofer: camion.chofer,
+    fecha: fecha,
     zona: '',
     ruta: '',
-    idCamion: '',
-    capacidad: 0,
+    idCamion: camion.idCamion,
+    capacidad: camion.capacidadPeso,
     pesoRestante: 0,
     numClientes: 0,
     peso:  0,
@@ -83,335 +109,407 @@ export class CamionesGuiasService {
     volumen:   0,
     facturas: null
  }
-
-
 
  if(this.listaCamionesGuia.length === 0){
-  guia.consecutivo=   consecutivo + '01'
+
+  guia.consecutivo=   consecutivo + '01' 
+
 }else if(this.listaCamionesGuia.length >= 1 && this.listaCamionesGuia.length <= 9){
-  guia.consecutivo  =  consecutivo + '0' +(this.listaCamionesGuia.length + 1)
+
+
+  guia.consecutivo  =  consecutivo + '0' +(this.listaCamionesGuia.length + 1) 
+
 }else{
-  guia.consecutivo  = consecutivo +  this.listaCamionesGuia.length
+
+  guia.consecutivo  = consecutivo +  this.listaCamionesGuia.length 
 }
 
- const i = this.camionesService.camiones.findIndex(c=> c.idCamion == factura.CAMION)
- if( i >= 0){
-guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-guia.chofer = this.camionesService.camiones[i].chofer;
- }
+;
+
+guia.facturas = [];
+
+ return guia;
+
+}
 
 
- guia.facturas = [];
 
- guia.facturas.push(factura)
+
+
+
+
+
+
+ async agregarGuia(ruta, fecha, factura){
+
+this.rutaZona = ruta;
+this.Fecha = fecha;
+console.log(ruta, 'rutarutarutarutarutaruta')
+  if(this.listaCamionesGuia.length > 0){
+
+
+    const alert = await this.alertCtrl.create({
+
+      cssClass: 'my-custom-class',
+      header: 'ISLEÑA',
+      message: '¿Defina la acción a ejecutar?',
+      buttons: [
+        {
+          text: 'Generar nueva Guia',
+          cssClass: 'secondary',
+          handler: (blah) => {
+         
+            //this.listaCamiones( guia);
+          //  this.eliminarCamionesFacturaIndividual(receipt);
+          this.alertCtrl.dismiss();
+      
+          this.crearGuia(ruta, fecha, factura)
+          this.removerFactura(factura)
+          }
+        },
+        {
+          text: 'Mover a guia existente',
+          id: 'confirm-button',
+          handler: () => {
+         //   this.loadNewRecordExsiting(receipt)
+         this.alertCtrl.dismiss();
+
+           this.agregarFacturaGuia(factura);
+          
  
- guia.zona = factura.ZONA;
- guia.ruta = factura.RUTA;
- guia.idCamion = factura.CAMION;
- guia.peso += factura.TOTAL_PESO;
- guia.estado = 'INI';
- guia.HH = 'nd';
- guia.pesoRestante =   guia.capacidad - factura.TOTAL_PESO;
- guia.volumen += Number(factura.RUBRO1);
- 
- guia.numClientes = guia.facturas.length;
-
-	return guia;
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-// AGREGA UN NUEVO REVISTRO A LAS GUIAS, SE LE PASA UNA FACTURA COMO PARAMETRO Y DEVUELVE UNA GUIA 
-
-loadNewRecord(receipt ){
-
- const guia = this.crearGuia(receipt);
-if(this.listaCamionesGuia.length > 0 ){
-  this.loadNewRecordAlert(receipt,guia); 
-}else{
+          }
+        },
   
-  this.listaCamiones(guia);
-  this.eliminarCamionesFacturaIndividual(receipt);
-}
-
-
-
-}
-
-
-
-// CARGA UN REGISTRO EXISTENTE 
-
-async loadNewRecordExsiting(factura){
-
-const modal = await this.modalCtrl.create({
-  component: ListaGuiasPage,
-  cssClass: 'my-custom-class'
-});
-modal.present();
-const { data } = await modal.onDidDismiss();
-console.log(data)
-  if(data !== undefined){
-  console.log(data.camion)
-  data.camion.pesoRestante = data.camion.capacidad -   factura.TOTAL_PESO;
-  data.camion.volumen +=  Number(factura.RUBRO1);
-  data.camion.peso +=factura.TOTAL_PESO
-  data.camion.facturas.push(factura)
-  data.camion.numClientes = data.camion.facturas.length;
-  }else{
-
-    console.log('false')
-  
-  }
-  this.actualizaCamionesData();
-}
-
-
-
-// ACTUALIZA LA DATA DE TODOS LOS CAMIONES
-actualizaAllCamionesData(truck){
-
-  this.listaCamionesGuia = [];
-  const camion = this.camionesService.camiones.findIndex(c=> c.idCamion == truck.idCamion)
-   
-  
-  let guia = {
-    idGuia: '',
-    chofer: '',
-    fecha: new Date(),
-    zona: '',
-    ruta: '',
-    idCamion: '',
-    capacidad: 0,
-    pesoRestante: 0,
-    numClientes: 0,
-    peso:  0,
-    estado: '',
-    consecutivo:'',
-    HH:'',
-    
-    volumen:   0,
-    facturas: null
- }
-
-  if( camion >= 0){
-    guia.capacidad = this.camionesService.camiones[camion].capacidadPeso;
-    guia.chofer = this.camionesService.camiones[camion].chofer;
-  }
-  guia.facturas = [];
-  this.datableService.data.forEach(factura =>{
-
-    const dt = new Date();
-    const year  = dt.getFullYear();
-    const month = (dt.getMonth() + 1).toString().padStart(2, "0");
-    const day   = dt.getDate().toString().padStart(2, "0");
-   const  consecutivo = year+''+month+''+day+factura.RUTA+'V';
-   
-   
-    if(this.listaCamionesGuia.length === 0){
-     guia.consecutivo=   consecutivo + '01'
-   }else if(this.listaCamionesGuia.length >= 1 && this.listaCamionesGuia.length <= 9){
-     guia.consecutivo  =  consecutivo + '0' +(this.listaCamionesGuia.length + 1)
-   }else{
-     guia.consecutivo  = consecutivo +  this.listaCamionesGuia.length
-   }
-
-factura.CAMION = truck.idCamion;
-guia.zona = factura.ZONA;
-guia.ruta = factura.RUTA;
-guia.idCamion = truck.idCamion;
-guia.facturas.push(factura)
-
-guia.peso += factura.TOTAL_PESO;
-guia.estado = 'INI';
-guia.HH = 'nd';
-guia.pesoRestante =   guia.capacidad - factura.TOTAL_PESO;
-guia.volumen += Number(factura.RUBRO1);;
-
-})
-
-guia.numClientes = guia.facturas.length;
-this.listaCamionesGuia.push(guia)
-console.log( this.camionesService.camiones, 'camiones')
-console.log(this.listaCamionesGuia, 'guia')
-}
-
-
-// ACTUALIZA LOS DATOS DE LOS CAMIONES
-
-actualizaCamionesData(){
-  this.listaCamionesGuia.forEach(camion=>{
-    camion.facturas.forEach(factura =>{
-      this.datableService.dataArrayToShow.forEach(data=>{
-
-        if(factura['FACTURA'] == data.FACTURA){
-          data.CAMION = camion.idCamion
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          id: 'cancel-button',
+          handler: (blah) => {
+          
+          }
         }
-      })
+      ]
+    });
+  
+     await alert.present();
+
+     return
+
+
+
+  }
+ 
+
+this.crearGuia(ruta, fecha, factura)
+
+
+}
+
+crearGuia(ruta, fecha, factura){
+  let camion = this.listaCamionesGuiaModal();
+
+  camion.then(resp =>{
+
+  // genera modelo  guia 
+  let guia = this.generarGuia(ruta, resp, fecha);
+
+
+  guia.zona = ruta;
+  guia.ruta = ruta;
+  guia.idCamion = resp.idCamion;
+  guia.estado = 'INI';
+  guia.HH = 'nd';
+  // asignar todas a un camion
+  guia.facturas.push(factura)
+  guia.peso += factura.factura.TOTAL_PESO;
+  guia.volumen += Number(factura.factura.RUBRO1);;
+  factura.idGuia = guia.consecutivo
+  
+  guia.pesoRestante = guia.capacidad - guia.peso
+  guia.numClientes =guia.facturas.length;
+  this.listaCamionesGuia.push(guia)
+
+  this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, guia.consecutivo)
+ 
+  // this.listaCamionesGuia.push(guia)
+
+  })
+
+}
+
+async listaCamionesGuiaModal(){
+ 
+  const modal = await this.modalCtrl.create({
+    component: ListaCamionesModalPage,
+    cssClass: 'large-modal'
+  });
+  modal.present();
+      
+        
+      
+  const { data } = await modal.onDidDismiss();
+  let camion : Camiones;
+  if(data !== undefined){
+
+  camion = data.camion ;
 
       
-    })
-  })
-}
-
-
-// MUESTRA EL MENU DE CLIENTES DE CADA CAMION
-
-async listaClientesGuia(facturas){
-  const modal = await this.modalCtrl.create({
-    component: ListaClientesGuiasPage,
-    componentProps:{
-      facturas: facturas
-    },
-    cssClass: 'example-modal'
-  });
-  modal.present();
-  const { data } = await modal.onDidDismiss();
-  console.log(data)
-    if(data !== undefined){
-
-
-    }else{
- 
-      console.log('false')
-    
-    }
-
-
-}
-
-// MUESTRA LA LISTA DE CAMIONES DISPONIBLES
-
-async listaCamiones(guia){
-  const modal = await this.modalCtrl.create({
-    component: ListaCapacidadCamionesPage,
-    cssClass: 'my-custom-class'
-  });
-  modal.present();
-  const { data } = await modal.onDidDismiss();
- 
-    if(data !== undefined){
-      const i = this.camionesService.camiones.findIndex(c=> c.idCamion == data.camion.idCamion)
-      if( i >= 0){
-       guia.chofer = this.camionesService.camiones[i].chofer;
-       guia.capacidad = this.camionesService.camiones[i].capacidadPeso;
-     guia.pesoRestante = guia.capacidad - guia.peso;
-     guia.idCamion = data.camion.idCamion
-     
-     this.listaCamionesGuia.push(guia)
-      }
-
-
-    }else{
- 
-      console.log('false')
-    
-    }
-
-this.actualizaCamionesData();
-}
-
-
-
-
-generarPost(){
-
- // this.guiasService.guiasArray = [];
-
-  // this.actualizarFacturasService.actualizaFacturasArray = [];
-
-  this.listaCamionesGuia.forEach(guia =>{
-
-    const guiaCamion = { 
-   idGuia: guia.consecutivo,
-   fecha: guia.fecha,
-   zona: guia.zona,
-   ruta: guia.ruta,
-   idCamion: guia.idCamion,
-   numClientes: guia.numClientes,
-   peso: guia.peso,
-   estado:  guia.estado,
-   HH: guia.HH,
-   volumen: guia.volumen
   }
 
-  this.guiasService.guiasArray.push(guiaCamion)
+
+  return camion
+}
 
 
 
-  guia.facturas.forEach(factura=>{
-
-    const actualizarFactura = {
-         numFactura: factura['FACTURA'],
-         tipoDocumento:factura['TIPO_DOCUMENTO'],
-         despachado: 'S',
-         rubro3:  guia.consecutivo,
-         U_LATITUD: factura['LATITUD'],
-         U_LONGITUD: factura['LONGITUD']
-    }
-    this.actualizarFacturasService.actualizaFacturasArray.push(actualizarFactura)
-  })
+removerFactura(factura){
+  const index = this.listaCamionesGuia.findIndex( guia => guia.consecutivo == factura.idGuia);
 
 
+  if(index >=0){
 
-  })
+    this.guiaFacturasaActual = this.listaCamionesGuia[index].facturas;
+for(let i = 0 ; i < this.listaCamionesGuia[index].facturas.length; i++){
+if(this.listaCamionesGuia[index].facturas[i].factura.FACTURA == factura.factura.FACTURA){
+
+  this.listaCamionesGuia[index].peso -= factura.factura.TOTAL_PESO;
+  this.listaCamionesGuia[index].volumen -= Number(factura.factura.RUBRO1);;
+  this.listaCamionesGuia[index].facturas[i].idGuia = null;
+  this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, this.listaCamionesGuia[index].facturas[i].idGuia)
+  this.listaCamionesGuia[index].facturas.splice(i, 1);
+  this.listaCamionesGuia[index].numClientes = this.listaCamionesGuia[index].facturas.length;
+  this.listaCamionesGuia[index].pesoRestante =  this.listaCamionesGuia[index].capacidad - this.listaCamionesGuia[index].peso
 
 
-  console.log('guias', this.guiasService.guiasArray , 'facturas',this.actualizarFacturasService.actualizaFacturasArray)
+}
 
-  this.actualizarFacturasService.insertarFacturas();
-  this.guiasService.insertarGuias();
-  this.eliminarTodosCamiones();
+}
+if(this.listaCamionesGuia[index].facturas.length == 0){
+  this.listaCamionesGuia.splice(index, 1)
 
- 
-  
+}  
+  }
 
 }
 
 
-async loadNewRecordAlert(receipt,guia) {
+removerGuia(consecutivo){
+
+for(let i = 0; i <   this.listaCamionesGuia.length; i++){
+
+  if(this.listaCamionesGuia[i].consecutivo == consecutivo){
+ 
+    for(let j = 0; j < this.listaCamionesGuia[i].facturas.length; j++){
+      console.log(consecutivo,'consecutivo')
+      this.listaCamionesGuia[i].facturas[j].idGuia = null;
+      this.actualizar(this.listaCamionesGuia[i].facturas[j].factura.CLIENTE_ORIGEN, this.listaCamionesGuia[i].facturas[j].factura.FACTURA, this.listaCamionesGuia[i].facturas[j].idGuia)
+    }
+    this.listaCamionesGuia.splice(i,1);
+  }
+
+}
+  
+}
+
+async listaGuias(){
+ 
+  const modal = await this.modalCtrl.create({
+    component: ListaGuiasPage,
+    cssClass: 'large-modal'
+  });
+  modal.present();
+      
+        
+      
+  const { data } = await modal.onDidDismiss();
+  let camion : GuiaEntregaArray;
+  if(data !== undefined){
+
+  camion = data.camion ;
+
+      
+  }
+
+
+  return camion
+}
+  
+
+  
+
+
+
+
+
+
+agregarFacturaGuia(factura:facturaGuia){
+
+  
+ if(factura.idGuia != '' || factura.idGuia != null || factura.idGuia != undefined){
+
+  const index = this.listaCamionesGuia.findIndex( guia => guia.consecutivo == factura.idGuia);
+
+
+  if(index >=0){
+
+
+    if(this.listaCamionesGuia[index].facturas.length == 0){
+      this.crearGuia(this.rutaZona.Ruta, this.Fecha, factura)
+      this.removerFactura(factura)
+      
+      this.listaCamionesGuia.splice(index, 1)
+    return
+    } 
+    
+for(let i = 0 ; i < this.listaCamionesGuia[index].facturas.length; i++){
+if(this.listaCamionesGuia[index].facturas[i].factura.FACTURA == factura.factura.FACTURA){
+
+  
+  console.log(index, 'index', factura)
+  this.listaCamionesGuia[index].peso -= factura.factura.TOTAL_PESO;
+  this.listaCamionesGuia[index].volumen -= Number(factura.factura.RUBRO1);;
+  this.listaCamionesGuia[index].facturas[i].idGuia = null;
+  this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, this.listaCamionesGuia[index].facturas[i].idGuia)
+  this.listaCamionesGuia[index].facturas.splice(i, 1);
+  this.listaCamionesGuia[index].numClientes = this.listaCamionesGuia[index].facturas.length;
+  this.listaCamionesGuia[index].pesoRestante =  this.listaCamionesGuia[index].capacidad - this.listaCamionesGuia[index].peso
+
+
+}
+
+
+
+}
+
+
+
+ 
+  }
+
+
+  let guia = this.listaGuias();
+
+ guia.then(resp =>{
+  for(let i = 0; i < this.listaCamionesGuia.length; i++){
+    if( this.listaCamionesGuia[i].consecutivo == resp.consecutivo){
+      this.listaCamionesGuia[i].peso += factura.factura.TOTAL_PESO;
+      this.listaCamionesGuia[i].volumen += Number(factura.factura.RUBRO1);;
+ 
+      this.listaCamionesGuia[i].facturas.push(factura)
+      this.listaCamionesGuia[i].numClientes = this.listaCamionesGuia[i].facturas.length;
+      this.listaCamionesGuia[i].pesoRestante = this.listaCamionesGuia[i].capacidad - this.listaCamionesGuia[i].peso
+
+      this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, resp.consecutivo)
+    }
+ }
+  })
+
+
+
+ }
+
+
+
+}
+
+agregarTodasFacturasUnicoCamion(ruta, camion, fecha){
+
+  this.listaCamionesGuia = [];
+  // genera modelo  guia 
+let guia = this.generarGuia(ruta, camion, fecha);
+guia.zona = ruta;
+guia.ruta = ruta;
+guia.idCamion = camion.idCamion;
+guia.estado = 'INI';
+guia.HH = 'nd';
+// asignar todas a un camion
+console.log(guia, 'guia',ruta, camion,'ruta, camion')
+this.datableService.data.forEach(
+  cliente =>{
+
+    cliente.facturas.forEach(factura =>{
+      console.log(factura,'facturafactura')
+      guia.peso += factura.factura.TOTAL_PESO;
+      guia.volumen += Number(factura.factura.RUBRO1);;
+      factura.idGuia = guia.consecutivo
+     guia.facturas.push(factura)
+
+    })
+  }
+)
+
+guia.pesoRestante = guia.capacidad - guia.peso
+guia.numClientes = this.datableService.data.length;
+this.listaCamionesGuia.push(guia)
+
+}
+
+actualizar(cienteId: string , facturaId:string, consecutivo){
+
+ 
+  for(let i = 0; i < this.datableService.data.length; i++){
+ 
+   if(cienteId == this.datableService.data[i].id ){
+ 
+     this.datableService.data[i].facturas.forEach(factura =>{
+ 
+       if(factura.factura.FACTURA ==  facturaId){
+         factura.idGuia = consecutivo ? consecutivo : null;
+ 
+       }
+     })
+   }
+  }
+ 
+ }
+
+
+async mostrarDetalleGuia(consecutivo, rutaZona, fecha){
+ 
+  const i = this.listaCamionesGuia.findIndex(guia => guia.consecutivo == consecutivo)
+let facturas = [];
+   if(i >=0){
+    facturas = this.listaCamionesGuia[i].facturas;
+
+   }
+  const modal = await this.modalCtrl.create({
+    component: ListaClientesGuiasPage,
+    cssClass: 'large-modal',
+    componentProps:{
+      facturas:facturas,
+      rutaZona:rutaZona,
+      fecha:fecha
+    }
+  });
+  modal.present();
+      
+
+}
+
+
+async eliminarTodosCamionesAlert(){
+
+
   const alert = await this.alertCtrl.create({
     cssClass: 'my-custom-class',
-    header: 'ISLEÑA',
-    message: '¿Defina la acción a ejecutar?',
+    header: 'PLANIFICACIÓN DE ENTREGAS',
+    message: '¿Desea eliminar todos los elementos de la guia?',
     buttons: [
       {
-        text: 'Generar nueva Guia',
-        cssClass: 'secondary',
-        handler: (blah) => {
-       
-          this.listaCamiones( guia);
-          this.eliminarCamionesFacturaIndividual(receipt);
-     
-        }
-      },
-      {
-        text: 'Mover a guia existente',
-        id: 'confirm-button',
-        handler: () => {
-          this.loadNewRecordExsiting(receipt)
-          this.eliminarCamionesFacturaIndividual(receipt);
-        
-     
-        }
-      },
-
-      {
-        text: 'Cancelar',
+        text: 'Cancel',
         role: 'cancel',
         cssClass: 'secondary',
         id: 'cancel-button',
         handler: (blah) => {
+          console.log('Confirm Cancel: blah');
+        }
+      }, {
+        text: 'Okay',
+        id: 'confirm-button',
+        handler: () => {
+
+       this.eliminarGuias();
         
         }
       }
@@ -419,282 +517,52 @@ async loadNewRecordAlert(receipt,guia) {
   });
 
   await alert.present();
-}
+
+
+   
+    
+    
+    }
 
 
 
 
 
 
-eliminarGuia(consecutivo){
 
-const i =   this.listaCamionesGuia.findIndex(element => element.consecutivo == consecutivo);
 
-if(i >=0){
 
-  for(let indexA = 0; indexA < this.listaCamionesGuia[i].facturas.length; indexA++){ 
 
-for(let indexB = 0; indexB < this.datableService.data.length; indexB ++){
 
-  if(  this.listaCamionesGuia[i].facturas[indexA]['FACTURA'] ===   this.datableService.data[indexB]['FACTURA']){
+
+
+
+
+
+
+
+
+
+
+
+eliminarGuias(){
+
+  this.listaCamionesGuia = [];
+
+  for(let i = 0; i < this.datableService.data.length; i++){
  
-    this.datableService.data[indexB]['CAMION'] = ''
+    this.datableService.data[i].facturas.forEach(factura =>{
 
+      factura.idGuia = '';
 
-    const faturasEliminar = this.listaCamionesGuia[i].facturas
-
-    console.log(faturasEliminar, 'eliiii', consecutivo)
-
-
-  }
-
-}
-
-  }
-
-  this.listaCamionesGuia.splice(i, 1);
-
-   
-}
-
-}
-
-editarCamionesAsignados(factura){
-
-let guia = this.crearGuia(factura);
-
-guia.facturas.forEach(facturas =>{
-
-  facturas.CAMION = factura.CAMION;
-  guia.zona = facturas.ZONA;
-  guia.ruta = facturas.RUTA;
-  guia.idCamion =  factura.CAMION;
-  guia.peso += facturas.TOTAL_PESO;
-  guia.estado = 'RUTA';
-  guia.HH = 'HH01';
-  guia.pesoRestante =   guia.capacidad - facturas.TOTAL_PESO;
-  guia.volumen += Number(factura.RUBRO1);
-  
-  })
-
-   for (let i =0; i < this.listaCamionesGuia.length; i++){
-
-  
-    for( let j = 0; j < this.listaCamionesGuia[i].facturas.length; j++){
-    if(this.listaCamionesGuia[i].consecutivo === factura.consecutivo && this.listaCamionesGuia[i].facturas[j]['FACTURA'] == factura.FACTURA ){
-     
-      this.listaCamionesGuia[i].peso  -= this.listaCamionesGuia[i].facturas[j]['TOTAL_PESO']
-      this.listaCamionesGuia[i].pesoRestante   += this.listaCamionesGuia[i].facturas[j]['TOTAL_PESO'];
-      this.listaCamionesGuia[i].facturas.splice(j, 1)
-    
-    }
-    
-    }
-    }
-
-   if(this.listaCamionesGuia){
-    this.cargarDatos(  this.listaCamionesGuia)
-   }
-  }
-
-asignarCamionesFacturaIndividual(factura, camion){
-  const i =  this.datableService.data.findIndex(f=>f.FACTURA == factura);
-
-  if(this.listaCamionesGuia.length >=0){
- // this.editarCamionesAsignados(factura, camion);
-//this.loadNewRecords(this.datableService.data,camion)
-this.loadNewRecord(factura)
-}
-  if(i >=0){
-    this.datableService.data[i].CAMION = camion.idCamion
-
-  }
-
-  }
-
-  async eliminarCamionesFacturaIndividualAlert(factura){
-
-
-    const alert = await this.alertCtrl.create({
-      cssClass: 'my-custom-class',
-      header: 'PLANIFICACIÓN DE ENTREGAS',
-      message: '¿Desea eliminar todos los elementos de la guia?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          id: 'cancel-button',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          id: 'confirm-button',
-          handler: () => {
-            this.alertCtrl.dismiss();
-         this.eliminarCamionesFacturaIndividual(factura);
-          
-          }
-        }
-      ]
-    });
-  
-    await alert.present();
-  
-  
-     
-      
-      
-      }
-
-
-
-
-   eliminarCamionesFacturaIndividual(factura){
-
-
-
-    const i =  this.datableService.data.findIndex(f=>f.FACTURA == factura.FACTURA);
-
-    if(i >=0){
-      this.datableService.data[i].CAMION = ''
-  
-    }
-  
-    for( let indexA = 0; indexA <this.listaCamionesGuia.length; indexA++ ){
-      for( let indexB = 0; indexB <this.listaCamionesGuia[indexA].facturas.length; indexB++ ){
-  
-        if(this.listaCamionesGuia[indexA].facturas[indexB]['CAMION']== factura.CAMION){
-         
-          this.listaCamionesGuia[indexA].peso -= this.listaCamionesGuia[indexA].facturas[indexB]['TOTAL_PESO']
-          this.listaCamionesGuia[indexA].pesoRestante = this.listaCamionesGuia[indexA].capacidad - this.listaCamionesGuia[indexA].peso
-          this.listaCamionesGuia[indexA].facturas.splice(indexB, 1)
-          this.listaCamionesGuia[indexA].numClientes =  this.listaCamionesGuia[indexA].facturas.length;
-          if( this.listaCamionesGuia[indexA].facturas.length == 0){
-            this.listaCamionesGuia = [];
-            this.cargarDatos(this.listaCamionesGuia)
-          }
-        }
-      }
-    }
-  
-  
-    this.listaCamionesGuia.forEach(camion =>{
-      camion.facturas.forEach(factura=>{
-  
-      })
     })
-
-
-
   }
+ 
 
-  async eliminarTodosCamionesAlert(){
-
-
-    const alert = await this.alertCtrl.create({
-      cssClass: 'my-custom-class',
-      header: 'PLANIFICACIÓN DE ENTREGAS',
-      message: '¿Desea eliminar todos los elementos de la guia?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          id: 'cancel-button',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          id: 'confirm-button',
-          handler: () => {
-
-         this.eliminarTodosCamiones();
-          
-          }
-        }
-      ]
-    });
-  
-    await alert.present();
-  
-  
-     
-      
-      
-      }
-
-
-   eliminarTodosCamiones(){
-
-    this.listaCamionesGuia = [];
-      
-    this.datableService.data.forEach(factura =>{
-      factura.CAMION = '';
-  
-  })
-     
-      
-      
-      }
+}
 
 
 
-    cargarDatos(arreglo){
-      console.log('cargadn arr', arreglo)
 
-      this.listaCamionesGuia = [];
-      console.log('cargadn arr', arreglo)
-  arreglo.forEach(factura =>{
-
-    console.log(factura, 'arregloerror')
-      
-  let guia = {
-    idGuia: '',
-    fecha: new Date(),
-    zona: '',
-    ruta: '',
-    chofer:'',
-    idCamion: '',
-    capacidad: 0,
-    pesoRestante: 0,
-    numClientes: 0,
-    peso:  0,
-    estado: '',
-    HH:'',
-    volumen:   0,
-    facturas: null
- }
-  guia.facturas = [];
-  guia.chofer = factura.chofer;
-  guia.capacidad = factura.capacidad;
-guia.zona = factura.zona;
-guia.ruta = factura.ruta;
-guia.idCamion = factura.idCamion;
-factura.facturas.forEach(factura=> {
-
-
-    guia.peso += factura.TOTAL_PESO;
-    guia.estado = 'RUTA';
-    guia.HH = 'HH01';
-    guia.pesoRestante =   guia.capacidad - factura.TOTAL_PESO;
-    guia.volumen += Number(factura.RUBRO1);
-    guia.facturas.push(factura)
-   
-  })
-  guia.numClientes = factura.facturas.length;
-
-
-//this.listaCamionesGuia.push(guia)
-})
-
-
-console.log(this.listaCamionesGuia, 'loaded')
-
-
-
-    }
 
 }

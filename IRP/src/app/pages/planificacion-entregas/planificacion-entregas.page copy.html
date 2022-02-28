@@ -1,0 +1,351 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="dark">
+
+    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
+      <ion-item>
+        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Planificación de entregas</ion-title>
+
+        <ion-label color="light">
+          <h2 class="ion-text-uppercase">Ruta</h2>
+          <p>
+            <ion-badge color="primary" mode="ios">{{rutaZonaData.ruta}}</ion-badge>
+          </p>
+        </ion-label>
+        <ion-label color="light">
+          <h2 class="ion-text-uppercase">Zona</h2>
+          <p>
+            <ion-badge color="primary" mode="ios">{{rutaZonaData.zona}}</ion-badge>
+          </p>
+        </ion-label>
+
+<ion-buttons slot="end" >
+  <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
+    <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+      <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+        <ion-icon class="spin-element"  name="settings"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="rutaZonaData.rutaID"  shape="round" fill="solid" color="dark" (click)="calendar()">
+        <ion-icon   name="calendar"></ion-icon>
+      </ion-button>
+  
+  <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
+    <ion-label slot="start">Salir</ion-label>
+    <ion-icon name="close" slot="end"> </ion-icon>
+  </ion-button>
+</ion-buttons>
+      </ion-item>
+    
+    </ion-list>
+  </ion-toolbar>
+
+
+</ion-header>
+
+
+
+
+
+
+
+<ion-content>
+
+
+  <ion-grid *ngIf="rutaFacturas.rutaFacturasArray.length == 0" style="display: flex;justify-content: center;align-items: center; height: 100%;">
+    <ion-row style="display: flex;justify-content: center;align-items: center; height: 100%;">
+      <ion-col size="5" style="margin: 0 auto;">
+       
+          <img  class="slide-image" src="../assets/icons/delivery-truck.svg" />
+     <ion-card-content>
+     <h2 class="ion-text-uppercase"> Gestiona la planificacion de entregas presionando el boton de configuracion en la parte superior derecha</h2>
+     </ion-card-content>
+          
+    
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+          
+
+  <ion-grid  *ngIf="rutaFacturas.rutaFacturasArray.length > 0"> 
+    <ion-row class="header-row">
+      <ion-col size="12" size-md="8"   >
+
+<ion-item lines="none">
+   
+
+  <ion-label class="ion-text-uppercase">Lista de clientes</ion-label>
+  <ion-label slot="end">Total Guias <ion-badge color="dark" mode="ios">{{actualizaFacturaGuiasService.listaCamionesGuia.length}}</ion-badge></ion-label>
+  <ion-buttons  slot="end">
+           
+
+            <ion-button (click)="listaCamiones()" shape="round"  fill="outline"  color="success">
+              <ion-chip  style="background: transparent!important;">
+                <ion-avatar >
+                  <img   [src]="image" />
+                </ion-avatar>
+                <ion-label color="dark">Camiones</ion-label>
+                  </ion-chip>
+            </ion-button>
+            <ion-button (click)="generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
+              <ion-chip  style="background: transparent!important;">
+                <ion-avatar >
+                  <img   [src]="image" />
+                </ion-avatar>
+              <ion-label>  <ion-icon  color="primary" slot="icon-only" name="save"></ion-icon></ion-label>
+                  </ion-chip>
+            </ion-button>
+            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamionesAlert()" shape="round"  fill="outline"  color="danger">
+              <ion-chip  style="background: transparent!important;">
+                <ion-avatar >
+                  <img   [src]="image" />
+                </ion-avatar>
+              <ion-label>  <ion-icon  color="danger" slot="icon-only" name="close"></ion-icon></ion-label>
+                  </ion-chip>
+            </ion-button>
+
+
+           </ion-buttons>
+           
+</ion-item>
+    
+
+      
+      </ion-col>
+      <ion-col size="12" size-md="4">
+        <ion-searchbar mode="ios" placeholder="Buscar cliente" (ionChange)="datableService.onSearchChange($event)" ></ion-searchbar>
+
+      </ion-col>
+<ion-col size="12" >
+<ion-row>
+  <ion-col size="12" size-md="4"*ngFor="let camion of  actualizaFacturaGuiasService.listaCamionesGuia">
+
+    
+    <ion-row>
+      <ion-col size="12" size-md="3">
+        <ion-avatar >
+          <img [src]="image" />
+          </ion-avatar>
+          <ion-label>
+            {{camion.idCamion}}</ion-label>
+
+      </ion-col>
+
+      <ion-col size="12" size-md="9">
+      
+    
+<ion-card style="width: 100%; height: auto;">
+  <ion-card-content>
+    <ion-label>
+
+      <p> {{camion.chofer}}</p>
+      <p>Placa : {{camion.idCamion}}</p>
+      <p>Consecutivo : {{camion.consecutivo}}</p>
+      <p>Total Clientes : <ion-badge  color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
+      <p>Total Bultos : {{camion.volumen }}</p>
+      <p>Capacidad Total : {{camion.capacidad }}</p>
+      <p>Capacidad Actual : {{camion.peso }}</p>
+      <p>Capacidad Restante : {{camion.pesoRestante}}</p>
+
+
+    </ion-label>
+    <ion-item lines="none">
+        
+      <ion-buttons slot="end">
+        <ion-button  fill="clear" color="danger"  (click)="actualizaFacturaGuiasService.eliminarGuia(camion.consecutivo)">
+          <ion-icon slot="start" name="close"></ion-icon>
+          <ion-label>Eliminar</ion-label>
+    
+        </ion-button>
+        <ion-button  (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)"   fill="clear" color="primary">
+          <ion-icon slot="start" name="create"></ion-icon>
+          <ion-label>Editar</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-card-content>
+
+
+</ion-card>
+       
+    
+      </ion-col>
+    </ion-row>
+
+  </ion-col>
+</ion-row>
+  
+
+
+
+</ion-col>
+
+
+
+<ion-col   size="4">Peso Total : {{rutaFacturas.pesoTotalBultosFactura}} KG </ion-col>
+<ion-col   size="4">Total Bultos:   {{rutaFacturas.totalBultosFactura}} Bultos</ion-col>
+<ion-col  size="4">Fecha de entrega  {{fechaEntrega}}</ion-col>
+    </ion-row>
+
+    <ion-row class="header-row">
+
+
+
+      <ion-col size="2" tappable (click)="datableService.sortBy('FACTURA')">
+
+      Total Clientes : {{datableService.dataArrayToShow.length}} 
+      <ion-icon  name="arrow-down" *ngIf="datableService.sortDirection == 1"></ion-icon>
+      <ion-icon  name="arrow-up" *ngIf="datableService.sortDirection == 2"></ion-icon>
+      </ion-col>
+<ion-col size="10">
+  <ion-row>
+    <ion-col   size="4">Factura</ion-col>
+    <ion-col   size="1">Frio
+
+
+
+    </ion-col>
+    <ion-col   size="1">Seco</ion-col>
+    <ion-col    size="2">Bultos</ion-col>
+    <ion-col   size="2">Peso</ion-col>
+    <ion-col   size="2">Camion</ion-col>
+  </ion-row>
+  
+</ion-col>
+
+     
+    </ion-row>
+
+   
+      <ng-template ngFor let-factura [ngForOf]="datableService.dataArrayToShow " let-i="index" let-odd="odd" >
+        <ion-row class="data-row">
+          <ion-col size="2" *ngIf="datableService.bulkEdit">
+            <ion-checkbox disabled="true" [(ngModel)]="datableService.edit[i]"></ion-checkbox>
+          </ion-col>
+        <ion-col size="2"   >
+     <ion-label>
+       <h2>     {{factura.cliente}}</h2>
+       <p class="ion-text-wrap">{{factura.direccion}}</p>
+
+     </ion-label>
+        
+        </ion-col>
+    <ion-col size="10">
+   
+        <ion-row  [ngClass]="odd ? 'odd' : 'even'"   *ngFor="let facturaCliente of factura.facturas let odd = odd">
+          <ion-col size="4">
+            {{facturaCliente.FACTURA}}
+          </ion-col>
+        <ion-col    size="1">
+ 
+          <ion-checkbox disabled="true"   [(ngModel)]="facturaCliente.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
+        </ion-col>
+        <ion-col    size="1">
+  
+          <ion-checkbox disabled="true" [(ngModel)]="facturaCliente.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
+        </ion-col>
+        <ion-col    size="2">
+{{facturaCliente.RUBRO1}}
+        </ion-col>
+        <ion-col    size="2" >
+          {{facturaCliente.TOTAL_PESO_NETO}}
+        </ion-col>
+        <ion-col    size="2" style="display: flex;" >
+          <ion-chip  *ngIf="facturaCliente.camion"  size="large" color="primary" mode="ios" outline="true"  color="dark"  >
+            <ion-avatar >
+              <img   [src]="image" />
+            </ion-avatar>
+            <ion-label>   {{factura.camion}}</ion-label>
+              </ion-chip>
+  <ion-buttons *ngIf="facturaCliente.camion">
+    <ion-button (click)="actualizaFacturaGuiasService.eliminarCamionesFacturaIndividualAlert(factura)" fill="clear" color="danger">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+  
+    </ion-button>
+    <ion-button (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
+      <ion-icon slot="icon-only" name="create"></ion-icon>
+  
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons *ngIf="!facturaCliente.camion">
+    <ion-button  (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+  
+    </ion-button>
+  </ion-buttons>
+  
+        </ion-col>
+      </ion-row>
+   
+
+      
+    </ion-col>
+
+      
+      </ion-row>
+      </ng-template>
+
+      <ion-row>
+        <ion-col size="12" class="ion-text-center">
+
+          Pagina {{datableService.page + 1 }} de {{datableService.totalPages}}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+    
+        <ion-col size="6" size-md="2" >
+      <ion-item lines="none" *ngIf="datableService.page > 0"> 
+        <ion-button (click)="datableService.prevPage()"  fill="clear" slot="start">
+          <ion-icon slot="start" name="play-back"></ion-icon>
+          <ion-label>Anterior</ion-label>
+          </ion-button>
+      </ion-item>
+        </ion-col>
+        <ion-col size="6" size-md="2" >
+          <ion-item lines="none" *ngIf="datableService.page > 0"> 
+            <ion-button (click)="datableService.goFirst()"  fill="clear" slot="start">
+              <ion-icon slot="start" name="play-back"></ion-icon>
+             <ion-label> Primer pagina</ion-label>
+              </ion-button>
+          </ion-item>
+            </ion-col>
+        <ion-col size="12" size-md="4"  class="ion-text-center">
+          <ion-select interface="popover" [(ngModel)]="datableService.resultsCount" (ionChange)="datableService.loadData()">
+            <ion-select-option [value]="5">5</ion-select-option>
+            <ion-select-option [value]="10">10</ion-select-option>
+            <ion-select-option [value]="25">25</ion-select-option>
+            <ion-select-option [value]="50">50</ion-select-option>
+            <ion-select-option [value]="datableService.data.length">Todos</ion-select-option>
+            
+          </ion-select>
+          
+        </ion-col>
+        <ion-col size="6" size-md="2" >
+          <ion-item lines="none" *ngIf="datableService.page+1 < datableService.totalPages"> 
+            <ion-button (click)="datableService.goLast()"  fill="clear" slot="start">
+            
+             <ion-label> Ultima pagina</ion-label>
+             <ion-icon slot="end" name="play-forward"></ion-icon>
+              </ion-button>
+          </ion-item>
+            </ion-col>
+        <ion-col  size="6" size-md="2">
+      <ion-item lines="none" *ngIf="datableService.page+1 < datableService.totalPages">
+        <ion-button (click)="datableService.nextPage()"  fill="clear" slot="end">
+          <ion-label>Siguiente</ion-label>
+          <ion-icon slot="end" name="play-forward"></ion-icon>
+          </ion-button>
+      </ion-item>
+        </ion-col>
+       
+      </ion-row>
+
+ 
+  </ion-grid>
+
+
+  
+  </ion-content>
+  

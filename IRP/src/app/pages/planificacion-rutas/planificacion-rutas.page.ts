@@ -14,6 +14,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { ServiciosCompartidosService } from 'src/app/services/servicios-compartidos.service';
 
 
 
@@ -39,13 +40,29 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
 
 
-  rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
+  rutaZona= null;
   drag = false;
   
   modo = 'off'
   @ViewChild('mapa') divMapa!:ElementRef;
 
-    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService) {
+    constructor(
+      public global: GlobalService,
+      public modalCtrl: ModalController, 
+      public alertCtrl: AlertController, 
+      public clientes: ClientesService, 
+      public zonas: ZonasService, 
+      public rutas: RutasService, 
+      public clienteEspejo: ClienteEspejoService , 
+      route:ActivatedRoute, 
+      public popOverCrtl: PopoverController, 
+      public mapa: MapaService, 
+      public rutaZonas: RutaZonaService,
+       public mapboxLgService: MapboxGLService,
+       public serviciosCompartidosService: ServiciosCompartidosService
+       
+       
+       ) {
 
 
     }
@@ -72,7 +89,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
     }
          
     limpiarDatos(){
-      this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
+      this.rutaZona = null
       this.mapboxLgService.reset();
     }
 
@@ -104,8 +121,8 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
           IdCliente:exportarMarcadores[i].id,
           Fecha: new Date().toISOString(),
           Usuario: 'IRP',
-          Zona: this.rutaZonaData.zonaId ,
-          Ruta:this.rutaZonaData.rutaID   ,
+          Zona: this.rutaZona.Zona ,
+          Ruta:this.rutaZona.Ruta   ,
           Latitud: exportarMarcadores[i].cliente.LATITUD,
           Longitud: exportarMarcadores[i].cliente.LONGITUD
                   }
@@ -127,7 +144,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
         this.global.message('Planificacion Rutas','No se efectuaron cambios');
       }
       this.mapboxLgService.marcadores = []
-      this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
+      this.rutaZona= null
       this.clientes.rutasClientes = [];
       this.clientes.nuevosClientes = [];
       this.drag=false;
@@ -155,7 +172,29 @@ this.modo = 'on'
     busquedaCliente(){
 
     }
-async configuracionZonaRuta(evento) {
+
+    configuracionZonaRuta(){
+      const valorRetorno =  this.serviciosCompartidosService.listaRutasModal();
+      
+      valorRetorno.then(valor =>{
+      
+        if(valor !== undefined){
+        
+          this.rutaZona = null;
+      
+          this.rutaZona = valor
+         
+          this.clienteEspejo.syncRutas( this.rutaZona.Ruta);
+        
+      
+         }
+      
+       
+      })
+      
+      }
+
+async configuracionZonaRuta2(evento) {
 
  
 
@@ -179,12 +218,12 @@ async configuracionZonaRuta(evento) {
    
       if ( i >= 0 ){
         const  z = this.zonas.zonas.findIndex( z => z.ZONA === this.rutaZona.rutasZonasArray[i].Zona);
-           this.rutaZonaData.rutaID = this.rutaZona.rutasZonasArray[i].Ruta;
-           this.rutaZonaData.ruta =this.rutaZona.rutasZonasArray[i].Descripcion;
-           this.rutaZonaData.zonaId =  this.zonas.zonas[z].ZONA;
-           this.rutaZonaData.zona = this.zonas.zonas[z].NOMBRE;
+         //  this.rutaZona.rutaID = this.rutaZona.rutasZonasArray[i].Ruta;
+           //this.rutaZonaData.ruta =this.rutaZona.rutasZonasArray[i].Descripcion;
+           //this.rutaZonaData.zonaId =  this.zonas.zonas[z].ZONA;
+           //this.rutaZonaData.zona = this.zonas.zonas[z].NOMBRE;
 
-           this.clienteEspejo.syncRutas( this.rutaZonaData.rutaID);
+           //this.clienteEspejo.syncRutas( this.rutaZonaData.rutaID);
         
          }  
   

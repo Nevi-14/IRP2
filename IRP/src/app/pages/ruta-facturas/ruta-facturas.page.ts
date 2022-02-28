@@ -3,12 +3,12 @@ import { ModalController, PopoverController } from '@ionic/angular';
 import { FechaPage } from '../fecha/fecha.page';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { RutasPage } from '../rutas/rutas.page';
-import { RutaFacturas } from 'src/app/models/rutaFacturas';
 import * as  mapboxgl from 'mapbox-gl';
 import { ListaClientesRutaFacturasPage } from '../lista-clientes-ruta-facturas/lista-clientes-ruta-facturas.page';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
+import { PlanificacionEntregas } from '../../models/planificacionEntregas';
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -83,7 +83,7 @@ mapa.addControl(new mapboxgl.GeolocateControl({
     
   }
 
-  mostrarFactura(factura:RutaFacturas){
+  mostrarFactura(factura:PlanificacionEntregas){
     this.factura = factura;
     
     this.createmapa()

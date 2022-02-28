@@ -218,6 +218,9 @@ this.loadData();
 const size = page_size;
 this.data = [];
 this.data = array;
+
+
+console.log(this.data, 'data aarrya')
 const pages = Array.from(
   
   //elementos por pagina

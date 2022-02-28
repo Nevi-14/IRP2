@@ -1,9 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { RutaFacturas } from '../models/rutaFacturas';
+import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { DataTableService } from './data-table.service';
 import { AlertasService } from './alertas.service';
+
+interface facturaGuia{
+  idGuia: string,
+  factura: PlanificacionEntregas
+}
+interface factura{
+
+  id: number,
+  cliente:string,
+  direccion:string,
+  volumenTotal: number,
+  pesoTotal:number,
+  bultosTotales:number,
+  camion:string,
+  facturas: facturaGuia[]
+
+}
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +37,10 @@ export class RutaFacturasService {
 
   //
 
-  rutaFacturasArray: RutaFacturas[]=[];
+  rutaFacturasArray: PlanificacionEntregas[]=[];
 
-  paginationArray:RutaFacturas[]=[];
-
+  paginationArray:PlanificacionEntregas[]=[];
+  facturas :  factura[]=[];
 
   constructor(
     
@@ -54,7 +73,7 @@ export class RutaFacturasService {
 
     const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
 
-
+    //alert(URL)
 
     return URL;
 
@@ -67,7 +86,8 @@ export class RutaFacturasService {
 
     const URL = this.getIrpUrl(environment.rutaFacturasURL,ruta, fecha);
 
-    return this.http.get<RutaFacturas[]>(URL);
+console.log(URL)
+    return this.http.get<PlanificacionEntregas[]>(URL);
 
   }
 
@@ -77,6 +97,8 @@ export class RutaFacturasService {
 
 syncRutaFacturas(ruta:string, fecha:string){
 
+  this.rutaFacturasArray = [];
+  
   this.alertasService.presentaLoading('Cargando facturas');
 
   this.getRutaFacturas(ruta, fecha).subscribe(
@@ -84,8 +106,45 @@ syncRutaFacturas(ruta:string, fecha:string){
       this.rutaFacturasArray = resp;
       this.totalBultosFactura = 0;
       this.pesoTotalBultosFactura = 0;
+
+      this.facturas = [];
+
+
+     
+   
+
+
+
+      for( let i = 0 ;  i < this.rutaFacturasArray.length; i++){
+
+        const  facturaCliente = {
+
+          id: this.rutaFacturasArray[i].CLIENTE_ORIGEN,
+          cliente:this.rutaFacturasArray[i].NOMBRE_CLIENTE,
+          direccion:this.rutaFacturasArray[i].DIRECCION_FACTURA,
+          volumenTotal: this.rutaFacturasArray[i].TOTAL_VOLUMEN,
+          pesoTotal:this.rutaFacturasArray[i].TOTAL_PESO_NETO,
+          bultosTotales: Number(this.rutaFacturasArray[i].RUBRO1),
+          camion:'',
+          facturas: [
+            
+          ]
+      
+        }
+     
+       facturaCliente.facturas.push({idGuia:null, factura:this.rutaFacturasArray[i]});
+
+        this.agrupar(this.rutaFacturasArray[i].CLIENTE_ORIGEN,facturaCliente);
+
+
+      }
+
+      console.log(this.rutaFacturasArray,'array new')
+
       this.rutaFacturasArray.forEach(factura =>{
 
+
+      
 
         console.log(typeof( Number(factura.RUBRO1)), Number(factura.RUBRO1)  + factura.TOTAL_PESO_NETO , 'rubri1',typeof( factura.TOTAL_PESO_NETO),'pepso t')
 
@@ -101,12 +160,30 @@ syncRutaFacturas(ruta:string, fecha:string){
        
       console.log(this.pesoTotalBultosFactura, 'peso bultos')
       console.log(this.totalBultosFactura, 'total bultos')
-      this.datatableService.paginacion( this.rutaFacturasArray, this.datatableService.resultsCount, this.datatableService.page)
+      this.datatableService.paginacion( this.facturas, this.datatableService.resultsCount, this.datatableService.page)
     }
   )
 
 
  
+}
+
+
+
+
+agrupar(identificador, factura){
+const i = this.facturas.findIndex(factura => factura.id === identificador);
+
+if(i >=0){
+
+  this.facturas[i].facturas.push(factura.facturas[0])
+
+  return 
+
+}
+
+ this.facturas.push(factura);
+
 }
 
 

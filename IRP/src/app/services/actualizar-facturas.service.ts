@@ -60,8 +60,7 @@ this.alertasService.presentaLoading('Guardando facturas')
   this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
 
     resp => {
-      console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json completed ')
-      console.log('completed')
+ 
 
       this.alertasService.loadingDissmiss();
 
@@ -76,7 +75,7 @@ this.alertasService.presentaLoading('Guardando facturas')
       this.datatableService.data = [];
     }, error => {
       console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
-      console.log('error')
+      
   }
 
   )

@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 export class GuiasService {
 
   guiasArray: GuiaEntrega[]=[];
+  guiasArrayRuta: GuiaEntrega[]=[];
+ 
 
 
   constructor(private http: HttpClient) { }
@@ -25,6 +27,39 @@ export class GuiasService {
 
 
   }
+  getIRPURLEstado( api: string, ){
+    let test: string = ''
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
+
+    const URL = environment.preURL  + test +environment.postURL + api + environment.guiasURLEstadoParam +'RUTA';
+
+    return URL;
+
+
+  }
+
+  private getEstado( ){
+    const URL = this.getIRPURLEstado( environment.guiasURL);
+    return this.http.get<GuiaEntrega[]>( URL );
+  }
+
+  syncGuiasRuta(){
+   
+    this.getEstado().subscribe(
+      resp =>{
+     
+        this.guiasArrayRuta = resp.slice(0);
+        console.log('rutasEstado',this.guiasArrayRuta)
+      }
+
+    );
+  }
+
+
+
+
 
   private postActualizarGuias (guia){
     const URL = this.getIRPURL( environment.guiasURL );

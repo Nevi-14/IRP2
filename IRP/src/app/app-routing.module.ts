@@ -79,10 +79,7 @@ const routes: Routes = [
     path: 'gestion-camiones',
     loadChildren: () => import('./pages/gestion-camiones/gestion-camiones.module').then( m => m.GestionCamionesPageModule)
   },
-  {
-    path: 'lista-capacidad-camiones',
-    loadChildren: () => import('./pages/lista-capacidad-camiones/lista-capacidad-camiones.module').then( m => m.ListaCapacidadCamionesPageModule)
-  },
+
   {
     path: 'guia-detalles',
     loadChildren: () => import('./pages/guia-detalles/guia-detalles.module').then( m => m.GuiaDetallesPageModule)
@@ -95,6 +92,36 @@ const routes: Routes = [
     path: 'lista-clientes-guias',
     loadChildren: () => import('./pages/lista-clientes-guias/lista-clientes-guias.module').then( m => m.ListaClientesGuiasPageModule)
   },
+  {
+    path: 'servicio-cliente',
+    loadChildren: () => import('./pages/servicio-cliente/servicio-cliente.module').then( m => m.ServicioClientePageModule)
+  },
+  {
+    path: 'guias-ruta',
+    loadChildren: () => import('./pages/guias-ruta/guias-ruta.module').then( m => m.GuiasRutaPageModule)
+  },
+  {
+    path: 'clientes-rutas',
+    loadChildren: () => import('./pages/clientes-rutas/clientes-rutas.module').then( m => m.ClientesRutasPageModule)
+  },
+
+  {
+    path: 'lista-camiones-modal',
+    loadChildren: () => import('./pages/lista-camiones-modal/lista-camiones-modal.module').then( m => m.ListaCamionesModalPageModule)
+  },
+  {
+    path: 'calendario-modal',
+    loadChildren: () => import('./pages/calendario-modal/calendario-modal.module').then( m => m.CalendarioModalPageModule)
+  },
+  {
+    path: 'lista-rutas-zonas-modal',
+    loadChildren: () => import('./pages/lista-rutas-zonas-modal/lista-rutas-zonas-modal.module').then( m => m.ListaRutasZonasModalPageModule)
+  },
+  {
+    path: 'lista-guias-modal',
+    loadChildren: () => import('./pages/lista-guias-modal/lista-guias-modal.module').then( m => m.ListaGuiasModalPageModule)
+  },
+ 
  
 ];
 

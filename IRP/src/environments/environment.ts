@@ -19,6 +19,7 @@ export const environment = {
   cantonesURL: 'Cantones/',
   distritosURL: 'Distritos/',
   busquedaCliente: 'Clientes2/',
+  ruteroURL:'Rutero/',
   rutasURL:'Rutas',
   entregaParam:'&entrega=',
   rutaParam:'?ruta=',
@@ -27,6 +28,7 @@ export const environment = {
   zonasURL:'Zonas',
   camionesURL:'Camiones',
   guiasURL:'Guias',
+  guiasURLEstadoParam:'?estado=',
   actualizaFacturasURL:'ActualizaFacturas',
   prdMode: true,
 };

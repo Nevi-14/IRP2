@@ -10,6 +10,7 @@ import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
 })
 export class ListaGuiasPage implements OnInit {
   image = '../assets/icons/delivery-truck.svg'
+  textoBuscar = '';
   constructor(
     public actualizaFacturaGuiasService: CamionesGuiasService,
 public modalCtrl: ModalController
@@ -17,6 +18,7 @@ public modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
+    
   
   }
 
@@ -29,7 +31,10 @@ public modalCtrl: ModalController
 
   
   }
+  onSearchChange(event){
+    this.textoBuscar = event.detail.value;
 
+  }
   cerrarModal(){
     this.modalCtrl.dismiss(); 
   }
