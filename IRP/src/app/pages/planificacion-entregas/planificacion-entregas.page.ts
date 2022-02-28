@@ -55,6 +55,16 @@ rutaZona = null;
 
 
   ngOnInit() {
+this.datableService.data = []
+this.datableService.dataArrayToShow = []
+this.planificacionEntregasService.bultosTotales = 0
+this.planificacionEntregasService.clientesTotales = 0
+this.planificacionEntregasService.pesoTotal = 0
+this.planificacionEntregasService.fecha = null;
+this.actualizaFacturaGuiasService.listaCamionesGuia = []
+this.actualizaFacturaGuiasService.Fecha = null;
+this.actualizaFacturaGuiasService.listaCamionesGuia = []
+this.planificacionEntregasService.rutaFacturasArray = [];
 
  
   }
@@ -89,7 +99,7 @@ rutaZona = null;
 
 
 generarPost(){
- // this.actualizaFacturaGuiasService.generarPost()
+ this.actualizaFacturaGuiasService.generarPost()
 this.rutaZona = null;
 }
 

@@ -13,12 +13,12 @@
               </ion-button>
 
 
-          <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+          <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
             <ion-icon class="spin-element"  name="settings"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="mapboxLgService.marcadores?.length > 0 "   shape="round" fill="solid" color="dark" (click)="informacionMarcadores($event)">
+          <ion-button *ngIf="servicioClienteMapaService.marcadores?.length > 0 "   shape="round" fill="solid" color="dark" (click)="informacionMarcadores()">
             <ion-icon name="location"></ion-icon>
-            <ion-badge color="primary" mode="ios">{{ mapboxLgService?.marcadores?.length }}</ion-badge>
+            <ion-badge color="primary" mode="ios">{{ servicioClienteMapaService?.marcadores?.length }}</ion-badge>
           </ion-button>
       
       
@@ -30,9 +30,7 @@
           <ion-button    (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
             <ion-icon  name="refresh"></ion-icon>
               </ion-button>
-          <ion-button   *ngIf="clientes.rutasClientes?.length > 0 || clientes.nuevosClientes?.length > 0" (click)="postRutas()"  shape="round" fill="solid" color="dark">
-        <ion-icon  name="save"></ion-icon>
-          </ion-button>
+  
         <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
     <ion-label slot="start">Salir</ion-label>
     <ion-icon name="close" slot="end"> </ion-icon>

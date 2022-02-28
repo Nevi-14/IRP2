@@ -10,10 +10,12 @@ import { ClienteEspejoService } from '../../services/cliente-espejo.service';
 import { ActivatedRoute } from '@angular/router';
 import { MapaService } from '../../services/mapa.service';
 import { RutaZonaService } from '../../services/ruta-zona.service';
-import { MapboxGLService } from '../../services/mapbox-gl.service';
+
 import { GuiasService } from 'src/app/services/guias.service';
 import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
 import { RuteroService } from '../../services/rutero.service';
+import { ServicioClienteMapaService } from 'src/app/services/servicio-cliente-mapa';
+import { ServicioClienteMarcadoresPage } from '../servicio-cliente-marcadores/servicio-cliente-marcadores.page';
 
 @Component({
   selector: 'app-servicio-cliente',
@@ -31,7 +33,7 @@ export class ServicioClientePage implements OnInit {
   modo = 'off'
   @ViewChild('mapa') divMapa!:ElementRef;
 
-    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public mapboxLgService: MapboxGLService, public guiasService:GuiasService, public ruteroService: RuteroService) {
+    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public servicioClienteMapaService: ServicioClienteMapaService, public guiasService:GuiasService, public ruteroService: RuteroService) {
 
 
     }
@@ -44,7 +46,7 @@ export class ServicioClientePage implements OnInit {
 
      this.clientes.rutasClientes = [];
      this.clientes.nuevosClientes = [];
-     this.mapboxLgService.marcadores = [];
+     this.servicioClienteMapaService.marcadores = [];
   console.log('planificacion Rutas')
 
 
@@ -54,23 +56,23 @@ export class ServicioClientePage implements OnInit {
       //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
       //Add 'implements AfterViewInit' to the class.
 
-      this.mapboxLgService.createmapa(this.divMapa,false, false)
+      this.servicioClienteMapaService.createmapa(this.divMapa,false, false)
       
-    this.mapboxLgService.agregarMarcadores(this.clientes.rutasClientes,'NOMBRE','IdCliente',false)
+    this.servicioClienteMapaService.agregarMarcadores2(this.clientes.rutasClientes,'NOMBRE','IdCliente',false)
     }
          
     limpiarDatos(){
       this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
-      this.mapboxLgService.reset();
+    //  this.servicioClienteMapaService.reset();
     }
 
-    async informacionMarcadores(evento) {
+    async informacionMarcadores() {
 
       const modal = await this.modalCtrl.create({
-        component: MarcadoresPage,
+        component: ServicioClienteMarcadoresPage,
         cssClass: 'auto-size-modal',
         componentProps:{
-          marcadores: this.mapboxLgService.marcadores,
+          marcadores: this.servicioClienteMapaService.marcadores,
         }
        // backdropDismiss:false
       });
@@ -80,75 +82,14 @@ export class ServicioClientePage implements OnInit {
     }
 
 
-    postRutas(){
-
-      const postArray = [];
-
-    const exportarMarcadores =  this.mapboxLgService.exportarMarcadores();
-    //  this.clienteEspejo.presentaLoading('Guardando Rutas...');
-      for(let i =0; i < exportarMarcadores.length; i++){
-
-        const rutasClientes = {
-          IdCliente:exportarMarcadores[i].id,
-          Fecha: new Date().toISOString(),
-          Usuario: 'IRP',
-          Zona: this.rutaZonaData.zonaId ,
-          Ruta:this.rutaZonaData.rutaID   ,
-          Latitud: exportarMarcadores[i].cliente.LATITUD,
-          Longitud: exportarMarcadores[i].cliente.LONGITUD
-                  }
-                
-                  postArray.push(rutasClientes)
-        
-      }
-      
-      
-      console.log(exportarMarcadores, 'exported array', 'post array', postArray)
-
-
-      if(exportarMarcadores.length > 0){
-  
-      this.clienteEspejo.insertarClienteEspejo(postArray);
-
-      }else{
-       
-        this.global.message('Planificacion Rutas','No se efectuaron cambios');
-      }
-      this.mapboxLgService.marcadores = []
-      this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
-      this.clientes.rutasClientes = [];
-      this.clientes.nuevosClientes = [];
-      this.drag=false;
-      this.modo = 'off'
-      this.mapboxLgService.createmapa(this.divMapa,false, false)
-
-      
-    }
-
     
             
-    dragMarcadores(){
-      this.drag=!this.drag;
-      if(this.drag === true){
-this.modo = 'on'
-      }else{
-        this.modo = 'off'
-      }
-      
-      this.mapboxLgService.createmapa(this.divMapa,false, false)
-      this.mapboxLgService.draggMarkers(this.mapboxLgService.marcadores, this.drag)
-    }
-
-
-    busquedaCliente(){
-
-    }
-async configuracionZonaRuta(evento) {
+ 
+async configuracionZonaRuta() {
 
   const modal = await this.modalCtrl.create({
     component: GuiasRutaPage,
-    cssClass: 'my-custom-class',
-    mode:'ios',
+    cssClass: 'large-modal'
   });
    await modal.present();
 
@@ -164,7 +105,7 @@ async configuracionZonaRuta(evento) {
 
    
 
-       this.mapboxLgService.agregarMarcadores2(this.ruteroService.ruteroArray,'nombre','idCliente',false);
+      this.servicioClienteMapaService.agregarMarcadores2(this.ruteroService.ruteroArray,'nombre','idCliente',false);
     }
 
 

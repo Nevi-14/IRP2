@@ -561,7 +561,60 @@ eliminarGuias(){
 
 }
 
+generarPost(){
 
+  // this.guiasService.guiasArray = [];
+ 
+   // this.actualizarFacturasService.actualizaFacturasArray = [];
+ 
+   this.listaCamionesGuia.forEach(guia =>{
+ 
+     const guiaCamion = { 
+    idGuia: guia.consecutivo,
+    fecha: guia.fecha,
+    zona: guia.zona,
+    ruta: guia.ruta,
+    idCamion: guia.idCamion,
+    numClientes: guia.numClientes,
+    peso: guia.peso,
+    estado:  guia.estado,
+    HH: guia.HH,
+    volumen: guia.volumen
+   }
+ 
+   this.guiasService.guiasArray.push(guiaCamion)
+ 
+ 
+ 
+   guia.facturas.forEach(factura=>{
+ 
+     const actualizarFactura = {
+          numFactura: factura['FACTURA'],
+          tipoDocumento:factura['TIPO_DOCUMENTO'],
+          despachado: 'S',
+          rubro3:  guia.consecutivo,
+          U_LATITUD: factura['LATITUD'],
+          U_LONGITUD: factura['LONGITUD']
+     }
+     this.actualizarFacturasService.actualizaFacturasArray.push(actualizarFactura)
+   })
+ 
+ 
+ 
+   })
+ 
+ 
+   console.log('guias', this.guiasService.guiasArray , 'facturas',this.actualizarFacturasService.actualizaFacturasArray)
+ 
+   this.actualizarFacturasService.insertarFacturas();
+   this.guiasService.insertarGuias();
+   this.ruteroService.insertarPostRutero();
+   this.eliminarGuias();
+ 
+  
+   
+ 
+ }
 
 
 

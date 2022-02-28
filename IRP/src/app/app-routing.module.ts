@@ -121,6 +121,14 @@ const routes: Routes = [
     path: 'lista-guias-modal',
     loadChildren: () => import('./pages/lista-guias-modal/lista-guias-modal.module').then( m => m.ListaGuiasModalPageModule)
   },
+  {
+    path: 'servicio-cliente-marcadores',
+    loadChildren: () => import('./pages/servicio-cliente-marcadores/servicio-cliente-marcadores.module').then( m => m.ServicioClienteMarcadoresPageModule)
+  },
+  {
+    path: 'servicio-cliente-marcadores',
+    loadChildren: () => import('./pages/servicio-cliente-marcadores/servicio-cliente-marcadores.module').then( m => m.ServicioClienteMarcadoresPageModule)
+  },
  
  
 ];

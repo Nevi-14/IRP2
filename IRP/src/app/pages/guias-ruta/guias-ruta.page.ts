@@ -32,5 +32,8 @@ export class GuiasRutaPage implements OnInit {
       idGuia:idGuia
     });
   }
+  cerrarModal(){
+    this.modalCtrl.dismiss();
+  }
 
 }
