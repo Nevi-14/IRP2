@@ -598,6 +598,34 @@ generarPost(){
           U_LONGITUD: factura.factura.LONGITUD
      }
      this.actualizarFacturasService.actualizaFacturasArray.push(actualizarFactura)
+
+   
+
+      const rutero = {
+        idGuia: guia.consecutivo,
+        idCliente: factura.factura.CLIENTE_ORIGEN,
+        nombre: factura.factura.NOMBRE_CLIENTE,
+        direccion:factura.factura.DIRECCION_FACTURA,
+        latitud:Number(factura.factura.LATITUD),
+        longitud:Number(factura.factura.LONGITUD),
+        checkin: null,
+        latitud_check: null,
+        longitud_check: null,
+        observaciones:null,
+        estado: 'P',
+        bultos: factura.factura.TOTAL_VOLUMEN,
+        checkout:null  
+     }
+
+     
+  const i = this.ruteroService.rutertoPostArray.findIndex(rutero => rutero.idCliente == factura.factura.CLIENTE_ORIGEN )
+   if(i >=0){
+    this.ruteroService.rutertoPostArray[i].bultos +=factura.factura.TOTAL_VOLUMEN
+   }else{
+    this.ruteroService.rutertoPostArray.push(rutero)
+   }
+  
+
    })
  
  

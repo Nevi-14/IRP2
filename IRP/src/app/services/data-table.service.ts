@@ -233,10 +233,14 @@ this.totalPages = pages.length;
 
 this.dataArrayToShow = [];
 
-for (let i = pages[page_number].inicio ; i <= pages[page_number].fin ; i++ ){
+if(array.length >0){
+  for (let i = pages[page_number].inicio ; i <= pages[page_number].fin ; i++ ){
 
-  this.dataArrayToShow.push(this.data[i])
+    this.dataArrayToShow.push(this.data[i])
+  }
+
 }
+
 
 
     }

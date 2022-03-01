@@ -74,7 +74,7 @@ console.log(JSON.stringify(rutero), 'JSON.stringify(rutero)')
 
 
 insertarPostRutero(){
-
+console.log(this.rutertoPostArray)
   this.postRutero(this.rutertoPostArray).subscribe(
 
     resp => {
