@@ -8,6 +8,7 @@ import { ModalController } from '@ionic/angular';
 })
 export class ListaClientesRutaFacturasPage implements OnInit {
 @Input() clientes;
+textoBuscar= '';
   constructor(
  public modalCtrl: ModalController
 
@@ -29,6 +30,9 @@ export class ListaClientesRutaFacturasPage implements OnInit {
 
   }
 
+  onSearchChange(event){
+this.textoBuscar = event.detail.value
 
+  }
 
 }

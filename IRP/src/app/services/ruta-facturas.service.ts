@@ -1,15 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { RutaFacturas } from '../models/rutaFacturas';
-import { LoadingController } from '@ionic/angular';
-import { RutasPageModule } from '../pages/rutas/rutas.module';
+import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { DataTableService } from './data-table.service';
+import { AlertasService } from './alertas.service';
+
+interface facturaGuia{
+  idGuia: string,
+  factura: PlanificacionEntregas
+}
+interface factura{
+
+  id: number,
+  cliente:string,
+  direccion:string,
+  volumenTotal: number,
+  pesoTotal:number,
+  bultosTotales:number,
+  camion:string,
+  facturas: facturaGuia[]
+
+}
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class RutaFacturasService {
+
   loading: HTMLIonLoadingElement;
 
   // control perso facturas
@@ -18,37 +37,26 @@ export class RutaFacturasService {
 
   //
 
+  rutaFacturasArray: PlanificacionEntregas[]=[];
 
-  rutaFacturasArray: RutaFacturas[]=[];
-  paginationArray:RutaFacturas[]=[];
-  constructor(private http: HttpClient, private loadingCtrl: LoadingController, public datatableService: DataTableService) { }
+  paginationArray:PlanificacionEntregas[]=[];
+  facturas :  factura[]=[];
 
-  async presentaLoading( mensaje: string ){
-    this.loading = await this.loadingCtrl.create({
-      message: mensaje,
-    });
-    await this.loading.present();
-  }
-
-   loadingDissmiss(){
-    this.loading.dismiss();
-  }
-
+  constructor(
+    
+    private http: HttpClient,  
+    public datatableService: DataTableService,
+    public alertasService: AlertasService
+    
+    
+    
+    ) { }
 
 
 
-  formatoFecha(date) {
-    let d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-    return [year, month, day].join('-');
-}
+
+
 
 
 
@@ -58,11 +66,15 @@ export class RutaFacturasService {
 
     let test = '';
     if(!environment.prdMode){
+
       test = environment.TestURL;
+      
     }
 
     const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
-    console.log(URL);
+
+    //alert(URL)
+
     return URL;
 
   }
@@ -71,30 +83,68 @@ export class RutaFacturasService {
 
  
   getRutaFacturas(ruta: string, fecha:string){
+
     const URL = this.getIrpUrl(environment.rutaFacturasURL,ruta, fecha);
-    return this.http.get<RutaFacturas[]>(URL);
+
+console.log(URL)
+    return this.http.get<PlanificacionEntregas[]>(URL);
+
   }
 
 
-  paginate(array, page_size, page_number) {
-    this.paginationArray = [];
-    // human-readable page numbers usually start with 1, so we reduce 1 in the first argument
-    console.log( array.slice((page_number - 1) * page_size, page_number * page_size), ' pagination')
-    this.paginationArray = array.slice((page_number - 1) * page_size, page_number * page_size);
- 
-  }
+
   
 
 syncRutaFacturas(ruta:string, fecha:string){
 
+  this.rutaFacturasArray = [];
   
+  this.alertasService.presentaLoading('Cargando facturas');
+
   this.getRutaFacturas(ruta, fecha).subscribe(
     resp =>{
       this.rutaFacturasArray = resp;
       this.totalBultosFactura = 0;
       this.pesoTotalBultosFactura = 0;
+
+      this.facturas = [];
+
+
+     
+   
+
+
+
+      for( let i = 0 ;  i < this.rutaFacturasArray.length; i++){
+
+        const  facturaCliente = {
+
+          id: this.rutaFacturasArray[i].CLIENTE_ORIGEN,
+          cliente:this.rutaFacturasArray[i].NOMBRE_CLIENTE,
+          direccion:this.rutaFacturasArray[i].DIRECCION_FACTURA,
+          volumenTotal: this.rutaFacturasArray[i].TOTAL_VOLUMEN,
+          pesoTotal:this.rutaFacturasArray[i].TOTAL_PESO_NETO,
+          bultosTotales: Number(this.rutaFacturasArray[i].RUBRO1),
+          camion:'',
+          facturas: [
+            
+          ]
+      
+        }
+     
+       facturaCliente.facturas.push({idGuia:null, factura:this.rutaFacturasArray[i]});
+
+        this.agrupar(this.rutaFacturasArray[i].CLIENTE_ORIGEN,facturaCliente);
+
+
+      }
+
+      console.log(this.rutaFacturasArray,'array new')
+
       this.rutaFacturasArray.forEach(factura =>{
 
+
+      
 
         console.log(typeof( Number(factura.RUBRO1)), Number(factura.RUBRO1)  + factura.TOTAL_PESO_NETO , 'rubri1',typeof( factura.TOTAL_PESO_NETO),'pepso t')
 
@@ -104,14 +154,36 @@ syncRutaFacturas(ruta:string, fecha:string){
         
       })
 
+      this.alertasService.loadingDissmiss();
+
+      this.alertasService.message('PLANIFICACIONDE ENTREGAS', 'Un total de ' + resp.length +' facturas se agregaron al sistema')
+       
       console.log(this.pesoTotalBultosFactura, 'peso bultos')
       console.log(this.totalBultosFactura, 'total bultos')
-      this.datatableService.paginacion( this.rutaFacturasArray, this.datatableService.resultsCount, this.datatableService.page)
+      this.datatableService.paginacion( this.facturas, this.datatableService.resultsCount, this.datatableService.page)
     }
   )
 
 
  
+}
+
+
+
+
+agrupar(identificador, factura){
+const i = this.facturas.findIndex(factura => factura.id === identificador);
+
+if(i >=0){
+
+  this.facturas[i].facturas.push(factura.facturas[0])
+
+  return 
+
+}
+
+ this.facturas.push(factura);
+
 }
 
 

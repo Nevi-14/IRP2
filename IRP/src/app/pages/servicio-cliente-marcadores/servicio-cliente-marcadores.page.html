@@ -1,0 +1,73 @@
+
+<ion-header class="ion-no-border ion-padding">
+  <span style="display: flex; justify-content: space-between; align-items: center;">
+    
+    <ion-title class="ion-text-uppercase" >Lista de Clientes</ion-title>
+    <ion-title class="ion-text-uppercase" >Tipo - Filtro :  {{toggleValue}}</ion-title>
+    <ion-toggle   [checked]="filtroToggle" 
+    (ionChange)="cambio()"></ion-toggle>
+    <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" style="width: 350px" debounce="250" ></ion-searchbar>
+    <ion-buttons >
+      <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+
+  </span>
+
+</ion-header>
+
+<div class="inner-content">
+
+  
+
+  <ion-grid class="ion-margin">
+
+    <ion-row class="ion-margin">
+      <ion-col size="6" class="ion-text-uppercase">ID - Nombre Cliente</ion-col>
+      <ion-col size="3" class="ion-text-uppercase">Detalle Cliente</ion-col>
+      <ion-col size="3" class="ion-text-uppercase">Redirigir Mapa</ion-col>
+    </ion-row>
+    <ion-row class="ion-margin">
+ 
+
+      <ng-template ngFor let-item [ngForOf]="marcadores | filtro : textoBuscar:toggleValue" let-i="index" >
+        <ion-col size="6">
+          <ion-label>{{item.id}} - {{item.nombre}}</ion-label>
+        </ion-col>
+        <ion-col size="3">   
+          <ion-button (click)="servicioClientesService.detalleClientes(item.cliente)" fill="clear" >
+            <ion-icon slot="start" name="person" [ngStyle]="{
+              'color': item.color
+          }"></ion-icon>
+      
+           
+          </ion-button>
+          <img *ngIf="item.cliente.longitud_Check && item.cliente.latitud_check" [src]="image"  style="height: 30px; width:30px; margin-right: 0.5rem;" alt="">
+          <ion-label *ngIf="item.cliente.longitud_Check && item.cliente.latitud_check">Entregado</ion-label>
+        
+        </ion-col>
+        <ion-col size="3">
+
+    
+            <ion-button (click)="irMarcador(item.marker!)" fill="clear">
+              <ion-icon slot="start" name="location" [ngStyle]="{
+                'color': item.color
+            }"></ion-icon>
+
+            <ion-label>[{{item.cliente.longitud}} , {{item.cliente.latitud}}]</ion-label>
+      
+      
+            
+            </ion-button>
+      
+      
+    
+        </ion-col>
+  
+      </ng-template>
+    </ion-row>
+  </ion-grid>
+
+</div>

@@ -638,3 +638,23 @@ text-transform: capitalize;
 font-size: 12px;
 }
 
+ion-checkbox.checkbox-disabled {
+  opacity: 1 !important;
+}
+
+ion-modal .calendario-modal{
+  --width: 50px;
+  --height: 32px;
+  --border-radius: 8px;
+        ion-datetime {
+          height: 32px;
+        }
+}
+
+.marker {
+display: block;
+border: none;
+cursor: pointer;
+padding: 0;
+margin-left: 3rem;
+}

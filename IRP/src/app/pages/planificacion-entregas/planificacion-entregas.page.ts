@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { ZonasService } from 'src/app/services/zonas.service';
-
-import { FechaPage } from '../fecha/fecha.page';
-import { RutasPage } from '../rutas/rutas.page';
-import { ListaCapacidadCamionesPage } from '../lista-capacidad-camiones/lista-capacidad-camiones.page';
 import { RutasService } from 'src/app/services/rutas.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 
 import { DataTableService } from 'src/app/services/data-table.service';
 import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
+import { ServiciosCompartidosService } from 'src/app/services/servicios-compartidos.service';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
+import { ListaCamionesModalPage } from '../lista-camiones-modal/lista-camiones-modal.page';
+import { ListaGuiasModalPage } from '../lista-guias-modal/lista-guias-modal.page';
 @Component({
   selector: 'app-planificacion-entregas',
   templateUrl: './planificacion-entregas.page.html',
@@ -20,9 +19,7 @@ import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
 export class PlanificacionEntregasPage implements OnInit {
 
 
-
   constructor(
-
 
     public modalCtrl: ModalController, 
     public rutas:RutasService, 
@@ -30,107 +27,90 @@ export class PlanificacionEntregasPage implements OnInit {
     public rutaFacturas: RutaFacturasService , 
     public popOverCrtl: PopoverController, 
     public rutaZonas: RutaZonaService,
-    public camionesService: GestionCamionesService,
     public actualizaFacturaGuiasService: CamionesGuiasService,
-    public datableService: DataTableService
-
+    public datableService: DataTableService,
+    public serviciosCompartidosService: ServiciosCompartidosService,
+    public planificacionEntregasService:PlanificacionEntregasService
 
 
   ) { }
 
+// IMAGEN DEL BOTON DE CAMION
 
+image = '../assets/icons/delivery-truck.svg'
 
+// OBJETO QUE TIENE LA INFORMACION DE RUTA Y ZONA RUTA, ZONA, DESCRIPCION
 
-  image = '../assets/icons/delivery-truck.svg'
- fechaEntrega:string;
- fechaBusqueda: string;
- ruta: any;
+rutaZona = null;
+
+// VARIABLE TIPO STRING QUE RECIBE EL VALOR DE FECHA RETORNO DEL CALENDARIO
+
+ fecha:string;
+
+// VARIABLES VERDADERO FALSO UTILIZADAS PARA VALIDAR FRIO -  SECO
+
  verdadero = true;
  falso = false;
-rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
-factura = null;
-totalBultosFactura: number;
-pesoTotalBultosFactura: number;
+
+
+
   ngOnInit() {
-    console.log('test')
-    this.rutaFacturas.rutaFacturasArray = [];
-    
-    this.camionesService.syncCamiones();
+this.datableService.data = []
+this.datableService.dataArrayToShow = []
+this.planificacionEntregasService.bultosTotales = 0
+this.planificacionEntregasService.clientesTotales = 0
+this.planificacionEntregasService.pesoTotal = 0
+this.planificacionEntregasService.fecha = null;
+this.actualizaFacturaGuiasService.listaCamionesGuia = []
+this.actualizaFacturaGuiasService.Fecha = null;
+this.actualizaFacturaGuiasService.listaCamionesGuia = []
+this.planificacionEntregasService.rutaFacturasArray = [];
 
-
+ 
   }
 
 
+  loadData(){
 
-
-
-loadData(){
-
-  this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, this.fechaBusqueda);
+    this.planificacionEntregasService.syncRutaFacturas( this.rutaZona.Ruta, this.fecha);
+    
+  }
   
+
+  calendarioModal(){
+
+   const valorRetorno = this.serviciosCompartidosService.calendarioModal('/');
+
+   valorRetorno.then(valor =>{
+    if(valor !== undefined){
+ 
+      this.fecha = valor
+   
+   this.loadData();
+
+     }
+
+   
+  })
 }
 
 
 
 
 
+generarPost(){
+ this.actualizaFacturaGuiasService.generarPost()
+this.rutaZona = null;
+}
 
-  async calendar(){
-    
-    const modal = await this.modalCtrl.create({
-      component: FechaPage,
-      cssClass: 'custom-modal',
-    });
-    modal.present();
-  
-    
-  
-    const { data } = await modal.onDidDismiss();
-  console.log(data)
-    if(data !== undefined){
-    
-     this.fechaEntrega = new Date(data.data).toLocaleDateString()
-     this.totalBultosFactura == 0;
-     this.pesoTotalBultosFactura == 0;
-     this.fechaBusqueda = data.data;
-   //  this.rutaFacturas.syncRutaFacturas(this.rutaZonaData.rutaID, data.data)
-this.loadData();
  
 
-
-    }
-  }
-
-  async syncRutas(){
-
-
-
-
-
-    const popover = await this.popOverCrtl.create({
-      component: FechaPage,
-      cssClass: 'auto-size-modal',
-      translucent: true
-    });
-    popover.present();
-    const { data } = await popover.onDidDismiss();
-    const ruta = data.ruta;
-    this.fechaBusqueda = data.data;
-
-  console.log(data)
-    if(data !== undefined){
-
-      this.loadData();
-      // this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID,  data.ruta);
-      
-    }
-}
 
 
 async listaCamiones(){
   const modal = await this.modalCtrl.create({
-    component: ListaCapacidadCamionesPage,
-    cssClass: 'my-custom-class'
+    component: ListaCamionesModalPage,
+    cssClass: 'large-modal'
   });
   modal.present();
       
@@ -140,7 +120,7 @@ async listaCamiones(){
 console.log(data)
   if(data !== undefined){
   
-this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
+this.actualizaFacturaGuiasService.agregarTodasFacturasUnicoCamion(this.rutaZona.Ruta, data.camion,  this.fecha);
       
   }else{
 
@@ -149,82 +129,43 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
   }
   
 }
+removerGuia(consecutivo){
+  this.actualizaFacturaGuiasService.removerGuia(consecutivo)
+}
+mostrarDetalleGuia(consecutivo){
+  this.actualizaFacturaGuiasService.mostrarDetalleGuia(consecutivo, this.rutaZona, this.fecha)
+}
 
+agregarGuia(factura){
+  this.actualizaFacturaGuiasService.agregarGuia(this.rutaZona.Ruta,  this.fecha, factura);
 
-
-
-  async configuracionZonaRuta(evento) {
-
-
-
-    const popover = await this.popOverCrtl.create({
-      component: RutasPage,
-      cssClass: 'menu-map-popOver',
-      event: evento,
-      translucent: true,
-      mode:'ios'
-    });
   
-     popover.present();
+}
+
+
+configuracionZonaRuta(){
+const valorRetorno =  this.serviciosCompartidosService.listaRutasModal();
+
+valorRetorno.then(valor =>{
+
+  if(valor !== undefined){
   
-  
-    const   {data}  = await popover.onDidDismiss();
-    const ruta = data.ruta;
-  
-    if(data!==undefined){
+    this.rutaZona = null;
 
-
-      const i = this.rutaZonas.rutasZonasArray.findIndex( r => r.Ruta ===  ruta);
-        
-
-     
-      if ( i >= 0 ){
-        const  z = this.zonas.zonas.findIndex( z => z.ZONA === this.rutaZonas.rutasZonasArray[i].Zona);
-           this.rutaZonaData.rutaID = this.rutaZonas.rutasZonasArray[i].Ruta;
-           this.rutaZonaData.ruta =this.rutaZonas.rutasZonasArray[i].Descripcion;
-           this.rutaZonaData.zonaId =  this.zonas.zonas[z].ZONA;
-           this.rutaZonaData.zona = this.zonas.zonas[z].NOMBRE;
-        
-         }  
-
-         const modal = await this.modalCtrl.create({
-          component: FechaPage,
-          cssClass: 'custom-modal',
-        });
-        modal.present();
-      
-        
-      
-        const { data } = await modal.onDidDismiss();
-      console.log(data)
-        if(data !== undefined){
-          this.totalBultosFactura == 0;
-  this.pesoTotalBultosFactura == 0;
-         this.fechaEntrega = new Date(data.data).toLocaleDateString()
-
-         this.rutaFacturas.rutaFacturasArray.forEach( factura =>{
-  this.totalBultosFactura  +=Number( factura.RUBRO1);
-  this.pesoTotalBultosFactura += Number(factura.TOTAL_PESO_NETO);
-  console.log(this.totalBultosFactura, 'total bultos', this.pesoTotalBultosFactura, 'total peso')
-
-         })
-         this.fechaBusqueda = data.data;
+    this.rutaZona = valor
    
-
-       //this.rutaFacturas.syncRutaFacturas(this.rutaZonaData.rutaID, data.data)
-       this.loadData()
+    this.calendarioModal();
 
 
-        }else{
-     
-          this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
-        
-        }
+   }
 
-    }
-  
-  }
+ 
+})
+
+}
 
 
+
+ 
 
 }

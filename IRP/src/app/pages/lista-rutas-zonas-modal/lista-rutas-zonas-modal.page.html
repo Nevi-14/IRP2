@@ -1,0 +1,47 @@
+
+  <ion-toolbar  >
+    <ion-grid >
+      <ion-row>
+        <ion-col size="6" style="display: flex; justify-content: center;align-items: right;">
+          <ion-title class="ion-text-uppercase" style="text-align: left;">Lista ruta - zonas</ion-title>
+        
+        </ion-col>
+        <ion-col size="5" style="display: flex; justify-content: center;align-items: right;">
+      
+          <ion-searchbar    mode="ios" placeholder="Buscar ruta - zona" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
+        
+      </ion-toolbar>
+
+
+
+<ion-content>
+
+  <ion-list lines="none">
+
+ 
+      <ion-radio-group allow-empty-selection="true" (ionChange)="retornarRuta($event)"  >
+    
+        <ion-item  *ngFor="let item of rutaZonas.rutasZonasArray | filtro: textoBuscar:'Descripcion'">
+     
+    
+          <ion-label>   {{ item.Descripcion }}</ion-label>
+         <ion-radio [value]="item"    slot="end" ></ion-radio>
+              
+      
+        </ion-item>
+      </ion-radio-group>
+    
+    
+      
+    </ion-list>
+</ion-content>
+
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="cerrarModal()" size="small" color="danger"> 
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

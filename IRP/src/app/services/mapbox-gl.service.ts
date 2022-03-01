@@ -6,6 +6,7 @@ import { BusquedaMapaPage } from '../pages/busqueda-mapa/busqueda-mapa.page';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { ClientesService } from './clientes.service';
 import { AlertasService } from './alertas.service';
+import { ServicioClienteService } from './servicio-cliente.service';
 
 interface Marcadores {
   id: string,
@@ -41,7 +42,8 @@ export class MapboxGLService {
     public clientes: ClientesService,
     public modalCtrl: ModalController,
     public logdingCtrl: LoadingController,
-    public alertasService: AlertasService
+    public alertasService: AlertasService,
+    public servicioClientesService: ServicioClienteService
 
     
   ) { }
@@ -140,8 +142,8 @@ if(this.mapa){
   
    const marcador = {
   
-    id:arreglo[i].cliente.IdCliente,
-    cliente:arreglo[i].cliente,
+    id:arreglo[i].IdCliente,
+    cliente:arreglo[i],
     nombre:arreglo[i][columna],
     marker:newMarker,
     nuevoCliente: true,
@@ -160,6 +162,71 @@ if(this.mapa){
   
     
     }
+    agregarMarcadores2(arreglo:any[], columna:string, id:string, nuevoCliente: boolean){
+
+      this.marcadores = []
+  
+      for(let i =0; i < arreglo.length ;i++)
+    
+      {
+    
+    const { newMarker , color } =  this.generarMarcadorColor();
+    const miniPopup = new  mapboxgl.Popup();
+    const nombre = arreglo[i][columna];
+  
+  console.log(arreglo[i], 'arreglo[i]')
+      newMarker.setLngLat([arreglo[i].longitud,arreglo[i].latitud]!)
+      miniPopup.setText(arreglo[i][id] +' ' +  nombre)
+      miniPopup.on('open', () => {
+        console.log('popup was opened', arreglo[i]);
+     
+        this.servicioClientesService.detalleClientes(arreglo[i])
+      })
+      newMarker.setPopup(miniPopup);
+      // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+      newMarker.setLngLat([arreglo[i].longitud,arreglo[i].latitud]!)
+  
+      .addTo(this.mapa);
+  
+      newMarker.on('dragend', () => {
+      
+        const i = this.marcadores.findIndex(m => m.id === this.marcadores[i].cliente.IdCliente);
+  
+        const { lng, lat } = this.marcadores[i].marker!.getLngLat();
+  
+  
+        this.marcadores[i].cliente.LONGITUD = lng;
+        this.marcadores[i].cliente.LATITUD = lat;
+  
+  
+        this.marcadores[i].modificado = true;
+        this.marcadores[i].marker.setLngLat([lng, lat]);
+        this.createmapa(this.divMapa,false, true);
+        this.irMarcador( this.marcadores[i].marker);
+  
+      })
+    
+     const marcador = {
+    
+      id:arreglo[i][id],
+      cliente:arreglo[i],
+      nombre:arreglo[i][columna],
+      marker:newMarker,
+      nuevoCliente: nuevoCliente,
+      modificado: false,
+      color:color
+    
+    }
+  
+      this.marcadores.push(marcador)
+  
+    
+     }
+    
+    
+    }
+  
+
 
   agregarMarcadores(arreglo:any[], columna:string, id:string, nuevoCliente: boolean){
 

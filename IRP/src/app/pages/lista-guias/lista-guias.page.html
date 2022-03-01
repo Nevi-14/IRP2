@@ -1,38 +1,38 @@
-
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-  
-
-    <ion-title class="title">
+<ion-toolbar  >
+  <ion-grid >
+    <ion-row>
+      <ion-col size="6" style="display: flex; justify-content: center;align-items: right;">
+        <ion-title class="ion-text-uppercase" style="text-align: left;">Lista de guias</ion-title>
       
-      <ion-label>Gestion de volument - peso camiones </ion-label> 
-</ion-title>
-    <ion-buttons  slot="end">
-      <ion-button (click)="cerrarModal()" fill="solid" color="danger" shape="round">
-        <ion-icon  name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-  </ion-toolbar>
-</ion-header>
+      </ion-col>
+      <ion-col size="5" style="display: flex; justify-content: center;align-items: right;">
+    
+        <ion-searchbar    mode="ios" placeholder="Buscar guia" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+      
+    </ion-toolbar>
 
 <ion-content>
 
   <ion-list>
  
 
-      <ion-item   *ngFor="let camion of   actualizaFacturaGuiasService.listaCamionesGuia" (click)="actualizar(camion)" detail>
-        <ion-chip  style="background: transparent!important; height: 40px;" >
-          <ion-avatar >
-            <img   [src]="image" />
+      <ion-item   *ngFor="let camion of   actualizaFacturaGuiasService.listaCamionesGuia | filtro:textoBuscar:'consecutivo'" (click)="actualizar(camion)" detail>
+        <ion-chip  style="background: transparent!important; height: 80px;" >
+          <ion-avatar  style="height: 80px;width: 80px;">
+            <img style="height: 80px;width: 80px;"  [src]="image" />
           </ion-avatar>
 
             </ion-chip>
 
         <ion-label>
-          <h2>Placa : {{camion.idCamion}}  
+          <h2>Consecutivo : {{camion.consecutivo}}  
           </h2>
           <p>Chofer : {{camion.chofer}}</p>
+          <p>Placa: {{camion.idCamion}}</p>
           <p>Capacidad Total : {{camion.capacidad}}</p>
           <p>Capacidad Restante : {{camion.pesoRestante}}</p>
 
@@ -48,3 +48,8 @@
   </ion-list>
 
 </ion-content>
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="cerrarModal()" size="small" color="danger"> 
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

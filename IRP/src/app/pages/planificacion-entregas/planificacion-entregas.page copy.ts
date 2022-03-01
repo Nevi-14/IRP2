@@ -12,6 +12,8 @@ import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 
 import { DataTableService } from 'src/app/services/data-table.service';
 import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
+import { ServiciosGeneralesService } from '../../services/servicios-generales.service';
+import { ServiciosCompartidosService } from 'src/app/services/servicios-compartidos.service';
 @Component({
   selector: 'app-planificacion-entregas',
   templateUrl: './planificacion-entregas.page.html',
@@ -32,13 +34,20 @@ export class PlanificacionEntregasPage implements OnInit {
     public rutaZonas: RutaZonaService,
     public camionesService: GestionCamionesService,
     public actualizaFacturaGuiasService: CamionesGuiasService,
-    public datableService: DataTableService
+    public datableService: DataTableService,
+    public serviciosGeneralesService: ServiciosGeneralesService,
+    public serviciosCompartidosService: ServiciosCompartidosService
 
 
 
   ) { }
 
 
+  rutaZona = {
+    Ruta: '',
+    Zona: '',
+    Descripcion: ''
+  }
 
 
   image = '../assets/icons/delivery-truck.svg'
@@ -62,18 +71,48 @@ pesoTotalBultosFactura: number;
 
 
 
+  calendarioModal(){
 
+    
+   const valorRetorno = this.serviciosCompartidosService.calendarioModal('-');
+
+   valorRetorno.then(valor =>{
+
+    if(valor !== undefined){
+    
+
+
+      const dateObj = new Date(valor);
+      const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+      const dateValue = ('0' + dateObj.getDate()).slice(-2);
+      const year = dateObj.getFullYear();
+      const shortDate = year + '-' + month + '-' + dateValue;
+          
+
+
+      this.fechaBusqueda = shortDate
+      console.log(valor , this.fechaBusqueda)
+   this.loadData();
+
+     }
+
+   
+  })
+}
 
 loadData(){
 
-  this.rutaFacturas.syncRutaFacturas( this.rutaZonaData.rutaID, this.fechaBusqueda);
+  this.rutaFacturas.syncRutaFacturas( this.rutaZona.Ruta, this.fechaBusqueda);
   
 }
 
 
 
 
-
+generarPost(){
+  this.actualizaFacturaGuiasService.generarPost()
+   this.reset();
+}
 
   async calendar(){
     
@@ -90,6 +129,7 @@ loadData(){
     if(data !== undefined){
     
      this.fechaEntrega = new Date(data.data).toLocaleDateString()
+     this.actualizaFacturaGuiasService.Fecha =  data.data;
      this.totalBultosFactura == 0;
      this.pesoTotalBultosFactura == 0;
      this.fechaBusqueda = data.data;
@@ -116,7 +156,7 @@ this.loadData();
     const { data } = await popover.onDidDismiss();
     const ruta = data.ruta;
     this.fechaBusqueda = data.data;
-
+    this.actualizaFacturaGuiasService.Fecha = data.data;
   console.log(data)
     if(data !== undefined){
 
@@ -152,8 +192,27 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
 
 
 
+configuracionZonaRuta(){
+const valorRetorno =  this.serviciosCompartidosService.listaRutasModal();
 
-  async configuracionZonaRuta(evento) {
+valorRetorno.then(valor =>{
+
+  if(valor !== undefined){
+  
+    this.rutaZona = null;
+
+    this.rutaZona = valor
+   
+    this.calendarioModal();
+console.log(valor, 'final valor')
+
+   }
+
+ 
+})
+
+}
+  async configuracionZonaRuta2(evento) {
 
 
 
@@ -198,8 +257,10 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
         const { data } = await modal.onDidDismiss();
       console.log(data)
         if(data !== undefined){
-          this.totalBultosFactura == 0;
-  this.pesoTotalBultosFactura == 0;
+
+          this.actualizaFacturaGuiasService.Fecha = data.data;
+          this.totalBultosFactura = 0;
+  this.pesoTotalBultosFactura = 0;
          this.fechaEntrega = new Date(data.data).toLocaleDateString()
 
          this.rutaFacturas.rutaFacturasArray.forEach( factura =>{
@@ -217,7 +278,7 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
 
         }else{
      
-          this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
+          this.reset();
         
         }
 
@@ -226,5 +287,9 @@ this.actualizaFacturaGuiasService.actualizaAllCamionesData(data.camion);
   }
 
 
+
+  reset(){
+    this.rutaZonaData = {rutaID: '', ruta: '', zonaId:'', zona:''};
+  }
 
 }

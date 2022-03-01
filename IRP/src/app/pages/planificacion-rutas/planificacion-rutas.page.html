@@ -7,14 +7,14 @@
 
         <ion-label color="light">
           <h2 class="ion-text-uppercase">Ruta</h2>
-          <p>
-            <ion-badge color="primary" mode="ios">{{rutaZonaData.ruta}}</ion-badge>
+          <p *ngIf="rutaZona">
+            <ion-badge color="primary" mode="ios">{{rutaZona.Ruta}}</ion-badge>
           </p>
         </ion-label>
         <ion-label color="light">
           <h2 class="ion-text-uppercase">Zona</h2>
-          <p>
-            <ion-badge color="primary" mode="ios">{{rutaZonaData.zona}}</ion-badge>
+          <p *ngIf="rutaZona">
+            <ion-badge color="primary" mode="ios">{{rutaZona.Descripcion}}</ion-badge>
           </p>
         </ion-label>
 
@@ -24,7 +24,7 @@
               </ion-button>
 
 
-          <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+          <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
             <ion-icon class="spin-element"  name="settings"></ion-icon>
           </ion-button>
           <ion-button *ngIf="clientes.rutasClientes?.length > 0 || clientes.nuevosClientes?.length > 0"   shape="round" fill="solid" color="dark" (click)="informacionMarcadores($event)">
@@ -41,10 +41,10 @@
       
       
       
-          <ion-button shape="round" fill="solid" color="dark" (click)="menuCliente()" *ngIf="rutaZonaData.ruta">
+          <ion-button shape="round" fill="solid" color="dark" (click)="menuCliente()" *ngIf="rutaZona">
             <ion-icon  name="person-add"></ion-icon>
           </ion-button>
-          <ion-button   *ngIf="rutaZonaData.ruta" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
+          <ion-button   *ngIf="rutaZona" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
             <ion-icon  name="refresh"></ion-icon>
               </ion-button>
           <ion-button   *ngIf="clientes.rutasClientes?.length > 0 || clientes.nuevosClientes?.length > 0" (click)="postRutas()"  shape="round" fill="solid" color="dark">

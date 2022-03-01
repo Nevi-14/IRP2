@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
+import { AlertasService } from './alertas.service';
+import { DataTableService } from './data-table.service';
+import { RutaFacturasService } from './ruta-facturas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +14,16 @@ export class ActualizarFacturasService {
 actualizaFacturasArray:ActualizaFacturaGuia[]=[];
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    
+    private http: HttpClient,
+    public alertasService: AlertasService,
+    public datatableService: DataTableService,
+    public rutasFacturas: RutaFacturasService
+    
+    
+    
+    ) { }
 
   getIRPURL( api: string ){
     let test: string = ''
@@ -44,15 +56,26 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
 
 
   insertarFacturas(){
-
+this.alertasService.presentaLoading('Guardando facturas')
   this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
 
     resp => {
-      console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json completed ')
-      console.log('completed')
+ 
+
+      this.alertasService.loadingDissmiss();
+
+      this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Las facturas se guardaron con exito');
+
+      this.rutasFacturas.rutaFacturasArray = []
+      
+      this.rutasFacturas.pesoTotalBultosFactura =0
+      this.rutasFacturas.pesoTotalBultosFactura =0
+      this.rutasFacturas.rutaFacturasArray = []
+      this.datatableService.dataArrayToShow = [];
+      this.datatableService.data = [];
     }, error => {
       console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
-      console.log('error')
+      
   }
 
   )

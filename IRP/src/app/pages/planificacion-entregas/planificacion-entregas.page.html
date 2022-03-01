@@ -7,14 +7,14 @@
 
         <ion-label color="light">
           <h2 class="ion-text-uppercase">Ruta</h2>
-          <p>
-            <ion-badge color="primary" mode="ios">{{rutaZonaData.ruta}}</ion-badge>
+          <p *ngIf="rutaZona">
+            <ion-badge color="primary" mode="ios" >{{rutaZona.Ruta}}</ion-badge>
           </p>
         </ion-label>
         <ion-label color="light">
           <h2 class="ion-text-uppercase">Zona</h2>
-          <p>
-            <ion-badge color="primary" mode="ios">{{rutaZonaData.zona}}</ion-badge>
+          <p  *ngIf="rutaZona">
+            <ion-badge color="primary" mode="ios">{{rutaZona.Descripcion}}</ion-badge>
           </p>
         </ion-label>
 
@@ -22,10 +22,10 @@
   <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
     <ion-icon name="home-outline"></ion-icon>
       </ion-button>
-      <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta($event)">
+      <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
         <ion-icon class="spin-element"  name="settings"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="rutaZonaData.rutaID"  shape="round" fill="solid" color="dark" (click)="calendar()">
+      <ion-button *ngIf="rutaZona" shape="round" fill="solid" color="dark" (click)="calendarioModal()">
         <ion-icon   name="calendar"></ion-icon>
       </ion-button>
   
@@ -51,7 +51,7 @@
 <ion-content>
 
 
-  <ion-grid *ngIf="rutaFacturas.rutaFacturasArray.length == 0" style="display: flex;justify-content: center;align-items: center; height: 100%;">
+  <ion-grid *ngIf="planificacionEntregasService.rutaFacturasArray.length == 0" style="display: flex;justify-content: center;align-items: center; height: 100%;">
     <ion-row style="display: flex;justify-content: center;align-items: center; height: 100%;">
       <ion-col size="5" style="margin: 0 auto;">
        
@@ -68,7 +68,7 @@
 
           
 
-  <ion-grid  *ngIf="rutaFacturas.rutaFacturasArray.length > 0"> 
+  <ion-grid  *ngIf="planificacionEntregasService.rutaFacturasArray.length > 0"> 
     <ion-row class="header-row">
       <ion-col size="12" size-md="8"   >
 
@@ -88,7 +88,7 @@
                 <ion-label color="dark">Camiones</ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button (click)="actualizaFacturaGuiasService.generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
+            <ion-button (click)="generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -96,7 +96,7 @@
               <ion-label>  <ion-icon  color="primary" slot="icon-only" name="save"></ion-icon></ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamiones()" shape="round"  fill="outline"  color="danger">
+            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamionesAlert()" shape="round"  fill="outline"  color="danger">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -153,12 +153,12 @@
     <ion-item lines="none">
         
       <ion-buttons slot="end">
-        <ion-button  fill="clear" color="danger"  (click)="actualizaFacturaGuiasService.eliminarGuia(camion.consecutivo)">
+        <ion-button  fill="clear" color="danger"  (click)="removerGuia(camion.consecutivo)">
           <ion-icon slot="start" name="close"></ion-icon>
           <ion-label>Eliminar</ion-label>
     
         </ion-button>
-        <ion-button  (click)="actualizaFacturaGuiasService.listaClientesGuia(camion.facturas)"   fill="clear" color="primary">
+        <ion-button  (click)="mostrarDetalleGuia(camion.consecutivo)"   fill="clear" color="primary">
           <ion-icon slot="start" name="create"></ion-icon>
           <ion-label>Editar</ion-label>
         </ion-button>
@@ -183,30 +183,37 @@
 
 
 
-<ion-col   size="4">Peso Total : {{rutaFacturas.pesoTotalBultosFactura}} KG </ion-col>
-<ion-col   size="4">Total Bultos:   {{rutaFacturas.totalBultosFactura}} Bultos</ion-col>
-<ion-col  size="4">Fecha de entrega  {{fechaEntrega}}</ion-col>
+<ion-col   size="4">Peso Total : {{planificacionEntregasService.pesoTotal}} KG </ion-col>
+<ion-col   size="4">Total Bultos:   {{planificacionEntregasService.bultosTotales}} Bultos</ion-col>
+<ion-col  size="4">Fecha de entrega  {{planificacionEntregasService.fecha}}</ion-col>
     </ion-row>
 
     <ion-row class="header-row">
 
 
 
-      <ion-col size="4" tappable (click)="datableService.sortBy('FACTURA')">
+      <ion-col size="2" tappable (click)="datableService.sortBy('FACTURA')">
 
-      Total Clientes : {{rutaFacturas.rutaFacturasArray.length}} 
+      Total Clientes : {{planificacionEntregasService.clientesTotales}} 
       <ion-icon  name="arrow-down" *ngIf="datableService.sortDirection == 1"></ion-icon>
       <ion-icon  name="arrow-up" *ngIf="datableService.sortDirection == 2"></ion-icon>
       </ion-col>
-      <ion-col   >Frio
+<ion-col size="10">
+  <ion-row>
+    <ion-col   size="4">Factura</ion-col>
+    <ion-col   size="1">Frio
 
 
 
-      </ion-col>
-      <ion-col   size="1">Seco</ion-col>
-      <ion-col    size="2">Bultos</ion-col>
-      <ion-col   size="2">Peso</ion-col>
-      <ion-col   size="2">Camion</ion-col>
+    </ion-col>
+    <ion-col   size="1">Seco</ion-col>
+    <ion-col    size="1">Bultos</ion-col>
+    <ion-col   size="1">Peso</ion-col>
+    <ion-col   size="4">Consecutivo</ion-col>
+  </ion-row>
+  
+</ion-col>
+
      
     </ion-row>
 
@@ -216,53 +223,73 @@
           <ion-col size="2" *ngIf="datableService.bulkEdit">
             <ion-checkbox disabled="true" [(ngModel)]="datableService.edit[i]"></ion-checkbox>
           </ion-col>
-        <ion-col size="4"   >
+        <ion-col size="2"   >
      <ion-label>
-       <h2>     {{factura.NOMBRE_CLIENTE}}</h2>
-       <p>Factura : {{factura.FACTURA}}</p>
+       <h2>     {{factura.cliente}}</h2>
+       <p class="ion-text-wrap">{{factura.direccion}}</p>
 
      </ion-label>
         
         </ion-col>
+    <ion-col size="10">
+   
+        <ion-row  [ngClass]="odd ? 'odd' : 'even'"   *ngFor="let facturaCliente of factura.facturas let odd = odd">
+          <ion-col size="4">
+            {{facturaCliente.factura.FACTURA}}
+          </ion-col>
         <ion-col    size="1">
  
-          <ion-checkbox disabled="true"   [(ngModel)]="factura.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
+          <ion-checkbox disabled="true"   [(ngModel)]="facturaCliente.factura.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
         <ion-col    size="1">
   
-          <ion-checkbox disabled="true" [(ngModel)]="factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
+          <ion-checkbox disabled="true" [(ngModel)]="facturaCliente.factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
         </ion-col>
-        <ion-col    size="2">
-{{factura.RUBRO1}}
+        <ion-col    size="1">
+{{facturaCliente.factura.RUBRO1}}
         </ion-col>
-        <ion-col    size="2" >
-          {{factura.TOTAL_PESO_NETO}}
+        <ion-col    size="1" >
+          {{facturaCliente.factura.TOTAL_PESO_NETO}}
         </ion-col>
-        <ion-col    size="2" style="display: flex;" >
-          <ion-chip  *ngIf="factura.CAMION"  size="large" color="primary" mode="ios" outline="true"  color="dark"  >
-            <ion-avatar >
-              <img   [src]="image" />
-            </ion-avatar>
-            <ion-label>   {{factura.CAMION}}</ion-label>
-              </ion-chip>
-  <ion-buttons *ngIf="factura.CAMION">
-    <ion-button (click)="actualizaFacturaGuiasService.eliminarCamionesFacturaIndividual(factura)" fill="clear" color="danger">
-      <ion-icon slot="icon-only" name="close"></ion-icon>
 
-    </ion-button>
-    <ion-button (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
-      <ion-icon slot="icon-only" name="create"></ion-icon>
-
-    </ion-button>
-  </ion-buttons>
-  <ion-buttons *ngIf="!factura.CAMION">
-    <ion-button  (click)="actualizaFacturaGuiasService.loadNewRecord(factura)" fill="clear" color="primary">
-      <ion-icon slot="icon-only" name="add"></ion-icon>
-
-    </ion-button>
-  </ion-buttons>
-
+        <ion-col    size="4"  >
+          <ion-label style="display: flex;justify-content:center ;align-items: center;">   
+    
+    <h2  *ngIf="facturaCliente.idGuia"> {{facturaCliente.idGuia}}</h2>
+    <p >
+    
+      <ion-buttons>
+      <ion-button  *ngIf="facturaCliente.idGuia" (click)="agregarGuia(facturaCliente)" fill="clear" color="primary">
+        <ion-icon slot="icon-only" name="create"></ion-icon>
+    
+      </ion-button>
+      <ion-button *ngIf="facturaCliente.idGuia"  (click)="actualizaFacturaGuiasService.removerFactura(facturaCliente)" fill="clear" color="danger">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+    
+      </ion-button>
+      <ion-buttons *ngIf="!facturaCliente.idGuia">
+        <ion-button  (click)="agregarGuia(facturaCliente)" fill="clear" color="primary">
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+      
+        </ion-button>
+      </ion-buttons>
+    </ion-buttons>
+    </p>
+          </ion-label>
+      
+              
+     
+      
         </ion-col>
+
+
+     
+      </ion-row>
+   
+
+      
+    </ion-col>
+
       
       </ion-row>
       </ng-template>

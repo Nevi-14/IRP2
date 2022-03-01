@@ -5,13 +5,19 @@ import { Injectable } from '@angular/core';
 })
 export class DataTableService {
 
+
   // busqueda
-  textoBuscar = '';
+
+textoBuscar = '';
+
   //   GUARDA TODOS LOS REGISTROS EN UN ARREGLO
   data = [];
   // GUARDA LOS ELEMENTOS A MOSTRAR POR VISTA
   dataArrayToShow = [];
+  
 // DATATABLE VARIABLES
+
+
 //  PAGINA INICIAL
 page = 0;
 //  TOTAL RESULTADOS POR PAGINA
@@ -212,6 +218,9 @@ this.loadData();
 const size = page_size;
 this.data = [];
 this.data = array;
+
+
+console.log(this.data, 'data aarrya')
 const pages = Array.from(
   
   //elementos por pagina
