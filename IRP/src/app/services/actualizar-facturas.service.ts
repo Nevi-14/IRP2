@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
 import { AlertasService } from './alertas.service';
 import { DataTableService } from './data-table.service';
+import { PlanificacionEntregasService } from './planificacion-entregas.service';
 import { RutaFacturasService } from './ruta-facturas.service';
 
 @Injectable({
@@ -19,7 +20,8 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
     private http: HttpClient,
     public alertasService: AlertasService,
     public datatableService: DataTableService,
-    public rutasFacturas: RutaFacturasService
+    public rutasFacturas: RutaFacturasService,
+    public planificacionEntregasService: PlanificacionEntregasService
     
     
     
@@ -56,8 +58,10 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
 
 
   insertarFacturas(){
+
+    console.log(this.actualizaFacturasArray, 'this.actualizaFacturasArray')
 this.alertasService.presentaLoading('Guardando facturas')
-  this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
+   this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
 
     resp => {
  
@@ -73,12 +77,19 @@ this.alertasService.presentaLoading('Guardando facturas')
       this.rutasFacturas.rutaFacturasArray = []
       this.datatableService.dataArrayToShow = [];
       this.datatableService.data = [];
+      this.planificacionEntregasService.bultosTotales = null;
+      this.planificacionEntregasService.clientesTotales = null;
+      this.planificacionEntregasService.fecha = null;
+      this.planificacionEntregasService.pesoTotal = null;
+      this.planificacionEntregasService.rutaFacturasArray = [];
     }, error => {
       console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
       
   }
+    )
+  
 
-  )
+
 
 
 }

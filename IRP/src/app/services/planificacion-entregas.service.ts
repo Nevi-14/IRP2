@@ -92,7 +92,7 @@ syncRutaFacturas(ruta:string, fecha:string){
      // this.rutaFacturasArray = resp;
       this.bultosTotales = 0;
       this.pesoTotal = 0;
-
+      this.planificacionEntregaArray = []
 
      for( let i = 0 ;  i < this.rutaFacturasArray.length; i++){
 
