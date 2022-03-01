@@ -53,9 +53,8 @@ export class ServicioClientePage implements OnInit {
       //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
       //Add 'implements AfterViewInit' to the class.
 
-      this.servicioClienteMapaService.createmapa(this.divMapa,false, false)
+      this.servicioClienteMapaService.createmapa(this.divMapa,[])
       
-    this.servicioClienteMapaService.agregarMarcadores2(this.clientes.rutasClientes,'NOMBRE','IdCliente',false)
     }
          
     limpiarDatos(){
@@ -98,11 +97,10 @@ async configuracionZonaRuta() {
       
        console.log(data.idGuia, 'return')
 
-       this.ruteroService.syncRutero(data.idGuia)
+       this.ruteroService.syncRutero(data.idGuia, this.divMapa)
 
    
-
-      this.servicioClienteMapaService.agregarMarcadores2(this.ruteroService.ruteroArray,'nombre','idCliente',false);
+       
     }
 
 

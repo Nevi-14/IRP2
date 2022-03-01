@@ -34,7 +34,7 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
     }
 
     const URL = environment.preURL  + test +environment.postURL + api ;
-
+ console.log(URL, 'POST ACTUALIZAR FACTURAAS')
     return URL;
 
 
@@ -59,7 +59,7 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
 
   insertarFacturas(){
 
-    console.log(this.actualizaFacturasArray, 'this.actualizaFacturasArray')
+    console.log(this.actualizaFacturasArray, 'this.actualizaFacturasArray insertar post')
 this.alertasService.presentaLoading('Guardando facturas')
    this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
 
@@ -89,7 +89,7 @@ this.alertasService.presentaLoading('Guardando facturas')
     )
   
 
-
+    this.actualizaFacturasArray = [];
 
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Rutero } from '../../models/Rutero';
 import { ModalController } from '@ionic/angular';
+import { ActualizaFacLinService } from 'src/app/services/actualizaFacLin';
 
 @Component({
   selector: 'app-clientes-rutas',
@@ -10,12 +11,14 @@ import { ModalController } from '@ionic/angular';
 export class ClientesRutasPage implements OnInit {
 @Input() cliente:Rutero;
   constructor(
-public modalCtrl:ModalController
+public modalCtrl:ModalController,
+public actualizaFacLinService: ActualizaFacLinService
 
   ) { }
 
   ngOnInit() {
-    console.log(this.cliente, ' ruterrooooooo')
+    this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia);
+    console.log(this.cliente, ' ruterrooooooo', this.actualizaFacLinService.facturaLineasEspejoArray,this.actualizaFacLinService.facturaLineasEspejoArray)
   }
 
   cerrarModal(){

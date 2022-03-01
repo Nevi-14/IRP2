@@ -17,6 +17,7 @@ export const environment = {
   distritosURL: 'Distritos/',
   rutasURL:'Rutas',
   ruteroURL:'Rutero/',
+  actualizaFacLinUrl:'ActualizaFacLin/',
   guiasURLEstadoParam:'?estado=',
   guiasURL:'Guias',
   actualizaFacturasURL:'ActualizaFacturas',

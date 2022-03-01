@@ -60,7 +60,7 @@ export class PlanificacionEntregasService {
 
     const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
 
-    //alert(URL)
+  console.log(URL)
 
     return URL;
 

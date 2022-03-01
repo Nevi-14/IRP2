@@ -24,9 +24,9 @@ export class ServiciosCompartidosService {
     
   
     const { data } = await modal.onDidDismiss();
-  console.log(data)
+
     if(data !== undefined){
-    
+      console.log(data)
  return this.formatoFecha(data.fecha, format)
 
 
@@ -74,9 +74,9 @@ export class ServiciosCompartidosService {
   
     const { data } = await modal.onDidDismiss();
 
-    console.log(data.ruta, 'data retorno', data !== undefined)
-    if(data !== undefined){
 
+    if(data !== undefined){
+      console.log(data.ruta, 'data retorno', data !== undefined)
     
     return data.ruta
 
