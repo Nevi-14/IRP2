@@ -22,7 +22,7 @@ export class GuiasService {
     }
 
     const URL = environment.preURL  + test +environment.postURL + api ;
-
+    console.log(URL, 'POST GUIAS URL')
     return URL;
 
 
@@ -84,14 +84,17 @@ export class GuiasService {
 
   insertarGuias(){
 
-
+    console.log(  console.log( this.guiasArray), '  this.guiasArray insertar')
  this.guiasArray.forEach( guia =>{
 
-  console.log(  console.log(guia), ' object  actualziar guias')
+
   this.postActualizarGuias( guia).subscribe(
     resp => {
 
      console.log('completed')
+
+
+ 
 
     }, error => {
 
@@ -100,6 +103,8 @@ export class GuiasService {
     }
   )
 })
+this.guiasArray = [];
+
   }
 
 

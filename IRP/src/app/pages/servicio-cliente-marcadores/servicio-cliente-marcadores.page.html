@@ -37,7 +37,7 @@
           <ion-label>{{item.id}} - {{item.nombre}}</ion-label>
         </ion-col>
         <ion-col size="3">   
-          <ion-button (click)="servicioClientesService.detalleClientes(item.cliente)" fill="clear" >
+          <ion-button (click)="detalleClientes(item.cliente)" fill="clear" >
             <ion-icon slot="start" name="person" [ngStyle]="{
               'color': item.color
           }"></ion-icon>

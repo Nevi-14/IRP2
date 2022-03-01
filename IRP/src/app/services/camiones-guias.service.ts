@@ -12,6 +12,7 @@ import { ListaCamionesModalPage } from '../pages/lista-camiones-modal/lista-cami
 import { Camiones } from '../models/camiones';
 import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
 import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clientes-guias.page';
+import { PlanificacionEntregasService } from './planificacion-entregas.service';
 
 interface facturaGuia{
   cliente:string,
@@ -73,7 +74,9 @@ export class CamionesGuiasService {
   public actualizarFacturasService: ActualizarFacturasService,
   public guiasService: GuiasService,
   public javascriptDateService: JavascriptDatesService,
-  public ruteroService:RuteroService
+  public ruteroService:RuteroService,
+  public planificacionEntregasService: PlanificacionEntregasService,
+  public actualizaFacturaGuiasService:ActualizarFacturasService
   ) {
   
 
@@ -90,7 +93,7 @@ generarGuia(ruta,camion, fecha) {
   const minutes            =   new Date().getMinutes();
   const seconds            =    new Date().getSeconds();
   var ramdomNumber = Math.floor(1000 + Math.random() * 9000);
-  const  consecutivo       = year+''+month+''+day+ ramdomNumber+ruta+'V';
+  const  consecutivo       = year+''+month+''+day+ruta+'V'+ramdomNumber;
 
   let guia = {
 
@@ -110,22 +113,6 @@ generarGuia(ruta,camion, fecha) {
     volumen:   0,
     facturas: null
  }
-
- if(this.listaCamionesGuia.length === 0){
-
-  guia.consecutivo=   consecutivo + '01' 
-
-}else if(this.listaCamionesGuia.length >= 1 && this.listaCamionesGuia.length <= 9){
-
-
-  guia.consecutivo  =  consecutivo + '0' +(this.listaCamionesGuia.length + 1) 
-
-}else{
-
-  guia.consecutivo  = consecutivo +  this.listaCamionesGuia.length 
-}
-
-;
 
 guia.facturas = [];
 
@@ -640,11 +627,26 @@ generarPost(){
    this.ruteroService.insertarPostRutero();
    this.eliminarGuias();
  
-  
+  this.reset();
    
  
  }
 
+
+
+ reset(){
+   
+  this.datableService.data = []
+  this.datableService.dataArrayToShow = []
+  this.planificacionEntregasService.bultosTotales = 0
+  this.planificacionEntregasService.clientesTotales = 0
+  this.planificacionEntregasService.pesoTotal = 0
+  this.planificacionEntregasService.fecha = null;
+  this.listaCamionesGuia = []
+  this.Fecha = null;
+  this.listaCamionesGuia = []
+  this.planificacionEntregasService.rutaFacturasArray = [];
+ }
 
 
 }

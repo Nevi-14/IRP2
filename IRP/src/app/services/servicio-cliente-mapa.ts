@@ -2,11 +2,10 @@ import { ElementRef, Injectable, ViewChild } from '@angular/core';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { BusquedaMapaPage } from '../pages/busqueda-mapa/busqueda-mapa.page';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { ClientesService } from './clientes.service';
 import { AlertasService } from './alertas.service';
-import { ServicioClienteService } from './servicio-cliente.service';
+import { ClientesRutasPage } from '../pages/clientes-rutas/clientes-rutas.page';
 
 interface Marcadores {
   id: string,
@@ -42,8 +41,7 @@ export class ServicioClienteMapaService {
     public clientes: ClientesService,
     public modalCtrl: ModalController,
     public logdingCtrl: LoadingController,
-    public alertasService: AlertasService,
-    public servicioClientesService: ServicioClienteService
+    public alertasService: AlertasService
 
     
   ) { }
@@ -51,7 +49,7 @@ export class ServicioClienteMapaService {
 
 
 
-  createmapa(mapa, dragable, reload) {
+  createmapa(mapa,marcadores) {
 
     this.divMapa = mapa
    
@@ -69,7 +67,7 @@ if(this.mapa){
 
 
     // Create a default Marker and add it to the map.
-    const newMarker = new mapboxgl.Marker({ draggable: dragable })
+    const newMarker = new mapboxgl.Marker({ draggable: true })
       .setLngLat(this.lngLat)
       .addTo(this.mapa);
   
@@ -78,11 +76,11 @@ if(this.mapa){
         this.mapa.resize();
       });
   
-
+      this.agregarMarcadores(marcadores,'nombre','idCliente',false);
   }
 
   
-  agregarMarcadores2(arreglo:any[], columna:string, id:string, nuevoCliente: boolean){
+  agregarMarcadores(arreglo:any[], columna:string, id:string, nuevoCliente: boolean){
 
     this.marcadores = []
 console.log(arreglo,'marcadores 2')
@@ -123,7 +121,7 @@ console.log(arreglo[i], 'arreglo[i]')
     miniPopup.on('open', () => {
       console.log('popup was opened', arreglo[i]);
    
-      this.servicioClientesService.detalleClientes(arreglo[i])
+      this.detalleClientes(arreglo[i])
     })
     newMarker.setPopup(miniPopup);
     // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
@@ -144,7 +142,7 @@ console.log(arreglo[i], 'arreglo[i]')
 
       this.marcadores[i].modificado = true;
       this.marcadores[i].marker.setLngLat([lng, lat]);
-      this.createmapa(this.divMapa,false, true);
+      this.createmapa(this.divMapa,[]);
      // this.irMarcador( this.marcadores[i].marker);
 
     })
@@ -168,7 +166,16 @@ console.log(arreglo[i], 'arreglo[i]')
   
   
   }
-
+  async detalleClientes(cliente){
+    const modal = await this.modalCtrl.create({
+      component: ClientesRutasPage,
+      cssClass: 'large-modal',
+      componentProps:{
+        cliente: cliente
+      }
+    });
+    return await modal.present();
+  }
   generarMarcadorColor(estado){
 
     let color = null;
@@ -225,7 +232,7 @@ console.log(arreglo[i], 'arreglo[i]')
     this.mapa.off('move', () => { });
     this.clientes.rutasClientes = []
     this.marcadores = [];
-    this.createmapa( this.divMapa,false, false);
+    this.createmapa( this.divMapa,[]);
     console.log(this.marcadores, 'mark')
 
   }

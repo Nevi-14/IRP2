@@ -215,7 +215,7 @@ this.loadData();
 
 
 //const elementosPorPagina = Array.from({ length: array.length }, (_, i) => `Item ${i + 1}`);
-const size = array.length > page_size ? page_size : 1;
+const size = array.length > page_size ? page_size : array.length;
 console.log(size, 'sizeeeeee')
 this.data = [];
 this.data = array;
