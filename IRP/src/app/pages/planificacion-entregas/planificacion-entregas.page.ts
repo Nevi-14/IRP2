@@ -55,7 +55,14 @@ rutaZona = null;
 
 
   ngOnInit() {
-this.datableService.data = []
+this.reset();
+
+ 
+  }
+
+
+  reset(){
+    this.datableService.data = []
 this.datableService.dataArrayToShow = []
 this.planificacionEntregasService.bultosTotales = 0
 this.planificacionEntregasService.clientesTotales = 0
@@ -65,13 +72,10 @@ this.actualizaFacturaGuiasService.listaCamionesGuia = []
 this.actualizaFacturaGuiasService.Fecha = null;
 this.actualizaFacturaGuiasService.listaCamionesGuia = []
 this.planificacionEntregasService.rutaFacturasArray = [];
-
- 
   }
 
-
   loadData(){
-
+    this.reset();
     this.planificacionEntregasService.syncRutaFacturas( this.rutaZona.Ruta, this.fecha);
     
   }

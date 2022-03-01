@@ -56,7 +56,7 @@ edit = {};
     })
     return {
       inicio:start ,
-      fin : end -1  == 0 ? 1 : end -1
+      fin : end -1
     }
   }
 
@@ -215,7 +215,8 @@ this.loadData();
 
 
 //const elementosPorPagina = Array.from({ length: array.length }, (_, i) => `Item ${i + 1}`);
-const size = page_size;
+const size = array.length > page_size ? page_size : 1;
+console.log(size, 'sizeeeeee')
 this.data = [];
 this.data = array;
 
@@ -233,7 +234,7 @@ this.totalPages = pages.length;
 this.dataArrayToShow = [];
 
 for (let i = pages[page_number].inicio ; i <= pages[page_number].fin ; i++ ){
-  console.log('oush', this.data[i], array, pages[page_number].inicio, pages[page_number].fin)
+
   this.dataArrayToShow.push(this.data[i])
 }
 
