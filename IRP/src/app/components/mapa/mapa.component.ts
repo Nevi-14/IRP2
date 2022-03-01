@@ -11,7 +11,6 @@ import { ZonasService } from 'src/app/services/zonas.service';
 
 import { MapaService } from 'src/app/services/mapa.service';
 import { MenuClientesPage } from 'src/app/pages/menu-clientes/menu-clientes.page';
-import { GlobalService } from 'src/app/services/global.service';
 import { async } from '@angular/core/testing';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
@@ -59,7 +58,7 @@ export class MapaComponent implements AfterViewInit {
 
 
   array :any;
-  constructor(public modalCtrl:ModalController, public marcadoresService: MarcadoresService, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService, public map: MapaService, public global: GlobalService) { }
+  constructor(public modalCtrl:ModalController, public marcadoresService: MarcadoresService, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService, public map: MapaService) { }
 
 
 

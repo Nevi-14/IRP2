@@ -1,7 +1,4 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { RutasPage } from '../rutas/rutas.page';
-import { MarcadoresPage } from '../marcadores/marcadores.page';
-import { GlobalService } from '../../services/global.service';
 import { ModalController, AlertController, PopoverController } from '@ionic/angular';
 import { ClientesService } from '../../services/clientes.service';
 import { ZonasService } from '../../services/zonas.service';
@@ -33,7 +30,7 @@ export class ServicioClientePage implements OnInit {
   modo = 'off'
   @ViewChild('mapa') divMapa!:ElementRef;
 
-    constructor(public global: GlobalService,public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public servicioClienteMapaService: ServicioClienteMapaService, public guiasService:GuiasService, public ruteroService: RuteroService) {
+    constructor(public modalCtrl: ModalController, public alertCtrl: AlertController, public clientes: ClientesService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService , route:ActivatedRoute, public popOverCrtl: PopoverController, public mapa: MapaService, public rutaZona: RutaZonaService, public servicioClienteMapaService: ServicioClienteMapaService, public guiasService:GuiasService, public ruteroService: RuteroService) {
 
 
     }

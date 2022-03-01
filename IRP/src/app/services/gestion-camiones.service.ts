@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Camiones } from '../models/camiones';
 import { environment } from 'src/environments/environment';
-import { GuiaEntrega } from '../models/guiaEntrega';
 import { AlertasService } from './alertas.service';
 
 @Injectable({

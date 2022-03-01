@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ZonasService } from './services/zonas.service';
 import { RutaZonaService } from './services/ruta-zona.service';
 import * as  mapboxgl from 'mapbox-gl';
-import { environment } from 'src/environments/environment';
-import { GlobalService } from './services/global.service';
+import { environment } from 'src/environments/environment';;
 import { BusquedaClienteService } from './services/busqueda-cliente.service';
 import { ProvinciasService } from './services/provincias.service';
 import { RutasService } from './services/rutas.service';
@@ -24,7 +23,7 @@ export class AppComponent implements OnInit {
    private rutas: RutasService,
    private zonas: ZonasService,
    private rutaZona : RutaZonaService,
-   private global: GlobalService,
+
    public datable: DataTableService,
    public rutero: RuteroService
    
@@ -32,8 +31,7 @@ export class AppComponent implements OnInit {
   ngOnInit(){
  
 
-    this.rutero.syncRutero('20220215SJ03V02');
-    this.global.mapMenu = false;
+    //this.global.mapMenu = false;
     (mapboxgl as any ).accessToken = environment.mapboxKey;
     console.log('appComponent')
     this.provincias.syncProvincias();

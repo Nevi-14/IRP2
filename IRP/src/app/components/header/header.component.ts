@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { GlobalService } from 'src/app/services/global.service';
 import { LoginService } from 'src/app/services/login.service';
 import { NgZone } from '@angular/core';
 @Component({
@@ -10,7 +9,7 @@ import { NgZone } from '@angular/core';
 })
 export class HeaderComponent  {
   fecha = new Date().toLocaleDateString();
-  constructor(public _router: Router, public login: LoginService, public global: GlobalService,private ngZone:NgZone,) { }
+  constructor(public _router: Router, public login: LoginService,private ngZone:NgZone,) { }
 
 
   myChangeEvent(event){

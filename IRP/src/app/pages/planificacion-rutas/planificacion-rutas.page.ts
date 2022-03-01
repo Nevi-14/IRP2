@@ -4,7 +4,6 @@ import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 
 import { ZonasService } from '../../services/zonas.service';
-import { GlobalService } from 'src/app/services/global.service';
 import { ActivatedRoute } from '@angular/router';
 import { MapaService } from 'src/app/services/mapa.service';
 import { RutaZonaService } from '../../services/ruta-zona.service';
@@ -47,7 +46,6 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
   @ViewChild('mapa') divMapa!:ElementRef;
 
     constructor(
-      public global: GlobalService,
       public modalCtrl: ModalController, 
       public alertCtrl: AlertController, 
       public clientes: ClientesService, 
@@ -141,7 +139,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
       }else{
        
-        this.global.message('Planificacion Rutas','No se efectuaron cambios');
+        
       }
       this.mapboxLgService.marcadores = []
       this.rutaZona= null
