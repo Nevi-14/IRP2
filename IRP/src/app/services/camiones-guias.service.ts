@@ -89,7 +89,8 @@ generarGuia(ruta,camion, fecha) {
   const hour            =   new Date().getHours();
   const minutes            =   new Date().getMinutes();
   const seconds            =    new Date().getSeconds();
-  const  consecutivo       = year+''+month+''+day+ 'H'+hour+minutes+seconds+ruta+'V';
+  var ramdomNumber = Math.floor(1000 + Math.random() * 9000);
+  const  consecutivo       = year+''+month+''+day+ ramdomNumber+ruta+'V';
 
   let guia = {
 

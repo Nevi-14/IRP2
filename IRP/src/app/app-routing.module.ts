@@ -47,10 +47,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/mantenimiento-rutas/mantenimiento-rutas.module').then( m => m.MantenimientoRutasPageModule)
   },
   {
-    path: 'ruta-facturas',
-    loadChildren: () => import('./pages/ruta-facturas/ruta-facturas.module').then( m => m.RutaFacturasPageModule)
-  },
-  {
     path: 'cliente-factura',
     loadChildren: () => import('./pages/cliente-factura/cliente-factura.module').then( m => m.ClienteFacturaPageModule)
   },
@@ -59,10 +55,7 @@ const routes: Routes = [
     path: 'marcadores',
     loadChildren: () => import('./pages/marcadores/marcadores.module').then( m => m.MarcadoresPageModule)
   },
-  {
-    path: 'fecha',
-    loadChildren: () => import('./pages/fecha/fecha.module').then( m => m.FechaPageModule)
-  },
+
   {
     path: 'busqueda-mapa',
     loadChildren: () => import('./pages/busqueda-mapa/busqueda-mapa.module').then( m => m.BusquedaMapaPageModule)
