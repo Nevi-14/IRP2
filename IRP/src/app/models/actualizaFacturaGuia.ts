@@ -4,7 +4,7 @@ export class ActualizaFacturaGuia{
         public tipoDocumento: string,
         public despachado: string,
         public rubro3: string,
-        public U_LATITUD: string,
+        public U_LATITUD: number,
         public U_LONGITUD: number
 
     ){}

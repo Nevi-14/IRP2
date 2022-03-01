@@ -590,12 +590,12 @@ generarPost(){
    guia.facturas.forEach(factura=>{
  
      const actualizarFactura = {
-          numFactura: factura['FACTURA'],
-          tipoDocumento:factura['TIPO_DOCUMENTO'],
+          numFactura: factura.factura.FACTURA,
+          tipoDocumento:factura.factura.TIPO_DOCUMENTO,
           despachado: 'S',
           rubro3:  guia.consecutivo,
-          U_LATITUD: factura['LATITUD'],
-          U_LONGITUD: factura['LONGITUD']
+          U_LATITUD: factura.factura.LATITUD,
+          U_LONGITUD: factura.factura.LONGITUD
      }
      this.actualizarFacturasService.actualizaFacturasArray.push(actualizarFactura)
    })
