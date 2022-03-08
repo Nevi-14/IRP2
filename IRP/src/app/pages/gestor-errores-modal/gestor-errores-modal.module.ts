@@ -15,9 +15,9 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     FormsModule,
     IonicModule,
     GestorErroresModalPageRoutingModule,
-    PipesModule,
-    DatePipe
+    PipesModule
   ],
-  declarations: [GestorErroresModalPage]
+  declarations: [GestorErroresModalPage],
+  providers: [DatePipe]
 })
 export class GestorErroresModalPageModule {}

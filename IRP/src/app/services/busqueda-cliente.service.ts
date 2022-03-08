@@ -34,7 +34,7 @@ console.log(URL);
 
 
   generateArrayFromComaSeparated(inputString){
-
+    this.clientesService.clientesArray = [];
     this.cliente = [];
     this.clientesService.clientes = [];
 
@@ -59,13 +59,21 @@ console.log(URL);
 
         resp.slice(0).forEach(cliente => {
    this.cliente.push(cliente)
-   this.clientesService.clientesArray.push(cliente)
+  const c =  this.clientesService.clientesArray.findIndex( clientesArray => clientesArray.IdCliente == cliente.IdCliente)
 
+
+
+  console.log('clientes, array', c)
+  if(c < 0){
+    this.clientesService.clientesArray.push(cliente)
+    console.log(cliente,'cliente')
+  }
+  
         })
      
 
         console.log(this.cliente, 'camclienteiones', resp)
-this.clientesService.clientes
+
       }, error =>{
        
         let errorObject = {
