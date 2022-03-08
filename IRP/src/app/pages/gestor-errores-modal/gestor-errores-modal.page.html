@@ -23,7 +23,7 @@
     <ion-label>
       <h2 class="ion-text-uppercase">{{item.titulo}} -  {{item.fecha | date: 'dd/MM/yyyy'}}</h2>
       <p *ngIf="item.metodo" class="ion-text-wrap">Error de tipo <span style="color: red; font-weight: 600;">{{item.metodo}}</span></p>
-     <p *ngIf="item.url && item.rutaError" class="ion-text-wrap">No se pudo ejecutar la acción completando la API <span style="color: red; font-weight: 600;">{{item.url}}</span>  en la ruta <span style="color: red; font-weight: 600;">{{item.rutaError}}</span></p>
+     <p  class="ion-text-wrap">No se pudo ejecutar la acción completando la API <span style="color: red; font-weight: 600;">{{item.url}}</span>  en la ruta <span style="color: red; font-weight: 600;">{{item.rutaError}}</span></p>
      <p *ngIf="item.message" class="ion-text-wrap">Mensage HTTP : <span style="color: red; font-weight: 600;">{{item.message}}</span></p>
      <p *ngIg="item.json" class="ion-text-wrap">Json - Array : {{item.json}}</p>
     </ion-label>
