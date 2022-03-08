@@ -4,7 +4,6 @@ import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
-import { MapaService } from '../../services/mapa.service';
 import { NgZone } from '@angular/core';
 interface Modulos {
   imagen: string,
@@ -23,7 +22,7 @@ export class InicioPage implements OnInit {
   textoBuscar = '';
 
 
-  constructor(public _router: Router, public mapa: MapaService, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService,  private ngZone:NgZone,) {}
+  constructor(public _router: Router, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService,  private ngZone:NgZone,) {}
 
 
   redirect(to) {

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Rutero } from '../models/Rutero';
 import { HttpClient } from '@angular/common/http';
-import { ServicioClienteMapaService } from './servicio-cliente-mapa';
+import { AlertasService } from './alertas.service';
+import { PlanificacionEntregasService } from './planificacion-entregas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,12 @@ export class RuteroService {
 
 ruteroArray: Rutero[]=[];
 rutertoPostArray: Rutero[]=[];
+url = null;
 
   constructor(
     public http: HttpClient,
-    public servicioClienteMapaService: ServicioClienteMapaService
+    public alertasService: AlertasService,
+    public planificacionEntregasService: PlanificacionEntregasService
   ) { }
 
 
@@ -27,6 +30,7 @@ if(!environment.prdMode){
 
 const URL = environment.preURL + test  + environment.postURL +  api + id;
 
+this.url = URL;
 return URL;
 
 
@@ -41,22 +45,8 @@ private getRutero(id){
 
 }
 
-syncRutero(id, mapa){
-this.getRutero(id).subscribe(
-resp => {
-
-  this.ruteroArray = resp;
-   console.log(resp)
-   //alert(resp)
-
-   this.servicioClienteMapaService.createmapa(mapa,this.ruteroArray)
-    
-}, error => {
-
-  console.log(error)
-}
-
-);
+syncRutero(id){
+return this.getRutero(id).toPromise();
 
 }
 
@@ -81,17 +71,31 @@ console.log(JSON.stringify(rutero), 'JSON.stringify(rutero)')
 
 
 insertarPostRutero(){
+
+  this.alertasService.presentaLoading('Insertando Rutero')
   console.log(this.rutertoPostArray, 'this.rutertoPostArray')
   this.postRutero(this.rutertoPostArray).subscribe(
 
     resp => {
-  
+      this.alertasService.loadingDissmiss();
       console.log(resp);
   
       this.rutertoPostArray = []
   
     }, error =>{
+      this.alertasService.loadingDissmiss();
+      let errorObject = {
+        titulo: 'Insertar rutero',
+        fecha: new Date(),
+        metodo:'POST',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/rutero-service.ts',
+        json:JSON.stringify(this.rutertoPostArray)
+      }
+      this.planificacionEntregasService.errorArray.push(errorObject)
       console.log(error)
+     
     }
   )
 

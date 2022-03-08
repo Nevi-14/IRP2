@@ -1,6 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="dark">
 
+
     <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
       <ion-item>
         <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Planificación de entregas</ion-title>
@@ -21,6 +22,13 @@
 <ion-buttons slot="end" >
   <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
     <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+  <ion-button  shape="round" fill="solid" color="dark" (click)="gestionErrores()">
+    <ion-icon  name="bug"></ion-icon>
+    <ion-badge color="primary" mode="ios">{{planificacionEntregasService.errorArray.length}}</ion-badge>
+  </ion-button>
+  <ion-button   *ngIf="rutaZona" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
+    <ion-icon  name="refresh"></ion-icon>
       </ion-button>
       <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
         <ion-icon class="spin-element"  name="settings"></ion-icon>
@@ -70,7 +78,7 @@
    
 
   <ion-label class="ion-text-uppercase">Lista de clientes</ion-label>
-  <ion-label slot="end">Total Guias <ion-badge color="dark" mode="ios">{{actualizaFacturaGuiasService.listaCamionesGuia.length}}</ion-badge></ion-label>
+  <ion-label slot="end">Total Guias <ion-badge color="dark" mode="ios">{{controlCamionesGuiasService.listaCamionesGuia.length}}</ion-badge></ion-label>
   <ion-buttons  slot="end">
            
 
@@ -82,7 +90,7 @@
                 <ion-label color="dark">Camiones</ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button (click)="generarPost()" *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
+            <ion-button (click)="generarPost()" *ngIf="controlCamionesGuiasService.listaCamionesGuia.length > 0" shape="round"  fill="outline"  color="primary">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -90,7 +98,7 @@
               <ion-label>  <ion-icon  color="primary" slot="icon-only" name="save"></ion-icon></ion-label>
                   </ion-chip>
             </ion-button>
-            <ion-button *ngIf="actualizaFacturaGuiasService.listaCamionesGuia.length > 0" (click)="actualizaFacturaGuiasService.eliminarTodosCamionesAlert()" shape="round"  fill="outline"  color="danger">
+            <ion-button *ngIf="controlCamionesGuiasService.listaCamionesGuia.length > 0" (click)="controlCamionesGuiasService.eliminarTodosCamionesAlert()" shape="round"  fill="outline"  color="danger">
               <ion-chip  style="background: transparent!important;">
                 <ion-avatar >
                   <img   [src]="image" />
@@ -113,7 +121,7 @@
       </ion-col>
 <ion-col size="12" >
 <ion-row>
-  <ion-col size="12" size-md="4"*ngFor="let camion of  actualizaFacturaGuiasService.listaCamionesGuia">
+  <ion-col size="12" size-md="4"*ngFor="let camion of  controlCamionesGuiasService.listaCamionesGuia">
 
     
     <ion-row>
@@ -257,7 +265,7 @@
         <ion-icon slot="icon-only" name="create"></ion-icon>
     
       </ion-button>
-      <ion-button *ngIf="facturaCliente.idGuia"  (click)="actualizaFacturaGuiasService.removerFactura(facturaCliente)" fill="clear" color="danger">
+      <ion-button *ngIf="facturaCliente.idGuia"  (click)="controlCamionesGuiasService.removerFactura(facturaCliente)" fill="clear" color="danger">
         <ion-icon slot="icon-only" name="close"></ion-icon>
     
       </ion-button>

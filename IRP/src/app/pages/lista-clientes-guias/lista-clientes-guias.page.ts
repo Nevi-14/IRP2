@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { ModalController } from '@ionic/angular';
-import { CamionesGuiasService } from 'src/app/services/camiones-guias.service';
+
 import { PlanificacionEntregas } from '../../models/planificacionEntregas';
+import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 
 @Component({
   selector: 'app-lista-clientes-guias',
@@ -18,7 +19,7 @@ image = '../assets/icons/delivery-truck.svg'
 falso = false;
 textoBuscar = '';
   constructor(
-    public actualizaFacturaGuiasService: CamionesGuiasService,
+    public controlCamionesGuiasService: ControlCamionesGuiasService,
     public modalCtrl:ModalController
   ) { }
 
@@ -27,23 +28,23 @@ textoBuscar = '';
 
   actualizarFactura(factura){
     this.modalCtrl.dismiss();
-   // this.actualizaFacturaGuiasService.crearGuia(factura);
+   // this.controlCamionesGuiasService.crearGuia(factura);
   }
   agregarGuia(factura){
     this.modalCtrl.dismiss();
-    this.actualizaFacturaGuiasService.agregarGuia(this.rutaZona.Ruta,  this.fecha, factura);
+    this.controlCamionesGuiasService.agregarGuia(factura);
   
     
   }
  removerFactura(factura){
-  this.actualizaFacturaGuiasService.removerFactura(factura);
+  this.controlCamionesGuiasService.removerFactura(factura);
 
-  if(this.actualizaFacturaGuiasService.guiaFacturasaActual.length == 0){
+  if(this.controlCamionesGuiasService.guiaFacturasaActual.length == 0){
     this.modalCtrl.dismiss();
   }
  }
   eliminarCamionesFacturaIndividualAlert(factura){
-   // this.actualizaFacturaGuiasService.eliminarCamionesFacturaIndividualAlert(factura)
+   // this.controlCamionesGuiasService.eliminarCamionesFacturaIndividualAlert(factura)
     this.modalCtrl.dismiss();
   }
 

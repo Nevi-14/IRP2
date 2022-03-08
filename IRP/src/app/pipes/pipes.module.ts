@@ -12,7 +12,8 @@ import { BarraBusquedaPipe } from './barra-busqueda.pipe';
     FiltroClientesPipe,
     FiltroPipe,
     RutasPipe,
-    BarraBusquedaPipe
+    BarraBusquedaPipe,
+    
   ],
   imports: [
     CommonModule

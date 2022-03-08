@@ -3,6 +3,7 @@ import { Clientes } from '../models/clientes';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ClientesService } from './clientes.service';
+import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class BusquedaClienteService {
   cliente: Clientes[]=[];
 
   constructor(private http: HttpClient,
-    public clientesService: ClientesService
+    public clientesService: ClientesService,
+    public planificacionRutasService:PlanificacionRutasService
     ) { }
 
   getIRPURL( api: string,id: string ){
@@ -57,14 +59,27 @@ console.log(URL);
 
         resp.slice(0).forEach(cliente => {
    this.cliente.push(cliente)
-   this.clientesService.clientes.push(cliente);
+   this.clientesService.clientesArray.push(cliente)
+
         })
      
-        this.clientesService.syncClientesArray();
 
-        console.log(this.clientesService.clientes, 'clientes')
         console.log(this.cliente, 'camclienteiones', resp)
-
+this.clientesService.clientes
+      }, error =>{
+       
+        let errorObject = {
+          titulo: 'Obtener cliente por ID',
+          fecha: new Date(),
+          metodo:'GET',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/clientes-service.ts',
+          json:JSON.stringify(this.clientesService.clientes)
+        }
+        this.planificacionRutasService.errorArray.push(errorObject)
+        console.log(error)
+       
       }
 
     );

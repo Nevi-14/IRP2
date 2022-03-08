@@ -4,8 +4,8 @@ import { environment } from 'src/environments/environment';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { Clientes } from '../models/clientes';
 import { ClientesService } from './clientes.service';
-import { MapboxGLService } from './mapbox-gl.service';
 import { AlertasService } from './alertas.service';
+import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
 
 
 @Injectable({
@@ -21,8 +21,8 @@ export class ClienteEspejoService {
     
      private http: HttpClient,
      private clientes: ClientesService, 
-     private mapboxLgService: MapboxGLService, 
-     private alertasService: AlertasService) { }
+     private alertasService: AlertasService,
+     public planificacionRutasService: PlanificacionRutasService) { }
 
   
 
@@ -62,46 +62,9 @@ export class ClienteEspejoService {
 
   syncRutas(ruta){
 
-    this.clientes.rutasClientes = [];
-    this.clientes.nuevosClientes = [];
-    this.mapboxLgService.marcadores = [];
-
-
-
-   this.alertasService.presentaLoading('Cargando Clientes ')
-
-
-    this.getRutas(ruta).subscribe(
-      resp =>{
-
-        this.clientes.rutasClientes = resp.slice(0);
-
-        this.mapboxLgService.createmapa(this.mapboxLgService.divMapa,false,false);
-
-
-        this.mapboxLgService.agregarMarcadores(this.clientes.rutasClientes,'NOMBRE','IdCliente',false)
-
-
-         this.alertasService.loadingDissmiss();
-
-        this.alertasService.message('Planificación De Rutas', 'Un total de : '+ resp.slice(0).length+' clientes se agregaron al mapa');
-   
-  
-      }, error => {
-
-        if(error){
-
-          this.alertasService.message('Planificación De Rutas','Error cargando clientes');
-
-        }
-
-
-      }
-      
-     
-
-
-    );
+ return   this.getRutas(ruta).toPromise();
+    
+    
   }
   
 
@@ -139,23 +102,26 @@ export class ClienteEspejoService {
 
       resp => {
         
-       this.mapboxLgService.marcadores = [];
-
-        this.mapboxLgService.createmapa(this.mapboxLgService.divMapa,false,false);
-
+     
            this.alertasService.loadingDissmiss()
 
 
             this.alertasService.message('IRP','Los cambios se efectuaron con exito');
 
-      }, error => {
-
-        console.log('Rerror', error);
-
-
-        this.alertasService.message('IRP','Error guardados las rutas');
-
-
+      },  error =>{
+        this.alertasService.loadingDissmiss();
+        let errorObject = {
+          titulo: 'Insertar rutero',
+          fecha: new Date(),
+          metodo:'POST',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/cliente-espejo-service.ts',
+          json:JSON.stringify(ruta)
+        }
+        this.planificacionRutasService.errorArray.push(errorObject)
+        console.log(error)
+       
       }
     )
 

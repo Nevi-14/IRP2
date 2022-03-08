@@ -9,5 +9,6 @@ export class FacturaLineasEspejo {
     public cantEntregada:  number,
     public idJusti:    string,
     public tipoJusti:  string,
+    public descripcion: string
     ){}
 }

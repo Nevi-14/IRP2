@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { MapaService } from 'src/app/services/mapa.service';
-import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
+import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 interface Marcadores{
   id:string,
   funcion: string,
@@ -22,11 +21,12 @@ interface Marcadores{
 
 export class MarcadoresPage implements OnInit {
   @Input() marcadores:Marcadores[];
+  @Input() duplicados: boolean;
   filtroToggle = true;
   toggleValue = 'id';
 @Input() funcion:string;
 textoBuscar = '';
-  constructor(public clientes: ClientesService, public mapa: MapaService, public modalCtrl: ModalController, public MapboxGlService: MapboxGLService) { }
+  constructor(public clientes: ClientesService, public modalCtrl: ModalController) { }
 
   ngOnInit() {
   console.log(this.marcadores)
@@ -54,9 +54,25 @@ textoBuscar = '';
    }
 
    irMarcador(item){
-     this.modalCtrl.dismiss();
-     this.MapboxGlService.irMarcador( item )
+ 
+     this.modalCtrl.dismiss({
+      'item': item
+    });
    }
 
    
+async detalleClientes(cliente){
+
+  const modal = await this.modalCtrl.create({
+    component: DetalleClientesPage,
+    cssClass: 'large-modal',
+    componentProps:{
+      detalleCliente: cliente
+    }
+  });
+  await modal.present();
+
+
+
+}
 }

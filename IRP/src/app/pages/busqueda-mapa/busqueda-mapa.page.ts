@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { MapaService } from 'src/app/services/mapa.service';
-import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
+import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
+import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 
 @Component({
   selector: 'app-busqueda-mapa',
@@ -17,7 +17,8 @@ toggleValue = 'id';
 longLat = '';
 textoBuscar = '';
 
-  constructor(public mapaService: MapaService, public clientesService: ClientesService, public modalCtrl: ModalController, public mapboxGLService: MapboxGLService) { }
+  constructor(public clientesService: ClientesService, public modalCtrl: ModalController,
+    public planificacionRutasService: PlanificacionRutasService) { }
 
   ngOnInit() {
     console.log(this.data)
@@ -28,26 +29,62 @@ this.longLat = '[ ' + this.data.geometry.coordinates + ' ]'
     this.modalCtrl.dismiss();
   }
 
-  actualizarCordenadas(id){
+  seleccionarTodos(){
+console.log('todos')
+    this.planificacionRutasService.marcadores.forEach(marcador =>{
+    console.log(marcador)
+      marcador.select = !marcador.select;
+    })
+  }
+  actualizarCordenadas(){
+
+    const marcadoresActualizados = [];
     
-    const  i = this.mapboxGLService.marcadores.findIndex(m => m.id === id);
-    console.log(id, 'actualiza')
+ this.planificacionRutasService.marcadores.forEach(marcador =>{
+
+  if(marcador.select){
+
+
+    const  i =  this.planificacionRutasService.marcadores.findIndex(m => m.id === marcador.id);
+
 if(i >= 0){
-  console.log(    this.mapboxGLService.marcadores[i], 'before')
-  this.mapboxGLService.marcadores[i].modificado = true;
-  this.mapboxGLService.marcadores[i].cliente.LONGITUD = this.data.geometry.coordinates[0];
-  this.mapboxGLService.marcadores[i].cliente.LATITUD = this.data.geometry.coordinates[1];
-  this.mapboxGLService.marcadores[i].centro = [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]
-  console.log(    this.mapboxGLService.marcadores[i], 'after')
+
+  this.planificacionRutasService.marcadores[i].modificado = true;
+  this.planificacionRutasService.marcadores[i].cliente.LONGITUD = this.data.geometry.coordinates[0];
+  this.planificacionRutasService.marcadores[i].cliente.LATITUD = this.data.geometry.coordinates[1];
+  this.planificacionRutasService.marcadores[i].longitud= this.data.geometry.coordinates[0];
+  this.planificacionRutasService.marcadores[i].latitud = this.data.geometry.coordinates[1];
+  this.planificacionRutasService.marcadores[i].centro = [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]
+  this.planificacionRutasService.marcadores[i].marker.setLngLat([this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]);
+
 }
-    this.modalCtrl.dismiss({
-      data:  true
-     });
+marcadoresActualizados.push(marcador)
+  this.modalCtrl.dismiss({
+    marcadores:marcadoresActualizados
+  });
+  }
+  marcador.select = false;
+ })
 
   }
 
 
-  
+
+     
+async detalleClientes(cliente){
+
+  const modal = await this.modalCtrl.create({
+    component: DetalleClientesPage,
+    cssClass: 'large-modal',
+    componentProps:{
+      detalleCliente: cliente
+    }
+  });
+  await modal.present();
+
+
+
+}
   cambio(){
     console.log(this.toggleValue,' toggle value')
     if(this.toggleValue === 'id' ){

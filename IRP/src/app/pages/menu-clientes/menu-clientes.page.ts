@@ -2,14 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { CantonesService } from '../../services/cantones.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { MapboxGLService } from 'src/app/services/mapbox-gl.service';
 import { BusquedaClienteService } from 'src/app/services/busqueda-cliente.service';
 import { DistritosService } from 'src/app/services/distritos.service';
-import { RutasService } from 'src/app/services/rutas.service';
 import { ProvinciasService } from 'src/app/services/provincias.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { AlertasService } from '../../services/alertas.service';
+import { PlanificacionRutasService } from '../../services/planificacion-rutas.service';
 
 
 @Component({
@@ -26,26 +25,47 @@ export class MenuClientesPage implements OnInit {
   myvalue = 'OFF';
   textoBuscar = '';
   isChecked = false;
-  @Input() mapa :any
+  @Input() rutaZona :any
   busqueda = false;
-  clienteId : string;
   clientesArray = [];
+
   constructor(
-    public modalCtrl: ModalController, public alertCtrl: AlertController, public clientesService: ClientesService, public provincias: ProvinciasService, public cantones: CantonesService, public distritos: DistritosService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public MapboxGLService: MapboxGLService,public busquedaClienteService: BusquedaClienteService) { }
+
+    public modalCtrl: ModalController, 
+    public alertCtrl: AlertController, 
+    public clientesService: ClientesService, 
+    public provincias: ProvinciasService, 
+    public cantones: CantonesService, 
+    public distritos: DistritosService, 
+    public clienteEspejo: ClienteEspejoService, 
+    public busquedaClienteService: BusquedaClienteService,
+    public aslertasService: AlertasService,
+    public planificacionRutasService: PlanificacionRutasService
+    
+    
+    
+    ) { }
 
 
   onSearchChange(event){
-    if(this.busqueda){
 
-      this.busquedaClienteService.generateArrayFromComaSeparated(event.detail.value)
-     // this.busquedaClienteService.syncClientes(event.detail.value)
-      this.borrarFiltro();
-this.clientesService.clientesArray = [];
+if(this.busqueda){
+
+this.busquedaClienteService.generateArrayFromComaSeparated(event.detail.value)
+   
+this.borrarFiltro();
+this.clientesArray = [];
 this.isChecked = !this.isChecked; 
+
+
     }else{
-      if(this.clientesService.clientesArray.length == 1){
-        this.clientesService.clientesArray = [];
+
+      if(this.clientesArray.length == 1){
+
+        this.clientesArray = [];
+
       }
+
       this.textoBuscar = event.detail.value;
     }
     
@@ -66,14 +86,14 @@ this.isChecked = !this.isChecked;
    
     
     if(isChecked){
-      for(let i =0; i < this.clientesService.clientesArray.length; i++) {
-        console.log( i, 'select' , this.clientesService.clientesArray.length)
-     this.clientesService.clientesArray[i].select  = true;
+      for(let i =0; i < this.clientesArray.length; i++) {
+        console.log( i, 'select' , this.clientesArray.length)
+     this.clientesArray[i].select  = true;
 
       }
      }else{
-      for(let i =0; i < this.clientesService.clientesArray.length; i++) {
-        this.clientesService.clientesArray[i].select  = false;
+      for(let i =0; i < this.clientesArray.length; i++) {
+        this.clientesArray[i].select  = false;
       }
      }
 
@@ -84,9 +104,7 @@ this.isChecked = !this.isChecked;
   }
   
   cerrarModal(){
-    this.modalCtrl.dismiss({
-    statement:true
-    });
+    this.modalCtrl.dismiss();
   }
 
   async detalleClientes(cliente: any){
@@ -99,7 +117,9 @@ this.isChecked = !this.isChecked;
     });
     return await modal.present();
   }
+
   async agregarCliente(){
+
 const checkedArray = [];
 
 this.clientesService.clientesArray.forEach(cliente =>{
@@ -109,26 +129,13 @@ this.clientesService.clientesArray.forEach(cliente =>{
     checkedArray.push(cliente)
   }
 })
-    this.MapboxGLService.agregarMarcadorNuevosRegistros(checkedArray,'NOMBRE','IdCliente');
-/**
- *   for(let i = 0; i < this.clientesService.clientesArray.length;i++){
-    const clienteExistenteDuplicado = this.clientesService.rutasClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
-    const clienteNuevoDuplicado = this.clientesService.nuevosClientes.findIndex( d => d.IdCliente === this.clientesService.clientesArray[i].cliente.IdCliente );
-    if ( clienteExistenteDuplicado >= 0){ 
-        this.clientesService.clientesArray.splice(clienteExistenteDuplicado, 1);
-    }else if ( clienteNuevoDuplicado >=0){
-      this.clientesService.nuevosClientes.splice(clienteNuevoDuplicado, 1);
-    }
-    console.log(this.clientesService.clientesArray[i])
-    if(this.clientesService.clientesArray[i].select){
-      this.clientesService.nuevosClientes.push(this.clientesService.clientesArray[i].cliente)
-    }
- 
-  }
- */
-  this.message('IRP','Se agrego a la lista de RUTAS');
-  this.modalCtrl.dismiss();
-  this.MapboxGLService.createmapa(this.MapboxGLService.divMapa,false,false);
+
+
+this.modalCtrl.dismiss({
+
+  'item': checkedArray
+
+});
 
 
   }
@@ -136,8 +143,22 @@ this.clientesService.clientesArray.forEach(cliente =>{
   
 
   async onSubmit(){
- 
-this.clientesService.syncClientes(this.filtroClientes.Cod_Provincia,this.filtroClientes.Cod_Canton,this.filtroClientes.Cod_Distrito);
+this.aslertasService.presentaLoading('Cargando lista de clientes')
+ this.planificacionRutasService.syncClientes(
+
+   this.filtroClientes.Cod_Provincia,
+   this.filtroClientes.Cod_Canton,
+   this.filtroClientes.Cod_Distrito
+
+   
+   ).then((result) => {
+    this.clientesService.clientesArray = [];
+this.aslertasService.loadingDissmiss();
+this.clientesService.clientesArray  = result;
+   console.log(this.clientesArray,'happ')
+ }).catch((err) => {
+  this.aslertasService.loadingDissmiss();
+ });
 this.borrarFiltro();
 this.clientesService.clientesArray = [];
 this.isChecked = !this.isChecked; 

@@ -16,14 +16,19 @@
 
   </span>
 
+
 </ion-header>
 
 <div class="inner-content">
 
-  
-
   <ion-grid class="ion-margin">
+    <ion-row *ngIf="duplicados"  style="background-color: #df4759;">
+    <ion-col size="12">
 
+    <ion-label color="light" class="ion-text-uppercase">Lista de clientes duplicados no agregados al mapa</ion-label>
+
+    </ion-col>
+    </ion-row>
     <ion-row class="ion-margin">
       <ion-col size="6" class="ion-text-uppercase">ID - Nombre Cliente</ion-col>
       <ion-col size="3" class="ion-text-uppercase">Detalle Cliente</ion-col>
@@ -37,7 +42,7 @@
           <ion-label>{{item.id}} - {{item.nombre}}</ion-label>
         </ion-col>
         <ion-col size="3">   
-          <ion-button (click)="clientes.switchModaldetalle(funcion,item.cliente)" fill="clear" >
+          <ion-button (click)="detalleClientes(item.cliente)" fill="clear" >
             <ion-icon slot="start" name="person" [ngStyle]="{
               'color': item.color
           }"></ion-icon>
@@ -47,7 +52,7 @@
         <ion-col size="3">
 
     
-            <ion-button (click)="irMarcador(item.marker!)" fill="clear">
+            <ion-button (click)="irMarcador(item)" fill="clear">
               <ion-icon slot="start" name="location" [ngStyle]="{
                 'color': item.color
             }"></ion-icon>

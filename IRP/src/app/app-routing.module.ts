@@ -122,6 +122,10 @@ const routes: Routes = [
     path: 'servicio-cliente-marcadores',
     loadChildren: () => import('./pages/servicio-cliente-marcadores/servicio-cliente-marcadores.module').then( m => m.ServicioClienteMarcadoresPageModule)
   },
+  {
+    path: 'gestor-errores-modal',
+    loadChildren: () => import('./pages/gestor-errores-modal/gestor-errores-modal.module').then( m => m.GestorErroresModalPageModule)
+  },
  
  
 ];

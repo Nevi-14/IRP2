@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { GuiaEntrega } from '../models/guiaEntrega';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { AlertasService } from './alertas.service';
+import { ServicioClienteService } from './servicio-cliente.service';
+import { PlanificacionEntregasService } from './planificacion-entregas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +13,18 @@ export class GuiasService {
 
   guiasArray: GuiaEntrega[]=[];
   guiasArrayRuta: GuiaEntrega[]=[];
- 
+  url = null;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    
+    private http: HttpClient,
+    public alertasService: AlertasService,
+    public servicioClienteService: ServicioClienteService,
+    public planificacionEntregasService: PlanificacionEntregasService
+    
+    
+    ) { }
 
   getIRPURL( api: string ){
     let test: string = ''
@@ -23,6 +34,7 @@ export class GuiasService {
 
     const URL = environment.preURL  + test +environment.postURL + api ;
     console.log(URL, 'POST GUIAS URL')
+    this.url = URL;
     return URL;
 
 
@@ -46,12 +58,26 @@ export class GuiasService {
   }
 
   syncGuiasRuta(){
-   
+   this.alertasService.presentaLoading('Cargando lista de Guias')
     this.getEstado().subscribe(
       resp =>{
-     
+     this.alertasService.loadingDissmiss();
         this.guiasArrayRuta = resp.slice(0);
         console.log('rutasEstado',this.guiasArrayRuta)
+      }, error =>{
+        this.alertasService.loadingDissmiss();
+        let errorObject = {
+          titulo: 'Lista de guias',
+          fecha: new Date(),
+          metodo:'GET',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/guias-service.ts',
+          json:JSON.stringify(this.guiasArrayRuta)
+        }
+        this.servicioClienteService.errorArray.push(errorObject)
+        console.log(error)
+       
       }
 
     );
@@ -84,11 +110,12 @@ export class GuiasService {
 
   insertarGuias(){
 
-    console.log(  console.log( this.guiasArray), '  this.guiasArray insertar')
+    console.log(   this.guiasArray, '  this.guiasArray insertar')
  this.guiasArray.forEach( guia =>{
 
 
   this.postActualizarGuias( guia).subscribe(
+    
     resp => {
 
      console.log('completed')
@@ -97,9 +124,18 @@ export class GuiasService {
  
 
     }, error => {
-
+ 
+      let errorObject = {
+        titulo: 'Insertar guias',
+        metodo:'POST',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/guias-service.ts',
+        json:JSON.stringify(this.guiasArray)
+      }
+      this.planificacionEntregasService.errorArray.push(errorObject)
       console.log('error')
-      
+    
     }
   )
 })

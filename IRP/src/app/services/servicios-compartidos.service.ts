@@ -77,7 +77,7 @@ export class ServiciosCompartidosService {
 
     if(data !== undefined){
       console.log(data.ruta, 'data retorno', data !== undefined)
-    
+      console.log(data)
     return data.ruta
 
     }
