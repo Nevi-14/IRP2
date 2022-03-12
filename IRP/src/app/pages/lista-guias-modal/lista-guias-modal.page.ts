@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CamionesGuiasService } from '../../services/camiones-guias.service';
+import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 
 @Component({
   selector: 'app-lista-guias-modal',
@@ -11,7 +11,7 @@ export class ListaGuiasModalPage implements OnInit {
   image = '../assets/icons/delivery-truck.svg'
   textoBuscar = ''
   constructor(
-    public actualizaFacturaGuiasService: CamionesGuiasService,
+    public controlCamionesGuiasService: ControlCamionesGuiasService,
 public modalCtrl: ModalController
 
   ) { }

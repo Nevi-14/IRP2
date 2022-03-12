@@ -36,7 +36,7 @@ export class PlanificacionEntregasService {
  pesoTotal: number = 0;
  bultosTotales: number = 0;
  clientesTotales: number = 0;
-
+ errorArray =[]
  constructor(
    
    private http: HttpClient,  
@@ -87,6 +87,7 @@ syncRutaFacturas(ruta:string, fecha:string){
 
   this.getPlanificacionEntregas(ruta, fecha).subscribe(
     resp =>{
+      this.alertasService.loadingDissmiss();
 
       this.rutaFacturasArray = resp;
      // this.rutaFacturasArray = resp;
@@ -132,11 +133,22 @@ syncRutaFacturas(ruta:string, fecha:string){
 
 
 
-      this.alertasService.loadingDissmiss();
 
       this.alertasService.message('PLANIFICACIONDE ENTREGAS', 'Un total de ' + this.planificacionEntregaArray.length +' clientes se agregaron al sistema')
 
       this.datatableService.paginacion( this.planificacionEntregaArray, this.datatableService.resultsCount, this.datatableService.page)
+    }, error  => {
+      this.alertasService.loadingDissmiss();
+      let errorObject = {
+        titulo: 'Sincronizar Facturas Clientes',
+        metodo:'GET',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/planificacion-entregas.ts',
+        json:JSON.stringify(this.planificacionEntregaArray)
+      }
+      this.alertasService.elementos.push(errorObject)
+      
     }
   )
 

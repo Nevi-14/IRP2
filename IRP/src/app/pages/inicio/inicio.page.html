@@ -1,29 +1,41 @@
-<app-header></app-header>
-<ion-content  >
+
+<ion-content  class="ion-padding">
 <ion-grid >
   
-  <ion-row  style="padding: 4rem;">
+
+  <ion-row class="ion-padding">
       
-  <ion-col size="12"  style="display: flex; margin-bottom: 100px;" >
+  <ion-col size="10"   >
 
     <ion-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Gestor de Modulos IRP</ion-title>
     <ion-searchbar mode="ios" palceholder="Buscar modulo" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
   </ion-col>
-    <ion-col size="3"  mode="ios"  *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'">
-      <ion-card (click)="redirect(modulo.ruta)" >
-        <img [src]="modulo.imagen" class="slide-image" alt="">
-        <ion-card-header>
-          <ion-card-subtitle>{{modulo.titulo}}</ion-card-subtitle>
-        
-        </ion-card-header>
-        <ion-card-content>
-         <p> {{modulo.descripcion}}</p>
-         
-        </ion-card-content>
-    
-      </ion-card>
-    </ion-col>
+
 
   </ion-row>
+  <ion-row class="ion-padding">
+    <ion-col size="12"  style="display: flex;" class="ion-padding">
+      <ion-card (click)="redirect(modulo.ruta)" *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'" class="ion-text-center" style="width: 20%;">
+        <img  [src]="modulo.imagen" class="floating-img" alt="">
+      <ion-card-header>
+        <ion-card-title style="font-size: 0.8rem; font-weight: 700;text-transform: uppercase;margin-top: 0.5rem;margin-bottom: 0.5rem;">{{modulo.titulo}}</ion-card-title>
+      </ion-card-header>
+      
+        <ion-card-content >
+      
+       <p class="text-content">{{modulo.descripcion}}</p>
+        </ion-card-content>
+      </ion-card>
+          
+        </ion-col>
+  </ion-row>
+
+
 </ion-grid>
 </ion-content>
+  <!-- fab placed to the top end -->
+  <ion-fab (click)="logOut()" vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button color="danger" >
+      <ion-icon size="large" name="log-out-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>

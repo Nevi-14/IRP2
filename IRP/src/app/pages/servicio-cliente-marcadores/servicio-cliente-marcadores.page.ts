@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ServicioClienteMapaService } from '../../services/servicio-cliente-mapa';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 interface Marcadores{
   id:string,
@@ -26,8 +25,7 @@ export class ServicioClienteMarcadoresPage implements OnInit {
 image = "assets/icons/shipped.svg"
 textoBuscar = '';
   constructor(
-    public modalCtrl: ModalController,
-    public servicioClienteMapaService: ServicioClienteMapaService
+    public modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -50,15 +48,15 @@ textoBuscar = '';
   }
   onSearchChange(event){
 
-    // alert('h')
-     //console.log(event.detail.value);
      this.textoBuscar = event.detail.value;
    }
 
    irMarcador(item){
-     this.modalCtrl.dismiss();
-     this.servicioClienteMapaService.irMarcador( item )
-   }
+ 
+    this.modalCtrl.dismiss({
+     'item': item
+   });
+  }
 
 
    async detalleClientes(cliente){

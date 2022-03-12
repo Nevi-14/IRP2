@@ -92,7 +92,8 @@ this.paginacionBusqueda(arregloRetorno, arregloRetorno.length , 0)
     // alert('h')
      //console.log(event.detail.value);
      this.textoBuscar = event.detail.value;
-     this.transform(this.data , 'NOMBRE_CLIENTE')
+     //console.log(this.data, ' search')
+     this.transform(this.data , 'cliente')
    }
 
   sortBy(key){
@@ -187,19 +188,26 @@ this.loadData();
     
     paginacionBusqueda(array, page_size, page_number){
 
-      const size = page_size;
+      const size = array.length > page_size ? page_size : array.length;
       this.dataArrayToShow = [];
       const pages = Array.from(
+  
         //elementos por pagina
         { length: Math.ceil(array.length / size) },
         (_, i) => this.getPageLabel(array.length, size, i)
       )
       this.totalPages = pages.length;
-
-      for (let i = pages[page_number].inicio ; i < pages[page_number].fin ; i++ ){
-       
-        this.dataArrayToShow.push(array[i])
+      
+      this.dataArrayToShow = [];
+      
+      if(array.length >0){
+        for (let i = pages[page_number].inicio ; i <= pages[page_number].fin ; i++ ){
+      
+          this.dataArrayToShow.push(this.data[i])
+        }
+      
       }
+      
      
           }
 

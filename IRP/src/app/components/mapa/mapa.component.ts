@@ -1,17 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
-import { MarcadoresService } from 'src/app/services/marcadores.service';
-import { DetalleClientesPage } from '../../pages/detalle-clientes/detalle-clientes.page';
-import { ClienteFacturaPage } from '../../pages/cliente-factura/cliente-factura.page';
-import { RutasPage } from 'src/app/pages/rutas/rutas.page';
-import { MarcadoresPage } from 'src/app/pages/marcadores/marcadores.page';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { ZonasService } from 'src/app/services/zonas.service';
-
-import { MapaService } from 'src/app/services/mapa.service';
-import { MenuClientesPage } from 'src/app/pages/menu-clientes/menu-clientes.page';
-import { async } from '@angular/core/testing';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/clientes.service';
@@ -58,7 +49,7 @@ export class MapaComponent implements AfterViewInit {
 
 
   array :any;
-  constructor(public modalCtrl:ModalController, public marcadoresService: MarcadoresService, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService, public map: MapaService) { }
+  constructor(public modalCtrl:ModalController, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService) { }
 
 
 

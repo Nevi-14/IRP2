@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RutaZonas } from '../models/rutazonas';
 import { environment } from 'src/environments/environment';
+import { AlertasService } from './alertas.service';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ import { environment } from 'src/environments/environment';
 export class RutaZonaService {
   rutasZonasArray: RutaZonas[]=[];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public alertasService: AlertasService) { }
 
 
   // API URL http://api_irp_test.soportecr.xyz/api/Ruta_Zona
@@ -33,12 +34,25 @@ console.log(URL);
   // SYNC RUTAS
 
   syncRutas(){
-   
+    this.alertasService.presentaLoading('Obteniendo información de rutas');
     this.getRutasZonas().subscribe(
       resp =>{
+        this.alertasService.loadingDissmiss();
      console.log(resp)
         this.rutasZonasArray = resp;
         console.log('rutas',this.rutasZonasArray.length)
+      }, error  => {
+        this.alertasService.loadingDissmiss();
+        let errorObject = {
+          titulo: 'Lista de rutas',
+          metodo:'GET',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/ruta-zona-service.ts',
+          json:JSON.stringify(this.rutasZonasArray)
+        }
+        this.alertasService.elementos.push(errorObject)
+        
       }
 
     );

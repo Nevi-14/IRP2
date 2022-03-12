@@ -10,6 +10,9 @@ import { ActualizaFacLinService } from 'src/app/services/actualizaFacLin';
 })
 export class ClientesRutasPage implements OnInit {
 @Input() cliente:Rutero;
+@Input() color:string;
+@Input() imagen:string;
+textoBuscar = '';
   constructor(
 public modalCtrl:ModalController,
 public actualizaFacLinService: ActualizaFacLinService
@@ -18,9 +21,12 @@ public actualizaFacLinService: ActualizaFacLinService
 
   ngOnInit() {
     this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia);
-    console.log(this.cliente, ' ruterrooooooo', this.actualizaFacLinService.facturaLineasEspejoArray,this.actualizaFacLinService.facturaLineasEspejoArray)
+    
   }
+  onSearchChange(event){
 
+    this.textoBuscar = event.detail.value;
+  }
   cerrarModal(){
     this.modalCtrl.dismiss();
   }

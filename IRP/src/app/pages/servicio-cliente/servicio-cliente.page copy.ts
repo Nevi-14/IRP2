@@ -265,15 +265,25 @@ this.mapa.remove();
       ]
     });
     
+    // Add the draw tool to the map.
+    this.mapa.addControl(draw);
    // this.mapa.addControl(draw)
-
+   let bounds = [
+    [-123.069003, 45.395273],
+    [-122.303707, 45.612333]
+  ];
+  this.mapa.setMaxBounds([
+    [-123.069003, 45.395273],
+    [-122.303707, 45.612333]
+  ]);
 
     this.mapa.on('load', () => {
-
+  
       this.mapa.resize();
     });
  
     this.agregarMarcadores(this.clientesArray,'nombre','idCliente',false);
+
 
 }
 
@@ -458,33 +468,6 @@ irMarcador(marker: mapboxgl.Marker) {
   }
 }
 
-refrescarVista(){
-
-  const ruteros =   this.ruteroService.syncRutero(this.guia.idGuia)
-        ruteros.then(rutero =>{
-
-this.clientesArray = rutero;
-this.createmapa();
-
-
-
-        }), error =>{
-     
-          let errorObject = {
-            titulo: 'this.ruteroService.syncRutero(data.idGuia)',
-            fecha: new Date(),
-            metodo:'GET',
-            url:error.url,
-            message:error.message,
-            rutaError:'app/services/rutero-service.ts',
-            json:JSON.stringify(this.clientesArray)
-          }
-          this.servicioClienteService.errorArray.push(errorObject)
-          
-          console.log(error)
-         
-        }
-}
 
 limpiarDatos() {
   this.guia = null;

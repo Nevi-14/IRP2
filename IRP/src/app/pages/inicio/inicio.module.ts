@@ -6,8 +6,6 @@ import { InicioPage } from './inicio.page';
 
 import { InicioPageRoutingModule } from './inicio-routing.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { AppHeaderModule } from '../../components/app-header.module';
-
 
 @NgModule({
   imports: [
@@ -15,8 +13,7 @@ import { AppHeaderModule } from '../../components/app-header.module';
     FormsModule,
     IonicModule,
     InicioPageRoutingModule,
-    PipesModule,
-    AppHeaderModule
+    PipesModule
   ],
   declarations: [InicioPage],
 

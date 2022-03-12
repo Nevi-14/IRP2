@@ -16,48 +16,74 @@
 
   </span>
 
+
 </ion-header>
 
 <div class="inner-content">
 
-  
-
   <ion-grid class="ion-margin">
+    <ion-row *ngIf="duplicados"  style="background-color: #df4759;">
+    <ion-col size="12">
 
-    <ion-row class="ion-margin">
-      <ion-col size="6" class="ion-text-uppercase">ID - Nombre Cliente</ion-col>
-      <ion-col size="3" class="ion-text-uppercase">Detalle Cliente</ion-col>
-      <ion-col size="3" class="ion-text-uppercase">Redirigir Mapa</ion-col>
+    <ion-label color="light" class="ion-text-uppercase">Lista de clientes duplicados no agregados al mapa</ion-label>
+
+    </ion-col>
     </ion-row>
     <ion-row class="ion-margin">
- 
+      <ion-col size="6" class="ion-text-uppercase">ID - Nombre Cliente</ion-col>
+      <ion-col size="3" class="ion-text-uppercase">Redirigir Mapa</ion-col>
+      <ion-col size="3" class="ion-text-uppercase">Opciones</ion-col>
+    </ion-row>
+    <ion-row class="ion-margin">
 
       <ng-template ngFor let-item [ngForOf]="marcadores | filtro : textoBuscar:toggleValue" let-i="index" >
         <ion-col size="6">
-          <ion-label>{{item.id}} - {{item.nombre}}</ion-label>
+          <ion-button (click)="detalleClientes(item.cliente)" fill="clear">
+      
+            <ion-label  >{{item.id}} - {{item.nombre}}</ion-label>
+          </ion-button>
+
         </ion-col>
         <ion-col size="3">   
-          <ion-button (click)="clientes.switchModaldetalle(funcion,item.cliente)" fill="clear" >
-            <ion-icon slot="start" name="person" [ngStyle]="{
+ 
+          <ion-button (click)="irMarcador(item)" fill="clear">
+            <ion-icon slot="start" name="location" [ngStyle]="{
               'color': item.color
           }"></ion-icon>
-          <ion-label>{{item.cliente.CANAL}}</ion-label>
-           
+
+          <ion-label>[{{item.cliente.LONGITUD}} , {{item.cliente.LATITUD}}]</ion-label>
+    
+    
+          
           </ion-button></ion-col>
         <ion-col size="3">
 
     
-            <ion-button (click)="irMarcador(item.marker!)" fill="clear">
-              <ion-icon slot="start" name="location" [ngStyle]="{
-                'color': item.color
-            }"></ion-icon>
+      
+            <ion-buttons >
+              <ion-button  (click)="detalleClientes(item.cliente)">
+                <ion-icon color="success" slot="start" name="person"></ion-icon>
+              
+              </ion-button>
+              <ion-button *ngIf="!item.excluir" (click)="planificacionRutasService.excluirClienteRuta(item.id)">
+                <ion-icon color="danger"  size="large" name="trash-outline"></ion-icon>
+              
+              </ion-button>
 
-            <ion-label>[{{item.cliente.LONGITUD}} , {{item.cliente.LATITUD}}]</ion-label>
-      
-      
-            
-            </ion-button>
-      
+              <ion-button *ngIf="item.excluir" (click)="planificacionRutasService.incluirClienteRuta(item.id)">
+                <ion-icon color="dark" size="large" name="add-outline"></ion-icon>
+              
+              </ion-button>
+              
+
+              <ion-button  (click)="planificacionRutasService.moverRuta(item.id)">
+                <ion-icon size="large" color="primary" name="create-outline"></ion-icon>
+              
+              </ion-button>
+       
+
+             
+            </ion-buttons>
       
     
         </ion-col>

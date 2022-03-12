@@ -4,7 +4,6 @@ import { MiniMapaComponent } from './mini-mapa/mini-mapa.component';
 import { MapaComponent } from './mapa/mapa.component';
 import { IonicModule } from '@ionic/angular';
 import { PipesModule } from '../pipes/pipes.module';
-import { HeaderComponent } from './header/header.component';
 
 
 

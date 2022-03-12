@@ -13,7 +13,7 @@ import { RutaFacturasService } from './ruta-facturas.service';
 export class ActualizarFacturasService {
 
 actualizaFacturasArray:ActualizaFacturaGuia[]=[];
-
+url = null;
 
   constructor(
     
@@ -34,6 +34,7 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
     }
 
     const URL = environment.preURL  + test +environment.postURL + api ;
+    this.url = URL
  console.log(URL, 'POST ACTUALIZAR FACTURAAS')
     return URL;
 
@@ -60,13 +61,13 @@ actualizaFacturasArray:ActualizaFacturaGuia[]=[];
   insertarFacturas(){
 
     console.log(this.actualizaFacturasArray, 'this.actualizaFacturasArray insertar post')
-this.alertasService.presentaLoading('Guardando facturas')
+this.alertasService.presentaLoading('Insertando Facturas')
    this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
 
     resp => {
  
-
-      this.alertasService.loadingDissmiss();
+this.alertasService.loadingDissmiss();
+    
 
       this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Las facturas se guardaron con exito');
 
@@ -83,7 +84,19 @@ this.alertasService.presentaLoading('Guardando facturas')
       this.planificacionEntregasService.pesoTotal = null;
       this.planificacionEntregasService.rutaFacturasArray = [];
     }, error => {
+      this.alertasService.loadingDissmiss();
+    // nombre controlador
+      let errorObject = {
+        titulo: 'Insertar Facturas',
+        metodo:'POST',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/actualiza-clientes-factura.ts',
+        json:JSON.stringify(this.actualizaFacturasArray)
+      }
+      this.planificacionEntregasService.errorArray.push(errorObject)
       console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
+     ;
       
   }
     )

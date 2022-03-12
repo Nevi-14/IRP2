@@ -43,9 +43,18 @@ console.log(URL);
 this.alertasService.loadingDissmiss();
         console.log(this.camiones, 'camiones')
 
-      }, error =>{
+      }, error  => {
+        this.alertasService.loadingDissmiss();
+        let errorObject = {
+          titulo: 'Lista de camiones',
+          metodo:'GET',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/gestion-camiones.ts',
+          json:JSON.stringify(this.camiones)
+        }
+        this.alertasService.elementos.push(errorObject)
         
-this.alertasService.loadingDissmiss();
       }
 
     );

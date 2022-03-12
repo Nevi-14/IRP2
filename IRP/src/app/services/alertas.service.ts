@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, ModalController } from '@ionic/angular';
+import { GestorErroresModalPage } from '../pages/gestor-errores-modal/gestor-errores-modal.page';
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +9,14 @@ export class AlertasService {
 
   isLoading = false;
   loading: HTMLIonLoadingElement ;
+  elementos =[]
 
 
 
   constructor(
     public loadingCtrl: LoadingController,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public modalCtrl:ModalController
   ) { }
 
 
@@ -61,6 +64,22 @@ export class AlertasService {
 }
 
 
+
+//    GESTION DE ERRORES EN UN MODAL
+
+async gestorErroresModal(errorArray){
+
+  const modal = await this.modalCtrl.create({
+component: GestorErroresModalPage,
+componentProps:{
+  "errorArray":errorArray
+},
+cssClass:'large-modal'
+  });
+
+  return await modal.present();
+
+}
 
 
 
