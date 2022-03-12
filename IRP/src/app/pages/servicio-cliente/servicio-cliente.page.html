@@ -35,10 +35,13 @@
       
       
     
-          <ion-button    (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
+          <ion-button  *ngIf="marcadores?.length > 0 "   (click)="refrescarVista()"  shape="round" fill="solid" color="dark">
             <ion-icon  name="refresh"></ion-icon>
               </ion-button>
   
+              <ion-button   *ngIf="marcadores?.length > 0 "    (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
+                <ion-icon  name="trash"></ion-icon>
+                  </ion-button>
         <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
     <ion-label slot="start">Salir</ion-label>
     <ion-icon name="close" slot="end"> </ion-icon>

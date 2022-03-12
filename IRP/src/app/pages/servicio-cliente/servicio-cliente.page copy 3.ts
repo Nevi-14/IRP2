@@ -16,6 +16,7 @@ import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
+import { HttpClient } from '@angular/common/http';
 interface Marcadores {
   id: string,
   cliente: any,
@@ -23,11 +24,16 @@ interface Marcadores {
   nuevoCliente: boolean,
   color: string,
   nombre: string,
+  lngLat: any,
   marker?: mapboxgl.Marker,
   centro?: [number, number]
 }
-
-
+var longLat = [
+  [53.515333, -6.190796],
+  [53.342686, -6.403656],
+  [51.678091, -9.624023],
+  [52.768293, -1.560059]
+];
 
 @Component({
   selector: 'app-servicio-cliente',
@@ -37,6 +43,7 @@ interface Marcadores {
 export class ServicioClientePage implements OnInit {
 
 
+  featureCollection = [];
 
 
   rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
@@ -46,6 +53,7 @@ export class ServicioClientePage implements OnInit {
   @ViewChild('mapa') divMapa!:ElementRef;
   result: any;
   mapa!: mapboxgl.Map;
+  draw: any;
   geocoder: any;
   zoomLevel: number = 12;
   array: any;
@@ -65,7 +73,8 @@ export class ServicioClientePage implements OnInit {
       public guiasService:GuiasService, 
       public ruteroService: RuteroService, 
       public alertasService: AlertasService,
-      public servicioClienteService: ServicioClienteService
+      public servicioClienteService: ServicioClienteService,
+      public http: HttpClient
       
       ) {
 
@@ -189,9 +198,6 @@ this.alertasService.loadingDissmiss();
 createmapa() {
 
  
-if(this.mapa){
-this.mapa.remove();
-}
 
   this.mapa = new mapboxgl.Map({
     container: this.divMapa.nativeElement,
@@ -206,106 +212,186 @@ this.mapa.remove();
   const newMarker = new mapboxgl.Marker({ draggable: true })
     .setLngLat(this.lngLat)
     .addTo(this.mapa);
-    const draw = new MapboxDraw({
-      // Instead of showing all the draw tools, show only the line string and delete tools.
-      displayControlsDefault: false,
-      controls: {
-        line_string: true,
-        trash: true
-      },
-      // Set the draw mode to draw LineStrings by default.
-      defaultMode: 'draw_line_string',
-      styles: [
-        // Set the line style for the user-input coordinates.
-        {
-          id: 'gl-draw-line',
-          type: 'line',
-          filter: ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
-          layout: {
-            'line-cap': 'round',
-            'line-join': 'round'
+ this.draw = new MapboxDraw({
+  displayControlsDefault: false,
+  controls: {
+      line_string: true,
+      trash: true
+  },
+  styles: [
+      // ACTIVE (being drawn)
+      // line stroke
+      {
+          "id": "gl-draw-line",
+          "type": "line",
+          "filter": ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+          "layout": {
+              "line-cap": "round",
+              "line-join": "round"
           },
-          paint: {
-            'line-color': '#438EE4',
-            'line-dasharray': [0.2, 2],
-            'line-width': 4,
-            'line-opacity': 0.7
+          "paint": {
+              "line-color": "#3b9ddd",
+              "line-dasharray": [0.2, 2],
+              "line-width": 4,
+              "line-opacity": 0.7
           }
-        },
-        // Style the vertex point halos.
-        {
-          id: 'gl-draw-polygon-and-line-vertex-halo-active',
-          type: 'circle',
-          filter: [
-            'all',
-            ['==', 'meta', 'vertex'],
-            ['==', '$type', 'Point'],
-            ['!=', 'mode', 'static']
-          ],
-          paint: {
-            'circle-radius': 12,
-            'circle-color': '#FFF'
+      },
+      // vertex point halos
+      {
+          "id": "gl-draw-polygon-and-line-vertex-halo-active",
+          "type": "circle",
+          "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+          "paint": {
+              "circle-radius": 10,
+              "circle-color": "#FFF"
           }
-        },
-        // Style the vertex points.
-        {
-          id: 'gl-draw-polygon-and-line-vertex-active',
-          type: 'circle',
-          filter: [
-            'all',
-            ['==', 'meta', 'vertex'],
-            ['==', '$type', 'Point'],
-            ['!=', 'mode', 'static']
-          ],
-          paint: {
-            'circle-radius': 8,
-            'circle-color': '#438EE4'
+      },
+      // vertex points
+      {
+          "id": "gl-draw-polygon-and-line-vertex-active",
+          "type": "circle",
+          "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+          "paint": {
+              "circle-radius": 6,
+              "circle-color": "#3b9ddd",
           }
-        }
-      ]
-    });
+      },
+  ]
+});
     
+    // Add the draw tool to the map.
+    this.mapa.addControl( this.draw);
+
+     // add create, update, or delete actions
+     this.mapa.on('draw.create', this.updateRoute);
+     this.mapa.on('draw.update', this.updateRoute);
+     this.mapa.on('draw.delete', this.removeRoute);
+
+     
    // this.mapa.addControl(draw)
+   let bounds: any  = [
+    [-123.069003, 45.395273],
+    [-122.303707, 45.612333]
+  ];
+ // this.mapa.setMaxBounds(bounds);
+ var featureCollection = []; // Initialize empty collection
+
+ // Your longLat collection
+
+
+// for every item object within longLat
+
 
 
     this.mapa.on('load', () => {
 
+      this.agregarMarcadores(this.clientesArray,'nombre','idCliente',false);
+
+
+
+      this.mapa.addLayer({
+        "id": "points",
+        "type": "symbol",
+        "source": {
+        "type": "geojson",
+          "data": {
+            "type": "FeatureCollection",
+            "features": this.featureCollection 
+          }
+        },
+        "layout": {
+          "icon-image": "{icon}-15",
+          "text-field": "{title}",
+          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          "text-offset": [0, 0.6],
+          "text-anchor": "top"
+        }
+      });
+      
+      console.log(this.featureCollection,'this.featureCollection')
+
       this.mapa.resize();
+     
     });
  
-    this.agregarMarcadores(this.clientesArray,'nombre','idCliente',false);
+   
 
 }
 
-addRoute(coords) {
-  // If a route is already loaded, remove it
+getRutas( URL){
+  return this.http.get( URL );
+}
+
+
+getMatch(e) {
+  var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + e
+      +'?geometries=geojson&steps=true&access_token=' + mapboxgl.accessToken;
+      alert([JSON.stringify(e), 'jsonResponse'])
+      this.getRutas(url).subscribe( resp =>{
+        var jsonResponse = resp
+alert([JSON.stringify(resp), 'jsonResponse'])
+   //     var coords = jsonResponse.routes[0].geometry;
+
+       this.addRoute(e);
+       console.log(e);
+
+      })
+
+}
+
+updateRoute() {
+
+  this.removeRoute(); // overwrite any existing layers
+  var data = this.draw.getAll();
+  var lastFeature = data.features.length - 1;
+  var coords = data.features[lastFeature].geometry.coordinates;
+  var newCoords = coords.join(';');
+  alert('update')
+  this.getMatch(newCoords);
+}
+
+addRoute (coords) {
+  // check if the route is already loaded
+
+  console.log(coords, 'marcaa')
   if (this.mapa.getSource('route')) {
-  this.mapa.removeLayer('route');
-  this.mapa.removeSource('route');
-  } else {
-  this.mapa.addLayer({
-  'id': 'route',
-  'type': 'line',
-  'source': {
-  'type': 'geojson',
-  'data': {
-  'type': 'Feature',
-  'properties': {},
-  'geometry': coords
+    this.mapa.removeLayer('route');
+    this.mapa.removeSource('route')
+  } else{
+    this.mapa.addLayer({
+          "id": "route",
+          "type": "line",
+          "source": {
+              "type": "geojson",
+              "data": {
+                  "type": "Feature",
+                  "properties": {},
+                  "geometry": coords
+              }
+          },
+          "layout": {
+              "line-join": "round",
+              "line-cap": "round"
+          },
+          "paint": {
+              "line-color": "#1db7dd",
+              "line-width": 8,
+              "line-opacity": 0.8
+          }
+      });
+  };
+}
+
+// remove the layer if it exists
+ removeRoute () {
+  if (this.mapa.getSource('route')) {
+    this.mapa.removeLayer('route');
+    this.mapa.removeSource('route');
+    
+  } else  {
+      return;
   }
-  },
-  'layout': {
-  'line-join': 'round',
-  'line-cap': 'round'
-  },
-  'paint': {
-  'line-color': '#03AA46',
-  'line-width': 8,
-  'line-opacity': 0.8
-  }
-  });
-  }
-  }
+}
 
 agregarMarcadores(arreglo:any[], columna:string, id:string, nuevoCliente: boolean){
 
@@ -354,17 +440,29 @@ console.log(arreglo[i], 'arreglo[i]')
     }
    
   })
+  const { lng, lat } = this.marcadores[i].marker!.getLngLat();
+
+  this.featureCollection.push({
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates":lngLat
+    },
+    "properties": {
+      "title": "Mapbox DC",
+      "icon": "monument"
+    }
+  });
   newMarker.setPopup(miniPopup);
   // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
   newMarker.setLngLat([arreglo[i].longitud,arreglo[i].latitud]!)
 
   .addTo(this.mapa);
 
+ 
   newMarker.on('dragend', () => {
   
     const i = this.marcadores.findIndex(m => m.id === this.marcadores[i].cliente.IdCliente);
-
-    const { lng, lat } = this.marcadores[i].marker!.getLngLat();
 
 
     this.marcadores[i].cliente.LONGITUD = lng;
@@ -383,6 +481,7 @@ console.log(arreglo[i], 'arreglo[i]')
   id:arreglo[i][id],
   cliente:arreglo[i],
   nombre:arreglo[i][columna],
+  lngLat:[lng, lat],
   marker:newMarker,
   nuevoCliente: nuevoCliente,
   modificado: false,
@@ -395,6 +494,7 @@ console.log(arreglo[i], 'arreglo[i]')
 
  }
 
+ console.log(this.featureCollection, 'this.featureCollection', this.marcadores, 'this.marcadores')
 
 }
 async detalleClientes(cliente, color , imagen){
@@ -460,30 +560,30 @@ irMarcador(marker: mapboxgl.Marker) {
 
 refrescarVista(){
 
-  const ruteros =   this.ruteroService.syncRutero(this.guia.idGuia)
-        ruteros.then(rutero =>{
+    const ruteros =   this.ruteroService.syncRutero(this.guia.idGuia)
+          ruteros.then(rutero =>{
 
-this.clientesArray = rutero;
+  this.clientesArray = rutero;
 this.createmapa();
 
 
-
-        }), error =>{
-     
-          let errorObject = {
-            titulo: 'this.ruteroService.syncRutero(data.idGuia)',
-            fecha: new Date(),
-            metodo:'GET',
-            url:error.url,
-            message:error.message,
-            rutaError:'app/services/rutero-service.ts',
-            json:JSON.stringify(this.clientesArray)
+  
+          }), error =>{
+       
+            let errorObject = {
+              titulo: 'this.ruteroService.syncRutero(data.idGuia)',
+              fecha: new Date(),
+              metodo:'GET',
+              url:error.url,
+              message:error.message,
+              rutaError:'app/services/rutero-service.ts',
+              json:JSON.stringify(this.clientesArray)
+            }
+            this.servicioClienteService.errorArray.push(errorObject)
+            
+            console.log(error)
+           
           }
-          this.servicioClienteService.errorArray.push(errorObject)
-          
-          console.log(error)
-         
-        }
 }
 
 limpiarDatos() {

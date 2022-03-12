@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ClientesService } from 'src/app/services/clientes.service';
+import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 interface Marcadores{
   id:string,
@@ -26,9 +27,10 @@ export class MarcadoresPage implements OnInit {
   toggleValue = 'id';
 @Input() funcion:string;
 textoBuscar = '';
-  constructor(public clientes: ClientesService, public modalCtrl: ModalController) { }
+  constructor(public clientes: ClientesService, public modalCtrl: ModalController, public planificacionRutasService:PlanificacionRutasService) { }
 
   ngOnInit() {
+
   console.log(this.marcadores)
   }
   cerrarModal(){

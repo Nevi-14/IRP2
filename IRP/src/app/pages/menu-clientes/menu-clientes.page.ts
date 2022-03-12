@@ -86,14 +86,14 @@ this.isChecked = !this.isChecked;
    
     
     if(isChecked){
-      for(let i =0; i < this.clientesArray.length; i++) {
-        console.log( i, 'select' , this.clientesArray.length)
-     this.clientesArray[i].select  = true;
+      for(let i =0; i <  this.clientesService.clientesArray.length; i++) {
+        console.log( i, this.clientesService.clientesArray , this.clientesService.clientesArray.length)
+        this.clientesService.clientesArray[i].select  = true;
 
       }
      }else{
-      for(let i =0; i < this.clientesArray.length; i++) {
-        this.clientesArray[i].select  = false;
+      for(let i =0; i < this.clientesService.clientesArray.length; i++) {
+        this.clientesService.clientesArray[i].select  = false;
       }
      }
 

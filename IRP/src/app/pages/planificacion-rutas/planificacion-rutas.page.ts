@@ -14,6 +14,7 @@ import { PlanificacionRutasService } from '../../services/planificacion-rutas.se
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { Clientes } from '../../models/clientes';
 import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
+
 interface Marcadores {
   select:boolean,
   id: string,
@@ -124,7 +125,8 @@ configuracionZonaRuta(){
           this.rutaZona = null;
       
           this.rutaZona = valor
-         
+           this.planificacionRutasService.rutaZona = null;
+           this.planificacionRutasService.rutaZona = valor;
           this.alertasService.presentaLoading('Generando lista de clientes')
 
          const clientes =   this.clienteEspejo.syncRutas( this.rutaZona.Ruta);
@@ -381,13 +383,18 @@ const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcad
      }
        
 
+    }else{
+
+      this.createmapa(false);
+      this.agregarMarcadoresExistentes(false)
     }
          }
 
 
 
 
-//============================================================================= 
+
+
 // MUESTRA EL DETALLE DEL PUNTERO
 //=============================================================================
 
@@ -456,40 +463,42 @@ async detalleClientes(cliente){
       
         {
    
-          this.planificacionRutasService.marcadores[i].marker.setDraggable(draggable)
+       if(!this.planificacionRutasService.marcadores[i].excluir){
+        this.planificacionRutasService.marcadores[i].marker.setDraggable(draggable)
       
             
-      const miniPopup = new  mapboxgl.Popup();
-      const nombre = this.planificacionRutasService.marcadores[i].nombre;
-      
-    
-        miniPopup.setText(this.planificacionRutasService.marcadores[i].cliente.IdCliente +' ' +  nombre)
-    
-        miniPopup.on('open', () => {
-          console.log('popup was opened', this.planificacionRutasService.marcadores[i].cliente);
-          this.detalleClientes(this.planificacionRutasService.marcadores[i].cliente)
-        })
-        this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup);
-        this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].cliente.LONGITUD,this.planificacionRutasService.marcadores[i].cliente.LATITUD]!)
-        this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup)
-        .addTo(this.mapa);
-      
-        this.planificacionRutasService.marcadores[i].marker.on('dragend', () => {
+        const miniPopup = new  mapboxgl.Popup();
+        const nombre = this.planificacionRutasService.marcadores[i].nombre;
         
-          const index = this.planificacionRutasService.marcadores.findIndex(m => m.id === this.planificacionRutasService.marcadores[i].cliente.IdCliente);
-    
-          const { lng, lat } = this.planificacionRutasService.marcadores[i].marker!.getLngLat();
-    
-          this.planificacionRutasService.marcadores[i].cliente.LONGITUD = lng;
-          this.planificacionRutasService.marcadores[i].cliente.LATITUD = lat;
-    
-    
-          this.planificacionRutasService.marcadores[i].modificado = true;
-          this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
-       //   this.createmapa(this.divMapa,false, true);
-          this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
-    
-        })
+      
+          miniPopup.setText(this.planificacionRutasService.marcadores[i].cliente.IdCliente +' ' +  nombre)
+      
+          miniPopup.on('open', () => {
+            console.log('popup was opened', this.planificacionRutasService.marcadores[i].cliente);
+            this.detalleClientes(this.planificacionRutasService.marcadores[i].cliente)
+          })
+          this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup);
+          this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].cliente.LONGITUD,this.planificacionRutasService.marcadores[i].cliente.LATITUD]!)
+          this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup)
+          .addTo(this.mapa);
+        
+          this.planificacionRutasService.marcadores[i].marker.on('dragend', () => {
+          
+            const index = this.planificacionRutasService.marcadores.findIndex(m => m.id === this.planificacionRutasService.marcadores[i].cliente.IdCliente);
+      
+            const { lng, lat } = this.planificacionRutasService.marcadores[i].marker!.getLngLat();
+      
+            this.planificacionRutasService.marcadores[i].cliente.LONGITUD = lng;
+            this.planificacionRutasService.marcadores[i].cliente.LATITUD = lat;
+      
+      
+            this.planificacionRutasService.marcadores[i].modificado = true;
+            this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
+         //   this.createmapa(this.divMapa,false, true);
+            this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
+      
+          })
+       }
         
        }
     
@@ -514,6 +523,7 @@ console.log(this.clientesArray,'clientesArray')
         select:false,
         id: this.clientesArray[i].IdCliente,
         cliente: this.clientesArray[i],
+        excluir: false,
         modificado: false,
         nuevoCliente: nuevoCliente,
         color: null,
@@ -612,8 +622,16 @@ const exportarMarcadores =  this.planificacionRutasService.exportarMarcadores();
       Latitud: exportarMarcadores[i].cliente.LATITUD,
       Longitud: exportarMarcadores[i].cliente.LONGITUD
               }
+
+              
+            if(exportarMarcadores[i].excluir){
+              rutasClientes.Ruta = 'ND'
+              rutasClientes.Zona = 'ND'
+
+            }
             
               postArray.push(rutasClientes)
+             
     
   }
   
