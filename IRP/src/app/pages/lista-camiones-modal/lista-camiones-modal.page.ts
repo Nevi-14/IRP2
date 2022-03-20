@@ -7,11 +7,13 @@ import { GestionCamionesService } from 'src/app/services/gestion-camiones.servic
   templateUrl: './lista-camiones-modal.page.html',
   styleUrls: ['./lista-camiones-modal.page.scss'],
 })
+
 export class ListaCamionesModalPage implements OnInit {
   textoBuscar = '';
+  myValue = false;
   constructor(
     public modalCtrl:ModalController,
-    public gestionCamiones: GestionCamionesService
+    public gestionCamiones: GestionCamionesService,
   ) { }
 
   ngOnInit() {
@@ -21,6 +23,7 @@ export class ListaCamionesModalPage implements OnInit {
   cerrarModal(){
     this.modalCtrl.dismiss();
       }
+
     
       retornarCamion(camion){
     

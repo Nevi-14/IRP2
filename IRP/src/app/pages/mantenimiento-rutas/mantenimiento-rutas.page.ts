@@ -73,7 +73,9 @@ zonaRuta ={
 }
 
   ngOnInit() {
-
+    this.rutas.syncRutas();
+    this.zonas.syncZonas();
+    this.rutaZonas.syncRutas();
   }
   onSearchChange(event){
     console.log(event.detail.value);

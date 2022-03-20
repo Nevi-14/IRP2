@@ -140,7 +140,7 @@
 <ion-card style="width: 100%; height: auto;">
   <ion-card-content>
     <ion-label>
-
+    <p><ion-badge color="dark" mode="ios">{{ camion.guiaExistente ? 'Guia existente' : 'Nueva Guia'}}</ion-badge></p>
       <p> {{camion.chofer}}</p>
       <p>Placa : {{camion.idCamion}}</p>
       <p>Consecutivo : {{camion.consecutivo}}</p>
@@ -185,8 +185,8 @@
 
 
 
-<ion-col   size="4">Peso Total : {{planificacionEntregasService.pesoTotal}} KG </ion-col>
-<ion-col   size="4">Total Bultos:   {{planificacionEntregasService.bultosTotales}} Bultos</ion-col>
+<ion-col   size="4">Peso Total : {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG </ion-col>
+<ion-col   size="4">Total Bultos:   {{planificacionEntregasService.bultosTotales.toFixed(2)}} Bultos</ion-col>
 <ion-col  size="4">Fecha de entrega  {{planificacionEntregasService.fecha}}</ion-col>
     </ion-row>
 

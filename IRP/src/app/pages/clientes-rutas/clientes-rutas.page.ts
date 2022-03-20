@@ -20,7 +20,7 @@ public actualizaFacLinService: ActualizaFacLinService
   ) { }
 
   ngOnInit() {
-    this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia);
+    this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia, this.cliente.idCliente);
     
   }
   onSearchChange(event){
