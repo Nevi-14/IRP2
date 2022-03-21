@@ -40,29 +40,29 @@ export class GuiasService {
 
 
   }
-  getIRPURLEstado( api: string, ){
+  getIRPURLEstado( api: string,estado ){
     let test: string = ''
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test +environment.postURL + api + environment.guiasURLEstadoParam +'INI';
+    const URL = environment.preURL  + test +environment.postURL + api + environment.guiasURLEstadoParam +estado;
 
     return URL;
 
 
   }
 
-  private getEstado( ){
-    const URL = this.getIRPURLEstado( environment.guiasURL);
+  private getEstado(estado ){
+    const URL = this.getIRPURLEstado( environment.guiasURL, estado);
 
     console.log(URL,'URL guias')
     return this.http.get<GuiaEntrega[]>( URL );
   }
 
-  syncGuiasRuta(){
+  syncGuiasRuta(estado){
    this.alertasService.presentaLoading('Cargando lista de Guias')
-    this.getEstado().subscribe(
+    this.getEstado(estado).subscribe(
       resp =>{
      this.alertasService.loadingDissmiss();
         this.guiasArrayRuta = resp.slice(0);
@@ -87,9 +87,9 @@ export class GuiasService {
   }
 
 
-  syncGuiasEnRutaPromise(){
+  syncGuiasEnRutaPromise(estado){
 
-    return  this.getEstado().toPromise();
+    return  this.getEstado(estado).toPromise();
    }
  
  

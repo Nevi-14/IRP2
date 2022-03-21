@@ -35,7 +35,7 @@ public camionesService: GestionCamionesService
     if(this.myValue){
 
       let camionesGuias = [];
-      this.guiasService.syncGuiasEnRutaPromise().then(resp =>{
+      this.guiasService.syncGuiasEnRutaPromise('INI').then(resp =>{
 
         resp.forEach(camion =>{
           const datosCamion = this.camionesService.camiones.findIndex(camion => camion.idCamion == camion.idCamion )
