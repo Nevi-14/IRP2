@@ -19,7 +19,15 @@ export class AlertasService {
     public modalCtrl:ModalController
   ) { }
 
-
+  async dismissAllLoaders() {
+    let topLoader = await this.loadingCtrl.getTop();
+    while (topLoader) {
+      if (!(await topLoader.dismiss())) {
+        throw new Error('Could not dismiss the topmost loader. Aborting...');
+      }
+      topLoader = await this.loadingCtrl.getTop();
+    }
+  }
 
   
 
@@ -36,7 +44,7 @@ export class AlertasService {
       });
     });
   }
-  async   loadingDissmiss(){
+  async   loadingDissmiss2(){
     this.isLoading = false;
     this.loadingCtrl.getTop().then(loader => {
       if (loader) {
@@ -44,7 +52,16 @@ export class AlertasService {
       }
     });
   }
-  
+  async   loadingDissmiss(){
+    this.isLoading = false;
+    let topLoader = await this.loadingCtrl.getTop();
+    while (topLoader) {
+      if (!(await topLoader.dismiss())) {
+        throw new Error('Could not dismiss the topmost loader. Aborting...');
+      }
+      topLoader = await this.loadingCtrl.getTop();
+    }
+  }
   
 
   async  message(header,message){

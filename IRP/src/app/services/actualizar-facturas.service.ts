@@ -60,7 +60,6 @@ url = null;
 
   insertarFacturas(){
 
-    console.log(this.actualizaFacturasArray, 'this.actualizaFacturasArray insertar post')
 this.alertasService.presentaLoading('Insertando Facturas')
    this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
 
