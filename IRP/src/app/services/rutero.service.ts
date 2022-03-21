@@ -12,6 +12,7 @@ export class RuteroService {
 
 ruteroArray: Rutero[]=[];
 rutertoPostArray: Rutero[]=[];
+rutertoPostArrayExistentes: Rutero[]=[];
 url = null;
 
   constructor(
@@ -68,6 +69,55 @@ console.log(JSON.stringify(rutero), 'JSON.stringify(rutero)')
   return this.http.post(URL,JSON.stringify(rutero), options);
 
 }
+
+private putActualizarRutero(rutero){
+  const URL = this.getRuteroURL(environment.ruteroURL,'');
+ 
+   const options = {
+     headers: {
+       'Content-Type':'application/json',
+       'Accept':'application/json',
+       'Access-Control-Allow-Origin':'*'
+     }
+   };
+   console.log(URL,'URL')
+ console.log(JSON.stringify(rutero), 'JSON.stringify(rutero) put rutero')
+   return this.http.put(URL,JSON.stringify(rutero), options);
+ 
+ }
+putRutero(){
+
+
+  this.rutertoPostArrayExistentes.forEach(rutero =>{
+    this.putActualizarRutero(rutero).subscribe(
+
+      resp => {
+      
+        console.log(resp, ' rutero actualizado');
+    
+       
+      }, error =>{
+        this.alertasService.loadingDissmiss();
+        let errorObject = {
+          titulo: 'actualizar rutero',
+          fecha: new Date(),
+          metodo:'PUT',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/rutero-service.ts',
+          json:JSON.stringify(this.rutertoPostArray)
+        }
+        this.planificacionEntregasService.errorArray.push(errorObject)
+        console.log(error, ' error actualizando rutero', rutero)
+       
+      }
+    )
+
+  })
+  this.rutertoPostArrayExistentes = []
+
+}
+
 
 
 insertarPostRutero(){

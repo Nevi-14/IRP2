@@ -34,6 +34,7 @@ interface facturaGuia{
 interface  GuiaEntregaArray{
 
       idGuia: string,
+      guiaExistente:boolean,
        chofer:string,
        fecha: Date,
        zona: string,
@@ -126,6 +127,7 @@ crearModeloGuia(ruta,camion, fecha) {
   let guia = {
     consecutivo:this.gerarConsecutivo(ruta,fecha) ,
     idGuia: '',
+    guiaExistente:false,
     chofer: camion.chofer,
     fecha: fecha,
     zona: '',
@@ -202,6 +204,7 @@ crearGuia(factura){
 
   camion.then(resp =>{
 
+if(resp != undefined){
   let guia = this.crearModeloGuia(this.rutaZona.Ruta, resp, this.Fecha); // GENERAR MODELO GUIA
 
   // EMPEZAMOS A LLENAR LOS DATOS DE LA GUIA
@@ -216,8 +219,8 @@ crearGuia(factura){
   this.listaCamionesGuia.push(guia)
 this.incrementarValoresGuia(guia.consecutivo, factura)
   this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, guia.consecutivo)
- 
-  // this.listaCamionesGuia.push(guia)
+
+}
 
   })
 
@@ -230,7 +233,6 @@ this.incrementarValoresGuia(guia.consecutivo, factura)
  async agregarGuia(factura){
 
 
-  if(this.listaCamionesGuia.length > 0){
 
     const alert = await this.alertCtrl.create({
 
@@ -245,6 +247,8 @@ this.incrementarValoresGuia(guia.consecutivo, factura)
           this.alertCtrl.dismiss();
           this.crearGuia(factura)
           this.removerFactura(factura)
+
+
           }
         },
         {
@@ -265,17 +269,11 @@ this.incrementarValoresGuia(guia.consecutivo, factura)
         }
       ]
     });
-  
+
+
     return await alert.present();
 
      
-
-
-
-  }
- 
-
-this.crearGuia(factura)
 
 
 }
@@ -360,11 +358,14 @@ for(let i = 0; i <   this.listaCamionesGuia.length; i++){
   
 }
 
-async listaGuias(){
+async listaGuias(camionesDisponibles){
  
   const modal = await this.modalCtrl.create({
     component: ListaGuiasPage,
-    cssClass: 'large-modal'
+    cssClass: 'large-modal',
+    componentProps:{
+      camiones: camionesDisponibles
+    }
   });
   modal.present();
       
@@ -374,13 +375,13 @@ async listaGuias(){
   let camion : GuiaEntregaArray;
   if(data !== undefined){
 
-  camion = data.camion ;
+  return camion = data.camion ;
 
       
   }
 
 
-  return camion
+  
 }
   
 
@@ -414,6 +415,7 @@ for(let i = 0 ; i < this.listaCamionesGuia[index].facturas.length; i++){
 if(this.listaCamionesGuia[index].facturas[i].factura.FACTURA == factura.factura.FACTURA){
 
   
+
   console.log(index, 'index', factura)
   this.listaCamionesGuia[index].peso -= factura.factura.TOTAL_PESO;
   this.listaCamionesGuia[index].volumen -= Number(factura.factura.RUBRO1);;
@@ -436,21 +438,41 @@ if(this.listaCamionesGuia[index].facturas[i].factura.FACTURA == factura.factura.
   }
 
 
-  let guia = this.listaGuias();
+  let guia = this.listaGuias(this.listaCamionesGuia);
 
  guia.then(resp =>{
+
+  console.log(resp,' respnseee')
+if(resp != undefined ){
+  const indexGuia = this.listaCamionesGuia.findIndex( guia => guia.consecutivo ==resp.consecutivo);
+
+if(indexGuia < 0){
+
+  this.listaCamionesGuia.push(resp)
+}
+
+ 
+  console.log(this.listaCamionesGuia,'this.listaCamionesGuia', resp.consecutivo, 'resp.consecutivo')
   for(let i = 0; i < this.listaCamionesGuia.length; i++){
+
     if( this.listaCamionesGuia[i].consecutivo == resp.consecutivo){
       this.listaCamionesGuia[i].peso += factura.factura.TOTAL_PESO;
       this.listaCamionesGuia[i].volumen += Number(factura.factura.RUBRO1);;
  
       this.listaCamionesGuia[i].facturas.push(factura)
-      this.listaCamionesGuia[i].numClientes = this.listaCamionesGuia[i].facturas.length;
+      if(index < 0 ){
+        this.listaCamionesGuia[i].numClientes += 1;
+      }else{
+        this.listaCamionesGuia[i].numClientes = this.listaCamionesGuia[i].facturas.length;
+      }
+  
       this.listaCamionesGuia[i].pesoRestante = this.listaCamionesGuia[i].capacidad - this.listaCamionesGuia[i].peso
 
       this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, resp.consecutivo)
     }
  }
+
+}
   })
 
 
@@ -617,6 +639,8 @@ generarPost(){
  
    this.listaCamionesGuia.forEach(guia =>{
  
+    console.log(guia)
+
      const guiaCamion = { 
     idGuia: guia.consecutivo,
     fecha: guia.fecha,
@@ -629,8 +653,12 @@ generarPost(){
     HH: guia.HH,
     volumen: guia.volumen
    }
- 
-   this.guiasService.guiasArray.push(guiaCamion)
+if(guia.guiaExistente){
+  this.guiasService.guiasArrayExistentes.push(guiaCamion)
+}else{
+   
+  this.guiasService.guiasArray.push(guiaCamion)
+}
  
  
  
@@ -664,14 +692,16 @@ generarPost(){
         checkout:null  
      }
 
+
+     const i = this.ruteroService.rutertoPostArray.findIndex(rutero => rutero.idCliente == factura.factura.CLIENTE_ORIGEN )
+
+     if(i >=0){
+      this.ruteroService.rutertoPostArray[i].bultos +=factura.factura.TOTAL_VOLUMEN
+     }else{
+      this.ruteroService.rutertoPostArray.push(rutero)
+     }
      
-  const i = this.ruteroService.rutertoPostArray.findIndex(rutero => rutero.idCliente == factura.factura.CLIENTE_ORIGEN )
-   if(i >=0){
-    this.ruteroService.rutertoPostArray[i].bultos +=factura.factura.TOTAL_VOLUMEN
-   }else{
-    this.ruteroService.rutertoPostArray.push(rutero)
-   }
-  
+
 
    })
  
@@ -679,15 +709,20 @@ generarPost(){
  
    })
  
+
+
+   console.log(this.actualizaFacturaGuiasService.actualizaFacturasArray,'todas las facturas')
+   console.log(this.guiasService.guiasArray,' guias nuevas')
+   console.log(this.guiasService.guiasArrayExistentes,' guias existentes')
+   console.log(this.ruteroService.rutertoPostArray,'ruteros nuevos')
+   console.log(this.ruteroService.rutertoPostArrayExistentes,' ruteros existentes')
+   this.actualizarFacturasService.insertarFacturas(); // POST
+  this.guiasService.insertarGuias();  // PUT
+  this.guiasService.putGuias();  // PUT
+  this.ruteroService.insertarPostRutero();  // POST 
+  this.eliminarGuias();
  
-   console.log('guias', this.guiasService.guiasArray , 'facturas',this.actualizarFacturasService.actualizaFacturasArray)
- 
-   this.actualizarFacturasService.insertarFacturas();
-   this.guiasService.insertarGuias();
-   this.ruteroService.insertarPostRutero();
-   this.eliminarGuias();
- 
-  this.reset();
+this.reset();
    
  
  }

@@ -12,6 +12,7 @@ import { PlanificacionEntregasService } from './planificacion-entregas.service';
 export class GuiasService {
 
   guiasArray: GuiaEntrega[]=[];
+  guiasArrayExistentes: GuiaEntrega[]=[];
   guiasArrayRuta: GuiaEntrega[]=[];
   url = null;
 
@@ -45,7 +46,7 @@ export class GuiasService {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test +environment.postURL + api + environment.guiasURLEstadoParam +'RUTA';
+    const URL = environment.preURL  + test +environment.postURL + api + environment.guiasURLEstadoParam +'INI';
 
     return URL;
 
@@ -54,6 +55,8 @@ export class GuiasService {
 
   private getEstado( ){
     const URL = this.getIRPURLEstado( environment.guiasURL);
+
+    console.log(URL,'URL guias')
     return this.http.get<GuiaEntrega[]>( URL );
   }
 
@@ -84,6 +87,12 @@ export class GuiasService {
   }
 
 
+  syncGuiasEnRutaPromise(){
+
+    return  this.getEstado().toPromise();
+   }
+ 
+ 
 
 
 
@@ -100,6 +109,51 @@ export class GuiasService {
     return this.http.post( URL, JSON.stringify(guia), options );
  
   }
+
+  private putActualizarGuias (guia,ID){
+    let URL = this.getIRPURL( environment.guiasURL );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      }
+    };
+URL = URL + environment.idParam + ID
+    console.log(URL, 'URL PUT GUIA')
+    return this.http.put( URL, JSON.stringify(guia), options );
+ 
+  }
+
+putGuias(){
+
+this.guiasArrayExistentes.forEach(guia =>{
+  this.putActualizarGuias(guia, guia.idGuia).subscribe(
+
+    resp =>{
+  console.log('guia actualizada', guia)
+
+    }, error =>{
+      let errorObject = {
+        titulo: 'actualizar guias',
+        metodo:'PUT',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/guias-service.ts',
+        json:JSON.stringify(this.guiasArray)
+      }
+      this.planificacionEntregasService.errorArray.push(errorObject)
+      console.log('error actualizando guia', guia, error)
+
+    }
+  )
+})
+
+this.guiasArrayExistentes = [];
+}
+
+
+
   cargarArraygoFacturas(guias){
     this.guiasArray = [];
     this.guiasArray = guias;

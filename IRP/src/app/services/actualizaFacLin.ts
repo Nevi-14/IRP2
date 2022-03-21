@@ -22,7 +22,7 @@ if(!environment.prdMode){
 }
 
 const URL = environment.preURL + test  + environment.postURL +  api + id;
-
+console.log('url', URL)
 return URL;
 
 
@@ -35,11 +35,17 @@ private getActualizaFacLin(id){
 
 }
 
-syncActualizaFacLin(id){
+syncActualizaFacLin(id, idCliente){
+  this.facturaLineasEspejoArray = [];
 this.getActualizaFacLin(id).subscribe(
 resp => {
+console.log(id, idCliente, 'jsjsjsjsjjsjs')
+  resp.forEach(element => {
+    if(element.idCliente == idCliente ){
+       this.facturaLineasEspejoArray.push(element)
+    }
+  });
 
-  this.facturaLineasEspejoArray = resp;
    console.log(resp)
    //alert(resp)
 }, error => {

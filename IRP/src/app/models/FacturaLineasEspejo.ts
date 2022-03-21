@@ -10,6 +10,7 @@ export class FacturaLineasEspejo {
     public idJusti:    string,
     public tipoJusti:  string,
     public descripcion: string, // DESCRIPCION DEL ARTICULO
-    public justificacion:  string // DESCRIPCION DE LA JUSTIFICACION
+    public justificacion:  string, // DESCRIPCION DE LA JUSTIFICACION
+    public idCliente:  string
     ){}
 }
