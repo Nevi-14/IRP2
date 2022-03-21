@@ -18,7 +18,7 @@ export class GuiasRutaPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.guiasService.syncGuiasRuta();
+    this.guiasService.syncGuiasRuta('RUTA');
   console.log(  this.guiasService.guiasArrayRuta)
   }
   onSearchChange(event){
