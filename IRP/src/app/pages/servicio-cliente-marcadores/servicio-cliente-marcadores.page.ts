@@ -19,7 +19,7 @@ interface Marcadores{
 export class ServicioClienteMarcadoresPage implements OnInit {
   @Input() marcadores:Marcadores[];
   filtroToggle = true;
-  toggleValue = 'id';
+  toggleValue = 'title';
 @Input() funcion:string;
 
 image = "assets/icons/shipped.svg"
@@ -29,23 +29,13 @@ textoBuscar = '';
   ) { }
 
   ngOnInit() {
- 
+ console.log(this.marcadores,'this.marcadores')
   }
   cerrarModal(){
     this.modalCtrl.dismiss();
   }
 
-  cambio(){
-    console.log(this.toggleValue,' toggle value')
-    if(this.toggleValue === 'id' ){
-      this.toggleValue = 'nombre'
-      this.filtroToggle = false;
-    }else{
-      this.toggleValue = 'id'
-      this.filtroToggle = true;
-    }
- 
-  }
+
   onSearchChange(event){
 
      this.textoBuscar = event.detail.value;

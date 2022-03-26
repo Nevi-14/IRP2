@@ -252,7 +252,14 @@ width: 100%;
 
 
 }
-
+.marker-icon {
+  display: block;
+  border: none;
+  cursor: pointer;
+  
+font-weight: bold;
+font-size: 10px;
+  }
 .marker {
   display: block;
   border: none;
@@ -673,7 +680,11 @@ cursor: pointer;
 padding: 0;
 margin-left: 3rem;
 }
-
+.marker-icon {
+position: absolute;
+top: -20px;
+left: -3rem;
+  }
 * {
   -webkit-user-select: text;
   -moz-user-select: text;
