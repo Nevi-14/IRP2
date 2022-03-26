@@ -145,10 +145,10 @@
       <p>Placa : {{camion.idCamion}}</p>
       <p>Consecutivo : {{camion.consecutivo}}</p>
       <p>Total Facturas : <ion-badge  color="dark" mode="ios">{{camion.numClientes}}</ion-badge></p>
-      <p>Total Bultos : {{camion.volumen }}</p>
-      <p>Capacidad Total : {{camion.capacidad }}</p>
-      <p>Capacidad Actual : {{camion.peso }}</p>
-      <p>Capacidad Restante : {{camion.pesoRestante}}</p>
+      <p>Total Bultos : {{camion.volumen.toFixed(2) }}</p>
+      <p>Capacidad Total : {{camion.capacidad.toFixed(2) }}</p>
+      <p>Capacidad Actual : {{camion.peso.toFixed(2) }}</p>
+      <p>Capacidad Restante : {{camion.pesoRestante.toFixed(2)}}</p>
 
 
     </ion-label>
