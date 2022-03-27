@@ -16,7 +16,6 @@ import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
-import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 interface Marcadores {
   id: string,
   cliente: any,
@@ -104,7 +103,6 @@ gestionErrores(){
       //Add 'implements AfterViewInit' to the class.
 
       this.limpiarDatos()
-
       
     }
          
@@ -166,10 +164,7 @@ this.features = [];
 this.coordinates.push(this.lngLat);
   this.clientesArray.forEach(cliente =>{
 const coordinate = [cliente.longitud, cliente.latitud]
-
-if(cliente.longitud != 0 && cliente.latitud != 0){
-  this.coordinates.push(coordinate);
-}
+this.coordinates.push(coordinate);
 const feature =    {
   title:  cliente.idCliente +' '+cliente.nombre,
   type: 'Feature',
@@ -230,61 +225,9 @@ this.alertasService.loadingDissmiss();
 //=============================================================================
 
 
-async  getRoute() {
-  // make a directions request using cycling profile
-  // an arbitrary start will always be the same
-  // only the end or destination will change
-
-  let firstPart =  `https://api.mapbox.com/directions/v5/mapbox/driving/${this.lngLat}`
-   let middle = '';
-this.coordinates.forEach(cordinate=>{
-
-  middle += ';'+cordinate
 
 
-})
-  let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
-  let final = firstPart + middle +secondPart;
-
-if(this.coordinates.length > 0){
-  const query = await fetch(
-    final,
-    { method: 'GET' }
-  );
-  const json = await query.json();
-
-  console.log(middle)
-  const data = json.routes[0];
-  const route = data.geometry.coordinates;
-  let geojson :any = {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'LineString',
-      coordinates: route
-    }
-  };
-  this.mapa.addLayer({
-    id: 'route',
-    type: 'line',
-    source: {
-      type: 'geojson',
-      data: geojson
-    },
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': '#3887be',
-      'line-width': 5,
-      'line-opacity': 0.75
-    }
-})
-}
-
-}
 createmapa() {
 
   
@@ -313,17 +256,12 @@ const geojson: any = {
   };
   this.mapa = new mapboxgl.Map({
     container: this.divMapa.nativeElement,
-    style: 'mapbox://styles/mapbox/light-v10', // Specify which map style to use
+    style: 'mapbox://styles/mapbox/streets-v11',
     center: this.lngLat,
     zoom: this.zoomLevel,
     interactive: true,
 
   });
-
-
-
-
-
     // Create a default Marker and add it to the map.
 
     const newMarker = new mapboxgl.Marker({
@@ -337,7 +275,7 @@ const geojson: any = {
     .addTo(this.mapa)
     .togglePopup();
 
-    this.getRoute()
+
 // add markers to map
 for (const feature of geojson.features) {
 
@@ -404,11 +342,50 @@ for (const feature of geojson.features) {
 }
 this.mapa.on('load', () => {
 
+    // 'line-gradient' can only be used with GeoJSON sources
+// and the source must have the 'lineMetrics' option set to true
+this.mapa.addSource('line', {
+  type: 'geojson',
+  lineMetrics: true,
+  data: geojsonCoordinates
+  });
+   
+  // the layer must be of type 'line'
+  this.mapa.addLayer({
+  type: 'line',
+  source: 'line',
+  id: 'line',
+  paint: {
+    'line-color': 'red',
+    'line-width': 14,
+    // 'line-gradient' must be specified using an expression
+    // with the special 'line-progress' property
+    'line-gradient': [
+    'interpolate',
+    ['linear'],
+    ['line-progress'],
+    0,
+    'blue',
+    0.1,
+    'royalblue',
+    0.3,
+    'cyan',
+    0.5,
+    'lime',
+    0.7,
+    'yellow',
+    1,
+    'red'
+    ]
+    },
+  layout: {
+  'line-cap': 'round',
+  'line-join': 'round'
+  }
+});
+
 this.mapa.resize();
   });
-
-
-
 }
 
 
