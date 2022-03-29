@@ -50,7 +50,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 @ViewChild('mapa') divMapa!:ElementRef;
 zoomLevel: number = 12;
 geocoderArray: any;
-lngLat: [number, number] = [-84.12216755918627, 10.003022709670836];
+lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
 marcadoresDuplicados : Marcadores [] = [];
 marcadoresModificados : Marcadores [] = [];
 marcadoresModal = []

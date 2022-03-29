@@ -16,7 +16,6 @@ import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
-import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 interface Marcadores {
   id: string,
   cliente: any,
@@ -48,13 +47,11 @@ export class ServicioClientePage implements OnInit {
   result: any;
   mapa!: mapboxgl.Map;
   geocoder: any;
-  zoomLevel: number = 10.5;
+  zoomLevel: number = 12;
   array: any;
-  lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+  lngLat: [number, number] = [-84.12216755918627, 10.003022709670836];
   marcadores: Marcadores[] = [];
   clientesArray = [];
-  coordinates = [];
-  features = [];
     constructor(
       
       public modalCtrl: ModalController, 
@@ -88,7 +85,7 @@ export class ServicioClientePage implements OnInit {
     
     }
 
-//============================================================================= 
+    //============================================================================= 
 // MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
 //=============================================================================
 
@@ -103,8 +100,7 @@ gestionErrores(){
       //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
       //Add 'implements AfterViewInit' to the class.
 
-      this.limpiarDatos()
-
+      this.createmapa()
       
     }
          
@@ -115,7 +111,7 @@ gestionErrores(){
         component: ServicioClienteMarcadoresPage,
         cssClass: 'auto-size-modal',
         componentProps:{
-          marcadores: this.features
+          marcadores: this.marcadores
         }
        // backdropDismiss:false
       });
@@ -161,35 +157,7 @@ this.alertasService.presentaLoading('Cargando lista de clientes')
           ruteros.then(rutero =>{
 
   this.clientesArray = rutero;
-this.coordinates = [];
-this.features = [];
-this.coordinates.push(this.lngLat);
-  this.clientesArray.forEach(cliente =>{
-const coordinate = [cliente.longitud, cliente.latitud]
-
-if(cliente.longitud != 0 && cliente.latitud != 0){
-  this.coordinates.push(coordinate);
-}
-const feature =    {
-  title:  cliente.idCliente +' '+cliente.nombre,
-  type: 'Feature',
-  geometry: {
-    type: 'Point',
-    coordinates: [cliente.longitud, cliente.latitud]
-  },
-  properties: {
-    title:  cliente.idCliente +' '+cliente.nombre,
-    icon:   'music',
-    client: cliente,
-    color: null,
-  }
-}
-this.features.push(feature)
-   
-  })
 this.createmapa();
-
-console.log(this.clientesArray,'this.clientesArray')
 
 this.alertasService.loadingDissmiss();
 
@@ -215,209 +183,220 @@ this.alertasService.loadingDissmiss();
     }
 
 
-  }
 
+} 
 
-//============================================================================= 
-// MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
-//=============================================================================
-
-
-
-
-//============================================================================= 
-//CREAR MAPA
-//=============================================================================
-
-
-async  getRoute() {
-  // make a directions request using cycling profile
-  // an arbitrary start will always be the same
-  // only the end or destination will change
-
-  let firstPart =  'https://api.mapbox.com/directions/v5/mapbox/driving/'
-   let middle = '';
-
-   for (let i = 0; i < this.coordinates.length; i++){
-
-if(this.coordinates.length -1  == i){
-  middle += this.coordinates[i]
-}else{
-  middle += this.coordinates[i]+';'
-}
-
-   }
-
-
-console.log(middle,'middle')
-  let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-
-  let final = firstPart + middle +secondPart;
-
-if(this.coordinates.length > 0){
-  const query = await fetch(
-    final,
-    { method: 'GET' }
-  );
-  const json = await query.json();
-console.log(json, 'json return')
-
-  const data = json.routes[0];
-  const route = data.geometry.coordinates;
-  let geojson :any = {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'LineString',
-      coordinates: route
-    }
-  };
-  this.mapa.addLayer({
-    id: 'route',
-    type: 'line',
-    source: {
-      type: 'geojson',
-      data: geojson
-    },
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': '#3887be',
-      'line-width': 5,
-      'line-opacity': 0.75
-    }
-})
-}
-
-}
 createmapa() {
 
-  
+ 
 if(this.mapa){
+this.mapa.remove();
+}
 
-  this.mapa.remove();
-
-  }
-
-let geojsonCoordinates : any = {
-  'type': 'FeatureCollection',
-  'features': [
-  {
-  'type': 'Feature',
-  'properties': {},
-  'geometry': {
-  'coordinates': this.coordinates,
-  'type': 'LineString'
-  }
-  }
-  ]
-  };
-const geojson: any = {
-  'type': 'FeatureCollection',
-  'features': this.features
-  };
   this.mapa = new mapboxgl.Map({
     container: this.divMapa.nativeElement,
-    style: 'mapbox://styles/mapbox/light-v10', // Specify which map style to use
+    style: 'mapbox://styles/mapbox/streets-v11',
     center: this.lngLat,
     zoom: this.zoomLevel,
-    interactive: true,
-
+    interactive: true
   });
 
 
+  // Create a default Marker and add it to the map.
+  const newMarker = new mapboxgl.Marker({ draggable: true })
+    .setLngLat(this.lngLat)
+    .addTo(this.mapa);
+    const draw = new MapboxDraw({
+      // Instead of showing all the draw tools, show only the line string and delete tools.
+      displayControlsDefault: false,
+      controls: {
+        line_string: true,
+        trash: true
+      },
+      // Set the draw mode to draw LineStrings by default.
+      defaultMode: 'draw_line_string',
+      styles: [
+        // Set the line style for the user-input coordinates.
+        {
+          id: 'gl-draw-line',
+          type: 'line',
+          filter: ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
+          layout: {
+            'line-cap': 'round',
+            'line-join': 'round'
+          },
+          paint: {
+            'line-color': '#438EE4',
+            'line-dasharray': [0.2, 2],
+            'line-width': 4,
+            'line-opacity': 0.7
+          }
+        },
+        // Style the vertex point halos.
+        {
+          id: 'gl-draw-polygon-and-line-vertex-halo-active',
+          type: 'circle',
+          filter: [
+            'all',
+            ['==', 'meta', 'vertex'],
+            ['==', '$type', 'Point'],
+            ['!=', 'mode', 'static']
+          ],
+          paint: {
+            'circle-radius': 12,
+            'circle-color': '#FFF'
+          }
+        },
+        // Style the vertex points.
+        {
+          id: 'gl-draw-polygon-and-line-vertex-active',
+          type: 'circle',
+          filter: [
+            'all',
+            ['==', 'meta', 'vertex'],
+            ['==', '$type', 'Point'],
+            ['!=', 'mode', 'static']
+          ],
+          paint: {
+            'circle-radius': 8,
+            'circle-color': '#438EE4'
+          }
+        }
+      ]
+    });
+    
+   // this.mapa.addControl(draw)
 
 
+    this.mapa.on('load', () => {
 
-    // Create a default Marker and add it to the map.
-
-    const newMarker = new mapboxgl.Marker({
-      color:"#010203",
-      draggable: false
-  
-  })
+      this.mapa.resize();
+    });
  
-  newMarker.setLngLat(this.lngLat)
-    .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
-    .addTo(this.mapa)
-    .togglePopup();
+    this.agregarMarcadores(this.clientesArray,'nombre','idCliente',false);
 
-// add markers to map
-for (const feature of geojson.features) {
+}
 
-
-     // Create a DOM element for each marker.
-     const el = document.createElement('div');
-     const elwidth = 60;
-     const elheight = 60;
-     el.className = 'marker';
-     el.style.backgroundImage = `url(assets/icons/shipped.svg)`;
-     el.style.width = `${elwidth}px`;
-     el.style.height = `${elheight}px`;
-     el.style.backgroundSize = '100%';
-      
-     el.addEventListener('click', () => {
-           if(feature.properties.client.estado === 'I'){
-          this.detalleClientes(feature.properties.client, color, 'url(assets/icons/shipped.svg)')
-        }else{
-          this.detalleClientes(feature.properties.client, color, null)
-        }
-     });
-
-       // Create a DOM element for each marker.
-       const store = document.createElement('div');
-       const storewidth = 40;
-       const storeheight = 40;
-       store.className = 'marker-icon';
-       store.style.backgroundImage = `url(assets/icons/store.svg)`;
-       store.style.width = `${storewidth}px`;
-       store.style.height = `${storeheight}px`;
-       store.style.backgroundSize = '100%';
-
-       store.addEventListener('click', () => {
-        if(feature.properties.client.estado === 'I'){
-          this.detalleClientes(feature.properties.client, color, 'url(assets/icons/shipped.svg)')
-        }else{
-          this.detalleClientes(feature.properties.client, color, null)
-        }
-        });
-
-
-       new mapboxgl.Marker(store)
-       .setLngLat(feature.geometry.coordinates)
-       .addTo(this.mapa);
-         
-         
-  const { newMarker , color } =  this.generarMarcadorColor(feature.properties.client.estado)
-
-  feature.properties.color = color
-  if(feature.properties.client.estado === 'I'){
-         // Add markers to the map.
-         new mapboxgl.Marker(el)
-         .setLngLat(feature.geometry.coordinates)
-         .addTo(this.mapa);
+addRoute(coords) {
+  // If a route is already loaded, remove it
+  if (this.mapa.getSource('route')) {
+  this.mapa.removeLayer('route');
+  this.mapa.removeSource('route');
+  } else {
+  this.mapa.addLayer({
+  'id': 'route',
+  'type': 'line',
+  'source': {
+  'type': 'geojson',
+  'data': {
+  'type': 'Feature',
+  'properties': {},
+  'geometry': coords
   }
-  newMarker.setLngLat(feature.geometry.coordinates)
-  .addTo(this.mapa)
-
-  const miniPopup = new  mapboxgl.Popup();
-  miniPopup.setText(feature.properties.title)
-
-  newMarker.setPopup(miniPopup)
-  //.togglePopup();
-}
-this.mapa.on('load', () => {
-  this.getRoute()
-this.mapa.resize();
+  },
+  'layout': {
+  'line-join': 'round',
+  'line-cap': 'round'
+  },
+  'paint': {
+  'line-color': '#03AA46',
+  'line-width': 8,
+  'line-opacity': 0.8
+  }
   });
+  }
+  }
+
+agregarMarcadores(arreglo:any[], columna:string, id:string, nuevoCliente: boolean){
+
+  this.marcadores = []
+console.log(arreglo,'marcadores 2')
+  for(let i =0; i < arreglo.length ;i++)
+
+  {
+   // Create a DOM element for each marker.
+   const el = document.createElement('div');
+   const width = 60;
+   const height = 60;
+   el.className = 'marker';
+   el.style.backgroundImage = `url(assets/icons/shipped.svg)`;
+   el.style.width = `${width}px`;
+   el.style.height = `${height}px`;
+   el.style.backgroundSize = '100%';
+    
+   el.addEventListener('click', () => {
+   window.alert('La factura ya fue  entregada');
+   });
+
+   let   lngLat: [number, number] = [arreglo[i].longitud,arreglo[i].latitud];
+    
+if(arreglo[i].estado === 'I'){
+     // Add markers to the map.
+     new mapboxgl.Marker(el)
+     .setLngLat(lngLat)
+     .addTo(this.mapa);
+}
+
+    
+const { newMarker , color } =  this.generarMarcadorColor(arreglo[i].estado);
+const miniPopup = new  mapboxgl.Popup();
+const nombre = arreglo[i][columna];
+
+console.log(arreglo[i], 'arreglo[i]')
+  newMarker.setLngLat([arreglo[i].longitud,arreglo[i].latitud]!)
+  miniPopup.setText(arreglo[i][id] +' ' +  nombre)
+  miniPopup.on('open', () => {
+    console.log('popup was opened', arreglo[i]);
+    if(arreglo[i].estado === 'I'){
+      this.detalleClientes(arreglo[i], color, 'url(assets/icons/shipped.svg)')
+    }else{
+      this.detalleClientes(arreglo[i], color, null)
+    }
+   
+  })
+  newMarker.setPopup(miniPopup);
+  // newMarker.setLngLat([item.cliente.LONGITUD,item.cliente.LATITUD]!)
+  newMarker.setLngLat([arreglo[i].longitud,arreglo[i].latitud]!)
+
+  .addTo(this.mapa);
+
+  newMarker.on('dragend', () => {
+  
+    const i = this.marcadores.findIndex(m => m.id === this.marcadores[i].cliente.IdCliente);
+
+    const { lng, lat } = this.marcadores[i].marker!.getLngLat();
 
 
+    this.marcadores[i].cliente.LONGITUD = lng;
+    this.marcadores[i].cliente.LATITUD = lat;
+
+
+    this.marcadores[i].modificado = true;
+    this.marcadores[i].marker.setLngLat([lng, lat]);
+    this.createmapa();
+   // this.irMarcador( this.marcadores[i].marker);
+
+  })
+
+ const marcador = {
+
+  id:arreglo[i][id],
+  cliente:arreglo[i],
+  nombre:arreglo[i][columna],
+  marker:newMarker,
+  nuevoCliente: nuevoCliente,
+  modificado: false,
+  color:color
 
 }
 
+  this.marcadores.push(marcador)
 
+
+ }
+
+
+}
 async detalleClientes(cliente, color , imagen){
   const modal = await this.modalCtrl.create({
     component: ClientesRutasPage,
@@ -432,7 +411,6 @@ async detalleClientes(cliente, color , imagen){
 }
 generarMarcadorColor(estado){
 
-
   let color = null;
   let primary = '#428cff';
   let success = "#4BB543"
@@ -444,7 +422,7 @@ generarMarcadorColor(estado){
 color = primary
    break;
 
-    case 'I':
+   case 'I':
      color = warning
 
     break;
@@ -471,10 +449,10 @@ color = primary
   return {newMarker , color}
 
 }
-irMarcador(item) {
-  if (item) {
+irMarcador(marker: mapboxgl.Marker) {
+  if (marker) {
     this.mapa.flyTo(
-      { center: item, zoom: 18 }
+      { center: marker.getLngLat(), zoom: 18 }
     )
 
   }
@@ -511,8 +489,11 @@ this.createmapa();
 limpiarDatos() {
   this.guia = null;
   this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
-  this.coordinates = []
-  this.features = [];
+  this.mapa.off('zoom', () => { });
+  this.mapa.off('zoomend', () => { });
+  this.mapa.off('move', () => { });
+  this.clientesArray = []
+  this.marcadores = [];
   this.createmapa();
 
 

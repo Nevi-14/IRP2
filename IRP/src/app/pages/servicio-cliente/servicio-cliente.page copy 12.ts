@@ -50,7 +50,7 @@ export class ServicioClientePage implements OnInit {
   geocoder: any;
   zoomLevel: number = 10.5;
   array: any;
-  lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+  lngLat: [number, number] = [-84.12216755918627, 10.003022709670836];
   marcadores: Marcadores[] = [];
   clientesArray = [];
   coordinates = [];
@@ -166,10 +166,7 @@ this.features = [];
 this.coordinates.push(this.lngLat);
   this.clientesArray.forEach(cliente =>{
 const coordinate = [cliente.longitud, cliente.latitud]
-
-if(cliente.longitud != 0 && cliente.latitud != 0){
-  this.coordinates.push(coordinate);
-}
+this.coordinates.push(coordinate);
 const feature =    {
   title:  cliente.idCliente +' '+cliente.nombre,
   type: 'Feature',
@@ -230,38 +227,28 @@ this.alertasService.loadingDissmiss();
 //=============================================================================
 
 
-async  getRoute() {
+async  getRoute(end) {
   // make a directions request using cycling profile
   // an arbitrary start will always be the same
   // only the end or destination will change
 
-  let firstPart =  'https://api.mapbox.com/directions/v5/mapbox/driving/'
+  let firstPart =  `https://api.mapbox.com/directions/v5/mapbox/driving/${this.lngLat}`
    let middle = '';
+this.coordinates.forEach(cordinate=>{
 
-   for (let i = 0; i < this.coordinates.length; i++){
-
-if(this.coordinates.length -1  == i){
-  middle += this.coordinates[i]
-}else{
-  middle += this.coordinates[i]+';'
-}
-
-   }
+  middle += ';'+cordinate
 
 
-console.log(middle,'middle')
+})
   let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
   let final = firstPart + middle +secondPart;
 
-if(this.coordinates.length > 0){
   const query = await fetch(
     final,
     { method: 'GET' }
   );
   const json = await query.json();
-console.log(json, 'json return')
-
   const data = json.routes[0];
   const route = data.geometry.coordinates;
   let geojson :any = {
@@ -289,7 +276,6 @@ console.log(json, 'json return')
       'line-opacity': 0.75
     }
 })
-}
 
 }
 createmapa() {
@@ -328,7 +314,21 @@ const geojson: any = {
   });
 
 
+  const directions = new MapboxDirections({
+    accessToken: mapboxgl.accessToken,
+    unit: 'metric',
+    profile: 'mapbox/driving',
+    alternatives: false,
+    geometries: 'geojson',
+    controls: { instructions: false },
 
+    flyTo: true,
+    flyFrom:true
+    });
+     
+    this.mapa.addControl(directions, 'top-right');
+    this.mapa.scrollZoom.enable();
+     
 
 
     // Create a default Marker and add it to the map.
@@ -344,6 +344,7 @@ const geojson: any = {
     .addTo(this.mapa)
     .togglePopup();
 
+   
 // add markers to map
 for (const feature of geojson.features) {
 
@@ -409,12 +410,15 @@ for (const feature of geojson.features) {
   //.togglePopup();
 }
 this.mapa.on('load', () => {
-  this.getRoute()
+
 this.mapa.resize();
   });
 
+  this.coordinates.forEach(cordinate=>{
+   // alert(cordinate)
+      this.getRoute([this.coordinates[this.coordinates.length-1]])
 
-
+  })
 }
 
 

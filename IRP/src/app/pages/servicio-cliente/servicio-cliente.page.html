@@ -24,9 +24,9 @@
           <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
             <ion-icon class="spin-element"  name="settings"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="marcadores?.length > 0 "   shape="round" fill="solid" color="dark" (click)="informacionMarcadores()">
+          <ion-button *ngIf="features?.length > 0 "   shape="round" fill="solid" color="dark" (click)="informacionMarcadores()">
             <ion-icon name="location"></ion-icon>
-            <ion-badge color="primary" mode="ios">{{ marcadores?.length }}</ion-badge>
+            <ion-badge color="primary" mode="ios">{{ features?.length }}</ion-badge>
           </ion-button>
       
       
@@ -35,11 +35,11 @@
       
       
     
-          <ion-button  *ngIf="marcadores?.length > 0 "   (click)="refrescarVista()"  shape="round" fill="solid" color="dark">
+          <ion-button  *ngIf="features?.length > 0 "   (click)="refrescarVista()"  shape="round" fill="solid" color="dark">
             <ion-icon  name="refresh"></ion-icon>
               </ion-button>
   
-              <ion-button   *ngIf="marcadores?.length > 0 "    (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
+              <ion-button   *ngIf="features?.length > 0 "    (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
                 <ion-icon  name="trash"></ion-icon>
                   </ion-button>
         <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
