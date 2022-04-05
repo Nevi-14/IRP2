@@ -1,0 +1,87 @@
+
+<ion-header class="ion-no-border ion-padding">
+  <span style="display: flex; justify-content: space-between; align-items: center;">
+    
+    <ion-title class="ion-text-uppercase" >Lista de Clientes</ion-title>
+
+    <ion-searchbar mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" style="width: 350px" debounce="250" ></ion-searchbar>
+    <ion-buttons >
+      <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+
+  </span>
+
+
+</ion-header>
+<ion-toolbar>
+<ion-title>ID - Nombre Cliente</ion-title>
+    </ion-toolbar>
+<ion-content  >
+
+  <ion-grid >
+    <ion-row  style="margin-top:2rem">
+
+      <ion-col size="12" size-md="4" *ngFor="let item of marcadores  | filtro : textoBuscar:'title'">
+        <ion-card mode="ios">
+          <ion-card-header>
+            <ion-card-subtitle class="ion-text-uppercase">
+              {{item.title}} 
+             
+              
+              </ion-card-subtitle >
+              <ion-card-subtitle style="display: flex;" class="ion-margin">
+                {{item.new ? 'Nuevo' : 'Existente'}} |  {{item.modify ? 'Modificado' : 'Sin Modificar'}}
+               
+             </ion-card-subtitle>
+
+
+          </ion-card-header>
+        
+          <ion-card-content>
+
+          </ion-card-content>
+
+
+        </ion-card>
+        
+        <span style="position: absolute; top: 0%; right: 0; background-color: #d3d3d3;border-radius: .3rem;">
+          <ion-button class="tooltip-btn"  data-tooltip="Motrar detalle cliente"  fill="clear" (click)="detalleClientes(item.client)">
+            <ion-icon color="success" slot="icon-only" name="person-outline"></ion-icon>
+          
+          </ion-button>
+          <ion-button  *ngIf="!item.exclude" class="tooltip-btn"  (click)="irMarcador(item.client)" data-tooltip="Redirigir al mapa" fill="clear">
+            <ion-icon slot="icon-only" name="location" [ngStyle]="{
+              'color': item.color
+          }"></ion-icon>
+        
+        
+        
+          </ion-button>
+        
+          <ion-button *ngIf="item.exclude" class="tooltip-btn" (click)="irMarcador(item.client)"  data-tooltip="Incluir en la ruta actual"  fill="clear">
+            <ion-icon color="dark" slot="icon-only" name="add-outline"></ion-icon>
+          
+          </ion-button>
+        
+          <ion-button class="tooltip-btn" (click)="irMarcador(item.client)"  fill="clear"  data-tooltip="Exluir de la ruta">
+            <ion-icon color="danger" slot="icon-only" name="trash-outline"></ion-icon>
+          
+          </ion-button>
+          <ion-button class="tooltip-btn" (click)="irMarcador(item.client)"   fill="clear"  data-tooltip="Mover a otra ruta">
+            <ion-icon color="primary" slot="icon-only" name="create-outline"></ion-icon>
+          
+          </ion-button>
+        </span>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+  <ion-list>
+    
+
+  </ion-list>
+  
+</ion-content>

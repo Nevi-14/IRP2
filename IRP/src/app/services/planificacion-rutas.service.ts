@@ -6,18 +6,24 @@ import { ServiciosCompartidosService } from './servicios-compartidos.service';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../environments/environment';
 interface Marcadores {
+  id: any,
   select:boolean,
-  id: string,
-  excluir:boolean,
-  cliente: any,
-  modificado: boolean,
-  nuevoCliente: boolean,
+  modify: boolean,
+  new: boolean,
+  exclude:boolean,
+  duplicate:boolean,
+  title:  string,
   color: string,
-  nombre: string,
-  latitud:number,
-  longitud:number,
   marker?: mapboxgl.Marker,
-  centro?: [number, number]
+  type: any,
+  geometry: {
+    type: any,
+    coordinates: any
+  },
+  properties: {
+    client: any
+  }
+
 }
 @Injectable({
   providedIn: 'root'
@@ -36,17 +42,25 @@ public modalCtrl: ModalController
   ) { }
 
 
+
+  contador(column,searchvalue){
+    var count = this.marcadores.filter(c => c[column] === searchvalue).length
+
+console.log(column, searchvalue, count)
+   return count
+  }
   excluirClienteRuta(id){
 
     const i = this.marcadores.findIndex (marcador => marcador.id == id);
 
     if(i >=0 ){
-      this.marcadores[i].modificado = true;
-      this.marcadores[i].excluir = true;
+      this.marcadores[i].modify = true;
+      this.marcadores[i].exclude = true;
 
 
     }
 
+    console.log(id,'kdkdkdkd')
 
   }
 
@@ -55,8 +69,8 @@ public modalCtrl: ModalController
     const i = this.marcadores.findIndex (marcador => marcador.id == id);
 
     if(i >=0 ){
-      this.marcadores[i].modificado = false;
-      this.marcadores[i].excluir = false
+      this.marcadores[i].modify = false;
+      this.marcadores[i].exclude = false;
 
 
     }
@@ -86,8 +100,8 @@ public modalCtrl: ModalController
                 Usuario: 'IRP',
                 Zona: valor.Zona ,
                 Ruta:valor.Ruta   ,
-                Latitud: this.marcadores[i].cliente.LATITUD,
-                Longitud: this.marcadores[i].cliente.LONGITUD
+                Latitud: this.marcadores[i].properties.client.LATITUD,
+                Longitud: this.marcadores[i].properties.client.LONGITUD
                         }
            this.insertarClienteEspejo([rutasClientes]);
 console.log([rutasClientes])
@@ -158,7 +172,7 @@ console.log(URL,'post cliente espejo')
     
         for(let i = 0; i < this.marcadores.length; i ++){     
     
-          if(this.marcadores[i].modificado  || this.marcadores[i].nuevoCliente || this.marcadores[i].excluir){
+          if(this.marcadores[i].modify  || this.marcadores[i].new || this.marcadores[i].exclude){
     
            marcadoresExportar.push(this.marcadores[i])
 

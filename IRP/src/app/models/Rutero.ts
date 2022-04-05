@@ -12,6 +12,9 @@ export class Rutero {
         public observaciones:string,
         public estado: string,
         public bultos: number,
-        public checkout:Date   
+        public checkout:Date   ,
+        public orden_Visita: number,
+        public Duracion: number,
+        public distancia: number
     ){}
 }

@@ -14,7 +14,6 @@ import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
 import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clientes-guias.page';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
 import * as  mapboxgl from 'mapbox-gl';
-import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
 
 //=============================================================================
 // INTERFACE DE ESTRUCTURA DE CADA FACTURA DENTRO DE LA GUIA
@@ -26,8 +25,7 @@ interface facturaGuia{
   idGuia: string,
   factura: PlanificacionEntregas,
   distancia: number,
-  duracion:number,
-  order_visita: number
+  duracion:number
 
 }
 
@@ -72,7 +70,6 @@ export class ControlCamionesGuiasService {
   listaCamionesGuia: GuiaEntregaArray[] = [];
   guia:GuiaEntregaArray;
   rutaZona = null;
-  idGuiaPostArray = [];
  constructor( 
    
   public datableService:DataTableService, 
@@ -219,41 +216,15 @@ if(resp != undefined){
   guia.idCamion = resp.idCamion; // AGREGADOS EL ID DEL CAMION
   guia.estado = 'INI'; // AGREGAMOS EL ESTADO
   guia.HH = 'nd';
+  guia.facturas.push(factura)
   factura.idGuia = guia.consecutivo
-  console.log('factura', factura, factura.factura.LONGITUD, factura.factura.LATITUD)
-   this.getRoute(factura.factura.LONGITUD +','+factura.factura.LATITUD).then(resp =>{
-
-    const { distance, duration} = resp;
-    factura.distancia = distance;
-    factura.duracion  = duration ;
-    factura.order_visita = null ;
-     console.log(resp,'resp')
-      guia.facturas.push(factura)
-      this.obtenerFacturas()
-//alert (resp)
-  })
-   
-/**
- *   factura.distancia
-  factura.duracion
-  factura.order_visita
- */
-
-  for (let i = 0 ; i < this.listaCamionesGuia.length; i++){
-    if(this.listaCamionesGuia[i].idGuia == guia.consecutivo){
-      console.log(this.listaCamionesGuia[i],'foudndd  ')
-    }
-  }
   this.listaCamionesGuia.push(guia)
 this.incrementarValoresGuia(guia.consecutivo, factura)
   this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, guia.consecutivo)
-  console.log(guia,'guiaaa addded')
 
 }
 
   })
-
-
 
 }
 
@@ -261,8 +232,8 @@ async  getRoute(item) {
   // make a directions request using cycling profile
   // an arbitrary start will always be the same
   // only the end or destination will change
-console.log(item,'itemmmm')
-  let URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${this.lngLat};${item}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+
+  let URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${this.lngLat};${item.coordinate}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
   console.log(URL)
    const query = await fetch(
     URL,
@@ -275,7 +246,7 @@ console.log(item,'itemmmm')
   let duration  = 0;
   duration = Number((json.routes[0].duration / 60).toFixed(2) );
 
-return {distance , duration}
+
 }
 
 
@@ -441,41 +412,19 @@ async listaGuias(camionesDisponibles){
 
   
 
-agruparOrdernar( list ) {
-
-  list.sort( ( a, b ) => a.distancia - b.distancia )
-
-  list.forEach( ( _, index, arr ) => {
-
-      arr[ index ].order_visita = index
-console.log(   arr[ index ].distancia )
-  } )
-
-}
-obtenerFacturas(  ) {
 
 
-for(let i = 0; i < this.listaCamionesGuia.length; i++){
 
-  for(let j = 0; j < this.listaCamionesGuia[i].facturas.length; j++){
-console.log(this.listaCamionesGuia[i].facturas[j].distancia)
 
-this.agruparOrdernar(this.listaCamionesGuia[i].facturas)
-
-    console.log(i, j,'i ,j' ,this.listaCamionesGuia[i].facturas[j].cliente)
-
-  }
-}
-
-}
 
 agregarFacturaGuia(factura:facturaGuia){
 
+  
  if(factura.idGuia != '' || factura.idGuia != null || factura.idGuia != undefined){
 
   const index = this.listaCamionesGuia.findIndex( guia => guia.consecutivo == factura.idGuia);
 
- 
+
   if(index >=0){
 
 
@@ -522,32 +471,10 @@ if(this.listaCamionesGuia[index].facturas[i].factura.FACTURA == factura.factura.
 if(resp != undefined ){
   const indexGuia = this.listaCamionesGuia.findIndex( guia => guia.consecutivo ==resp.consecutivo);
 
-
-  this.getRoute(factura.factura.LONGITUD +','+factura.factura.LATITUD).then(resp =>{
-
-    const { distance, duration} = resp;
-    factura.distancia = distance;
-    factura.duracion  = duration ;
-    factura.order_visita = null ;
-     console.log(resp,'resp')
- 
-     this.obtenerFacturas()
-  })
-
-
-
-
 if(indexGuia < 0){
 
   this.listaCamionesGuia.push(resp)
-
 }
-
-/**
-*   factura.distancia
-factura.duracion
-factura.order_visita
-*/
 
  
   console.log(this.listaCamionesGuia,'this.listaCamionesGuia', resp.consecutivo, 'resp.consecutivo')
@@ -558,10 +485,8 @@ factura.order_visita
       this.listaCamionesGuia[i].volumen += Number(factura.factura.RUBRO1);;
  
       this.listaCamionesGuia[i].facturas.push(factura)
-
       if(index < 0 ){
         this.listaCamionesGuia[i].numClientes += 1;
-
       }else{
         this.listaCamionesGuia[i].numClientes = this.listaCamionesGuia[i].facturas.length;
       }
@@ -569,11 +494,9 @@ factura.order_visita
       this.listaCamionesGuia[i].pesoRestante = this.listaCamionesGuia[i].capacidad - this.listaCamionesGuia[i].peso
 
       this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, resp.consecutivo)
-      
     }
  }
 
-//alert('after')
 }
   })
 
@@ -582,7 +505,6 @@ factura.order_visita
  }
 
 
-  
 
 }
 
@@ -620,7 +542,7 @@ this.listaCamionesGuia.push(guia)
 
 actualizar(cienteId: string , facturaId:string, consecutivo){
 
-
+ 
   for(let i = 0; i < this.datableService.data.length; i++){
  
    if(cienteId == this.datableService.data[i].id ){
@@ -739,11 +661,11 @@ generarPost(){
   // this.guiasService.guiasArray = [];
  
    // this.actualizarFacturasService.actualizaFacturasArray = [];
-   this.idGuiaPostArray = [];
+ 
    this.listaCamionesGuia.forEach(guia =>{
  
     console.log(guia)
-this.idGuiaPostArray.push(guia.consecutivo)
+
      const guiaCamion = { 
     idGuia: guia.consecutivo,
     fecha: guia.fecha,
@@ -792,10 +714,7 @@ if(guia.guiaExistente){
         observaciones:null,
         estado: 'P',
         bultos: factura.factura.TOTAL_VOLUMEN,
-        checkout:null,
-        distancia: factura.distancia,
-        Duracion: factura.duracion,
-        orden_Visita: factura.order_visita
+        checkout:null  
      }
 
 
@@ -827,23 +746,12 @@ if(guia.guiaExistente){
   this.guiasService.putGuias();  // PUT
   this.ruteroService.insertarPostRutero();  // POST 
   this.eliminarGuias();
-  this.listaGuiasArray();
  
 this.reset();
    
  
  }
 
-async listaGuiasArray(){
- const modal = await this.modalCtrl.create({
-   component:ListaGuiasPostPage,
-   componentProps: {
-     guias:this.idGuiaPostArray
-   }
- }) 
-
- return modal.present();
- }
 
 
  reset(){

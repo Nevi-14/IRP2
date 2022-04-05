@@ -732,3 +732,14 @@ left: -3rem;
   .card-details {
   padding: 3px 6px;
   }
+
+  .my-custom-modal   {
+      
+    --backdrop-opacity: 0.8 !important;
+    align-items: center;
+    justify-content: center; 
+    &::part(content){
+      width:80%;
+      height: 80%; 
+    }
+  }

@@ -14,7 +14,6 @@ import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
 import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clientes-guias.page';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
 import * as  mapboxgl from 'mapbox-gl';
-import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
 
 //=============================================================================
 // INTERFACE DE ESTRUCTURA DE CADA FACTURA DENTRO DE LA GUIA
@@ -26,7 +25,7 @@ interface facturaGuia{
   idGuia: string,
   factura: PlanificacionEntregas,
   distancia: number,
-  duracion:number,
+  duracion:number
   order_visita: number
 
 }
@@ -72,7 +71,6 @@ export class ControlCamionesGuiasService {
   listaCamionesGuia: GuiaEntregaArray[] = [];
   guia:GuiaEntregaArray;
   rutaZona = null;
-  idGuiaPostArray = [];
  constructor( 
    
   public datableService:DataTableService, 
@@ -219,6 +217,7 @@ if(resp != undefined){
   guia.idCamion = resp.idCamion; // AGREGADOS EL ID DEL CAMION
   guia.estado = 'INI'; // AGREGAMOS EL ESTADO
   guia.HH = 'nd';
+  guia.facturas.push(factura)
   factura.idGuia = guia.consecutivo
   console.log('factura', factura, factura.factura.LONGITUD, factura.factura.LATITUD)
    this.getRoute(factura.factura.LONGITUD +','+factura.factura.LATITUD).then(resp =>{
@@ -226,13 +225,10 @@ if(resp != undefined){
     const { distance, duration} = resp;
     factura.distancia = distance;
     factura.duracion  = duration ;
-    factura.order_visita = null ;
+    factura.order_visita = 1 ;
      console.log(resp,'resp')
-      guia.facturas.push(factura)
-      this.obtenerFacturas()
 //alert (resp)
   })
-   
 /**
  *   factura.distancia
   factura.duracion
@@ -441,32 +437,32 @@ async listaGuias(camionesDisponibles){
 
   
 
-agruparOrdernar( list ) {
 
-  list.sort( ( a, b ) => a.distancia - b.distancia )
 
-  list.forEach( ( _, index, arr ) => {
+updateIndexes( list ) {
+let orderArray:facturaGuia[] = [];
 
-      arr[ index ].order_visita = index
-console.log(   arr[ index ].distancia )
-  } )
-
-}
-obtenerFacturas(  ) {
 
 
 for(let i = 0; i < this.listaCamionesGuia.length; i++){
+  console.log(this.listaCamionesGuia[i].facturas,'this.listaCamionesGuia[i].facturas')
 
   for(let j = 0; j < this.listaCamionesGuia[i].facturas.length; j++){
-console.log(this.listaCamionesGuia[i].facturas[j].distancia)
-
-this.agruparOrdernar(this.listaCamionesGuia[i].facturas)
-
-    console.log(i, j,'i ,j' ,this.listaCamionesGuia[i].facturas[j].cliente)
+    console.log(this.listaCamionesGuia[i].facturas[j], 'this.listaCamionesGuia[i].facturas[j]')
+    alert(this.listaCamionesGuia[i].facturas.length)
+    console.log(this.listaCamionesGuia[i].facturas[j].distancia,'this.listaCamionesGuia[i].facturas[j].distancia')
 
   }
 }
+console.log('this.listaCamionesGuia', this.listaCamionesGuia)
+this.listaCamionesGuia.forEach(guia =>{
+  let facturas:facturaGuia[] = guia.facturas ;
+ for(let i = 0; i <  facturas.length; i++){
+  console.log(facturas[i].distancia ,'for each')
 
+ }
+})
+console.log(orderArray,'orderArray')
 }
 
 agregarFacturaGuia(factura:facturaGuia){
@@ -530,17 +526,41 @@ if(resp != undefined ){
     factura.duracion  = duration ;
     factura.order_visita = null ;
      console.log(resp,'resp')
- 
-     this.obtenerFacturas()
+  //alert (resp)
   })
 
 
+  for (let i = 0 ; i < this.listaCamionesGuia.length; i++){
+    console.log(this.listaCamionesGuia[i], 'this.listaCamionesGuia[i]', factura, 'facturaaeee')
+    
+    if(this.listaCamionesGuia[i].consecutivo == factura.idGuia){
+  
+      this.listaCamionesGuia[i].facturas.forEach(facturaGuia =>{
+  
+        console.log(facturaGuia, 'facturaGuia', factura, 'facturaaeee')
+        if(facturaGuia.distancia > factura.distancia){
+          console.log(facturaGuia, 'facturaGuia higer')
+  
+         factura.order_visita = facturaGuia.order_visita;
+  
+         facturaGuia.order_visita = factura.order_visita +1 ;
+  
+        }else{
+          console.log(factura, 'factura higer')
 
+        }
+  
+  
+      })
+  
+      
+    }
+  }
 
 if(indexGuia < 0){
 
   this.listaCamionesGuia.push(resp)
-
+  this.updateIndexes([])
 }
 
 /**
@@ -558,10 +578,8 @@ factura.order_visita
       this.listaCamionesGuia[i].volumen += Number(factura.factura.RUBRO1);;
  
       this.listaCamionesGuia[i].facturas.push(factura)
-
       if(index < 0 ){
         this.listaCamionesGuia[i].numClientes += 1;
-
       }else{
         this.listaCamionesGuia[i].numClientes = this.listaCamionesGuia[i].facturas.length;
       }
@@ -569,7 +587,6 @@ factura.order_visita
       this.listaCamionesGuia[i].pesoRestante = this.listaCamionesGuia[i].capacidad - this.listaCamionesGuia[i].peso
 
       this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, resp.consecutivo)
-      
     }
  }
 
@@ -620,7 +637,7 @@ this.listaCamionesGuia.push(guia)
 
 actualizar(cienteId: string , facturaId:string, consecutivo){
 
-
+ 
   for(let i = 0; i < this.datableService.data.length; i++){
  
    if(cienteId == this.datableService.data[i].id ){
@@ -739,11 +756,11 @@ generarPost(){
   // this.guiasService.guiasArray = [];
  
    // this.actualizarFacturasService.actualizaFacturasArray = [];
-   this.idGuiaPostArray = [];
+ 
    this.listaCamionesGuia.forEach(guia =>{
  
     console.log(guia)
-this.idGuiaPostArray.push(guia.consecutivo)
+
      const guiaCamion = { 
     idGuia: guia.consecutivo,
     fecha: guia.fecha,
@@ -792,10 +809,7 @@ if(guia.guiaExistente){
         observaciones:null,
         estado: 'P',
         bultos: factura.factura.TOTAL_VOLUMEN,
-        checkout:null,
-        distancia: factura.distancia,
-        Duracion: factura.duracion,
-        orden_Visita: factura.order_visita
+        checkout:null  
      }
 
 
@@ -827,23 +841,12 @@ if(guia.guiaExistente){
   this.guiasService.putGuias();  // PUT
   this.ruteroService.insertarPostRutero();  // POST 
   this.eliminarGuias();
-  this.listaGuiasArray();
  
 this.reset();
    
  
  }
 
-async listaGuiasArray(){
- const modal = await this.modalCtrl.create({
-   component:ListaGuiasPostPage,
-   componentProps: {
-     guias:this.idGuiaPostArray
-   }
- }) 
-
- return modal.present();
- }
 
 
  reset(){
