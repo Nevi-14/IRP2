@@ -11,7 +11,7 @@ import { ControlCamionesGuiasService } from '../../services/control-camiones-gui
   styleUrls: ['./lista-clientes-guias.page.scss'],
 })
 export class ListaClientesGuiasPage implements OnInit {
-@Input() facturas:PlanificacionEntregas[]=[];
+@Input() facturas:any[]
 @Input()rutaZona;
 @Input() fecha;
 verdadero = true;
@@ -24,6 +24,7 @@ textoBuscar = '';
   ) { }
 
   ngOnInit() {
+   console.log( this.facturas)
   }
 
   actualizarFactura(factura){
