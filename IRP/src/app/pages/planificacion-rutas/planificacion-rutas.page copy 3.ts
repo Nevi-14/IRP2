@@ -14,6 +14,7 @@ import { PlanificacionRutasService } from '../../services/planificacion-rutas.se
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { Clientes } from '../../models/clientes';
 import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
+import { CalcularDitanciaRutaPage } from '../calcular-ditancia-ruta/calcular-ditancia-ruta.page';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
 
 interface Maradores2{
@@ -61,7 +62,7 @@ export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 default: any = 'title';
 zoomLevel: number = 12;
 geocoderArray: any;
-lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+lngLat: [number, number] = [-77.038659, 38.931567];
 marcadoresDuplicados : Marcadores [] = [];
 marcadoresModificados : Marcadores [] = [];
 marcadoresModal = []
@@ -427,7 +428,8 @@ gestionErrores(){
         };
 
 
-        // add markers to map
+/**
+ *         // add markers to map
 for (const feature of geojson.features) {
    
 const { newMarker , color } =  this.generarMarcadorColor( feature.properties.color)
@@ -436,56 +438,180 @@ feature.properties.color = color
 feature.marker = newMarker
 newMarker.setLngLat(feature.geometry.coordinates)
 .addTo(this.mapa)
-const name = 'abc';
 
-
-const divElement = document.createElement('div');
-const assignBtn = document.createElement('div');
-assignBtn.innerHTML = `
-
-<ion-list> 
-<ion-item>
-<ion-button fill="clear" class="ion-text-wrap">
-${feature.title}
-</ion-button>
-</ion-item>
-
-</ion-list>
-`;
-divElement.appendChild(assignBtn);
-// btn.className = 'btn';
-assignBtn.addEventListener('click', (e) => {
-this.detalleClientes(feature.properties.client)
-});
-newMarker.setPopup(new mapboxgl.Popup({offset: 32})
-.setDOMContent(divElement))
-    
-newMarker.on('dragend', () => {
-
-  const { lng, lat } = newMarker.getLngLat();
-const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcador.id == feature.id);
-
-if(i >=0){
-  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = lng;
-  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = lat;
-  this.planificacionRutasService.marcadores[i].modify = true;
-  this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
-  this.planificacionRutasService.marcadores[i].geometry.coordinates = [lng, lat]
-
-}
-
-//   this.createmapa(this.divMapa,false, true);
-  this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
-
+const miniPopup = new  mapboxgl.Popup();
+miniPopup.setText(feature.title)
+miniPopup.on('open', () => {
+  this.detalleClientes(feature.properties.client)
 })
-.addTo(this.mapa);
+
+newMarker.setPopup(miniPopup)
 
 //.togglePopup();
 }
+ */
   
       this.mapa .on('load', () => {
-
-        
+        this.mapa.addSource('places', {
+          // This GeoJSON contains features that include an "icon"
+          // property. The value of the "icon" property corresponds
+          // to an image in the Mapbox Streets style's sprite.
+          'type': 'geojson',
+          'data': {
+          'type': 'FeatureCollection',
+          'features': [
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Make it Mount Pleasant</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+          'icon': 'theatre-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.038659, 38.931567]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Mad Men Season Five Finale Watch Party</strong><p>Head to Lounge 201 (201 Massachusetts Avenue NE) Sunday for a <a href="http://madmens5finale.eventbrite.com/" target="_blank" title="Opens in a new window">Mad Men Season Five Finale Watch Party</a>, complete with 60s costume contest, Mad Men trivia, and retro food and drink. 8:00-11:00 p.m. $10 general admission, $20 admission and two hour open bar.</p>',
+          'icon': 'theatre-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.003168, 38.894651]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Big Backyard Beach Bash and Wine Fest</strong><p>EatBar (2761 Washington Boulevard Arlington VA) is throwing a <a href="http://tallulaeatbar.ticketleap.com/2012beachblanket/" target="_blank" title="Opens in a new window">Big Backyard Beach Bash and Wine Fest</a> on Saturday, serving up conch fritters, fish tacos and crab sliders, and Red Apron hot dogs. 12:00-3:00 p.m. $25.grill hot dogs.</p>',
+          'icon': 'bar-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.090372, 38.881189]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Ballston Arts & Crafts Market</strong><p>The <a href="http://ballstonarts-craftsmarket.blogspot.com/" target="_blank" title="Opens in a new window">Ballston Arts & Crafts Market</a> sets up shop next to the Ballston metro this Saturday for the first of five dates this summer. Nearly 35 artists and crafters will be on hand selling their wares. 10:00-4:00 p.m.</p>',
+          'icon': 'art-gallery-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.111561, 38.882342]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Seersucker Bike Ride and Social</strong><p>Feeling dandy? Get fancy, grab your bike, and take part in this year\'s <a href="http://dandiesandquaintrelles.com/2012/04/the-seersucker-social-is-set-for-june-9th-save-the-date-and-start-planning-your-look/" target="_blank" title="Opens in a new window">Seersucker Social</a> bike ride from Dandies and Quaintrelles. After the ride enjoy a lawn party at Hillwood with jazz, cocktails, paper hat-making, and more. 11:00-7:00 p.m.</p>',
+          'icon': 'bicycle-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.052477, 38.943951]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Capital Pride Parade</strong><p>The annual <a href="http://www.capitalpride.org/parade" target="_blank" title="Opens in a new window">Capital Pride Parade</a> makes its way through Dupont this Saturday. 4:30 p.m. Free.</p>',
+          'icon': 'rocket-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.043444, 38.909664]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Muhsinah</strong><p>Jazz-influenced hip hop artist <a href="http://www.muhsinah.com" target="_blank" title="Opens in a new window">Muhsinah</a> plays the <a href="http://www.blackcatdc.com">Black Cat</a> (1811 14th Street NW) tonight with <a href="http://www.exitclov.com" target="_blank" title="Opens in a new window">Exit Clov</a> and <a href="http://godsilla.bandcamp.com" target="_blank" title="Opens in a new window">Gods’illa</a>. 9:00 p.m. $12.</p>',
+          'icon': 'music-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.031706, 38.914581]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>A Little Night Music</strong><p>The Arlington Players\' production of Stephen Sondheim\'s  <a href="http://www.thearlingtonplayers.org/drupal-6.20/node/4661/show" target="_blank" title="Opens in a new window"><em>A Little Night Music</em></a> comes to the Kogod Cradle at The Mead Center for American Theater (1101 6th Street SW) this weekend and next. 8:00 p.m.</p>',
+          'icon': 'music-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.020945, 38.878241]
+          }
+          },
+          {
+          'type': 'Feature',
+          'properties': {
+          'description':
+          '<strong>Truckeroo</strong><p><a href="http://www.truckeroodc.com/www/" target="_blank">Truckeroo</a> brings dozens of food trucks, live music, and games to half and M Street SE (across from Navy Yard Metro Station) today from 11:00 a.m. to 11:00 p.m.</p>',
+          'icon': 'music-15'
+          },
+          'geometry': {
+          'type': 'Point',
+          'coordinates': [-77.007481, 38.876516]
+          }
+          }
+          ]
+          }
+          });
+        // Add a layer showing the places.
+        this.mapa.addLayer({
+  'id': 'places',
+  'type': 'symbol',
+  'source': 'places',
+  'layout': {
+  'icon-image': '{icon}',
+  'icon-allow-overlap': true
+  }
+  });
+   
+  // When a click event occurs on a feature in the places layer, open a popup at the
+  // location of the feature, with description HTML from its properties.
+  this.mapa.on('click', 'places', (e) => {
+  // Copy coordinates array.
+  console.log( e.features[0]['geometry']['coordinates'])
+  const coordinates = e.features[0]['geometry']['coordinates'];
+  const description = e.features[0].properties.description;
+   
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+   
+  new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  .setHTML(description)
+  .addTo(this.mapa);
+  });
+   
+  // Change the cursor to a pointer when the mouse is over the places layer.
+  this.mapa.on('mouseenter', 'places', () => {
+    this.mapa.getCanvas().style.cursor = 'pointer';
+  });
+   
+  // Change it back to a pointer when it leaves.
+  this.mapa.on('mouseleave', 'places', () => {
+    this.mapa.getCanvas().style.cursor = '';
+  });
         this.mapa .resize();
 
       });
@@ -571,7 +697,24 @@ if(i >=0){
 
     }   }
 
-    
+    async calcDistance() {
+
+      const modal = await this.modalCtrl.create({
+        component: CalcularDitanciaRutaPage,
+        cssClass: 'my-custom-modal',
+        componentProps:{
+          marcadores: this.features
+
+        }
+
+      });
+      
+
+      await modal.present();
+
+     const {data} = await modal.onDidDismiss();
+   }
+
 
 
 
@@ -581,7 +724,7 @@ if(i >=0){
 //=============================================================================
 
 async detalleClientes(cliente){
-console.log('clene',cliente)
+
   const modal = await this.modalCtrl.create({
     component: DetalleClientesPage,
     cssClass: 'large-modal',
@@ -611,16 +754,13 @@ console.log('clene',cliente)
 
 
 irMarcador(marker: mapboxgl.Marker) {
-this.planificacionRutasService.marcadores.forEach(marcadores => {
-let pop = marcadores.marker.getPopup().remove()
-console.log(pop,'pop')
-})
-if (marker) {
-  this.mapa.flyTo(
-    { center: marker.getLngLat(), zoom: 18 }
-  )
+
+  if (marker) {
+    this.mapa.flyTo(
+      { center: marker.getLngLat(), zoom: 18 }
+    )
 marker.togglePopup();
-}
+  }
 }
  //============================================================================= 
 // PERMITE QUE LOS MARCADORES SE PUEDAN MOVER

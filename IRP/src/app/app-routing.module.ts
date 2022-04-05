@@ -126,6 +126,11 @@ const routes: Routes = [
     path: 'gestor-errores-modal',
     loadChildren: () => import('./pages/gestor-errores-modal/gestor-errores-modal.module').then( m => m.GestorErroresModalPageModule)
   },
+  {
+    path: 'lista-guias-post',
+    loadChildren: () => import('./pages/lista-guias-post/lista-guias-post.module').then( m => m.ListaGuiasPostPageModule)
+  },
+
 
  
  

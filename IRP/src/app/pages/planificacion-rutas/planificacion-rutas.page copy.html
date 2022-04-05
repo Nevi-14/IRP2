@@ -30,17 +30,17 @@
           <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
             <ion-icon class="spin-element"  name="settings"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="features.length> 0"   shape="round" fill="solid" color="dark" (click)="informacionMarcadores('title')">
+          <ion-button *ngIf="planificacionRutasService.marcadores?.length > 0"   shape="round" fill="solid" color="dark" (click)="informacionMarcadores(planificacionRutasService.marcadores,false)">
             <ion-icon name="location"></ion-icon>
-            <ion-badge color="primary" mode="ios">{{features.length }}</ion-badge>
+            <ion-badge color="primary" mode="ios">{{planificacionRutasService.marcadores.length }}</ion-badge>
           </ion-button>
       
       
-          <ion-button  *ngIf="features.length > 0 "   shape="round" fill="solid" color="dark" (click)="dragMarcadores()"> 
+          <ion-button  *ngIf="planificacionRutasService.marcadores?.length > 0 "   shape="round" fill="solid" color="dark" (click)="dragMarcadores()"> 
             <ion-icon slot="start" name="locate-outline"></ion-icon>
             <ion-badge color="warning" mode="ios" >{{modo}}</ion-badge>
           </ion-button>
-
+      
       
       
       
@@ -48,9 +48,9 @@
             <ion-icon  name="person-add"></ion-icon>
           </ion-button>
           <ion-button   *ngIf="rutaZona" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
-            <ion-icon  name="trash-outline"></ion-icon>
+            <ion-icon  name="refresh"></ion-icon>
               </ion-button>
-          <ion-button   *ngIf="features.length > 0 " (click)="postRutas()"  shape="round" fill="solid" color="dark">
+          <ion-button   *ngIf="planificacionRutasService.marcadores?.length > 0 " (click)="postRutas()"  shape="round" fill="solid" color="dark">
         <ion-icon  name="save"></ion-icon>
           </ion-button>
         <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">

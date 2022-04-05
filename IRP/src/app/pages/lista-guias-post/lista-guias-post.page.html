@@ -1,0 +1,41 @@
+
+<ion-header class="ion-no-border ion-padding">
+  <span style="display: flex; justify-content: space-between; align-items: center;">
+    
+    <ion-title class="ion-text-uppercase" >Lista de guias guardadas 
+
+      <ion-badge  color="dark" mode="ios"  >{{guias.length}}</ion-badge>
+
+    </ion-title>
+
+
+  </span>
+
+
+</ion-header>
+<ion-toolbar>
+<ion-title>Numero de guia</ion-title>
+    </ion-toolbar>
+<ion-content  >
+
+  <ion-list>
+    <ion-item *ngFor="let item of guias">
+      <ion-label>
+    
+         {{item}}
+    
+        
+    
+       </ion-label>
+    
+    </ion-item>
+  </ion-list>
+  
+</ion-content>
+
+
+<ion-fab  (click)="cerrarModal()" vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button   color="danger">
+    <ion-icon  name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

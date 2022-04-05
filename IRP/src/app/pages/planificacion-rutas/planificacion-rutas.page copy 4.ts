@@ -14,6 +14,7 @@ import { PlanificacionRutasService } from '../../services/planificacion-rutas.se
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { Clientes } from '../../models/clientes';
 import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
+import { CalcularDitanciaRutaPage } from '../calcular-ditancia-ruta/calcular-ditancia-ruta.page';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
 
 interface Maradores2{
@@ -436,49 +437,31 @@ feature.properties.color = color
 feature.marker = newMarker
 newMarker.setLngLat(feature.geometry.coordinates)
 .addTo(this.mapa)
-const name = 'abc';
+const el = document.createElement('div');
+const elwidth = 60;
+const elheight = 60;
+el.className = 'marker';
+el.style.backgroundImage = `url(assets/icons/shipped.svg)`;
+el.style.width = `${elwidth}px`;
+el.style.height = `${elheight}px`;
+el.style.backgroundSize = '100%';
+ 
+el.addEventListener('click', () => {
 
-
-const divElement = document.createElement('div');
-const assignBtn = document.createElement('div');
-assignBtn.innerHTML = `
-
-<ion-list> 
-<ion-item>
-<ion-button fill="clear" class="ion-text-wrap">
-${feature.title}
-</ion-button>
-</ion-item>
-
-</ion-list>
-`;
-divElement.appendChild(assignBtn);
-// btn.className = 'btn';
-assignBtn.addEventListener('click', (e) => {
-this.detalleClientes(feature.properties.client)
-});
-newMarker.setPopup(new mapboxgl.Popup({offset: 32})
-.setDOMContent(divElement))
-    
-newMarker.on('dragend', () => {
-
-  const { lng, lat } = newMarker.getLngLat();
-const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcador.id == feature.id);
-
-if(i >=0){
-  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = lng;
-  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = lat;
-  this.planificacionRutasService.marcadores[i].modify = true;
-  this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
-  this.planificacionRutasService.marcadores[i].geometry.coordinates = [lng, lat]
-
-}
-
-//   this.createmapa(this.divMapa,false, true);
-  this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
-
+alert('clicked')
 })
-.addTo(this.mapa);
+newMarker.setPopup(new mapboxgl.Popup({offset: 32})
+                .setHTML(
+                  `
+                  ${feature.title}
+                  <ion-button color="dark" shape="round" fill="outline" (click)="detalleClientes( ${feature.properties.client})">Ver detalle</ion-button>
+
+
+
+                  `
+                 
+                  ))
+            .addTo(this.mapa);
 
 //.togglePopup();
 }
@@ -571,7 +554,24 @@ if(i >=0){
 
     }   }
 
-    
+    async calcDistance() {
+
+      const modal = await this.modalCtrl.create({
+        component: CalcularDitanciaRutaPage,
+        cssClass: 'my-custom-modal',
+        componentProps:{
+          marcadores: this.features
+
+        }
+
+      });
+      
+
+      await modal.present();
+
+     const {data} = await modal.onDidDismiss();
+   }
+
 
 
 
@@ -611,16 +611,13 @@ console.log('clene',cliente)
 
 
 irMarcador(marker: mapboxgl.Marker) {
-this.planificacionRutasService.marcadores.forEach(marcadores => {
-let pop = marcadores.marker.getPopup().remove()
-console.log(pop,'pop')
-})
-if (marker) {
-  this.mapa.flyTo(
-    { center: marker.getLngLat(), zoom: 18 }
-  )
+
+  if (marker) {
+    this.mapa.flyTo(
+      { center: marker.getLngLat(), zoom: 18 }
+    )
 marker.togglePopup();
-}
+  }
 }
  //============================================================================= 
 // PERMITE QUE LOS MARCADORES SE PUEDAN MOVER

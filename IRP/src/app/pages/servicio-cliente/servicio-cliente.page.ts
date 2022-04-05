@@ -50,7 +50,7 @@ export class ServicioClientePage implements OnInit {
   geocoder: any;
   zoomLevel: number = 10.5;
   array: any;
-  lngLat: [number, number] = [-84.12216755918627, 10.003022709670836];
+  lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
   marcadores: Marcadores[] = [];
   clientesArray = [];
   coordinates = [];
@@ -235,14 +235,21 @@ async  getRoute() {
   // an arbitrary start will always be the same
   // only the end or destination will change
 
-  let firstPart =  `https://api.mapbox.com/directions/v5/mapbox/driving/${this.lngLat}`
+  let firstPart =  'https://api.mapbox.com/directions/v5/mapbox/driving/'
    let middle = '';
-this.coordinates.forEach(cordinate=>{
 
-  middle += ';'+cordinate
+   for (let i = 0; i < this.coordinates.length; i++){
+
+if(this.coordinates.length -1  == i){
+  middle += this.coordinates[i]
+}else{
+  middle += this.coordinates[i]+';'
+}
+
+   }
 
 
-})
+console.log(middle,'middle')
   let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
   let final = firstPart + middle +secondPart;
@@ -253,8 +260,8 @@ if(this.coordinates.length > 0){
     { method: 'GET' }
   );
   const json = await query.json();
+console.log(json, 'json return')
 
-  console.log(middle)
   const data = json.routes[0];
   const route = data.geometry.coordinates;
   let geojson :any = {
@@ -337,7 +344,6 @@ const geojson: any = {
     .addTo(this.mapa)
     .togglePopup();
 
-    this.getRoute()
 // add markers to map
 for (const feature of geojson.features) {
 
@@ -403,7 +409,7 @@ for (const feature of geojson.features) {
   //.togglePopup();
 }
 this.mapa.on('load', () => {
-
+  this.getRoute()
 this.mapa.resize();
   });
 

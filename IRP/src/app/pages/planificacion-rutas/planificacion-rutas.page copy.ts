@@ -14,17 +14,7 @@ import { PlanificacionRutasService } from '../../services/planificacion-rutas.se
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { Clientes } from '../../models/clientes';
 import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
-import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
 
-interface Maradores2{
-  title: string,
-  color: string,
-  new: boolean,
-  modify:boolean,
-  exclude:boolean,
-  client:any,
-  select : boolean
-}
 interface Marcadores {
   select:boolean,
   id: string,
@@ -58,10 +48,9 @@ interface Marcadores {
 export class PlanificacionRutasPage implements OnInit, AfterViewInit {
 
 @ViewChild('mapa') divMapa!:ElementRef;
-default: any = 'title';
 zoomLevel: number = 12;
 geocoderArray: any;
-lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+lngLat: [number, number] = [-84.12216755918627, 10.003022709670836];
 marcadoresDuplicados : Marcadores [] = [];
 marcadoresModificados : Marcadores [] = [];
 marcadoresModal = []
@@ -70,7 +59,7 @@ rutaZona= null;
 drag = false;
 modo = 'off'
 mapa!: mapboxgl.Map;
-features = [];
+
 
 
     constructor(
@@ -109,7 +98,7 @@ features = [];
 
    ngAfterViewInit() {
 
-    this.createmapa()
+    this.createmapa(true)
 
    }
 
@@ -119,116 +108,18 @@ features = [];
 // PROCESOS GENERALES DEL MODULO
 //=============================================================================
 
-mapData(clientes:Clientes[], newClient){
-
-  let newCount = 0;
-  let duplicateCount = 0;
-
-
-  this.planificacionRutasService.marcadores.forEach(client=>{
-
-    client.duplicate = false;
- 
-  })
-  
-
-  clientes.forEach(cliente =>{
-    const feature =    {
-      id: cliente.IdCliente,
-      title:  cliente.IdCliente +' '+cliente.NOMBRE,
-      marker: null,
-      select:false,
-      modify: false,
-      new: newClient,
-      exclude:false,
-      color: null,
-      type: 'Feature',
-      duplicate:false,
-      geometry: {
-        type: 'Point',
-        coordinates: [cliente.LONGITUD, cliente.LATITUD]
-      },
-      properties: {
-        client: cliente,
-      }
-    }
-
-    
-const index = this.planificacionRutasService.marcadores.findIndex(client => client.id == cliente.IdCliente)
-
-    if( newClient  ){
-     if(index >=0){
-      duplicateCount += 1;
-      this.planificacionRutasService.marcadores[index].duplicate = true;
-     }else{
-     
-       newCount += 1;
-       console.log('elseee',newCount)
-      this.features.push(feature)
-     }
-    }else{
-      this.features.push(feature)
-    }
-    
-       
-      })
-
-
-   if(duplicateCount  > 0) {
-        this.default = 'duplicate';
-      this.informacionMarcadores(this.default );
-
-     
-   }else if(newCount  > 0){
-    this.default = 'new';
-    this.informacionMarcadores(this.default );
-
-   
-   }
-
-      this.planificacionRutasService.marcadores = [];
-      this.planificacionRutasService.marcadores = this.features;
-      console.log( this.planificacionRutasService.marcadores,'marr')
-
-}
           
 //============================================================================= 
 // MODAL GESTION DE LA LISTA DE RUTAS Y ZONAS A CONSULTAR
 //=============================================================================
-async listaRutasModal(){
-    
-  const modal = await this.modalCtrl.create({
-    component: ListaRutasZonasModalPage,
-    cssClass: 'large-modal',
-  });
-  modal.present();
-
-  
-
-  const { data } = await modal.onDidDismiss();
-
-
-  if(data !== undefined){
-    console.log(data.ruta, 'data retorno', data !== undefined)
-    console.log(data)
-  return data.ruta
-
-  }else{
-
-    this.limpiarDatos();
-  }
-}
-
-
 
 configuracionZonaRuta(){
 
 
-  const rutaZona =  this.listaRutasModal();
+  const rutaZona =  this.serviciosCompartidosService.listaRutasModal();
 
   rutaZona.then(valor =>{
 
-this.features = []
         if(valor !== undefined){
         
           this.rutaZona = null;
@@ -241,27 +132,16 @@ this.features = []
          const clientes =   this.clienteEspejo.syncRutas( this.rutaZona.Ruta);
         
          clientes.then((result) => {
-
-
-
-
-  this.mapData(result, false)
-
-
-
-
-
-          
            this.marcadoresDuplicados =[]
           this.clientesArray = [];
-        
+          this.planificacionRutasService.marcadores = []
        this.clientesArray = result;
 
          this.alertasService.loadingDissmiss();
 
-        this.createmapa()
+        this.createmapa(false)
 
-      //  this.agregarMarcadores(false)
+        this.agregarMarcadores(false)
         
       }).catch((err) => {
 
@@ -316,9 +196,8 @@ async menuCliente(){
    let clientesNuevos: Clientes[]
         clientesNuevos = data.item
         this.clientesArray = clientesNuevos;
-        this.mapData(data.item, true)
-        this.createmapa()
-  //      this.agregarMarcadores(true);
+        this.createmapa(false)
+        this.agregarMarcadores(true);
   
    
 
@@ -351,10 +230,8 @@ gestionErrores(){
       this.mapa.off('zoom', () => { });
       this.mapa.off('zoomend', () => { });
       this.mapa.off('move', () => { });
-      this.features = [];
-      this.geocoderArray = [];
       this.planificacionRutasService.marcadores= [];
-      this.createmapa();
+      this.createmapa(false);
       this.planificacionRutasService.errorArray = []
 
     }
@@ -376,7 +253,7 @@ gestionErrores(){
 // CREAR MAPA  EL DRAGGABLE ES PARA MOVER LOS PUNTOS DEL MAPA
 //=============================================================================
 
- createmapa( ) {
+ createmapa( dragable) {
 
   this.mapa   = new mapboxgl.Map({
         container: this.divMapa.nativeElement,
@@ -386,11 +263,12 @@ gestionErrores(){
         interactive: true
       });
   
-      const newMarker = new mapboxgl.Marker()
-      .setLngLat(this.lngLat)
-      .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
-      .addTo(this.mapa)
-      .togglePopup();
+      const newMarker = new mapboxgl.Marker({ draggable: dragable })
+
+        .setLngLat(this.lngLat)
+
+        .addTo(this.mapa );
+
   
         this.mapa .addControl(new mapboxgl.NavigationControl());
         this.mapa .addControl(new mapboxgl.FullscreenControl());
@@ -400,9 +278,6 @@ gestionErrores(){
         },
         trackUserLocation: true
       }));
-
-
-  
   
       const geocoder= new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
@@ -420,72 +295,9 @@ gestionErrores(){
   
       })
   
-
-      const geojson: any = {
-        'type': 'FeatureCollection',
-        'features': this.planificacionRutasService.marcadores
-        };
-
-
-        // add markers to map
-for (const feature of geojson.features) {
-   
-const { newMarker , color } =  this.generarMarcadorColor( feature.properties.color)
-
-feature.properties.color = color
-feature.marker = newMarker
-newMarker.setLngLat(feature.geometry.coordinates)
-.addTo(this.mapa)
-const name = 'abc';
-
-
-const divElement = document.createElement('div');
-const assignBtn = document.createElement('div');
-assignBtn.innerHTML = `
-
-<ion-list> 
-<ion-item>
-<ion-button fill="clear" class="ion-text-wrap">
-${feature.title}
-</ion-button>
-</ion-item>
-
-</ion-list>
-`;
-divElement.appendChild(assignBtn);
-// btn.className = 'btn';
-assignBtn.addEventListener('click', (e) => {
-this.detalleClientes(feature.properties.client)
-});
-newMarker.setPopup(new mapboxgl.Popup({offset: 32})
-.setDOMContent(divElement))
-    
-newMarker.on('dragend', () => {
-
-  const { lng, lat } = newMarker.getLngLat();
-const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcador.id == feature.id);
-
-if(i >=0){
-  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = lng;
-  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = lat;
-  this.planificacionRutasService.marcadores[i].modify = true;
-  this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
-  this.planificacionRutasService.marcadores[i].geometry.coordinates = [lng, lat]
-
-}
-
-//   this.createmapa(this.divMapa,false, true);
-  this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
-
-})
-.addTo(this.mapa);
-
-//.togglePopup();
-}
   
       this.mapa .on('load', () => {
 
-        
         this.mapa .resize();
 
       });
@@ -509,7 +321,7 @@ if(i >=0){
 
         if (data !== undefined) {
           console.log(data)
-          this.createmapa();
+          this.createmapa( false);
 
   this.marcadoresModificados = data.marcadores;
   console.log(this.planificacionRutasService.marcadores,'this.planificacionRutasService.marcadores')
@@ -518,19 +330,19 @@ if(i >=0){
   for(let i = 0; i < this.planificacionRutasService.marcadores.length; i++){
     const miniPopup = new  mapboxgl.Popup();
 
-    this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].properties.client.LONGITUD,this.planificacionRutasService.marcadores[i].properties.client.LATIRUD]!)
-    miniPopup.setText(this.planificacionRutasService.marcadores[i].title)
+    this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].longitud,this.planificacionRutasService.marcadores[i].latitud]!)
+    miniPopup.setText(this.planificacionRutasService.marcadores[i].id+' ' +  this.planificacionRutasService.marcadores[i].nombre)
     miniPopup.on('open', () => {
-      this.detalleClientes(this.planificacionRutasService.marcadores[i].properties.client)
+      this.detalleClientes(this.planificacionRutasService.marcadores[i].cliente)
     })
 
     this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup);
-    this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].properties.client.LONGITUD,this.planificacionRutasService.marcadores[i].properties.client.LATITUD]!)
+    this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].longitud,this.planificacionRutasService.marcadores[i].latitud]!)
     .addTo(this.mapa );
    
 
   }
-  this.informacionMarcadores('title' )
+  this.informacionMarcadores(this.marcadoresModificados,false)
        //   this.informacionMarcadores(this.marcadoresModificados,false)
         }
       }
@@ -544,19 +356,18 @@ if(i >=0){
 //=============================================================================
 
 
-    async informacionMarcadores(defaultV) {
-   
-  
-    
+    async informacionMarcadores(marcadores,duplicados) {
+
       const modal = await this.modalCtrl.create({
         component: MarcadoresPage,
-        cssClass: 'my-custom-modal',
+        cssClass: 'auto-size-modal',
         componentProps:{
-          default:defaultV
+          marcadores: marcadores,
+          duplicados: duplicados
+
         }
 
       });
-      
 
       await modal.present();
 
@@ -564,14 +375,21 @@ if(i >=0){
 
     if(data !=undefined){
 
- 
-      this.irMarcador(  data.item)
- 
+       const item = data.item
+console.log(item,'itemm')
+const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcador.id == item.id)
+     if(i >=0){
+      this.irMarcador( this.planificacionRutasService.marcadores[i].marker)
+     }
        
 
-    }   }
+    }else{
 
-    
+      this.createmapa(false);
+      this.agregarMarcadoresExistentes(false)
+    }
+         }
+
 
 
 
@@ -581,7 +399,7 @@ if(i >=0){
 //=============================================================================
 
 async detalleClientes(cliente){
-console.log('clene',cliente)
+
   const modal = await this.modalCtrl.create({
     component: DetalleClientesPage,
     cssClass: 'large-modal',
@@ -609,19 +427,16 @@ console.log('clene',cliente)
 //=============================================================================
 
 
+    irMarcador(marker: mapboxgl.Marker) {
 
-irMarcador(marker: mapboxgl.Marker) {
-this.planificacionRutasService.marcadores.forEach(marcadores => {
-let pop = marcadores.marker.getPopup().remove()
-console.log(pop,'pop')
-})
-if (marker) {
-  this.mapa.flyTo(
-    { center: marker.getLngLat(), zoom: 18 }
-  )
-marker.togglePopup();
-}
-}
+      if (marker) {
+        this.mapa.flyTo(
+          { center: marker.getLngLat(), zoom: 18 }
+        )
+  marker.togglePopup();
+      }
+    }
+  
  //============================================================================= 
 // PERMITE QUE LOS MARCADORES SE PUEDAN MOVER
 //=============================================================================        
@@ -634,44 +449,157 @@ marker.togglePopup();
       }else{
         this.modo = 'off'
       }
-
-
-
-
-    this.createmapa() 
+    this.createmapa(this.drag) 
    
+
+    
+          this.agregarMarcadoresExistentes(this.drag)
          
       }
+      agregarMarcadoresExistentes(draggable){
+
+    
+        for(let i =0; i < this.planificacionRutasService.marcadores.length ;i++)
+      
+        {
+   
+       if(!this.planificacionRutasService.marcadores[i].excluir){
+        this.planificacionRutasService.marcadores[i].marker.setDraggable(draggable)
+      
+            
+        const miniPopup = new  mapboxgl.Popup();
+        const nombre = this.planificacionRutasService.marcadores[i].nombre;
+        
+      
+          miniPopup.setText(this.planificacionRutasService.marcadores[i].cliente.IdCliente +' ' +  nombre)
+      
+          miniPopup.on('open', () => {
+            console.log('popup was opened', this.planificacionRutasService.marcadores[i].cliente);
+            this.detalleClientes(this.planificacionRutasService.marcadores[i].cliente)
+          })
+          this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup);
+          this.planificacionRutasService.marcadores[i].marker.setLngLat([this.planificacionRutasService.marcadores[i].cliente.LONGITUD,this.planificacionRutasService.marcadores[i].cliente.LATITUD]!)
+          this.planificacionRutasService.marcadores[i].marker.setPopup(miniPopup)
+          .addTo(this.mapa);
+        
+          this.planificacionRutasService.marcadores[i].marker.on('dragend', () => {
+          
+            const index = this.planificacionRutasService.marcadores.findIndex(m => m.id === this.planificacionRutasService.marcadores[i].cliente.IdCliente);
+      
+            const { lng, lat } = this.planificacionRutasService.marcadores[i].marker!.getLngLat();
+      
+            this.planificacionRutasService.marcadores[i].cliente.LONGITUD = lng;
+            this.planificacionRutasService.marcadores[i].cliente.LATITUD = lat;
+      
+      
+            this.planificacionRutasService.marcadores[i].modificado = true;
+            this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
+         //   this.createmapa(this.divMapa,false, true);
+            this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
+      
+          })
+       }
+        
+       }
+    
+    
+      
+      }
+//============================================================================= 
+// AGREGA LOS MARCADORES AL MAPA 
+//=============================================================================
+
+  agregarMarcadores(nuevoCliente:boolean){
+
+console.log(this.clientesArray,'clientesArray')
+
+    for(let i =0; i < this.clientesArray.length ;i++)
+  
+    {
+
+      const centro: [number, number] = [this.clientesArray[i].LONGITUD,this.clientesArray[i].LATITUD];
+  
+      let marcador = {
+        select:false,
+        id: this.clientesArray[i].IdCliente,
+        cliente: this.clientesArray[i],
+        excluir: false,
+        modificado: false,
+        nuevoCliente: nuevoCliente,
+        color: null,
+        nombre: this.clientesArray[i].NOMBRE,
+        marker: null,
+        longitud: this.clientesArray[i].LONGITUD,
+        latitud: this.clientesArray[i].LATITUD,
+        centro: centro
+
+      }
+  
+     const { newMarker , color } =  this.generarMarcadorColor();
+
+     marcador.color = color;
+     marcador.marker = newMarker;
+
+     const m =  this.planificacionRutasService.marcadores.findIndex(marcador=> marcador.id == this.clientesArray[i].IdCliente)
+ if( m >=0){
+   this.marcadoresDuplicados.push(marcador)
+   
+  } else{
+    
+  this.planificacionRutasService.marcadores.push(marcador);
+  
 
 
+
+  }
+
+  
+
+  
+   }
+   for(let i = 0; i < this.planificacionRutasService.marcadores.length; i++){
+
+    const pin = this.planificacionRutasService.marcadores[i];
+  
+    const miniPopup = new  mapboxgl.Popup();
+  
+    pin.marker.setLngLat([pin.longitud,pin.latitud]!)
+    miniPopup.setText(pin.id+' ' +  pin.nombre)
+    miniPopup.on('open', () => {
+      this.detalleClientes(pin.cliente)
+    })
+  
+    pin.marker.setPopup(miniPopup);
+    pin.marker.setLngLat([pin.longitud,pin.latitud]!)
+    .addTo(this.mapa );
+  }
+   console.log( this.planificacionRutasService.marcadores,'maeca')
+   if(this.marcadoresDuplicados.length > 0){
+     this.informacionMarcadores(this.marcadoresDuplicados,true)
+   }
+  }
 
 //============================================================================= 
 // GENERA UN COLOR ALEATORIO AL MARCADOR
 //=============================================================================
 
 
-generarMarcadorColor( previousColor){
+generarMarcadorColor(){
 
-  let color =  null;
-
-  let setColor = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
+  let color = "#xxxxxx".replace(/x/g, y=>(Math.random()*16|0).toString(16));
   
-  const i =  this.features.findIndex(feature => feature.properties.color === setColor);
+  const i =  this.planificacionRutasService.marcadores.findIndex(marcador => marcador.color === color);
 
   if(i >=0){
-    this.generarMarcadorColor(previousColor);
-
-    return 
-
+    this.generarMarcadorColor();
   }else{
-     color =  previousColor != null ?  previousColor : setColor ;
 
     const newMarker = new mapboxgl.Marker({
-      color: color,
-
-      draggable: this.drag
+      color:color,
+      draggable: false
 
 })
+
     return {newMarker , color}
   }
 

@@ -49,12 +49,12 @@ console.log('todos')
 
 if(i >= 0){
 
-  this.planificacionRutasService.marcadores[i].modificado = true;
-  this.planificacionRutasService.marcadores[i].cliente.LONGITUD = this.data.geometry.coordinates[0];
-  this.planificacionRutasService.marcadores[i].cliente.LATITUD = this.data.geometry.coordinates[1];
-  this.planificacionRutasService.marcadores[i].longitud= this.data.geometry.coordinates[0];
-  this.planificacionRutasService.marcadores[i].latitud = this.data.geometry.coordinates[1];
-  this.planificacionRutasService.marcadores[i].centro = [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]
+  this.planificacionRutasService.marcadores[i].modify = true;
+  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = this.data.geometry.coordinates[0];
+  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = this.data.geometry.coordinates[1];
+  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = this.data.geometry.coordinates[0];
+  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = this.data.geometry.coordinates[1];
+  this.planificacionRutasService.marcadores[i].geometry = { type: 'Feature' , coordinates: [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]}
   this.planificacionRutasService.marcadores[i].marker.setLngLat([this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]);
 
 }

@@ -16,13 +16,31 @@ export class FiltroPipe implements PipeTransform {
    if(!arreglo){
      return arreglo;
    }
+
+   console.log(typeof(texto), ' typeof')
    // todas las busquedas de javascript son case sentisive
-texto = texto.toLocaleLowerCase();
- //  return null;
+   if(typeof(texto) != 'boolean' ){
+    texto = texto.toLocaleLowerCase();
+
+     //  return null;
  return arreglo.filter(
- //  item=> item.title.toLocaleLowerCase().includes(texto)
- item=> item[columna].toLocaleLowerCase().includes(texto) 
- );
+  //  item=> item.title.toLocaleLowerCase().includes(texto)
+  item=> item[columna].toLocaleLowerCase().includes(texto) 
+  );
+
+
+   }else{
+
+    texto = texto
+
+     //  return null;
+ return arreglo.filter(
+  //  item=> item.title.toLocaleLowerCase().includes(texto)
+  item=> item[columna] == texto
+  );
+   }
+
+
 
 
  }
