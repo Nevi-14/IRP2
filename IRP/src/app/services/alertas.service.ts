@@ -57,7 +57,7 @@ export class AlertasService {
     let topLoader = await this.loadingCtrl.getTop();
     while (topLoader) {
       if (!(await topLoader.dismiss())) {
-        throw new Error('Could not dismiss the topmost loader. Aborting...');
+     //   throw new Error('Could not dismiss the topmost loader. Aborting...');
       }
       topLoader = await this.loadingCtrl.getTop();
     }

@@ -15,7 +15,6 @@ import { ListaClientesGuiasPage } from '../pages/lista-clientes-guias/lista-clie
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
 import * as  mapboxgl from 'mapbox-gl';
 import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
-import { AlertasService } from './alertas.service';
 
 //=============================================================================
 // INTERFACE DE ESTRUCTURA DE CADA FACTURA DENTRO DE LA GUIA
@@ -74,17 +73,6 @@ export class ControlCamionesGuiasService {
   guia:GuiaEntregaArray;
   rutaZona = null;
   idGuiaPostArray = [];
-
-
-   startValue:facturaGuia = null;
-   orderArray :facturaGuia[] = [];
-   facturaGuia:facturaGuia[] = [];
-   compareArray :facturaGuia[] = [];
-   nullElements  :facturaGuia[] = [];
-
-
-
-
  constructor( 
    
   public datableService:DataTableService, 
@@ -95,8 +83,7 @@ export class ControlCamionesGuiasService {
   public javascriptDateService: JavascriptDatesService,
   public ruteroService:RuteroService,
   public planificacionEntregasService: PlanificacionEntregasService,
-  public actualizaFacturaGuiasService:ActualizarFacturasService,
-  public alertasService: AlertasService
+  public actualizaFacturaGuiasService:ActualizarFacturasService
   ) {
   
 
@@ -216,95 +203,104 @@ disminuirValoresGuia(consecutivo, factura){
 //=============================================================================
 
 
-ordernarDistancia(facturas:facturaGuia[]){
-  facturas.sort( ( a, b ) => a.distancia - b.distancia )
+agruparOrdernar( guia:GuiaEntregaArray) {
 
-  for(let i = 0; i < facturas.length ; i++ ){
-
-      if(i == facturas.length -1){
-
-         this.startValue =   facturas[0];
-         this.startValue.order_visita = this.orderArray.length
-        this.orderArray.push(this.startValue);
-
-        this.compareArray = facturas.slice(1);
-      
-        this.compareArray.forEach( ( _, index, arr ) => {
-          this.getRoute(this.orderArray[this.orderArray.length -1].factura.LONGITUD+','+this.orderArray[this.orderArray.length -1].factura.LATITUD, arr[index].factura.LONGITUD +','+ arr[index].factura.LATITUD ).then(resp =>{
-  
-                  const { distance, duration } = resp;
-                  arr[index].distancia = distance;
-                  arr[index].duracion = duration;
-        
-
-                  facturas = [];
-                  facturas = this.orderArray;           
-                });
-  
-          if(index == arr.length -1){
-      
-
-           this.ordernarDistancia(this.compareArray)
-   
-          }
-      
-      })
-  
-        
-      }
-
-  }
-  
-
-  
-}
-
-
-
- agruparOrdernar( guia:GuiaEntregaArray) {
-
-  let guiaReturn = guia;
+  let startValue = null;
 
   for (let i = 0; i < guia.facturas.length ; i++){
 
-    let longitud = guia.facturas[i].factura.LONGITUD;
-    let latitud = guia.facturas[i].factura.LATITUD ;
 
-  this.getRoute(this.lngLat, longitud +','+ latitud ).then(resp =>{
+    let lngLatFormat = guia.facturas[i].factura.LONGITUD +','+guia.facturas[i].factura.LATITUD 
+  
+   
+    this.getRoute(lngLatFormat).then(resp =>{
   
     const { distance, duration } = resp;
   
     guia.facturas[i].distancia = distance;
     guia.facturas[i].duracion = duration;
-
-    if(i == guia.facturas.length -1){
-      this.ordernarDistancia(guia.facturas)
-      this.completePost(guia.facturas, guia)
-    }
-
+  
     })
 
+    if(i == guia.facturas.length -1){
+
+      guia.facturas.sort( ( a, b ) => a.distancia - b.distancia )
+
+      guia.facturas.forEach( ( _, index, arr ) => {
+    
+        arr[ index ].order_visita = index
+    
+        startValue =  arr[ index ];
+    
+    console.log(   arr[ index ].distancia, startValue )
+    
+    
+    })
+
+    
+    }
+  
+       
   }
 
 
-    }
 
 
 
 
+}
+
+
+//  como parametro vamos a pasar una guia
+
+
+asignarDistancia(facturas:facturaGuia[]){
+
+  
+for (let i = 0; i < facturas.length ; i++){
+
+
+  let lngLatFormat = facturas[i].factura.LONGITUD +','+facturas[i].factura.LATITUD 
+
+ 
+  this.getRoute(lngLatFormat).then(resp =>{
+
+  const { distance, duration } = resp;
+
+  facturas[i].distancia = distance;
+  facturas[i].duracion = duration;
+
+  })
+
+     
+}
+
+}
+ordenamientoGuias(guia:GuiaEntregaArray){
 
 
 
 
+  
+
+  guia.facturas.sort( ( a, b ) => a.distancia - b.distancia )
+
+  guia.facturas.forEach( ( _, index, arr ) => {
+
+  arr[ index ].order_visita = index
+
+console.log(   arr[ index ].distancia )
 
 
+  } )
+  console.log(guia,'guiaguia');
+
+  
+  //  obtener la distancia de todos los elementos y ver cual es menor a isleña
+  // compamprar el primer valor con cada uno de los nuevos datos tomando como rferenia el ultimo  punto
 
 
-
-
-
-
-
+}
 
 crearGuia(factura){
 
@@ -323,15 +319,34 @@ if(resp != undefined){
   guia.estado = 'INI'; // AGREGAMOS EL ESTADO
   guia.HH = 'nd';
   factura.idGuia = guia.consecutivo
-  guia.facturas.push(factura)
+  console.log('factura', factura, factura.factura.LONGITUD, factura.factura.LATITUD)
+   this.getRoute(factura.factura.LONGITUD +','+factura.factura.LATITUD).then(resp =>{
+
+    const { distance, duration} = resp;
+    factura.distancia = distance;
+    factura.duracion  = duration ;
+    factura.order_visita = null ;
+     console.log(resp,'resp')
+      guia.facturas.push(factura)
+  //    this.obtenerFacturas()
+//alert (resp)
+  })
    
+/**
+ *   factura.distancia
+  factura.duracion
+  factura.order_visita
+ */
 
-
-
+  for (let i = 0 ; i < this.listaCamionesGuia.length; i++){
+    if(this.listaCamionesGuia[i].idGuia == guia.consecutivo){
+      console.log(this.listaCamionesGuia[i],'foudndd  ')
+    }
+  }
   this.listaCamionesGuia.push(guia)
 this.incrementarValoresGuia(guia.consecutivo, factura)
   this.actualizar(factura.factura.CLIENTE_ORIGEN, factura.factura.FACTURA, guia.consecutivo)
-
+  console.log(guia,'guiaaa addded')
 
 }
 
@@ -341,14 +356,12 @@ this.incrementarValoresGuia(guia.consecutivo, factura)
 
 }
 
-async  getRoute( start, end) {
+async  getRoute(item) {
   // make a directions request using cycling profile
   // an arbitrary start will always be the same
   // only the end or destination will change
-
-let startPoint  =  start;
-let endPoint  =  end
-  let URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${startPoint};${endPoint}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
+console.log(item,'itemmmm')
+  let URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${this.lngLat};${item}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
   console.log(URL)
    const query = await fetch(
     URL,
@@ -356,14 +369,11 @@ let endPoint  =  end
   );
   const json = await query.json();
 
-  let distance  = null ;
-  let duration  = null;
-if(json.routes){
+  let distance  = 0 ;
   distance = Number((json.routes[0].distance / 1000).toFixed(2));
-
+  let duration  = 0;
   duration = Number((json.routes[0].duration / 60).toFixed(2) );
 
-}
 return {distance , duration}
 }
 
@@ -581,10 +591,21 @@ if(this.listaCamionesGuia[index].facturas[i].factura.FACTURA == factura.factura.
 
  guia.then(resp =>{
 
-
+  console.log(resp,' respnseee')
 if(resp != undefined ){
   const indexGuia = this.listaCamionesGuia.findIndex( guia => guia.consecutivo ==resp.consecutivo);
 
+
+  this.getRoute(factura.factura.LONGITUD +','+factura.factura.LATITUD).then(resp =>{
+
+    const { distance, duration} = resp;
+    factura.distancia = distance;
+    factura.duracion  = duration ;
+    factura.order_visita = null ;
+     console.log(resp,'resp')
+ 
+  //   this.obtenerFacturas()
+  })
 
 
 
@@ -595,8 +616,14 @@ if(indexGuia < 0){
 
 }
 
+/**
+*   factura.distancia
+factura.duracion
+factura.order_visita
+*/
 
-
+ 
+  console.log(this.listaCamionesGuia,'this.listaCamionesGuia', resp.consecutivo, 'resp.consecutivo')
   for(let i = 0; i < this.listaCamionesGuia.length; i++){
 
     if( this.listaCamionesGuia[i].consecutivo == resp.consecutivo){
@@ -781,26 +808,16 @@ eliminarGuias(){
 }
 
 generarPost(){
-   this.idGuiaPostArray = [];
 
-   for(let i = 0; i  < this.listaCamionesGuia.length; i++){
-
-    this.agruparOrdernar(this.listaCamionesGuia[i]);
-
-   }  
+  // this.guiasService.guiasArray = [];
  
- }
-
- completePost(facturas: facturaGuia[], guia){
-
-
-  let postFacturas = [];
-
-  let postRutero = [];
-
-
-
- const guiaCamion = { 
+   // this.actualizarFacturasService.actualizaFacturasArray = [];
+   this.idGuiaPostArray = [];
+   this.listaCamionesGuia.forEach(guia =>{
+ this.agruparOrdernar(guia);
+    console.log(guia)
+this.idGuiaPostArray.push(guia.consecutivo)
+     const guiaCamion = { 
     idGuia: guia.consecutivo,
     fecha: guia.fecha,
     zona: guia.zona,
@@ -812,119 +829,83 @@ generarPost(){
     HH: guia.HH,
     volumen: guia.volumen
    }
-
-
-
 if(guia.guiaExistente){
   this.guiasService.guiasArrayExistentes.push(guiaCamion)
 }else{
    
   this.guiasService.guiasArray.push(guiaCamion)
 }
-    for(let i =0; i <  facturas.length; i++){
-
-      this.idGuiaPostArray.push(guia.consecutivo)
-
+ 
+ 
+ 
+   guia.facturas.forEach(factura=>{
+ 
+     const actualizarFactura = {
+          numFactura: factura.factura.FACTURA,
+          tipoDocumento:factura.factura.TIPO_DOCUMENTO,
+          despachado: 'S',
+          rubro3:  guia.consecutivo,
+          U_LATITUD: factura.factura.LATITUD,
+          U_LONGITUD: factura.factura.LONGITUD
+     }
+     this.actualizarFacturasService.actualizaFacturasArray.push(actualizarFactura)
 
    
 
+      const rutero = {
+        idGuia: guia.consecutivo,
+        idCliente: factura.factura.CLIENTE_ORIGEN,
+        nombre: factura.factura.NOMBRE_CLIENTE,
+        direccion:factura.factura.DIRECCION_FACTURA,
+        latitud:Number(factura.factura.LATITUD),
+        longitud:Number(factura.factura.LONGITUD),
+        checkin: null,
+        latitud_check: null,
+        longitud_check: null,
+        observaciones:null,
+        estado: 'P',
+        bultos: factura.factura.TOTAL_VOLUMEN,
+        checkout:null,
+        distancia: factura.distancia,
+        Duracion: factura.duracion,
+        orden_Visita: factura.order_visita
+     }
 
 
+     const i = this.ruteroService.rutertoPostArray.findIndex(rutero => rutero.idCliente == factura.factura.CLIENTE_ORIGEN )
 
-      const actualizarFactura = {
-        numFactura: facturas[i].factura.FACTURA,
-        tipoDocumento:facturas[i].factura.TIPO_DOCUMENTO,
-        despachado: 'S',
-        rubro3:  guia.consecutivo,
-        U_LATITUD: facturas[i].factura.LATITUD,
-        U_LONGITUD: facturas[i].factura.LONGITUD
-   }
+     if(i >=0){
+      this.ruteroService.rutertoPostArray[i].bultos +=factura.factura.TOTAL_VOLUMEN
+     }else{
+      this.ruteroService.rutertoPostArray.push(rutero)
+     }
+     
 
 
-postFacturas.push(actualizarFactura)
-
-console.log('ostt', postFacturas, actualizarFactura, 'act')
- 
-
-    const rutero = {
-      idGuia:guia.consecutivo,
-      idCliente: facturas[i].factura.CLIENTE_ORIGEN,
-      nombre: facturas[i].factura.NOMBRE_CLIENTE,
-      direccion:facturas[i].factura.DIRECCION_FACTURA,
-      latitud:Number(facturas[i].factura.LATITUD),
-      longitud:Number(facturas[i].factura.LONGITUD),
-      checkin: null,
-      latitud_check: null,
-      longitud_check: null,
-      observaciones:null,
-      estado: 'P',
-      bultos: facturas[i].factura.TOTAL_VOLUMEN,
-      checkout:null,
-      distancia: facturas[i].distancia,
-      Duracion: facturas[i].duracion,
-      orden_Visita:facturas[i].order_visita
-   }
-
-   postRutero.push(rutero)
-
- /**
-  *   const r = this.ruteroService.rutertoPostArray.findIndex(rutero => rutero.idCliente ==  facturas[i].factura.CLIENTE_ORIGEN )
-  
-   if(r >=0){
-    this.ruteroService.rutertoPostArray[i].bultos += facturas[i].factura.TOTAL_VOLUMEN
-   }else{
-    this.ruteroService.rutertoPostArray.push(rutero)
-   }
-
-  */
-   
- if(i === facturas.length -1){
-
- 
-  console.log(facturas[i].distancia, 'dii')
-   this.actualizarFacturasService.insertarFacturas(postFacturas); // POST
-   this.guiasService.insertarGuias(guiaCamion).then(resp =>{
-
-    console.log(resp, 'guia insertada')
-const i = this.listaCamionesGuia.findIndex( guiaBorrar => guiaBorrar.consecutivo == guia.consecutivo)
-console.log(i ,'i ')
-if(i >=0){
-  this.listaCamionesGuia.splice(i, 1)
-}
-console.log(this.listaCamionesGuia, ' lista')
-this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Nueva Guia Generada ' + guia.consecutivo);
-
-    this.ruteroService.insertarPostRutero(postRutero)
    })
-/**
- *   
-   this.ruteroService.insertarPostRutero(postRutero)
- */
-   //this.guiasService.putGuias()
-/**
- *   this.guiasService.insertarGuias();  // PUT
-  this.guiasService.putGuias();  // PUT
-  this.ruteroService.insertarPostRutero();
- */
+ 
+ 
+ 
+   })
+ 
 
 
-/**
- *   console.log(this.actualizaFacturaGuiasService.actualizaFacturasArray,'todas las facturas')
-  console.log(this.guiasService.guiasArray,' guias nuevas')
-  console.log(this.guiasService.guiasArrayExistentes,' guias existentes')
-  console.log(this.ruteroService.rutertoPostArray,'ruteros nuevos')
-  console.log(this.ruteroService.rutertoPostArrayExistentes,' ruteros existentes')
- */
-
+   console.log(this.actualizaFacturaGuiasService.actualizaFacturasArray,'todas las facturas')
+   console.log(this.guiasService.guiasArray,' guias nuevas')
+   console.log(this.guiasService.guiasArrayExistentes,' guias existentes')
+   console.log(this.ruteroService.rutertoPostArray,'ruteros nuevos')
+   console.log(this.ruteroService.rutertoPostArrayExistentes,' ruteros existentes')
+ //  this.actualizarFacturasService.insertarFacturas(); // POST
+  //this.guiasService.insertarGuias();  // PUT
+  //this.guiasService.putGuias();  // PUT
+  //this.ruteroService.insertarPostRutero();  // POST 
+  //this.eliminarGuias();
+  //this.listaGuiasArray();
+ 
+//this.reset();
+   
+ 
  }
-
-    }
-
-  
- }
-
-
-
 
 async listaGuiasArray(){
  const modal = await this.modalCtrl.create({
@@ -950,9 +931,6 @@ async listaGuiasArray(){
   this.Fecha = null;
   this.listaCamionesGuia = []
   this.planificacionEntregasService.rutaFacturasArray = [];
-  this.startValue = null;
-  this.orderArray = [];
-  this.compareArray = [];
  }
 
 

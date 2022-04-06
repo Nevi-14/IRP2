@@ -162,7 +162,17 @@ this.guiasArrayExistentes = [];
   
     }
 
-  insertarGuias(){
+  insertarGuias(guia){
+
+    console.log(  guia, 'insertar guia')
+
+   return  this.postActualizarGuias( guia).toPromise();
+
+
+  }
+
+
+  insertarGuias2(){
 
     console.log(   this.guiasArray, '  this.guiasArray insertar')
  this.guiasArray.forEach( guia =>{

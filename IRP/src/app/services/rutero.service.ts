@@ -120,20 +120,23 @@ putRutero(){
 
 
 
-insertarPostRutero(){
+insertarPostRutero(postRutero){
+  console.log(postRutero, 'postRutero')
+ //this.alertasService.presentaLoading('Insertando Rutero')
 
-  this.alertasService.presentaLoading('Insertando Rutero')
-  console.log(this.rutertoPostArray, 'this.rutertoPostArray')
-  this.postRutero(this.rutertoPostArray).subscribe(
+  this.postRutero(postRutero).subscribe(
 
     resp => {
-      this.alertasService.loadingDissmiss();
-      console.log(resp);
+      console.log('completed', resp)
+  
+  
+  //    this.alertasService.loadingDissmiss();
+
   
       this.rutertoPostArray = []
   
     }, error =>{
-      this.alertasService.loadingDissmiss();
+     // this.alertasService.loadingDissmiss();
       let errorObject = {
         titulo: 'Insertar rutero',
         fecha: new Date(),
