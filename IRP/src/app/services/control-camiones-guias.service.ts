@@ -66,7 +66,7 @@ interface  GuiaEntregaArray{
 
 
 export class ControlCamionesGuiasService {
-  lngLat: [number,number] = [ -84.1165100,10.0023600];
+  lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
    guiaFacturasaActual = []
    Fecha : null;
   actualizaGuiaFacturaArray : ActualizaFacturaGuia[]=[];
@@ -217,6 +217,7 @@ disminuirValoresGuia(consecutivo, factura){
 
 
 ordernarDistancia(facturas:facturaGuia[]){
+
   facturas.sort( ( a, b ) => a.distancia - b.distancia )
 
   for(let i = 0; i < facturas.length ; i++ ){
@@ -230,11 +231,14 @@ ordernarDistancia(facturas:facturaGuia[]){
         this.compareArray = facturas.slice(1);
       
         this.compareArray.forEach( ( _, index, arr ) => {
+
           this.getRoute(this.orderArray[this.orderArray.length -1].factura.LONGITUD+','+this.orderArray[this.orderArray.length -1].factura.LATITUD, arr[index].factura.LONGITUD +','+ arr[index].factura.LATITUD ).then(resp =>{
   
                   const { distance, duration } = resp;
                   arr[index].distancia = distance;
                   arr[index].duracion = duration;
+
+                  console.log( distance, duration, ' distance, duration')
         
 
                   facturas = [];
@@ -880,8 +884,26 @@ console.log('ostt', postFacturas, actualizarFactura, 'act')
    
  if(i === facturas.length -1){
 
- 
-  console.log(facturas[i].distancia, 'dii')
+ console.log(postRutero,'postRutero')
+
+ this.actualizarFacturasService.insertarFacturas(postFacturas); // POST
+   this.guiasService.insertarGuias(guiaCamion).then(resp =>{
+
+    console.log(resp, 'guia insertada')
+const i = this.listaCamionesGuia.findIndex( guiaBorrar => guiaBorrar.consecutivo == guia.consecutivo)
+console.log(i ,'i ')
+if(i >=0){
+  this.listaCamionesGuia.splice(i, 1)
+}
+console.log(this.listaCamionesGuia, ' lista')
+this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Nueva Guia Generada ' + guia.consecutivo);
+
+    this.ruteroService.insertarPostRutero(postRutero)
+   })
+
+
+/**
+ *   console.log(facturas[i].distancia, 'dii')
    this.actualizarFacturasService.insertarFacturas(postFacturas); // POST
    this.guiasService.insertarGuias(guiaCamion).then(resp =>{
 
@@ -896,6 +918,7 @@ this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Nueva Guia Generada '
 
     this.ruteroService.insertarPostRutero(postRutero)
    })
+ */
 /**
  *   
    this.ruteroService.insertarPostRutero(postRutero)

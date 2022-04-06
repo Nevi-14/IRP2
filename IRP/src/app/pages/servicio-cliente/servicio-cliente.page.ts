@@ -164,6 +164,10 @@ this.alertasService.presentaLoading('Cargando lista de clientes')
 this.coordinates = [];
 this.features = [];
 this.coordinates.push(this.lngLat);
+
+this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
+
+console.log('sorted',this.clientesArray )
   this.clientesArray.forEach(cliente =>{
 const coordinate = [cliente.longitud, cliente.latitud]
 
