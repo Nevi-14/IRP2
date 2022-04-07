@@ -58,48 +58,48 @@ url = null;
   
 
 
-  insertarFacturas(){
+  insertarFacturas(facturas){
 
-this.alertasService.presentaLoading('Insertando Facturas')
-   this.postActualizarFactura(this.actualizaFacturasArray).subscribe(
+    console.log(facturas, 'facturas post')
+    this.postActualizarFactura(facturas).subscribe(
 
-    resp => {
- 
-this.alertasService.loadingDissmiss();
-    
-
-      this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Las facturas se guardaron con exito');
-
-      this.rutasFacturas.rutaFacturasArray = []
+      resp => {
+        console.log(facturas, 'completed')
+  //this.alertasService.loadingDissmiss();
       
-      this.rutasFacturas.pesoTotalBultosFactura =0
-      this.rutasFacturas.pesoTotalBultosFactura =0
-      this.rutasFacturas.rutaFacturasArray = []
-      this.datatableService.dataArrayToShow = [];
-      this.datatableService.data = [];
-      this.planificacionEntregasService.bultosTotales = null;
-      this.planificacionEntregasService.clientesTotales = null;
-      this.planificacionEntregasService.fecha = null;
-      this.planificacionEntregasService.pesoTotal = null;
-      this.planificacionEntregasService.rutaFacturasArray = [];
-    }, error => {
-      this.alertasService.loadingDissmiss();
-    // nombre controlador
-      let errorObject = {
-        titulo: 'Insertar Facturas',
-        metodo:'POST',
-        url:error.url,
-        message:error.message,
-        rutaError:'app/services/actualiza-clientes-factura.ts',
-        json:JSON.stringify(this.actualizaFacturasArray)
-      }
-      this.planificacionEntregasService.errorArray.push(errorObject)
-      console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
-     ;
-      
-  }
-    )
   
+    
+  
+  
+        this.rutasFacturas.rutaFacturasArray = []
+        
+        this.rutasFacturas.pesoTotalBultosFactura =0
+        this.rutasFacturas.pesoTotalBultosFactura =0
+        this.rutasFacturas.rutaFacturasArray = []
+        this.datatableService.dataArrayToShow = [];
+        this.datatableService.data = [];
+        this.planificacionEntregasService.bultosTotales = null;
+        this.planificacionEntregasService.clientesTotales = null;
+        this.planificacionEntregasService.fecha = null;
+        this.planificacionEntregasService.pesoTotal = null;
+        this.planificacionEntregasService.rutaFacturasArray = [];
+      }, error => {
+      //  this.alertasService.loadingDissmiss();
+      // nombre controlador
+        let errorObject = {
+          titulo: 'Insertar Facturas',
+          metodo:'POST',
+          url:error.url,
+          message:error.message,
+          rutaError:'app/services/actualiza-clientes-factura.ts',
+          json:JSON.stringify(this.actualizaFacturasArray)
+        }
+        this.planificacionEntregasService.errorArray.push(errorObject)
+        console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
+       ;
+        
+    }
+      )
 
     this.actualizaFacturasArray = [];
 

@@ -269,7 +269,14 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
     
       </ion-button>
-      <ion-buttons *ngIf="!facturaCliente.idGuia">
+
+      <ion-badge color="dark" mode="ios" *ngIf="facturaCliente.factura.LONGITUD == null &&  facturaCliente.factura.LATITUD == null ">
+        
+        <ion-icon name="location-outline"></ion-icon> 
+        Longitud o Latitud sin definir
+
+        </ion-badge>
+      <ion-buttons *ngIf="!facturaCliente.idGuia && facturaCliente.factura.LONGITUD != null &&  facturaCliente.factura.LATITUD != null  ">
         <ion-button  (click)="agregarGuia(facturaCliente)" fill="clear" color="primary">
           <ion-icon slot="icon-only" name="add"></ion-icon>
       
