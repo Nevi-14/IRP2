@@ -843,6 +843,7 @@ generarPost(){
  }
 
 
+ this.idGuiaPostArray.push(guia.consecutivo)
 
 if(guia.guiaExistente){
 this.guiasService.guiasArrayExistentes.push(guiaCamion)
@@ -852,7 +853,6 @@ this.guiasService.guiasArray.push(guiaCamion)
 }
   for(let i =0; i <  facturas.length; i++){
 
-    this.idGuiaPostArray.push(guia.consecutivo)
 
 
  
@@ -943,12 +943,15 @@ if(i >=0){
 this.listaCamionesGuia.splice(i, 1)
 }
 console.log(this.listaCamionesGuia, ' lista')
-this.alertasService.message( 'PLANIFICACION DE ENTREGAS', 'Nueva Guia Generada ' + guia.consecutivo);
 
   this.ruteroService.insertarPostRutero(postRutero)
+
+
  })
 
- 
+ if(this.listaCamionesGuia.length == 0){
+  this.listaGuiasArray();
+}
  //this.ruteroService.insertarPostRutero(postRutero)
 
 
