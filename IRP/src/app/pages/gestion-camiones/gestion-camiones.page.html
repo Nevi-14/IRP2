@@ -46,7 +46,7 @@
 
   <ion-grid >
     <ion-row>
-      <ion-col   size="12" size-md="3" *ngFor="let camion of camionesService.camiones">
+      <ion-col   size="12" size-md="3" *ngFor="let camion of camionesService.camiones" style="position:relative">
 
   
         <ion-card mode="ios">
@@ -67,34 +67,27 @@
 
 
   <ion-item>
-    <ion-avatar slot="end">
-      <img src="../assets/home/delivery.svg" />
-    </ion-avatar>
+
     <ion-label>
       <h2>{{camion.descripcion}}
       </h2>
-      <p>Placa: {{camion.idCamion }}</p>
-      <p>Capacidad Volumen: {{camion.capacidadVolumen}}</p>
-      <p>Capacidad Peso : {{camion.capacidadPeso}}</p>
+      <p class="ion-margin">Placa: {{camion.idCamion }}</p>
+      <p class="ion-margin">Capacidad Volumen: {{camion.capacidadVolumen}}</p>
+      <p class="ion-margin">Capacidad Peso : {{camion.capacidadPeso}}</p>
 
     </ion-label>
 
 
   </ion-item>
-<ion-item>
-  <ion-buttons slot="end">
-    <ion-button shape="round" color="dark" fill="outline">
-     
-   <ion-label>Detalle</ion-label>
-    </ion-button>
-  </ion-buttons>
-</ion-item>
+
 
  </ion-list>
 </ion-list>
           </ion-card-content>
+
         </ion-card>
     
+
     </ion-col>
     </ion-row>
   </ion-grid>

@@ -63,16 +63,14 @@ console.log(URL);
 
 
 
-  console.log('clientes, array', c)
+
   if(c < 0){
     this.clientesService.clientesArray.push(cliente)
-    console.log(cliente,'cliente')
+    
   }
   
         })
      
-
-        console.log(this.cliente, 'camclienteiones', resp)
 
       }, error =>{
        

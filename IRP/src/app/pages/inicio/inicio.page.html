@@ -1,20 +1,12 @@
-
+<ion-toolbar class="ion-padding">
+  <ion-title class="ion-text-left ion-margin" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Gestor de Modulos IRP</ion-title>
+  <ion-searchbar mode="ios" palceholder="Buscar modulo" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+</ion-toolbar>
 <ion-content  class="ion-padding">
 <ion-grid >
   
-
-  <ion-row class="ion-padding">
-      
-  <ion-col size="10"   >
-
-    <ion-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Gestor de Modulos IRP</ion-title>
-    <ion-searchbar mode="ios" palceholder="Buscar modulo" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-  </ion-col>
-
-
-  </ion-row>
-  <ion-row class="ion-padding">
-    <ion-col size="12"  style="display: flex;" class="ion-padding">
+  <ion-row  >
+    <ion-col size="12"  style="display: flex;"  >
       <ion-card (click)="redirect(modulo.ruta)" *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'" class="ion-text-center" style="width: 20%;">
         <img  [src]="modulo.imagen" class="floating-img" alt="">
       <ion-card-header>

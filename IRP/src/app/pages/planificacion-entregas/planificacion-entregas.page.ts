@@ -6,11 +6,10 @@ import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { DataTableService } from 'src/app/services/data-table.service';
 import { ServiciosCompartidosService } from 'src/app/services/servicios-compartidos.service';
-import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
-import { ListaCamionesModalPage } from '../lista-camiones-modal/lista-camiones-modal.page';
-import { AlertasService } from '../../services/alertas.service';
-import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
-
+import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
+import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
+import { AlertasService } from 'src/app/services/alertas.service';
+import { ListaCamionesModalPageModule } from '../lista-camiones-modal/lista-camiones-modal.module';
 
 
 
@@ -195,7 +194,7 @@ this.rutaZona = null;
 async listaCamiones(){
 
   const modal = await this.modalCtrl.create({
-    component: ListaCamionesModalPage,
+    component: ListaCamionesModalPageModule,
     cssClass: 'large-modal'
   });
 

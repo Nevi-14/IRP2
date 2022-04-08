@@ -15,6 +15,7 @@ export class ActualizaFacLinService {
 
 
 getURL(api, id){
+  
 let test : string = '';
 
 if(!environment.prdMode){
@@ -36,13 +37,19 @@ private getActualizaFacLin(id){
 }
 
 syncActualizaFacLin(id, idCliente){
+
   this.facturaLineasEspejoArray = [];
+
 this.getActualizaFacLin(id).subscribe(
+
 resp => {
-console.log(id, idCliente, 'jsjsjsjsjjsjs')
+
   resp.forEach(element => {
+    
     if(element.idCliente == idCliente ){
+
        this.facturaLineasEspejoArray.push(element)
+
     }
   });
 
