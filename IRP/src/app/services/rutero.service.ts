@@ -123,7 +123,8 @@ putRutero(){
 insertarPostRutero(postRutero){
   console.log(postRutero, 'postRutero')
  //this.alertasService.presentaLoading('Insertando Rutero')
-
+if(postRutero.length > 0){
+  
   this.postRutero(postRutero).subscribe(
 
     resp => {
@@ -151,6 +152,7 @@ insertarPostRutero(postRutero){
      
     }
   )
+}
 
 }
 

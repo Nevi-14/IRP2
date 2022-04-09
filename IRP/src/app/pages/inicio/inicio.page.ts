@@ -48,17 +48,18 @@ export class InicioPage implements OnInit {
         descripcion: 'Permite gestionar la relación de Rutas y Zonas',
         ruta: '/mantenimiento-rutas',
       },
-      {
-        imagen: '../assets/home/route.png',
-        titulo: 'Planificacion de Rutas',
-        descripcion: 'Permite definir la configuracion de Rutas - Clientes',
-        ruta: '/planificacion-rutas',
-      },
+   
       {
         imagen: '../assets/home/delivery.svg',
         titulo: 'Gestion de camiones',
         descripcion: 'Permite gestionar los camiones en ruta',
         ruta: '/gestion-camiones',
+      },
+      {
+        imagen: '../assets/home/route.png',
+        titulo: 'Planificacion de Rutas',
+        descripcion: 'Permite definir la configuracion de Rutas - Clientes',
+        ruta: '/planificacion-rutas',
       },
       {
         imagen: '../assets/png/receipt.png',

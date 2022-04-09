@@ -65,11 +65,6 @@ url = null;
 
       resp => {
         console.log(facturas, 'completed')
-  //this.alertasService.loadingDissmiss();
-      
-  
-    
-  
   
         this.rutasFacturas.rutaFacturasArray = []
         

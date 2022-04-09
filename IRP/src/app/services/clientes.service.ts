@@ -54,25 +54,6 @@ nuevosClientes: Clientes[]=[];
 
 
 
-
-/**
- * 
- * @param cliente   switchModaldetalle(expression,cliente){
-    switch(expression){
-      case 'planificacion-rutas':
-  
-         this.detalleClientes(cliente);
-      
-        break;
-      case 'rutas-facturas':
-this.mostrarClienteFactura(cliente);
-        break;
-      default:
-        // code block
-    }
-  }
- * @returns 
- */
   
 
   async detalleClientes(cliente){

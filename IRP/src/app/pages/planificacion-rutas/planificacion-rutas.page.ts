@@ -1,20 +1,21 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import {  ModalController, PopoverController } from '@ionic/angular';
-import { ZonasService } from '../../services/zonas.service';
-import { RutaZonaService } from '../../services/ruta-zona.service';
-import { MarcadoresPage } from '../marcadores/marcadores.page';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ServiciosCompartidosService } from 'src/app/services/servicios-compartidos.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { PlanificacionRutasService } from '../../services/planificacion-rutas.service';
-import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
-import { Clientes } from '../../models/clientes';
-import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
+import { ZonasService } from 'src/app/services/zonas.service';
+import { RutaZonaService } from 'src/app/services/ruta-zona.service';
+import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
+import { Clientes } from 'src/app/models/clientes';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
+import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
+import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
+import { MarcadoresPage } from '../marcadores/marcadores.page';
+import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
+
 
 interface Maradores2{
   title: string,

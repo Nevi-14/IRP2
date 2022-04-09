@@ -1,22 +1,21 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ModalController, AlertController, PopoverController } from '@ionic/angular';
-import { ClientesService } from '../../services/clientes.service';
-import { ZonasService } from '../../services/zonas.service';
-import { RutasService } from '../../services/rutas.service';
-import { ClienteEspejoService } from '../../services/cliente-espejo.service';
-import { RutaZonaService } from '../../services/ruta-zona.service';
-
-import { GuiasService } from 'src/app/services/guias.service';
-import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
-import { RuteroService } from '../../services/rutero.service';
-import { ServicioClienteMarcadoresPage } from '../servicio-cliente-marcadores/servicio-cliente-marcadores.page';
-import { AlertasService } from 'src/app/services/alertas.service';
-import { ServicioClienteService } from '../../services/servicio-cliente.service';
-import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { ZonasService } from 'src/app/services/zonas.service';
+import { RutasService } from 'src/app/services/rutas.service';
+import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
+import { RutaZonaService } from 'src/app/services/ruta-zona.service';
+import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
+import { RuteroService } from 'src/app/services/rutero.service';
+import { AlertasService } from 'src/app/services/alertas.service';
+import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
+import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
+import { ServicioClienteMarcadoresPage } from '../servicio-cliente-marcadores/servicio-cliente-marcadores.page';
+import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 interface Marcadores {
   id: string,
   cliente: any,
@@ -62,10 +61,10 @@ export class ServicioClientePage implements OnInit {
       public clientes: ClientesService, 
       public zonas: ZonasService, 
       public rutas: RutasService, 
-      public clienteEspejo: ClienteEspejoService , 
+      public clienteEspejo: ClienteEspejoService, 
       public popOverCrtl: PopoverController, 
       public rutaZona: RutaZonaService, 
-      public guiasService:GuiasService, 
+      public guiasService:ControlCamionesGuiasService, 
       public ruteroService: RuteroService, 
       public alertasService: AlertasService,
       public servicioClienteService: ServicioClienteService
