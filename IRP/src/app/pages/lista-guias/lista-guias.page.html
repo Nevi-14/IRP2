@@ -27,7 +27,7 @@
   <ion-list>
  
 
-      <ion-item   *ngFor="let camion of   camiones | filtro:textoBuscar:'consecutivo'" (click)="actualizar(camion)" detail>
+      <ion-item   *ngFor="let guia of   camiones | filtro:textoBuscar:'consecutivo'" (click)="actualizar(guia)" detail>
         <ion-chip  style="background: transparent!important; height: 80px;" >
           <ion-avatar  style="height: 80px;width: 80px;">
             <img style="height: 80px;width: 80px;"  [src]="image" />
@@ -36,13 +36,13 @@
             </ion-chip>
 
         <ion-label>
-          <h2>Consecutivo : {{camion.consecutivo}}  
+          <h2>Consecutivo : {{guia.idGuia}}  
           </h2>
-          <p>Chofer : {{camion.chofer}}</p>
-          <p>Placa: {{camion.idCamion}}</p>
-          <p>Capacidad Total : {{camion.capacidad}}</p>
-          <p>Capacidad Restante : {{camion.pesoRestante}}</p>
-          <p>Numero de clientes : {{camion.numClientes}}</p>
+          <p>Chofer : {{guia.camion.chofer}}</p>
+          <p>Placa: {{guia.camion.idCamion}}</p>
+          <p>Capacidad Total : {{guia.camion.capacidad}}</p>
+          <p>Capacidad Restante : {{guia.camion.pesoRestante}}</p>
+          <p>Numero de clientes : {{guia.camion.numClientes}}</p>
 
   
   

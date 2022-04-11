@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 
 import { PlanificacionEntregas } from '../../models/planificacionEntregas';
 import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
@@ -14,13 +14,15 @@ export class ListaClientesGuiasPage implements OnInit {
 @Input() facturas:any[]
 @Input()rutaZona;
 @Input() fecha;
+@Input()  idGuia
 verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
 textoBuscar = '';
   constructor(
     public controlCamionesGuiasService: ControlCamionesGuiasService,
-    public modalCtrl:ModalController
+    public modalCtrl:ModalController,
+    public alertCTrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -33,16 +35,18 @@ textoBuscar = '';
   }
   agregarGuia(factura){
     this.modalCtrl.dismiss();
-    this.controlCamionesGuiasService.agregarGuia(factura);
+   // this.controlCamionesGuiasService.agregarGuia(factura);
   
     
   }
  removerFactura(factura){
-  this.controlCamionesGuiasService.removerFactura(factura);
+/**
+ *   this.controlCamionesGuiasService.removerFactura(factura);
 
   if(this.controlCamionesGuiasService.guiaFacturasaActual.length == 0){
     this.modalCtrl.dismiss();
   }
+ */
  }
   eliminarCamionesFacturaIndividualAlert(factura){
    // this.controlCamionesGuiasService.eliminarCamionesFacturaIndividualAlert(factura)
@@ -57,4 +61,56 @@ textoBuscar = '';
 
     this.textoBuscar = event.detail.value;
   }
+
+  async onOpenMenuGuias(factura) {
+  
+    let inputArray:any = []
+  
+  let agregar :any =          {
+  name: 'radio1',
+  type: 'radio',
+  label: 'Mover a otra guia',
+  value: 'value1',
+  handler: () => {
+    console.log('Radio 1 selected');
+  
+    this.alertCTrl.dismiss();
+  }
+  }
+  
+
+
+    
+  let eliminar :any =     {
+  name: 'radio2',
+  type: 'radio',
+  label: 'Eliminar Factura',
+  value: 'value2',
+  handler: () => {
+    console.log('Radio 2 selected');
+  
+  this.alertCTrl.dismiss();
+  }
+  }
+  
+  
+  
+  inputArray.push(agregar,eliminar)
+  
+  
+    const alert = await this.alertCTrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Administrar Guias',
+      message: `
+      Te permite gestionar todas las facturas disponibles ya sea para mover todas las facturas a una nueva guia, guia existente en estado INI o eliminar todas las guias 
+  `,
+      inputs: inputArray,
+    });
+  
+    await alert.present();
+  }
+
+  
+
+
 }
