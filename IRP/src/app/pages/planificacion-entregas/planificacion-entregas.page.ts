@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonSlides, ModalController, AlertController } from '@ionic/angular';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
@@ -10,6 +10,7 @@ import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-g
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { ListaCamionesModalPageModule } from '../lista-camiones-modal/lista-camiones-modal.module';
+import { ListaCamionesModalPage } from '../lista-camiones-modal/lista-camiones-modal.page';
 
 
 
@@ -32,11 +33,15 @@ export class PlanificacionEntregasPage implements OnInit {
     public datableService: DataTableService,
     public serviciosCompartidosService: ServiciosCompartidosService,
     public planificacionEntregasService:PlanificacionEntregasService,
-    public alertasService: AlertasService
+    public alertasService: AlertasService,
+    public alertCTrl: AlertController
 
 
   ) { }
-
+  @ViewChild(IonSlides) slides: IonSlides;
+  avatarSlide = {
+    slidesPerView: 3
+  }
 
 //============================================================================= 
 // IMAGEN DEL BOTON DE CAMION 
@@ -67,14 +72,7 @@ rutaZona = null;
 
 
  limpiarDatos(){
-  this.planificacionEntregasService.bultosTotales = 0
-  this.planificacionEntregasService.clientesTotales = 0
-  this.planificacionEntregasService.pesoTotal = 0
-  this.planificacionEntregasService.fecha = null;
-  this.controlCamionesGuiasService.listaCamionesGuia = []
-  this.controlCamionesGuiasService.Fecha = null;
-  this.controlCamionesGuiasService.listaCamionesGuia = []
-  this.planificacionEntregasService.rutaFacturasArray = [];
+
  }
 
   ngOnInit() {
@@ -96,7 +94,13 @@ rutaZona = null;
     this.planificacionEntregasService.syncRutaFacturas( this.rutaZona.Ruta, this.fecha);
     
   }
-
+  slidePrev() {
+    this.slides.slidePrev();
+  }
+  slideNext() {
+    
+    this.slides.slideNext();
+  }
 
 //=============================================================================
 // DESPLIEGA UN MODAL CON LAS RUTAS Y ZONAS UNA VEZ SELECCIONADA LA OPCION 
@@ -155,7 +159,7 @@ configuracionZonaRuta(){
     if(valor !== undefined){
  
       this.fecha = valor
-      this.controlCamionesGuiasService.Fecha = valor;
+      this.controlCamionesGuiasService.fecha = valor;
    this.cargarDatos();
 
      }
@@ -180,7 +184,7 @@ gestionErrores(){
 
 generarPost(){
 
- this.controlCamionesGuiasService.generarPost()
+
 
 this.rutaZona = null;
 
@@ -191,7 +195,7 @@ this.rutaZona = null;
 // SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA LA LISTA DE CAMIONES Y DEVUELVE EL VALOR SELECCIONADO
 //=============================================================================
 
-async listaCamiones(){
+async listaCamiones(factura){
 
   const modal = await this.modalCtrl.create({
     component: ListaCamionesModalPageModule,
@@ -204,14 +208,15 @@ async listaCamiones(){
   const { data } = await modal.onDidDismiss();
 
   if(data !== undefined){
-
+    this.controlCamionesGuiasService.borrarFactura(factura, factura.idGuia)
+    this.controlCamionesGuiasService.generarGuia(factura, data);
 //=============================================================================
 // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
 // LAS FACTURAS A UNA SOLA GUIA
 //=============================================================================
  
  
-this.controlCamionesGuiasService.agregarTodasFacturasUnicoCamion(this.rutaZona.Ruta, data.camion,  this.fecha);
+
       
   }
   
@@ -224,8 +229,7 @@ this.controlCamionesGuiasService.agregarTodasFacturasUnicoCamion(this.rutaZona.R
 
 removerGuia(consecutivo){
 
-  this.controlCamionesGuiasService.removerGuia(consecutivo)
-
+  
 }
 
 //=============================================================================
@@ -233,7 +237,7 @@ removerGuia(consecutivo){
 //=============================================================================
 mostrarDetalleGuia(consecutivo){
 
-  this.controlCamionesGuiasService.mostrarDetalleGuia(consecutivo, this.rutaZona, this.fecha)
+ 
 
 }
 
@@ -241,11 +245,181 @@ mostrarDetalleGuia(consecutivo){
 // NOS PERMITE GENERAR UNA NUEVA GUIA POR MEDIO DE UNA FACTURA
 //=============================================================================
 
-agregarGuia(factura){
+async generarNuevaGuia(factura){
 
-  this.controlCamionesGuiasService.agregarGuia(factura);
+
+  const modal = await this.modalCtrl.create({
+    component: ListaCamionesModalPage,
+    cssClass: 'large-modal'
+  });
+
+  modal.present();
+      
+        
+  const { data } = await modal.onDidDismiss();
+
+  if(data !== undefined){
+
+    console.log(data, 'data')
+    this.controlCamionesGuiasService.generarGuia(factura, data.camion);
+//=============================================================================
+// UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
+// LAS FACTURAS A UNA SOLA GUIA
+//=============================================================================
+ 
+ 
+
+      
+  }
+ 
 
 }
  
+async onOpenMenu(factura) {
+ 
+  let inputArray:any = []
+
+let nuevaGuia :any =          {
+name: 'radio1',
+type: 'radio',
+label: 'Generar Nueva Guia',
+value: 'value1',
+handler: () => {
+  console.log('Radio 1 selected');
+  this.controlCamionesGuiasService.borrarFactura(factura, factura.idGuia)
+this.generarNuevaGuia(factura)
+  this.alertCTrl.dismiss();
+}
+}
+
+let agregarFacturaGuiaExistente :any =     {
+name: 'radio2',
+type: 'radio',
+label: 'Agregar Guia Existente',
+value: 'value2',
+handler: () => {
+  console.log('Radio 2 selected');
+
+this.controlCamionesGuiasService.agregarFacturaGuia(factura)
+this.alertCTrl.dismiss();
+}
+}
+
+let eliminarFacturaGuiaExistente:any =    {
+name: 'radio3',
+type: 'radio',
+label: 'Eliminar Factura Guia Existente',
+value: 'value3',
+handler: () => {
+
+  console.log('Radio 3 selected');
+
+  this.borrarFactura(factura, factura.idGuia);
+  this.alertCTrl.dismiss();
+}
+}
+
+inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExistente)
+
+
+  const alert = await this.alertCTrl.create({
+    cssClass: 'my-custom-class',
+    header: 'Administrar Factura ' + factura.factura.FACTURA,
+    message: `
+  Te permite generar nuevas guias, ademas de poder agregar facturas a guias existentes o eliminar una factura de una guia
+`,
+    inputs: inputArray
+   
+  });
+
+  await alert.present();
+}
+async onOpenMenuGuias() {
+  
+  let inputArray:any = []
+
+let agregar :any =          {
+name: 'radio1',
+type: 'radio',
+label: 'Nueva Guia',
+value: 'value1',
+handler: () => {
+  console.log('Radio 1 selected');
+
+  this.alertCTrl.dismiss();
+}
+}
+
+
+let post :any =          {
+  name: 'radio1',
+  type: 'radio',
+  label: 'Guardar Guias',
+  value: 'value1',
+  handler: () => {
+    console.log('Radio 1 selected');
+  this.controlCamionesGuiasService.generarPost();
+    this.alertCTrl.dismiss();
+  }
+  }
+
+
+let agregarExistentes :any =          {
+  name: 'radio1',
+  type: 'radio',
+  label: 'Guia Existente',
+  value: 'value1',
+  handler: () => {
+    console.log('Radio 1 selected');
+  
+    this.alertCTrl.dismiss();
+  }
+  }
+let eliminar :any =     {
+name: 'radio2',
+type: 'radio',
+label: 'Eliminar Guias',
+value: 'value2',
+handler: () => {
+  console.log('Radio 2 selected');
+
+this.alertCTrl.dismiss();
+}
+}
+
+
+
+inputArray.push(agregar,post,agregarExistentes,eliminar)
+
+
+  const alert = await this.alertCTrl.create({
+    cssClass: 'my-custom-class',
+    header: 'Administrar Guias',
+    message: `
+    Te permite gestionar todas las facturas disponibles ya sea para mover todas las facturas a una nueva guia, guia existente en estado INI o eliminar todas las guias 
+`,
+    inputs: inputArray,
+  });
+
+  await alert.present();
+}
+
+
+detalleGuia(idGuia){
+
+  this.controlCamionesGuiasService.detalleGuia(idGuia)
+}
+
+borrarGuia(idGuia){
+  this.controlCamionesGuiasService.borrarGuia(idGuia)
+
+
+}
+borrarFactura(factura, idGuia){
+  this.controlCamionesGuiasService.borrarFactura(factura,idGuia)
+
+
+}
+
 
 }
