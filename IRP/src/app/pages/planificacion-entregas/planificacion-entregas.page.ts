@@ -279,47 +279,47 @@ async onOpenMenu(factura) {
  
   let inputArray:any = []
 
-let nuevaGuia :any =          {
-name: 'radio1',
-type: 'radio',
-label: 'Generar Nueva Guia',
-value: 'value1',
-handler: () => {
-  console.log('Radio 1 selected');
-  this.controlCamionesGuiasService.borrarFactura(factura, factura.idGuia)
-this.generarNuevaGuia(factura)
-  this.alertCTrl.dismiss();
-}
-}
+  let nuevaGuia :any =          {
+    name: 'radio1',
+    type: 'radio',
+    label: 'Generar Nueva Guia',
+    value: 'value1',
+    handler: () => {
+      console.log('Radio 1 selected');
+      this.controlCamionesGuiasService.borrarFactura(factura, factura.idGuia)
+    this.generarNuevaGuia(factura)
+      this.alertCTrl.dismiss();
+    }
+  }
 
-let agregarFacturaGuiaExistente :any =     {
-name: 'radio2',
-type: 'radio',
-label: 'Agregar Guia Existente',
-value: 'value2',
-handler: () => {
-  console.log('Radio 2 selected');
+  let agregarFacturaGuiaExistente :any =     {
+    name: 'radio2',
+    type: 'radio',
+    label: 'Agregar Guia Existente',
+    value: 'value2',
+    handler: () => {
+      console.log('Radio 2 selected');
 
-this.controlCamionesGuiasService.agregarFacturaGuia(factura)
-this.alertCTrl.dismiss();
-}
-}
+    this.controlCamionesGuiasService.agregarFacturaGuia(factura)
+    this.alertCTrl.dismiss();
+    }
+  }
 
-let eliminarFacturaGuiaExistente:any =    {
-name: 'radio3',
-type: 'radio',
-label: 'Eliminar Factura Guia Existente',
-value: 'value3',
-handler: () => {
+  let eliminarFacturaGuiaExistente:any =    {
+    name: 'radio3',
+    type: 'radio',
+    label: 'Eliminar Factura Guia Existente',
+    value: 'value3',
+    handler: () => {
 
-  console.log('Radio 3 selected');
+      console.log('Radio 3 selected');
 
-  this.borrarFactura(factura, factura.idGuia);
-  this.alertCTrl.dismiss();
-}
-}
+      this.borrarFactura(factura, factura.idGuia);
+      this.alertCTrl.dismiss();
+    }
+  }
 
-inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExistente)
+  inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExistente)
 
 
   const alert = await this.alertCTrl.create({
@@ -334,63 +334,61 @@ inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExisten
 
   await alert.present();
 }
+
 async onOpenMenuGuias() {
   
   let inputArray:any = []
 
-let agregar :any =          {
-name: 'radio1',
-type: 'radio',
-label: 'Nueva Guia',
-value: 'value1',
-handler: () => {
-  console.log('Radio 1 selected');
+  let agregar :any =          {
+    name: 'radio1',
+    type: 'radio',
+    label: 'Nueva Guia',
+    value: 'value1',
+    handler: () => {
+      console.log('Radio 1 selected');
 
-  this.alertCTrl.dismiss();
-}
-}
+      this.alertCTrl.dismiss();
+    }
+  }
 
+  let post :any =          {
+    name: 'radio1',
+    type: 'radio',
+    label: 'Guardar Guias',
+    value: 'value1',
+    handler: () => {
+      console.log('Radio 1 selected');
+      this.controlCamionesGuiasService.generarPost();
+      console.log('Guia: ', this.controlCamionesGuiasService.listaGuias);
+      this.alertCTrl.dismiss();
+    }
+  }
 
-let post :any =          {
-  name: 'radio1',
-  type: 'radio',
-  label: 'Guardar Guias',
-  value: 'value1',
-  handler: () => {
-    console.log('Radio 1 selected');
-  this.controlCamionesGuiasService.generarPost();
+  let agregarExistentes :any =          {
+    name: 'radio1',
+    type: 'radio',
+    label: 'Guia Existente',
+    value: 'value1',
+    handler: () => {
+      console.log('Radio 1 selected');
+    
+      this.alertCTrl.dismiss();
+    }
+  }
+
+  let eliminar :any =     {
+    name: 'radio2',
+    type: 'radio',
+    label: 'Eliminar Guias',
+    value: 'value2',
+    handler: () => {
+      console.log('Radio 2 selected');
+
     this.alertCTrl.dismiss();
+    }
   }
-  }
 
-
-let agregarExistentes :any =          {
-  name: 'radio1',
-  type: 'radio',
-  label: 'Guia Existente',
-  value: 'value1',
-  handler: () => {
-    console.log('Radio 1 selected');
-  
-    this.alertCTrl.dismiss();
-  }
-  }
-let eliminar :any =     {
-name: 'radio2',
-type: 'radio',
-label: 'Eliminar Guias',
-value: 'value2',
-handler: () => {
-  console.log('Radio 2 selected');
-
-this.alertCTrl.dismiss();
-}
-}
-
-
-
-inputArray.push(agregar,post,agregarExistentes,eliminar)
-
+  inputArray.push(agregar,post,agregarExistentes,eliminar)
 
   const alert = await this.alertCTrl.create({
     cssClass: 'my-custom-class',

@@ -18,3 +18,17 @@ export class Rutero {
         public distancia: number
     ){}
 }
+
+export class RuteroMH {
+    constructor( 
+        public id: string,
+        public cliente: string,
+        public latitud: number,
+        public longitud:number,
+        public distancia: number,
+        public duracion:number,
+        public direccion:string,
+        public bultosTotales:number,
+        public order_visita: number,
+        public asignado: boolean){}
+}

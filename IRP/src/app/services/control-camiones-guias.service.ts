@@ -9,6 +9,7 @@ import { ListaGuiasPage } from '../pages/lista-guias/lista-guias.page';
 import * as  mapboxgl from 'mapbox-gl';
 import { AlertasService } from './alertas.service';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
+import { Rutero, RuteroMH } from '../models/Rutero';
 
 
 //=============================================================================
@@ -25,7 +26,6 @@ interface ordenEntregaCliente {
   direccion:string,
   bultosTotales:number,
   order_visita: number
-
 }
 
 interface factura {
@@ -40,29 +40,28 @@ factura:PlanificacionEntregas
 
 interface  GuiaEntregaArray{
 
-       idGuia: string,
-       guiaExistente:boolean,
-       zona: string,
-       ruta: string,
-       fecha: string,
-       numClientes: number,
-       totalFacturas:number
+      idGuia: string,
+      guiaExistente:boolean,
+      zona: string,
+      ruta: string,
+      fecha: string,
+      numClientes: number,
+      totalFacturas:number
 
-     camion:{
+      camion:{
 
-      chofer:string,  
-      idCamion: string,
-      capacidad: number,
-      pesoRestante: number,
-      peso: number,
-      estado: string,
-      HH: string,
-      volumen: number,
+        chofer:string,  
+        idCamion: string,
+        capacidad: number,
+        pesoRestante: number,
+        peso: number,
+        estado: string,
+        HH: string,
+        volumen: number,
+      }
 
-     }
-       facturas: PlanificacionEntregas[],
-       ordenEntregaCliente:ordenEntregaCliente[]
-
+      facturas: PlanificacionEntregas[],
+      ordenEntregaCliente:ordenEntregaCliente[]
 }
 
 @Injectable({
@@ -77,20 +76,30 @@ export class ControlCamionesGuiasService {
 // VARIABLES GLOBALES
 //=============================================================================
 
-rutaZona = null;
-fecha:string;
-lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
-listaGuias : GuiaEntregaArray[] =[]
-orderArray = [];
-compareArray  : ordenEntregaCliente[] = [];
-complete = 0;
+    rutaZona = null;
+    fecha:string;
+    lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+    listaGuias : GuiaEntregaArray[] = [];
+    orderArray = [];
+    compareArray  : ordenEntregaCliente[] = [];
+    complete = 0;
+
+    // Variables proceso de ordenamiento MAURICIO HERRA
+
+    listos: number = 1;
+    total: number = 1;
+    actual: number = 0;
+    menor:  number = 0;
+    i:      number = 0;
+    p:      number = 0;
+    rutero: RuteroMH[] = [];
 
 
  constructor( 
-   public modalCtrl: ModalController,
-  public datableService:DataTableService, 
-  public alertasService: AlertasService,
-  public planificacionEntregasService: PlanificacionEntregasService
+    public modalCtrl: ModalController,
+    public datableService:DataTableService, 
+    public alertasService: AlertasService,
+    public planificacionEntregasService: PlanificacionEntregasService
 
   ) {
   
@@ -313,22 +322,17 @@ borrarGuia(idGuia){
 
   let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == idGuia);
 
-if(i >=0){
-let facturas = this.listaGuias[i].facturas;
+  if(i >=0){
+    let facturas = this.listaGuias[i].facturas;
 
-for(let f =0; f < facturas.length; f++){
-  let cliente = facturas[f]
-  this.planificacionEntregasService.borrarIdGuiaFactura(idGuia);
-if(f === this.listaGuias[i].facturas.length -1){
-  this.listaGuias.splice(i,1);
-}
-
-
-}
-
-
-
-}
+    for(let f =0; f < facturas.length; f++){
+      let cliente = facturas[f]
+      this.planificacionEntregasService.borrarIdGuiaFactura(idGuia);
+      if(f === this.listaGuias[i].facturas.length -1){
+        this.listaGuias.splice(i,1);
+      }
+    }
+  }
 
 };
 
@@ -349,42 +353,152 @@ borrarTodasLasGuias(){
 //=============================================================================
 
 
-
-
-
 generarPost(){
   console.log(' inicio For loop de cada una de las guias' )
 
   for(let i = 0; i  < this.listaGuias.length; i++){
     console.log('Evaluando Guia',this.listaGuias[i].idGuia  )
-   this.asignarDistanciaDuracion(this.listaGuias[i]);
- 
-  }  
-
+    this.llenarRutero( this.listaGuias[i] );
+    this.ordenaMH(0);
+    //this.devolverRutero(i);
+    console.log(this.listaGuias[i]);
+    //this.asignarDistanciaDuracion(this.listaGuias[i]);
+  }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+//   PROCESO DE ORDENAMIENTO NUEVO MH
+////////////////////////////////////////////////////////////////////////////////////////
 
- 
+
+llenarRutero( guia: GuiaEntregaArray ){
+  this.rutero = [];
+  let item = new RuteroMH( '0', 'ISLEÑA', 9.982628288210657, -84.14123589305028, 0, 0, '', 0, 0, true );
+  this.rutero.push(item);
+
+  guia.ordenEntregaCliente.forEach( x => {
+    item = new RuteroMH( x.id, x.cliente, x.latitud, x.longitud, x.distancia, x.duracion, x.direccion, x.bultosTotales, x.order_visita, false);
+    this.rutero.push( item );
+  });
+
+  console.log('Rutero: ', this.rutero);
+}
+
+ordenaMH(a: number){
+  let m: number;
+  let o: number;
+
+  this.getDistancia(a)
+    .then( x => console.log(x))
+    .then( x => {
+      m = this.calcularMenor();
+      console.log(m);
+      this.rutero[m].asignado = true;
+      o = this.sumarOrdenados();
+      this.rutero[m].order_visita = o
+      if ( o < this.rutero.length - 1 ){
+        this.ordenaMH(m);
+      }
+    });
+}
+
+sumarOrdenados(){
+  let c: number = 0;
+
+  this.rutero.forEach( x => {
+    if (x.asignado){
+      c += 1;
+    }
+  });
+  return c - 1;
+}
+
+async getDistancia( a: number ) {
+
+  // NOS AYUDA ENCONTRAR LA DISTANCIA Y DURACION
+
+  let start: string;
+  let end:   string;
+  let URL:   string;
+  console.log(URL);
+
+  for (let i = 1; i < this.rutero.length; i++) {
+    if ( !this.rutero[i].asignado ){
+      start = this.rutero[a].longitud +','+  this.rutero[a].latitud;
+      end = this.rutero[i].longitud +','+  this.rutero[i].latitud;
+      URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${start};${end}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
+
+      const query = await fetch(
+        URL,
+        { method: 'GET' }
+      );
+      const json = await query.json();
+
+      if(json.routes){
+        this.rutero[i].distancia = Number((json.routes[0].distance / 1000).toFixed(2));
+    
+        this.rutero[i].duracion = Number((json.routes[0].duration / 60).toFixed(2) );
+      }
+    }
+    
+  }
+  
+  return this.rutero;
+}
+
+calcularMenor(){
+  let menor:  number = 100000;
+  let indice: number = 0;
+
+  for (let i = 0; i < this.rutero.length; i++) {
+    if ( !this.rutero[i].asignado ){
+      if ( this.rutero[i].distancia < menor ){
+        menor = this.rutero[i].distancia;
+        indice = i;
+      }
+    }
+  }
+  return indice;
+}
+
+devolverRutero(i: number){
+  let j: number;
+
+  this.rutero.forEach( x => {
+    j = this.listaGuias[i].ordenEntregaCliente.findIndex( y => y.id === x.id );
+    if ( j >= 0 ){
+      this.listaGuias[i].ordenEntregaCliente[j].duracion = x.duracion;
+      this.listaGuias[i].ordenEntregaCliente[j].distancia = x.distancia;
+      this.listaGuias[i].ordenEntregaCliente[j].order_visita = x.order_visita;
+    }
+  });
+}
+
+//////////////////////////////////////////////////////////////////////
+//
+//    FIN DEL PROCESO DE ORDENAMIENTO
+//
+/////////////////////////////////////////////////////////////////////
+
 
 
  
 exportarGuias(){
 
-for(let i = 0; i < this.listaGuias.length; i++){
+  for(let i = 0; i < this.listaGuias.length; i++){
 
-  let guia = this.listaGuias[i];
-  let facturas = this.listaGuias[i].facturas;
+    let guia = this.listaGuias[i];
+    let facturas = this.listaGuias[i].facturas;
 
-  let rutero = this.listaGuias[i].ordenEntregaCliente;
+    let rutero = this.listaGuias[i].ordenEntregaCliente;
 
-  
-  console.log(guia)
-  console.log(facturas)
-  console.log(rutero)
+    console.log(guia)
+    console.log(facturas)
+    console.log(rutero)
 
-  this.completePost(guia,facturas,rutero)
+    this.completePost(guia,facturas,rutero)
 
-}
+  }
 }   
 
 
@@ -430,12 +544,6 @@ for(let r = 0; r < jj.length; r++){
    }
 
 postFacturas.push(actualizarFactura)
-
-
-
-
-
-
 
 if(i === facturas.length -1){
 
@@ -492,10 +600,6 @@ if(i === facturas.length -1){
  }
  
 
-
-
-
-
 //=============================================================================
 // OPCIONES DE  DIRECCIONAMIENTO
 //=============================================================================
@@ -505,11 +609,11 @@ async  consultarDistanciaDuracion( start, end) {
 
   // NOS AYUDA ENCONTRAR LA DISTANCIA Y DURACION
 
-let startPoint  =  start;
-let endPoint  =  end
+  let startPoint  =  start;
+  let endPoint  =  end;
   let URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${startPoint};${endPoint}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`
   console.log(URL)
-   const query = await fetch(
+  const query = await fetch(
     URL,
     { method: 'GET' }
   );
@@ -517,13 +621,14 @@ let endPoint  =  end
 
   let distance  = null ;
   let duration  = null;
-if(json.routes){
-  distance = Number((json.routes[0].distance / 1000).toFixed(2));
+  if(json.routes){
+    distance = Number((json.routes[0].distance / 1000).toFixed(2));
 
-  duration = Number((json.routes[0].duration / 60).toFixed(2) );
-
-}
-return {distance , duration}
+    duration = Number((json.routes[0].duration / 60).toFixed(2) );
+  }
+  console.log('Distancia: ', distance);
+  console.log('Duración: ', duration);
+  return {distance , duration}
 }
 
 //=======================================================================
@@ -534,130 +639,91 @@ asignarDistanciaDuracion( guia:GuiaEntregaArray) {
 
   console.log('Asignar Distancia Duracion en referencia a ISLEÑA ',guia.idGuia  )
   this.complete = 0;
-    this.orderArray = [];
-    this.compareArray = [];
+  this.orderArray = [];
+  this.compareArray = [];
   
-    for (let i = 0; i <  guia.ordenEntregaCliente.length ; i++){
+  for (let i = 0; i <  guia.ordenEntregaCliente.length ; i++){
   
-      let lngLat =  guia.ordenEntregaCliente[i].longitud +','+  guia.ordenEntregaCliente[i].latitud;
+    let lngLat =  guia.ordenEntregaCliente[i].longitud +','+  guia.ordenEntregaCliente[i].latitud;
+
     this.consultarDistanciaDuracion(this.lngLat, lngLat ).then(resp =>{
-  
       const { distance, duration } = resp;
       guia.ordenEntregaCliente[i].distancia = distance;
       guia.ordenEntregaCliente[i].duracion = duration;
   
       if(i === guia.ordenEntregaCliente.length -1){
-     
-       
-        console.log('Asignacion de distancia y duracon finalizada',guia )
+        console.log('Asignacion de distancia y duracion finalizada',guia )
         this.ordernarDistancia(guia.ordenEntregaCliente)
-      
-      
-      
       }
-  
-  
-  
-  
-      })
-  
-    
-   
-     
-      
-  
-    }
-  
-  
-      }
-  
+    });
+  }
+}
 
 
-
+//=======================================================================
+// ORDENAR DISTANCIA: ORDENA EL ARREGLO DE ORDENENTREGA POR DISTANCIA
+//========================================================================
 
 
 ordernarDistancia(clientes:ordenEntregaCliente[]){
-  console.log('Ordenamiento Distancia ',clientes )
+  
   clientes.sort( ( a, b ) => a.distancia - b.distancia )
 
   let startValue : ordenEntregaCliente  = null
 
   for(let i = 0; i < clientes.length ; i++ ){
 
-
-
     if(i === 0){
 
-     startValue =   clientes[0];
+      startValue =   clientes[0];
       startValue.order_visita =  this.orderArray.length +1;
 
-     this.orderArray.push(startValue);
-     this.compareArray = clientes.slice(1);
+      this.orderArray.push(startValue);
+      this.compareArray = clientes.slice(1);
 
+      if(clientes.length == 1){
 
-     if(clientes.length == 1){
-
-      this.complete += 1;
-      this.orderArray = []
-      this.compareArray = []
-  
-      if(this.complete == this.listaGuias.length){
-        console.log('Orden evaluado procedemos a exportar ',clientes )
-        this.exportarGuias();
-       
+        this.complete += 1;
+        this.orderArray = [];
+        this.compareArray = [];
+        if(this.complete == this.listaGuias.length){
+          console.log('Orden evaluado procedemos a exportar ',clientes )
+          this.exportarGuias();
+        }
       }
 
+      for(let j =0; j< this.compareArray.length; j++){
+
+        let cliente = this.compareArray[j];
+        console.log('Ordenamiento Distancia ',cliente.id )
+        this.consultarDistanciaDuracion(this.orderArray[this.orderArray.length-1].longitud+','+this.orderArray[this.orderArray.length-1].latitud , this.compareArray[j].longitud +','+this.compareArray[j].latitud ).then( 
+          resp =>{
+
+            if(resp){
+              console.log('Distancia Asignada ',cliente.id )
+
+              const { distance, duration } = resp;
+              cliente.distancia = distance;
+              cliente.duracion = duration;
+            }
+          });
+
+        if(j === this.compareArray.length -1){
+
+          this.ordernarDistancia(this.compareArray)
+          this.orderArray = []
+          this.compareArray = []
+
+          this.complete += 1;
+
+          if(this.complete == this.listaGuias.length){
+            console.log('Orden evaluado procedemos a exportar ',clientes )
+            this.exportarGuias();
+          } 
+        }
+      }
 
     }
-
-   
-for(let j =0; j< this.compareArray.length; j++){
-
-let cliente = this.compareArray[j];
-console.log('Ordenamiento Distancia ',cliente.id )
-this.consultarDistanciaDuracion(this.orderArray[this.orderArray.length-1].longitud+','+this.orderArray[this.orderArray.length-1].latitud , this.compareArray[j].longitud +','+this.compareArray[j].latitud ).then( resp =>{
-
-if(resp){
-  console.log('Distancia Asignada ',cliente.id )
-
-const { distance, duration } = resp;
-cliente.distancia = distance;
-cliente.duracion = duration;
-
-
-
-}
-})
-
-if(j === this.compareArray.length -1){
-
-
-this.ordernarDistancia(this.compareArray)
-this.orderArray = []
-this.compareArray = []
-
-this.complete += 1;
-
-if(this.complete == this.listaGuias.length){
-  console.log('Orden evaluado procedemos a exportar ',clientes )
-  this.exportarGuias();
-}
-
-
-
-
- 
-       }
-
-
-
-
-}
-
-    }
-
-
-  
   }
 }
 
