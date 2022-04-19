@@ -22,6 +22,7 @@ export class Rutero {
 export class RuteroMH {
     constructor( 
         public id: string,
+        public idGuia: string,
         public cliente: string,
         public latitud: number,
         public longitud:number,

@@ -73,11 +73,15 @@ url = null;
         this.rutasFacturas.rutaFacturasArray = []
         this.datatableService.dataArrayToShow = [];
         this.datatableService.data = [];
-        this.planificacionEntregasService.bultosTotales = null;
-        this.planificacionEntregasService.clientesTotales = null;
+        this.planificacionEntregasService.bultosTotales = 0;
+        this.planificacionEntregasService.clientesTotales = 0;
         this.planificacionEntregasService.fecha = null;
-        this.planificacionEntregasService.pesoTotal = null;
+        this.planificacionEntregasService.pesoTotal = 0;
         this.planificacionEntregasService.rutaFacturasArray = [];
+     
+
+
+
       }, error => {
       //  this.alertasService.loadingDissmiss();
       // nombre controlador
@@ -96,7 +100,7 @@ url = null;
     }
       )
 
-    this.actualizaFacturasArray = [];
+   // this.actualizaFacturasArray = [];
 
 
 }

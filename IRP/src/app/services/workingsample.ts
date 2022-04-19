@@ -370,7 +370,7 @@ generarPost(){
   for(let i = 0; i  < this.listaGuias.length; i++){
     console.log('Evaluando Guia',this.listaGuias[i].idGuia  )
     this.llenarRutero( this.listaGuias[i] );
-   this.ordenaMH(0);
+   this.ordenaMH(i);
     console.log(this.listaGuias[i]);
     //this.asignarDistanciaDuracion(this.listaGuias[i]);
   }
@@ -425,7 +425,6 @@ ordenaMH(a: number){
         this.exportarRuteros()
       }
     })
-    
 }
 
 
