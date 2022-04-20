@@ -13,6 +13,7 @@ import { Rutero, RuteroMH } from '../models/Rutero';
 import { GuiasService } from './guias.service';
 import { RuteroService } from './rutero.service';
 import { ActualizarFacturasService } from './actualizar-facturas.service';
+import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
 
 
 //=============================================================================
@@ -100,7 +101,7 @@ export class ControlCamionesGuiasService {
     rutero: RuteroMH[] = [];
 
     ruteros = []
-
+    idGuiasArray = [];
 
  constructor( 
     public modalCtrl: ModalController,
@@ -542,6 +543,9 @@ devolverRutero(i: number){
 
  
 exportarGuias(){
+  
+  this.idGuiasArray = [];
+  
 let  verificarGuias = this.listaGuias.filter(guia => guia.verificada == false);
 if(verificarGuias.length > 0){
  this.alertasService.message('Planificación de entregas','Ups!. Todas las guias deben de ser verificadas!. Guias pendientes : ' + verificarGuias.length)
@@ -568,7 +572,7 @@ if(verificarGuias.length > 0){
 
 completePost(guia: GuiaEntregaArray, facturas:PlanificacionEntregas[], ruteros:ordenEntregaCliente[]){
 
-  
+
 
   let postFacturas = [];
 
@@ -589,6 +593,8 @@ completePost(guia: GuiaEntregaArray, facturas:PlanificacionEntregas[], ruteros:o
     volumen: guia.camion.volumen
    }
 
+   
+  this.idGuiasArray.push(guiaCamion.idGuia)
 
     for(let i =0; i <  facturas.length; i++){
 
@@ -645,12 +651,14 @@ postFacturas.push(actualizarFactura)
             this.guiasService.insertarGuias(guiaCamion); 
             this.ruteroService.insertarPostRutero(postRutero);
             this.actualizarFacturasService.insertarFacturas(postFacturas)
+  
         
           if(this.complete == this.listaGuias.length){
         this.listaGuias = [];
         this.rutaZona = null;
         this.planificacionEntregasService.planificacionEntregaArray = [];
             this.complete  = 0;
+            this.guiasPost();
           }
         
         
@@ -681,7 +689,16 @@ postFacturas.push(actualizarFactura)
  }
  
 
+async guiasPost(){
+const modal = await this.modalCtrl.create({
+component:ListaGuiasPostPage,
+componentProps:{
+  idGuiasArray:this.idGuiasArray
+}
+});
 
+return modal.present();
+}
 
 //=============================================================================
 // OPCIONES DE FACTURAS

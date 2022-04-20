@@ -92,7 +92,7 @@ rutaZona = null;
 
   cargarDatos(){
 
-    this.planificacionEntregasService.syncRutaFacturas( this.rutaZona.Ruta, this.fecha);
+    this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha);
     
   }
   slidePrev() {
@@ -125,9 +125,7 @@ configuracionZonaRuta(){
   
     if(valor !== undefined){
     
-      this.rutaZona = null;
-  
-      this.rutaZona = valor
+      this.controlCamionesGuiasService.rutaZona = null;
       this.controlCamionesGuiasService.rutaZona = valor;
       
 //=============================================================================
@@ -350,7 +348,11 @@ async onOpenMenu(factura) {
     }
   }
 
-  inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExistente)
+  if(factura.idGuia){
+    inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExistente)
+  }else{
+    inputArray.push(nuevaGuia,agregarFacturaGuiaExistente)
+  }
 
 
   const alert = await this.alertCTrl.create({

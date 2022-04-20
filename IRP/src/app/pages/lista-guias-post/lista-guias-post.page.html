@@ -1,25 +1,23 @@
-
-<ion-header class="ion-no-border ion-padding">
-  <span style="display: flex; justify-content: space-between; align-items: center;">
-    
-    <ion-title class="ion-text-uppercase" >Lista de guias guardadas 
-
-      <ion-badge  color="dark" mode="ios"  >{{guias.length}}</ion-badge>
-
-    </ion-title>
+<ion-header class="ion-no-border" traslucent>
+ 
+  <ion-toolbar>
 
 
-  </span>
+    <ion-title class="title">
+      
+      <ion-label>Lista de guias guardadas </ion-label> 
+      <ion-badge>{{idGuiasArray.length}}</ion-badge></ion-title>
 
+
+  </ion-toolbar>
 
 </ion-header>
-<ion-toolbar>
-<ion-title>Numero de guia</ion-title>
-    </ion-toolbar>
-<ion-content  >
-
+<ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of guias">
+    <ion-item>
+      <ion-label>Numero de guia</ion-label>
+    </ion-item>
+    <ion-item *ngFor="let item of idGuiasArray">
       <ion-label>
     
          {{item}}

@@ -7,7 +7,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./lista-guias-post.page.scss'],
 })
 export class ListaGuiasPostPage implements OnInit {
-@Input() guias: [];
+@Input() idGuiasArray: [];
 
 
   constructor(
