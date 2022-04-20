@@ -11,6 +11,7 @@ import { PlanificacionEntregasService } from 'src/app/services/planificacion-ent
 import { AlertasService } from 'src/app/services/alertas.service';
 import { ListaCamionesModalPageModule } from '../lista-camiones-modal/lista-camiones-modal.module';
 import { ListaCamionesModalPage } from '../lista-camiones-modal/lista-camiones-modal.page';
+import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
 
 
 
@@ -240,7 +241,37 @@ mostrarDetalleGuia(consecutivo){
  
 
 }
+async mapa(guia){
 
+
+  const modal = await this.modalCtrl.create({
+    component: RutaMapaComponent,
+    cssClass: 'large-modal',
+    componentProps:{
+      guia:guia,
+      lngLat: [ -84.14123589305028, 9.982628288210657 ],
+      height: '100%',
+      width:' 100%',
+      interactive: true
+    }
+  });
+
+  modal.present();
+      
+        
+  const { data } = await modal.onDidDismiss();
+
+  if(data !== undefined){
+
+    console.log(data, 'data')
+
+ 
+
+      
+  }
+ 
+
+}
 //=============================================================================
 // NOS PERMITE GENERAR UNA NUEVA GUIA POR MEDIO DE UNA FACTURA
 //=============================================================================
@@ -358,7 +389,7 @@ async onOpenMenuGuias() {
     value: 'value1',
     handler: () => {
       console.log('Radio 1 selected');
-      this.controlCamionesGuiasService.generarPost();
+      this.controlCamionesGuiasService.exportarGuias();
       console.log('Guia: ', this.controlCamionesGuiasService.listaGuias);
       this.alertCTrl.dismiss();
     }
@@ -419,5 +450,9 @@ borrarFactura(factura, idGuia){
 
 }
 
+verificarGuia(guia, i){
+  console.log(guia,i)
+this.controlCamionesGuiasService.llenarRutero(guia,i)
 
+}
 }

@@ -99,7 +99,7 @@
     </ion-fab-button>
   
     <ion-slides   [options]="avatarSlide" class="ion-padding">
-      <ion-slide *ngFor="let guia of controlCamionesGuiasService.listaGuias">
+      <ion-slide *ngFor="let guia of controlCamionesGuiasService.listaGuias;let i = index">
   
   <ion-card >
 
@@ -121,8 +121,14 @@
 
   </ion-card-content>
   
-  <span style="position: absolute; top: 0; right: 0; display: flex;justify-content: space-around;">
-   
+  <span style="position: absolute; top: -15px; right: 0; display: flex;justify-content: space-around;">
+    <ion-fab-button  (click)="verificarGuia(guia,i)" size="small" class="custom-button" color="primary"  >
+      <ion-icon   name="checkmark-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button  *ngIf="guia.verificada" (click)="mapa(guia)" size="small" class="custom-button" color="dark"  >
+      <ion-icon   name="map-outline"></ion-icon>
+    </ion-fab-button>
+
     <ion-fab-button (click)="borrarGuia(guia.idGuia)" size="small" class="custom-button" color="danger"  >
       <ion-icon   name="close-outline"></ion-icon>
     </ion-fab-button>

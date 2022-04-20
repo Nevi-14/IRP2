@@ -4,18 +4,19 @@ import { MiniMapaComponent } from './mini-mapa/mini-mapa.component';
 import { MapaComponent } from './mapa/mapa.component';
 import { IonicModule } from '@ionic/angular';
 import { PipesModule } from '../pipes/pipes.module';
+import { RutaMapaComponent } from './ruta-mapa/ruta-mapa.component';
 
 
 
 @NgModule({
-  declarations: [MiniMapaComponent,MapaComponent],
+  declarations: [MiniMapaComponent,MapaComponent, RutaMapaComponent],
   imports: [
     CommonModule,
     IonicModule,
     PipesModule
   ],
   exports: [
-  MiniMapaComponent,MapaComponent
+  MiniMapaComponent,MapaComponent,RutaMapaComponent
 
   ]
 })

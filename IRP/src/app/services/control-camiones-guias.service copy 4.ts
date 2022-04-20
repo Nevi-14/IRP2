@@ -202,7 +202,7 @@ let orderPush = {
   longitud:factura.factura.LONGITUD,
   distancia: 0,
   duracion:0,
-  direccion:factura.factura.DIRECCION_FACTURA,
+  direccion:factura.factura.CLIENTE_DIRECCION,
   bultosTotales:0,
   order_visita: 0
 
@@ -272,7 +272,7 @@ async agregarFacturaGuia(factura:factura){
       cliente: factura.factura.NOMBRE_CLIENTE,
       latitud: factura.factura.LATITUD,
       longitud:factura.factura.LONGITUD,
-      direccion:factura.factura.DIRECCION_FACTURA,
+      direccion:factura.factura.CLIENTE_DIRECCION,
       bultosTotales:0,
       distancia: 0,
       duracion:0,
@@ -382,7 +382,7 @@ let lista = this.listaGuias[i].ordenEntregaCliente
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-llenarRutero( guia: GuiaEntregaArray ,index){
+llenarRutero( guia: GuiaEntregaArray ,i){
   this.rutero = [];
   let item = new RuteroMH( '0', guia.idGuia,'ISLEÑA', 9.982628288210657, -84.14123589305028, 0, 0, '', 0, 0, true );
   this.rutero.push(item);
@@ -394,7 +394,7 @@ for(let i = 0; i < guia.ordenEntregaCliente.length; i++){
     this.rutero.push( item );
 
     if(i == guia.ordenEntregaCliente.length -1){
-      this.ordenaMH(index)
+      this.ordenaMH(i)
       console.log('Rutero: ', this.rutero);
     
     }
@@ -413,7 +413,6 @@ exportRutero(rutero){
 }
 
 ordenaMH(a: number){
-  //this.alertasService.presentaLoading('Verificando Guia')
   let m: number;
   let o: number;
 
@@ -429,7 +428,6 @@ ordenaMH(a: number){
         this.ordenaMH(m);
       }
       if(o == this.rutero.length -1){
-     //   this.alertasService.loadingDissmiss();  
         this.exportarRuteros()
       }
     })
@@ -452,6 +450,7 @@ if(index >=0){
   this.listaGuias[index].ordenEntregaCliente  = this.rutero.slice(1);
   let guia = this.listaGuias[index]
   console.log('trueee','sshshs')
+  this.completePost(guia, guia.facturas, this.listaGuias[index].ordenEntregaCliente)
 }
    
 
@@ -542,14 +541,18 @@ devolverRutero(i: number){
 
  
 exportarGuias(){
+  console.log(this.listaGuias,'exporting')
 
   for(let i = 0; i < this.listaGuias.length; i++){
-    console.log(this.listaGuias[i],'exporting')
 
     let guia = this.listaGuias[i];
     let facturas = this.listaGuias[i].facturas;
 
     let rutero = this.listaGuias[i].ordenEntregaCliente;
+
+    console.log(guia)
+    console.log(facturas)
+    console.log(rutero)
 
     this.completePost(guia,facturas,rutero)
 
@@ -559,7 +562,7 @@ exportarGuias(){
 
 completePost(guia: GuiaEntregaArray, facturas:PlanificacionEntregas[], ruteros:ordenEntregaCliente[]){
 
-  
+  ruteros.forEach(function(x){ delete x.idGuia });
 
   let postFacturas = [];
 
@@ -629,33 +632,16 @@ postFacturas.push(actualizarFactura)
       
         if(j === ruteros.length -1){
 
-          let index =  this.listaGuias.findIndex(filtrar => filtrar.idGuia == guia.idGuia);
-          if(index >=0){
-         //   this.listaGuias.splice(index,1)
-    this.complete += 1;
-            this.guiasService.insertarGuias(guiaCamion); 
+
+          console.log('guiaCamion', guiaCamion)
+            console.log('postFacturas', postFacturas)
+            console.log('postRutero',  postRutero)
+        /**
+         *      this.guiasService.insertarGuias(guiaCamion); 
             this.ruteroService.insertarPostRutero(postRutero);
-            this.actualizarFacturasService.insertarFacturas(postFacturas)
-        
-          if(this.complete == this.listaGuias.length){
-        this.listaGuias = [];
-        this.planificacionEntregasService.planificacionEntregaArray = [];
-            this.complete  = 0;
-          }
-        
-        
-          }
-
-  
-
-
-
-
-
-       
-        
-
-
+             this.actualizarFacturasService.insertarFacturas(postFacturas)
+         */
+            
           //  postFacturas = []
             //postRutero = [];
 
