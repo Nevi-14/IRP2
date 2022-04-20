@@ -354,7 +354,7 @@ async onOpenMenu(factura) {
 
 
   const alert = await this.alertCTrl.create({
-    cssClass: 'my-custom-class',
+    cssClass: 'alert-menu',
     header: 'Administrar Factura ' + factura.factura.FACTURA,
     message: `
   Te permite generar nuevas guias, ademas de poder agregar facturas a guias existentes o eliminar una factura de una guia
@@ -370,17 +370,7 @@ async onOpenMenuGuias() {
   
   let inputArray:any = []
 
-  let agregar :any =          {
-    name: 'radio1',
-    type: 'radio',
-    label: 'Nueva Guia',
-    value: 'value1',
-    handler: () => {
-      console.log('Radio 1 selected');
 
-      this.alertCTrl.dismiss();
-    }
-  }
 
   let post :any =          {
     name: 'radio1',
@@ -390,27 +380,18 @@ async onOpenMenuGuias() {
     handler: () => {
       console.log('Radio 1 selected');
       this.controlCamionesGuiasService.exportarGuias();
+ 
       console.log('Guia: ', this.controlCamionesGuiasService.listaGuias);
       this.alertCTrl.dismiss();
     }
   }
 
-  let agregarExistentes :any =          {
-    name: 'radio1',
-    type: 'radio',
-    label: 'Guia Existente',
-    value: 'value1',
-    handler: () => {
-      console.log('Radio 1 selected');
-    
-      this.alertCTrl.dismiss();
-    }
-  }
+
 
   let eliminar :any =     {
     name: 'radio2',
     type: 'radio',
-    label: 'Eliminar Guias',
+    label: 'Asignar todas las factuas a una guia',
     value: 'value2',
     handler: () => {
       console.log('Radio 2 selected');
@@ -419,13 +400,13 @@ async onOpenMenuGuias() {
     }
   }
 
-  inputArray.push(agregar,post,agregarExistentes,eliminar)
+  inputArray.push(post,eliminar)
 
   const alert = await this.alertCTrl.create({
-    cssClass: 'my-custom-class',
+    cssClass: 'alert-menu',
     header: 'Administrar Guias',
     message: `
-    Te permite gestionar todas las facturas disponibles ya sea para mover todas las facturas a una nueva guia, guia existente en estado INI o eliminar todas las guias 
+    Te permite gestionar las guias previamente creadas
 `,
     inputs: inputArray,
   });

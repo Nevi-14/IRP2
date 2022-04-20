@@ -743,3 +743,10 @@ left: -3rem;
       height: 80%; 
     }
   }
+
+  .alert-menu{
+    --backdrop-opacity: 0.8 !important;
+    --height:60%;
+    --width: 60%;
+    --max-width: 80%;
+  }

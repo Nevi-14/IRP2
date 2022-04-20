@@ -542,18 +542,27 @@ devolverRutero(i: number){
 
  
 exportarGuias(){
+let  verificarGuias = this.listaGuias.filter(guia => guia.verificada == false);
+if(verificarGuias.length > 0){
+ this.alertasService.message('Planificación de entregas','Ups!. Todas las guias deben de ser verificadas!. Guias pendientes : ' + verificarGuias.length)
+
+ return
+}
 
   for(let i = 0; i < this.listaGuias.length; i++){
-    console.log(this.listaGuias[i],'exporting')
+  if(this.listaGuias[i].verificada){
+   console.log(this.listaGuias[i],'exporting')
 
-    let guia = this.listaGuias[i];
-    let facturas = this.listaGuias[i].facturas;
+   let guia = this.listaGuias[i];
+   let facturas = this.listaGuias[i].facturas;
 
-    let rutero = this.listaGuias[i].ordenEntregaCliente;
+   let rutero = this.listaGuias[i].ordenEntregaCliente;
 
-    this.completePost(guia,facturas,rutero)
-
+   this.completePost(guia,facturas,rutero)
   }
+
+ }
+ 
 }   
 
 
@@ -639,6 +648,7 @@ postFacturas.push(actualizarFactura)
         
           if(this.complete == this.listaGuias.length){
         this.listaGuias = [];
+        this.rutaZona = null;
         this.planificacionEntregasService.planificacionEntregaArray = [];
             this.complete  = 0;
           }
