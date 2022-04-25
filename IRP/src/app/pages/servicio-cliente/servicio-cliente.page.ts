@@ -67,7 +67,7 @@ export class ServicioClientePage implements OnInit {
       public guiasService:ControlCamionesGuiasService, 
       public ruteroService: RuteroService, 
       public alertasService: AlertasService,
-      public servicioClienteService: ServicioClienteService
+      public servicioClienteService: ServicioClienteService,
       
       ) {
 
@@ -82,6 +82,7 @@ export class ServicioClientePage implements OnInit {
      this.clientes.nuevosClientes = [];
 
   console.log('planificacion Rutas')
+  this.servicioClienteService.syncConsultarClientes('');
 
 
     

@@ -208,7 +208,7 @@ async listaCamiones(factura){
   const { data } = await modal.onDidDismiss();
 
   if(data !== undefined){
-    this.controlCamionesGuiasService.borrarFactura(factura)
+    this.controlCamionesGuiasService.borrarFactura(factura, factura.idGuia)
     this.controlCamionesGuiasService.generarGuia(factura, data);
 //=============================================================================
 // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
@@ -347,7 +347,7 @@ async onOpenMenu(factura) {
     value: 'value1',
     handler: () => {
       console.log('Radio 1 selected');
-      this.controlCamionesGuiasService.borrarFactura(factura)
+      this.controlCamionesGuiasService.borrarFactura(factura, factura.idGuia)
     this.generarNuevaGuia(factura)
       this.alertCTrl.dismiss();
     }
@@ -361,7 +361,7 @@ async onOpenMenu(factura) {
     handler: () => {
       console.log('Radio 2 selected');
 
-  //  this.controlCamionesGuiasService.agregarFacturaGuia(factura)
+    this.controlCamionesGuiasService.agregarFacturaGuia(factura)
     this.alertCTrl.dismiss();
     }
   }
@@ -449,9 +449,9 @@ async onOpenMenuGuias() {
 }
 
 
-detalleGuia(guia){
+detalleGuia(idGuia){
 
-  this.controlCamionesGuiasService.detalleGuia(guia)
+  this.controlCamionesGuiasService.detalleGuia(idGuia)
 }
 
 async borrarGuia(idGuia){
@@ -483,14 +483,14 @@ async borrarGuia(idGuia){
 
 
 borrarFactura(factura, idGuia){
-  this.controlCamionesGuiasService.borrarFactura(factura)
+  this.controlCamionesGuiasService.borrarFactura(factura,idGuia)
 
 
 }
 
-verificarGuia(guia){
-
-this.controlCamionesGuiasService.llenarRutero(guia)
+verificarGuia(guia, i){
+  console.log(guia,i)
+this.controlCamionesGuiasService.llenarRutero(guia,i)
 
 }
 }

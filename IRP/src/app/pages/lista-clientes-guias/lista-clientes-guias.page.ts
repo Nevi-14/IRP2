@@ -4,6 +4,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 
 import { PlanificacionEntregas } from '../../models/planificacionEntregas';
 import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
+import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 
 @Component({
   selector: 'app-lista-clientes-guias',
@@ -15,6 +16,7 @@ export class ListaClientesGuiasPage implements OnInit {
 @Input()rutaZona;
 @Input() fecha;
 @Input()  idGuia
+@Input()  guia:any
 verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
@@ -26,7 +28,7 @@ textoBuscar = '';
   ) { }
 
   ngOnInit() {
-   console.log( this.facturas)
+   console.log( this.facturas, this.guia,'guiia')
   }
 
   actualizarFactura(factura){
@@ -110,7 +112,38 @@ textoBuscar = '';
     await alert.present();
   }
 
+  async controlFacturas(factura){
+
+
+    const modal = await this.modalCtrl.create({
+      component: ControlFacturasPage,
+      cssClass: 'large-modal',
+      componentProps:{
+        factura:factura
+      },id:'control-facturas'
+    });
   
+    modal.present();
+        
+          
+    const { data } = await modal.onDidDismiss();
+  
+    if(data !== undefined){
+  
+      console.log(data, 'data')
+    //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
+  //=============================================================================
+  // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
+  // LAS FACTURAS A UNA SOLA GUIA
+  //=============================================================================
+   
+   
+  
+        
+    }
+   
+  
+  }
 
 
 }

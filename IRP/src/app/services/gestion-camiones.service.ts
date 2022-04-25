@@ -39,7 +39,7 @@ console.log(URL);
     this.getCamiones().subscribe(
       resp =>{
         this.camiones = resp.slice(0);
-
+console.log('camiones', this.camiones)
 this.alertasService.loadingDissmiss();
         console.log(this.camiones, 'camiones')
 
@@ -59,4 +59,9 @@ this.alertasService.loadingDissmiss();
 
     );
   }
+
+ async syncPromiseCamiones(){
+
+   return  this.getCamiones().toPromise();
+   }
 }

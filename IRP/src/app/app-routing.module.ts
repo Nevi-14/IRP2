@@ -129,7 +129,11 @@ const routes: Routes = [
   {
     path: 'lista-guias-post',
     loadChildren: () => import('./pages/lista-guias-post/lista-guias-post.module').then( m => m.ListaGuiasPostPageModule)
+  },  {
+    path: 'control-facturas',
+    loadChildren: () => import('./pages/control-facturas/control-facturas.module').then( m => m.ControlFacturasPageModule)
   },
+
 
 
  

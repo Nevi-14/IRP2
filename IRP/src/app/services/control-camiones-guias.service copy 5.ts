@@ -14,15 +14,7 @@ import { GuiasService } from './guias.service';
 import { RuteroService } from './rutero.service';
 import { ActualizarFacturasService } from './actualizar-facturas.service';
 import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
-interface modeloCamiones {
-  placa:string,
-  chofer:string,
-  volumen:number,
-  peso:number,
-  numeroGuia:string,
-  ruta:string
 
-}
 
 //=============================================================================
 // INTERFACE DE ORDEN ENTREGA CLIENTES
@@ -41,13 +33,11 @@ interface ordenEntregaCliente {
   order_visita: number
 }
 
-interface facturas {
-  idFactura:string,
-  cliente:string,
-  factura: PlanificacionEntregas;
-  idGuia:  string
+interface factura {
+idGuia:string,
+factura:PlanificacionEntregas
   
-  }
+}
 
 //=============================================================================
 // INTERFACE DE  MODELO GUIA DE ENTREGA
@@ -168,20 +158,12 @@ let    consecutivo  = null,
 //=============================================================================
 
 
-generarGuia(factura:facturas,camion:modeloCamiones) {
-console.log(camion,'cami')
+generarGuia(factura,camion) {
 
-
-if(factura.idGuia){
-  this.borrarFactura(factura)
-}
-
-
-
-  let capacidad = camion.peso;
+  let capacidad = camion.capacidadPeso;
   let peso = factura.factura.TOTAL_PESO_NETO;
-  let pesoRestante = camion.peso - factura.factura.TOTAL_PESO_NETO; 
-  let volumen = Number(factura.factura.RUBRO1);
+  let pesoRestante = camion.capacidadPeso - factura.factura.TOTAL_PESO_NETO; 
+  let volumen = factura.factura.TOTAL_VOLUMEN;
   let guia = {
 
     idGuia: this.generarIDGuia(),
@@ -199,7 +181,7 @@ if(factura.idGuia){
   camion:{
 
    chofer:camion.chofer,  
-   idCamion: camion.placa,
+   idCamion: camion.idCamion,
    capacidad: capacidad,
    pesoRestante: pesoRestante,
    peso: peso,
@@ -231,11 +213,13 @@ let orderPush = {
 }
 factura.idGuia = guia.idGuia;
 
-guia.facturas.push(factura)
+guia.facturas.push(factura.factura)
 guia.ordenEntregaCliente.push(orderPush)
 this.listaGuias.push(guia)
 console.log('Guia generada ', guia)
 
+  
+
 
 
 }
@@ -244,28 +228,44 @@ console.log('Guia generada ', guia)
 
 
 
+async agregarFacturaGuia(factura:factura){
 
- agregarFacturaGuia(factura,camion:modeloCamiones){
-
-
-    let g = this.listaGuias.findIndex(guia => guia.idGuia = camion.numeroGuia );
-//    let j = this.listaGuias.findIndex(guia =>   guia.idGuia = factura.idGuia );
- 
-let i = this.listaGuias.findIndex(guia => guia.idGuia = camion.numeroGuia )
-
-console.log(i ,'i',    this.listaGuias, camion)
-
-if(factura.idGuia){
- // this.borrarFactura(factura)
-}
+  const modal = await this.modalCtrl.create({
+    component: ListaGuiasPage,
+    cssClass: 'large-modal',
+    componentProps:{
+      camiones: this.listaGuias
+    }
+  });
+  modal.present();
       
+        
+      
+  const { data } = await modal.onDidDismiss();
+  let camion : GuiaEntregaArray;
+
+  if(data !== undefined){
+
+
+
+
+
+
+    this.borrarFacturaExistente(factura, factura.idGuia, data.camion.idGuia);
+
+    let i = this.listaGuias.findIndex(guia => guia.idGuia === data.camion.idGuia );
+
+
+    
     if(i >=0){
+
+
 
     this.listaGuias[i].verificada = false;
     this.listaGuias[i].distancia = 0;
     this.listaGuias[i].duracion = 0;
      this.listaGuias[i].camion.peso  += factura.factura.TOTAL_PESO_NETO
-     this.listaGuias[i].camion.volumen  += Number(factura.factura.RUBRO1)
+     this.listaGuias[i].camion.volumen  += factura.factura.TOTAL_VOLUMEN
      this.listaGuias[i].camion.pesoRestante  = this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
      this.listaGuias[i].numClientes += 1;
      factura.idGuia =  this.listaGuias[i].idGuia
@@ -297,12 +297,14 @@ if(factura.idGuia){
 
    
   
-     this.listaGuias[i].facturas.push(factura)
+     this.listaGuias[i].facturas.push(factura.factura)
 
      console.log(this.listaGuias)
     }
-  return camion
+  return camion = data.camion ;
 
+      
+  }
 
 
 
@@ -311,23 +313,28 @@ if(factura.idGuia){
 }
 
 
-async detalleGuia(guia){
+async detalleGuia(idGuia){
+
+let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == idGuia);
+
+if(i >=0){
+
+  console.log(this.listaGuias[i]);
 
   const modal = await this.modalCtrl.create({
     component: ListaClientesGuiasPage,
     cssClass: 'large-modal',
     componentProps:{
-      facturas:guia.facturas,
+      facturas:this.listaGuias[i].facturas,
       rutaZona:this.rutaZona,
       fecha:this.fecha,
-      guia:guia
-    },
-    id:'detalle-guia'
+      idGuia:idGuia
+    }
   });
-
   modal.present();
 
 
+}
 }
 
 borrarGuia(idGuia){
@@ -381,7 +388,7 @@ let lista = this.listaGuias[i].ordenEntregaCliente
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-llenarRutero( guia: GuiaEntregaArray){
+llenarRutero( guia: GuiaEntregaArray ,index){
   this.rutero = [];
   let item = new RuteroMH( '0', guia.idGuia,'ISLEÑA', 9.982628288210657, -84.14123589305028, 0, 0, '', 0, 0, true );
   this.rutero.push(item);
@@ -393,7 +400,7 @@ for(let i = 0; i < guia.ordenEntregaCliente.length; i++){
     this.rutero.push( item );
 
     if(i == guia.ordenEntregaCliente.length -1){
-      this.ordenaMH(0)
+      this.ordenaMH(index)
       console.log('Rutero: ', this.rutero);
     
     }
@@ -476,8 +483,6 @@ sumarOrdenados(){
 
 async getDistancia( a: number ) {
 
-
-  console.log('ettt', a, this.rutero[a])
   // NOS AYUDA ENCONTRAR LA DISTANCIA Y DURACION
 
   let start: string;
@@ -490,7 +495,7 @@ async getDistancia( a: number ) {
       start = this.rutero[a].longitud +','+  this.rutero[a].latitud;
       end = this.rutero[i].longitud +','+  this.rutero[i].latitud;
       URL =  `https://api.mapbox.com/directions/v5/mapbox/driving/${start};${end}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-      console.log('ettt2', a, this.rutero[a],URL,'URL')
+
       const query = await fetch(
         URL,
         { method: 'GET' }
@@ -710,51 +715,21 @@ return modal.present();
 //=============================================================================
 
 
-borrarFactura(factura:facturas){
-
-console.log(factura, 'borrarrrr')
-  let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == factura.idGuia);
- let facturas = this.listaGuias[i].facturas
- this.listaGuias[i].totalFacturas - 1;
-
-  let index  = facturas.findIndex(facturas=> facturas.FACTURA = factura.idFactura);
-
-   facturas.splice(index, 1)
-
-
-if( this.listaGuias[i].facturas.length == 0){
-  this.listaGuias.splice(i, 1)
-  this.modalCtrl.dismiss();
-}
-
-  console.log( facturas,index, facturas[index])
-  this.modalCtrl.dismiss(null,null,'detalle-guia');
-  this.modalCtrl.dismiss(null,null,'control-facturas');
-  factura.idGuia = '';
-}
-
-
-
-
-
-
-
-
-borrarFacturas(factura, idGuia){
-  console.log('borrar',factura,idGuia)
-
+borrarFactura(factura, idGuia){
 
   let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == idGuia);
- console.log( this.listaGuias[i],' this.listaGuias[i]')
+  console.log(factura, idGuia, factura.factura.FACTURA);
+  console.log(i)
 if(i >=0){
 let facturas = this.listaGuias[i].facturas;
 
 console.log(facturas)
   let f = this.listaGuias[i].facturas.findIndex(guia =>  guia.FACTURA == factura.factura.FACTURA);
-
-  
+  console.log(f)
 if(f>=0){
   this.listaGuias[i].verificada = false;
+    this.listaGuias[i].distancia = 0;
+    this.listaGuias[i].duracion = 0;
   this.listaGuias[i].facturas.splice(f,1);
   factura.idGuia = '';
   this.listaGuias[i].numClientes -= 1

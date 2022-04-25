@@ -1,0 +1,104 @@
+
+  <ion-toolbar  >
+    <ion-grid >
+      <ion-row>
+        <ion-col size="6" style="display: flex; justify-content: center;align-items: right;">
+          <ion-title class="ion-text-uppercase" style="text-align: left;">Lista de clientes</ion-title>
+        
+        </ion-col>
+        <ion-col size="5" style="display: flex; justify-content: center;align-items: right;">
+      
+          <ion-searchbar    mode="ios" placeholder="Buscar cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
+        
+      </ion-toolbar>
+
+
+<ion-content>
+  
+
+<ion-item>
+<ion-grid >
+  <ion-row>
+    <ion-row class="header-row">
+
+
+
+      <ion-col size="4">
+  
+      Total Clientes : {{facturas.length}} 
+  
+      </ion-col>
+      <ion-col   size="2">Frio
+  
+  
+  
+      </ion-col>
+      <ion-col   size="2">Seco</ion-col>
+      <ion-col    size="2">Bultos</ion-col>
+      <ion-col   size="2">Peso</ion-col>
+   
+     
+    </ion-row>
+  </ion-row>
+</ion-grid>
+</ion-item>
+  <ion-item (click)="controlFacturas(factura)" class="data-row" *ngFor="let factura of facturas | filtro:textoBuscar:'cliente'">
+<ion-grid >
+  <ion-row > 
+
+    <ion-col size="4"   >
+  <ion-label>
+   <h2 class="ion-text-left">
+    
+    <ion-button (click)="onOpenMenuGuias(factura.FACTURA)" fill="clear" shape="round" >
+      {{factura.NOMBRE_CLIENTE}}
+    </ion-button>
+    </h2>
+   <p>Factura : {{factura.FACTURA}}</p>
+  
+  </ion-label>
+    
+    </ion-col>
+    <ion-col    size="2">
+  
+      <ion-checkbox  disabled="true"  [(ngModel)]="factura.FRIO_SECO == 'F' ? verdadero : falso " ></ion-checkbox>
+    </ion-col>
+    <ion-col    size="2">
+  
+      <ion-checkbox disabled="true"  [(ngModel)]="factura.FRIO_SECO == 'S' ? verdadero : falso " ></ion-checkbox>
+    </ion-col>
+    <ion-col    size="2">
+  {{factura.RUBRO1}}
+    </ion-col>
+    <ion-col    size="2" >
+      {{factura.TOTAL_PESO_NETO}}
+    </ion-col>
+    <ion-col    size="2" style="display: flex;" >
+      <ion-label style="position: relative;">   
+
+<h2> {{factura.idGuia}}</h2>
+
+      </ion-label>
+  
+          
+ 
+  
+    </ion-col>
+  
+  </ion-row>
+</ion-grid>
+  </ion-item>
+  
+
+
+</ion-content>
+
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="cerrarModal()" size="small" color="danger"> 
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

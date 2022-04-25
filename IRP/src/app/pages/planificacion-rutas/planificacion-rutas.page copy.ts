@@ -716,6 +716,44 @@ postArray.push(rutasClientes)
     this.limpiarDatos();
   }
 }
+/**
+ * const exportarMarcadores =  this.planificacionRutasService.exportarMarcadores();
+//  this.clienteEspejo.presentaLoading('Guardando Rutas...');
+  for(let i =0; i < exportarMarcadores.length; i++){
+
+    const rutasClientes = {
+      IdCliente:exportarMarcadores[i].id,
+      Fecha: new Date().toISOString(),
+      Usuario: 'IRP',
+      Zona: this.rutaZona.Zona ,
+      Ruta:this.rutaZona.Ruta   ,
+      Latitud: exportarMarcadores[i].cliente.LATITUD,
+      Longitud: exportarMarcadores[i].cliente.LONGITUD
+              }
+
+              
+            if(exportarMarcadores[i].excluir){
+              rutasClientes.Ruta = 'ND'
+              rutasClientes.Zona = 'ND'
+
+            }
+            
+              postArray.push(rutasClientes)
+             
+    
+  }
+  
+  
+  console.log(exportarMarcadores, 'exported array', 'post array', postArray)
+
+
+  if(exportarMarcadores.length > 0){
+console.log(postArray,'postArray')
+this.clienteEspejo.insertarClienteEspejo(postArray);
+
+  }
+this.limpiarDatos();
+ */
 
  
 }

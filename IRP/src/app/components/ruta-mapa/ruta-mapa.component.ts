@@ -15,7 +15,6 @@ interface Coordenadas {
   estado:   string,
   color: string
 }
-
 @Component({
   selector: 'app-ruta-mapa',
   templateUrl: './ruta-mapa.component.html',
@@ -59,6 +58,7 @@ export class RutaMapaComponent implements AfterViewInit {
   features = [];
   zoomLevel: number = 10.5;
   array :any;
+  mostrar = false;
   constructor(public modalCtrl:ModalController, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService) { }
 
   ionViewWillEnter(){
@@ -69,7 +69,9 @@ export class RutaMapaComponent implements AfterViewInit {
     this.extrarCoordenadas();
   }
   }
-
+  mostrarDatos(){
+    this.mostrar = !this.mostrar 
+  }
   extrarCoordenadas(){
     let primerElemento = {
       nombre: 'ISLEÑA' ,
@@ -86,7 +88,7 @@ export class RutaMapaComponent implements AfterViewInit {
     for(let i =0; i < this.guia.ordenEntregaCliente.length; i++){
 
       let clienteCoordenada = {
-        nombre: this.guia.ordenEntregaCliente[i].cliente ,
+        nombre: 'Orden : ' + this.guia.ordenEntregaCliente[i].order_visita  + ' / Cliente : '+ this.guia.ordenEntregaCliente[i].cliente ,
         longitud :this.guia.ordenEntregaCliente[i].longitud,
         latitud : this.guia.ordenEntregaCliente[i].latitud,
         estado:   this.guia.ordenEntregaCliente[i].estado,
@@ -109,7 +111,16 @@ export class RutaMapaComponent implements AfterViewInit {
 
      
   }
-
+  irMarcador(item) {
+    if (item) {
+      this.mapa.flyTo(
+        { center: item, zoom: 18 }
+   
+      )
+  
+    }
+    this.mostrarDatos()
+  }
   crearMapa(){
     if(this.mapa){
       this.mapa.remove();

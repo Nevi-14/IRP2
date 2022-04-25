@@ -32,6 +32,7 @@ export const environment = {
   guiasURLEstadoParam:'?estado=',
   actualizaFacturasURL:'ActualizaFacturas',
   actualizaFacLinUrl:'ActualizaFacLin/',
+  clientesGuias:'ClientesGuia/',
   prdMode: true,
 };
 

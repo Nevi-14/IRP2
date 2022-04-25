@@ -1,0 +1,68 @@
+
+  <ion-toolbar  class="ion-padding">
+    <ion-title slot="start" class="ion-text-uppercase" style="text-align: left;">Control Facturas</ion-title>
+    <ion-button fill="clear" slot="start"  >
+      <ion-icon color="danger" slot="icon-only" name="trash-outline"></ion-icon>
+    </ion-button>
+
+
+    <ion-searchbar slot="end" style="width: 60%;"    mode="ios" placeholder="Buscar camión" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+        <ion-label slot="end">Label</ion-label>
+       <ion-toggle slot="end"></ion-toggle>
+        <ion-label slot="end">Label</ion-label>
+    <ion-checkbox slot="end"></ion-checkbox>
+
+      </ion-toolbar>
+      <ion-toolbar>
+ <ion-buttons slot="end">
+   <ion-button (click)="onClick()">
+     <ion-icon slot="start" name="add"></ion-icon>
+     Click me
+   </ion-button>
+   <ion-button (click)="onClick()">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Click me
+  </ion-button>
+  <ion-button (click)="onClick()">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Click me
+  </ion-button>
+  <ion-button (click)="onClick()">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Click me
+  </ion-button>
+ </ion-buttons>
+      </ion-toolbar>
+
+<ion-content>
+
+  <ion-list>
+ 
+
+      <ion-item   *ngFor="let camion of   controlCamionesGuiasService.listaGuias| filtro:textoBuscar:'idCamion'" (click)="actualizar(camion)" detail>
+        <ion-chip  style="background: transparent!important; height: 40px;" >
+          <ion-avatar >
+            <img   [src]="image" />
+          </ion-avatar>
+
+            </ion-chip>
+
+        <ion-label>
+          <h2>Placa : {{camion.idCamion}}  
+          </h2>
+          <p>Chofer : {{camion.chofer}}</p>
+          <p>Capacidad Total : {{camion.capacidad}}</p>
+          <p>Capacidad Restante : {{camion.pesoRestante}}</p>
+
+  
+        </ion-label>
+            
+      </ion-item>
+  
+
+    
+
+    
+  </ion-list>
+
+</ion-content>

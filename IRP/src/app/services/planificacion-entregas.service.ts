@@ -6,7 +6,8 @@ import { DataTableService } from './data-table.service';
 import { environment } from 'src/environments/environment';
 
 interface facturas {
-
+idFactura:string,
+cliente:string,
 factura: PlanificacionEntregas;
 idGuia:  string
 
@@ -35,9 +36,11 @@ export class PlanificacionEntregasService {
  paginationArray:PlanificacionEntregas[]=[];
  planificacionEntregaArray :  clientesFacturas[]=[];
  fecha: string;
+ totalFacturas: number = 0;
  pesoTotal: number = 0;
+ volumenTotal: number = 0;
  bultosTotales: number = 0;
- clientesTotales: number = 0;
+ totalClientes: number = 0;
  errorArray =[]
  constructor(
    
@@ -105,7 +108,19 @@ syncRutaFacturas(ruta:string, fecha:string){
 
       let clienteFactura :clientesFacturas;
       
+      this.totalFacturas = 0;
+      this.pesoTotal = 0;
+      this.bultosTotales = 0;
+      this.volumenTotal = 0;
+      this.totalFacturas = resp.length;
+      this.totalClientes = 0;
+   
       for ( let i = 0; i < resp.length; i++){
+
+       
+        this.pesoTotal +=  resp[i].TOTAL_PESO_NETO;
+        this.bultosTotales += resp[i].TOTAL_UNIDADES;
+        this.volumenTotal += resp[i].TOTAL_VOLUMEN;
 
         clienteFactura = {
 
@@ -114,9 +129,9 @@ syncRutaFacturas(ruta:string, fecha:string){
           direccion: resp[i].DIRECCION_FACTURA,
           incluir: resp[i].LONGITUD  && resp[i].LATITUD ? true : false,
           facturas:  [],
-          volumenTotal:  0,
-          pesoTotal: 0,
-          bultosTotales:0
+          volumenTotal:  resp[i].TOTAL_VOLUMEN,
+          pesoTotal: resp[i].TOTAL_PESO_NETO,
+          bultosTotales: resp[i].TOTAL_UNIDADES
       
         
         }
@@ -125,7 +140,8 @@ syncRutaFacturas(ruta:string, fecha:string){
 
 
 let factura: facturas = {
-
+  idFactura:resp[i].FACTURA,
+  cliente: resp[i].NOMBRE_CLIENTE,
   idGuia:null,
   factura: resp[i]
 
@@ -159,6 +175,8 @@ if(i === resp.length -1  ){
   this.alertasService.loadingDissmiss();
       
   console.log(this.planificacionEntregaArray, 'this.planificacionEntregaArray ')
+  this.totalClientes = 0;
+  this.totalClientes = this.planificacionEntregaArray.length
 }
 
 
@@ -192,15 +210,12 @@ if(i === resp.length -1  ){
 }
 
 
-
-
 agruparPorClientes(identificador, factura){
 const i = this.planificacionEntregaArray.findIndex(factura => factura.id === identificador);
 
 if(i >=0){
 
   this.planificacionEntregaArray[i].facturas.push(factura.facturas[0])
-
   return 
 
 }

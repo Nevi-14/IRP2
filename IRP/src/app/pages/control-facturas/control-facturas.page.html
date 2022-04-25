@@ -1,0 +1,91 @@
+
+  <ion-toolbar>
+    <ion-grid >
+      <ion-row>
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-title slot="start" class="ion-text-uppercase" style="text-align: left;">Control Facturas</ion-title>
+            <ion-label slot="start" style="display: flex;justify-content: space-around;align-items: center;">Incluir Todas las Facturas <ion-checkbox ></ion-checkbox></ion-label>
+            
+          </ion-item>
+        </ion-col>
+        <ion-col size="8">
+          
+          <ion-item >
+        <span style="display: flex;justify-content: center;align-items: center;">
+          <ion-label>Nueva Guia</ion-label>
+          <ion-toggle  [(ngModel)]="consultas.nuevaGuia"  (ionChange)="nuevaGuia(consultas.nuevaGuia)"></ion-toggle>
+        </span>
+
+        <span style="display: flex;justify-content: center;align-items: center;">
+          <ion-label>Guia Existente</ion-label>
+          <ion-toggle [(ngModel)]="consultas.guiaExistente" (ionChange)="guiasExistentes($event)"></ion-toggle>
+        </span>
+
+        <span style="display: flex;justify-content: center;align-items: center;">
+          
+          <ion-label>Otras Guias</ion-label>
+          <ion-toggle [(ngModel)]="consultas.otrasGuias" (ionChange)="otrasGuias($event)"></ion-toggle>
+        </span>
+   
+       <span *ngIf="factura.idGuia">
+        <ion-label>Eliminar</ion-label>
+        <ion-button (click)="borrarFactura()" fill="clear" >
+          <ion-icon color="danger" slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+       </span>
+              </ion-item>
+        </ion-col>
+        <ion-col size="4" style="display:flex; justify-content: center;align-items: center;">
+      
+          <ion-searchbar    mode="ios" placeholder="Buscar camión" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+     
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+        
+      </ion-toolbar>
+
+
+<ion-content>
+<ion-grid >
+  <ion-row>
+    <ion-col size="6">
+<ion-label>{{factura.factura.FACTURA}}</ion-label>
+
+
+      
+    </ion-col>
+    <ion-col size="6">
+      <ion-list>
+ 
+
+        <ion-item  *ngFor="let camion of camiones | filtro: textoBuscar:'idCamion'" (click)="retornarCamion(camion)" detail>
+          <ion-label>
+            <h2>Placa : {{camion.placa}} 
+            </h2>
+            <p>Chofer : {{camion.chofer}}</p>
+            <p>Capacidad Volumen: {{camion.volumen}}</p>
+            <p>Capacidad Peso : {{camion.peso}}</p>
+            <p>Numero de guia : {{camion.numeroGuia}}</p>
+            <p>Ruta : {{camion.ruta}}</p>
+    
+          </ion-label>
+              
+        </ion-item>
+    
+  
+      </ion-list>
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+</ion-content>
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="cerrarModal()" size="small" color="danger"> 
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
