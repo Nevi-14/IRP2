@@ -56,7 +56,7 @@ interface Marcadores {
     `
   ]
 })
-export class PlanificacionRutasPage implements OnInit, AfterViewInit {
+export class PlanificacionRutasPage implements OnInit {
 
 @ViewChild('mapa') divMapa!:ElementRef;
 default: any = 'title';
@@ -108,12 +108,10 @@ features = [];
 // EL MAPA SE TIENE QUE INCIAR EN AFTER INIT POR SER UN VIEWCHILD 
 //=============================================================================
 
-   ngAfterViewInit() {
 
+   ionViewWillEnter(){
     this.createmapa()
-
-   }
-
+  }
 
 
 //============================================================================= 
