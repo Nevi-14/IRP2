@@ -7,7 +7,7 @@
   
   <ion-row  >
     <ion-col size="12"  style="display: flex;"  >
-      <ion-card (click)="redirect(modulo.ruta)" *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'" class="ion-text-center" style="width: 20%;">
+      <ion-card (click)="refirect(i+1,modulo)" *ngFor="let modulo of modulosArray | filtro : textoBuscar:'titulo'; let i = index;" class="ion-text-center" style="width: 20%;">
         <img  [src]="modulo.imagen" class="floating-img" alt="">
       <ion-card-header>
         <ion-card-title style="font-size: 0.8rem; font-weight: 700;text-transform: uppercase;margin-top: 0.5rem;margin-bottom: 0.5rem;">{{modulo.titulo}}</ion-card-title>

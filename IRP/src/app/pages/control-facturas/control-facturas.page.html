@@ -4,8 +4,8 @@
       <ion-row>
         <ion-col size="12">
           <ion-item lines="none">
-            <ion-title slot="start" class="ion-text-uppercase" style="text-align: left;">Control Facturas</ion-title>
-            <ion-label slot="start" style="display: flex;justify-content: space-around;align-items: center;">Incluir Todas las Facturas <ion-checkbox ></ion-checkbox></ion-label>
+            <ion-title slot="start" class="ion-text-uppercase" style="text-align: left;">Control Facturas <ion-badge color="dark" mode="ios">{{consultas.incluirFacturas ? facturas.length : 1}}</ion-badge></ion-title>
+            <ion-label slot="start" style="display: flex;justify-content: space-around;align-items: center;">Incluir Todas las Facturas <ion-checkbox [(ngModel)]="consultas.incluirFacturas"  (ionChange)="incluirFacturasEvent($event)"  ></ion-checkbox></ion-label>
             
           </ion-item>
         </ion-col>
@@ -52,10 +52,20 @@
 <ion-grid >
   <ion-row>
     <ion-col size="6">
-<ion-label>{{factura.factura.FACTURA}}</ion-label>
 
+<ion-list *ngIf="!consultas.incluirFacturas">
+  <ion-item>
+    <ion-label>{{factura.factura.FACTURA}}</ion-label>
+  </ion-item>
+</ion-list>
+<ion-list *ngIf="consultas.incluirFacturas">
 
-      
+  <ion-item *ngFor="let factura of facturas">
+    <ion-label>{{factura.factura.FACTURA}}</ion-label>
+  </ion-item>
+
+</ion-list>
+
     </ion-col>
     <ion-col size="6">
       <ion-list>

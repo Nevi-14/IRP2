@@ -41,7 +41,7 @@ private getRutero(id){
 
   const URL = this.getRuteroURL(environment.ruteroURL,id);
 
-  console.log(URL, 'POST rutero  URL')
+  console.log(URL, 'GET rutero  URL')
   return this.http.get<Rutero[]>(URL);
 
 }

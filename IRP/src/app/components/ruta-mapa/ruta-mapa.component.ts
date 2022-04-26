@@ -30,11 +30,10 @@ interface Coordenadas {
     
     ion-list{
       position: fixed;
-      top: 90px;
-      right: 0px;
+      left: 50%;
       z-index: 99999;
-      height:85%;
-      width:220px;
+      height:80%;
+      width:80%;
       overflow: hidden;
       overflow-y: auto;
       ::-webkit-scrollbar {
@@ -81,14 +80,14 @@ export class RutaMapaComponent implements AfterViewInit {
       color:  "#010203",
     }
     
-    this.guia.ordenEntregaCliente.sort( ( a, b ) => a.order_visita - b.order_visita )
+    this.guia.ordenEntregaCliente.sort( ( a, b ) => a.orden_visita - b.orden_visita )
     
     this.coordinates.push(primerElemento)
 
     for(let i =0; i < this.guia.ordenEntregaCliente.length; i++){
 
       let clienteCoordenada = {
-        nombre: 'Orden : ' + this.guia.ordenEntregaCliente[i].order_visita  + ' / Cliente : '+ this.guia.ordenEntregaCliente[i].cliente ,
+        nombre: 'Orden : ' + this.guia.ordenEntregaCliente[i].orden_visita  + ' / Cliente : '+ this.guia.ordenEntregaCliente[i].cliente ,
         longitud :this.guia.ordenEntregaCliente[i].longitud,
         latitud : this.guia.ordenEntregaCliente[i].latitud,
         estado:   this.guia.ordenEntregaCliente[i].estado,

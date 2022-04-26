@@ -5,6 +5,8 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { NgZone } from '@angular/core';
+import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
+import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
 interface Modulos {
   imagen: string,
   titulo: string,
@@ -22,7 +24,7 @@ export class InicioPage implements OnInit {
   textoBuscar = '';
 
 
-  constructor(public _router: Router, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService,  private ngZone:NgZone,) {}
+  constructor(public _router: Router, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService,  private ngZone:NgZone, public planificacionRutasService: PlanificacionRutasService, public servicioClienteService: ServicioClienteService) {}
 
 
   redirect(to) {
@@ -88,5 +90,36 @@ export class InicioPage implements OnInit {
      this.textoBuscar = event.detail.value;
    }
  
+
+   refirect(id, element){
+
+switch(id){
+     case 1: 
+
+     this.redirect(element.ruta);
+     
+     break;
+     case 2: 
+     this.redirect(element.ruta);
+     break;
+     case 3:
+      this.planificacionRutasService.marcadores = []; 
+     this.redirect(element.ruta);
+  
+     break;
+     case 4: 
+     this.redirect(element.ruta);
+     break;
+   
+     case 5: 
+     this.redirect(element.ruta);
+     this.servicioClienteService.consultaGuias = []; 
+     break;
+  default:
+
+  
+}
+
+   }
 
 }

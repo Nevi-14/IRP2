@@ -35,6 +35,7 @@ export class PlanificacionEntregasService {
  rutaFacturasArray: PlanificacionEntregas[]=[];
  paginationArray:PlanificacionEntregas[]=[];
  planificacionEntregaArray :  clientesFacturas[]=[];
+formattedArray :  facturas[]=[];
  fecha: string;
  totalFacturas: number = 0;
  pesoTotal: number = 0;
@@ -114,7 +115,7 @@ syncRutaFacturas(ruta:string, fecha:string){
       this.volumenTotal = 0;
       this.totalFacturas = resp.length;
       this.totalClientes = 0;
-   
+      this.formattedArray = []
       for ( let i = 0; i < resp.length; i++){
 
        
@@ -146,6 +147,8 @@ let factura: facturas = {
   factura: resp[i]
 
 }
+
+this.formattedArray.push(factura)
   
 
 clienteFactura.facturas.push(factura)

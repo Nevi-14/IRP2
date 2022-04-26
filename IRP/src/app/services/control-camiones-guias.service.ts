@@ -38,7 +38,7 @@ interface ordenEntregaCliente {
   duracion:number,
   direccion:string,
   bultosTotales:number,
-  order_visita: number
+  orden_visita: number
 }
 
 interface facturas {
@@ -77,7 +77,7 @@ interface  GuiaEntregaArray{
     volumen: number,
   }
 
-  facturas: PlanificacionEntregas[],
+  facturas: facturas[],
   ordenEntregaCliente:ordenEntregaCliente[]
 }
 
@@ -133,11 +133,7 @@ export class ControlCamionesGuiasService {
 // LIMPIA LOS DATOS DEL SERVICIO
 //=============================================================================
 
- limpiarDatosCamionesGuiasService(){
 
-
-
- }
 
 
 //=============================================================================
@@ -146,7 +142,6 @@ export class ControlCamionesGuiasService {
 
 generarIDGuia(){
 
-  console.log(this.rutaZona.Ruta, 'ruu')
 let    consecutivo  = null,
        date               = new Date(this.fecha),  // FECHA HOY
        year               = date.getFullYear(),  // AÑO
@@ -168,8 +163,7 @@ let    consecutivo  = null,
 //=============================================================================
 
 
-generarGuia(factura:facturas,camion:modeloCamiones) {
-console.log(camion,'cami')
+generarGuia(factura:facturas,camion:modeloCamiones, existente?:boolean) {
 
 
 if(factura.idGuia){
@@ -185,7 +179,7 @@ if(factura.idGuia){
   let guia = {
 
     idGuia: this.generarIDGuia(),
-    guiaExistente:false,
+    guiaExistente:existente ? existente : false,
     verificada: false,
     totalFacturas:1,
     distancia: 0,
@@ -194,7 +188,7 @@ if(factura.idGuia){
     ruta: this.rutaZona.Zona,
     fecha: this.fecha,
     numClientes: 1,
-    
+
    
   camion:{
 
@@ -229,6 +223,8 @@ let orderPush = {
   order_visita: 0
 
 }
+
+
 factura.idGuia = guia.idGuia;
 
 guia.facturas.push(factura)
@@ -245,67 +241,61 @@ console.log('Guia generada ', guia)
 
 
 
+
  agregarFacturaGuia(factura,camion:modeloCamiones){
 
 
-    let g = this.listaGuias.findIndex(guia => guia.idGuia = camion.numeroGuia );
-//    let j = this.listaGuias.findIndex(guia =>   guia.idGuia = factura.idGuia );
- 
-let i = this.listaGuias.findIndex(guia => guia.idGuia = camion.numeroGuia )
-
-console.log(i ,'i',    this.listaGuias, camion)
-
 if(factura.idGuia){
- // this.borrarFactura(factura)
+  //this.listaGuias[i].totalFacturas -= 1;
+  this.borrarFactura(factura);
+ 
 }
-      
-    if(i >=0){
 
-    this.listaGuias[i].verificada = false;
-    this.listaGuias[i].distancia = 0;
-    this.listaGuias[i].duracion = 0;
-     this.listaGuias[i].camion.peso  += factura.factura.TOTAL_PESO_NETO
-     this.listaGuias[i].camion.volumen  += Number(factura.factura.RUBRO1)
-     this.listaGuias[i].camion.pesoRestante  = this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
-     this.listaGuias[i].numClientes += 1;
-     factura.idGuia =  this.listaGuias[i].idGuia
+let i = this.listaGuias.findIndex(guia => guia.idGuia === camion.numeroGuia);
 
 
-     let orderPush = {
-
-      id: factura.factura.CLIENTE_ORIGEN,
-      idGuia:factura.idGuia,
-      cliente: factura.factura.NOMBRE_CLIENTE,
-      latitud: factura.factura.LATITUD,
-      longitud:factura.factura.LONGITUD,
-      direccion:factura.factura.DIRECCION_FACTURA,
-      bultosTotales:0,
-      distancia: 0,
-      duracion:0,
-      order_visita: 0
-    
-    }
-
-     const f =  this.listaGuias[i].ordenEntregaCliente.findIndex(facturas => facturas.id == factura.factura.CLIENTE_ORIGEN );
-
-     if(f < 0){
-      this.listaGuias[i].ordenEntregaCliente.push(orderPush)
-
-     } 
+if(i >=0 && camion.numeroGuia ===  this.listaGuias[i].idGuia){
 
 
+   this.listaGuias[i].camion.peso  += factura.factura.TOTAL_PESO_NETO
+   this.listaGuias[i].camion.volumen  += Number(factura.factura.RUBRO1)
+   this.listaGuias[i].camion.pesoRestante  = this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
 
-   
+   factura.idGuia =  this.listaGuias[i].idGuia
+
+
+   let orderPush = {
+
+    id: factura.factura.CLIENTE_ORIGEN,
+    idGuia:factura.idGuia,
+    cliente: factura.factura.NOMBRE_CLIENTE,
+    latitud: factura.factura.LATITUD,
+    longitud:factura.factura.LONGITUD,
+    direccion:factura.factura.DIRECCION_FACTURA,
+    bultosTotales:0,
+    distancia: 0,
+    duracion:0,
+    orden_visita: 0
   
-     this.listaGuias[i].facturas.push(factura)
+  }
 
-     console.log(this.listaGuias)
-    }
-  return camion
+   const f =  this.listaGuias[i].ordenEntregaCliente.findIndex(facturas => facturas.id == factura.factura.CLIENTE_ORIGEN );
+
+   if(f < 0){
+    this.listaGuias[i].ordenEntregaCliente.push(orderPush)
+
+   } 
 
 
 
+ 
 
+   this.listaGuias[i].facturas.push(factura)
+
+
+   this.listaGuias[i].numClientes = this.listaGuias[i].ordenEntregaCliente.length;
+   this.listaGuias[i].totalFacturas = this.listaGuias[i].facturas.length
+}
 
 
 }
@@ -389,7 +379,7 @@ llenarRutero( guia: GuiaEntregaArray){
 
 for(let i = 0; i < guia.ordenEntregaCliente.length; i++){
   let cliente =  guia.ordenEntregaCliente[i];
-  item = new RuteroMH( cliente.id,  guia.idGuia, cliente.cliente, cliente.latitud, cliente.longitud, cliente.distancia, cliente.duracion, cliente.direccion, cliente.bultosTotales, cliente.order_visita, false);
+  item = new RuteroMH( cliente.id,  guia.idGuia, cliente.cliente, cliente.latitud, cliente.longitud, cliente.distancia, cliente.duracion, cliente.direccion, cliente.bultosTotales, cliente.orden_visita, false);
     this.rutero.push( item );
 
     if(i == guia.ordenEntregaCliente.length -1){
@@ -423,7 +413,7 @@ ordenaMH(a: number){
       console.log(m);
       this.rutero[m].asignado = true;
       o = this.sumarOrdenados();
-      this.rutero[m].order_visita = o
+      this.rutero[m].orden_visita = o
       if ( o < this.rutero.length - 1 ){
         this.ordenaMH(m);
       }
@@ -532,7 +522,7 @@ devolverRutero(i: number){
     if ( j >= 0 ){
       this.listaGuias[i].ordenEntregaCliente[j].duracion = x.duracion;
       this.listaGuias[i].ordenEntregaCliente[j].distancia = x.distancia;
-      this.listaGuias[i].ordenEntregaCliente[j].order_visita = x.order_visita;
+      this.listaGuias[i].ordenEntregaCliente[j].orden_visita = x.orden_visita;
     }
   });
   console.log('return rutero',this.listaGuias[i] )
@@ -563,7 +553,11 @@ if(verificarGuias.length > 0){
    console.log(this.listaGuias[i],'exporting')
 
    let guia = this.listaGuias[i];
-   let facturas = this.listaGuias[i].facturas;
+   let facturas = [];
+   this.listaGuias[i].facturas.forEach(factura =>{
+    facturas.push(factura)
+
+   })
 
    let rutero = this.listaGuias[i].ordenEntregaCliente;
 
@@ -575,7 +569,7 @@ if(verificarGuias.length > 0){
 }   
 
 
-completePost(guia: GuiaEntregaArray, facturas:PlanificacionEntregas[], ruteros:ordenEntregaCliente[]){
+completePost(guia: GuiaEntregaArray, facturas:facturas[], ruteros:ordenEntregaCliente[]){
 
 
 
@@ -604,12 +598,12 @@ completePost(guia: GuiaEntregaArray, facturas:PlanificacionEntregas[], ruteros:o
     for(let i =0; i <  facturas.length; i++){
 
       const actualizarFactura = {
-        numFactura: facturas[i].FACTURA,
-        tipoDocumento:facturas[i].TIPO_DOCUMENTO,
+        numFactura: facturas[i].factura.FACTURA,
+        tipoDocumento:facturas[i].factura.TIPO_DOCUMENTO,
         despachado: 'S',
         rubro3:  guia.idGuia,
-        U_LATITUD: facturas[i].LATITUD,
-        U_LONGITUD: facturas[i].LONGITUD
+        U_LATITUD: facturas[i].factura.LATITUD,
+        U_LONGITUD: facturas[i].factura.LONGITUD
 
    }
 
@@ -640,7 +634,7 @@ postFacturas.push(actualizarFactura)
           checkout:null,
           distancia: ruteros[j].distancia,
           Duracion: ruteros[j].duracion,
-          orden_Visita:ruteros[j].order_visita
+          orden_Visita:ruteros[j].orden_visita
        }
       
        postRutero.push(rut)
@@ -649,13 +643,14 @@ postFacturas.push(actualizarFactura)
       
         if(j === ruteros.length -1){
 
+          console.log(postFacturas,'postFacturas',)
           let index =  this.listaGuias.findIndex(filtrar => filtrar.idGuia == guia.idGuia);
           if(index >=0){
          //   this.listaGuias.splice(index,1)
     this.complete += 1;
             this.guiasService.insertarGuias(guiaCamion); 
             this.ruteroService.insertarPostRutero(postRutero);
-            this.actualizarFacturasService.insertarFacturas(postFacturas)
+          this.actualizarFacturasService.insertarFacturas(postFacturas)
   
         
           if(this.complete == this.listaGuias.length){
@@ -712,94 +707,82 @@ return modal.present();
 
 borrarFactura(factura:facturas){
 
-console.log(factura, 'borrarrrr')
+console.log('borrando', factura, this.listaGuias)
+
   let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == factura.idGuia);
- let facturas = this.listaGuias[i].facturas
- this.listaGuias[i].totalFacturas - 1;
-
-  let index  = facturas.findIndex(facturas=> facturas.FACTURA = factura.idFactura);
-
-   facturas.splice(index, 1)
 
 
-if( this.listaGuias[i].facturas.length == 0){
-  this.listaGuias.splice(i, 1)
-  this.modalCtrl.dismiss();
-}
+  if(i >=0){
 
-  console.log( facturas,index, facturas[index])
-  this.modalCtrl.dismiss(null,null,'detalle-guia');
-  this.modalCtrl.dismiss(null,null,'control-facturas');
-  factura.idGuia = '';
-}
+    let guia = this.listaGuias[i]
+    let guiaCamion  = this.listaGuias[i].camion
+    let guiaFacturas  = this.listaGuias[i].facturas
+    let guiaOrdenEntrega  = this.listaGuias[i].ordenEntregaCliente
+
+    let indexOrdenEntrega  = guiaOrdenEntrega.findIndex(facturas=> facturas.id = factura.factura.CLIENTE_ORIGEN);
+
+    for(let f = 0; f < guiaFacturas.length; f ++){
+
+      if(guiaFacturas[f].idFactura == factura.idFactura){
+        
+        let  conteoFacturasCliente = guiaFacturas.filter(clienteFactura =>clienteFactura.factura.FACTURA ==  factura.factura.FACTURA )
+
+        guia.verificada = false;
+        guia.distancia = 0;
+        guia.duracion = 0;
+        guia.totalFacturas = guiaFacturas.length
+        guiaCamion.peso -= guiaFacturas[f].factura.TOTAL_PESO_NETO
+        guiaCamion.pesoRestante =     guiaCamion.peso - guiaFacturas[f].factura.TOTAL_PESO
+        guiaCamion.volumen -= Number(guiaFacturas[f].factura.RUBRO1)
+        guiaFacturas[f].idGuia = ''
+        guiaFacturas[f].idFactura = guiaFacturas[f].factura.FACTURA
+        guiaFacturas.splice(f, 1)
+        this.modalCtrl.dismiss(null,null,'control-facturas');
+        if(conteoFacturasCliente.length == 0){
+  
+          if(indexOrdenEntrega>=0){
+            guiaOrdenEntrega.splice(indexOrdenEntrega,1)
+            guia.numClientes = guiaOrdenEntrega.length
+  
+             }
+  
+        }
+  
+        this.listaGuias[i].totalFacturas = guiaFacturas.length
+      }
+
+    }
 
 
-
-
-
-
-
-
-borrarFacturas(factura, idGuia){
-  console.log('borrar',factura,idGuia)
-
-
-  let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == idGuia);
- console.log( this.listaGuias[i],' this.listaGuias[i]')
-if(i >=0){
-let facturas = this.listaGuias[i].facturas;
-
-console.log(facturas)
-  let f = this.listaGuias[i].facturas.findIndex(guia =>  guia.FACTURA == factura.factura.FACTURA);
+    
 
   
-if(f>=0){
-  this.listaGuias[i].verificada = false;
-  this.listaGuias[i].facturas.splice(f,1);
-  factura.idGuia = '';
-  this.listaGuias[i].numClientes -= 1
-  if(this.listaGuias[i].facturas.length == 0){
-    this.listaGuias.splice(i,1)
-   
-  }
-}
 
-}
 
-}
+ 
+ if( this.listaGuias[i].facturas.length == 0){
+   this.listaGuias.splice(i, 1)
+   this.modalCtrl.dismiss();
+ }
+ 
 
-borrarFacturaExistente(factura, idGuia,nuevaGuia){
+   this.modalCtrl.dismiss(null,null,'detalle-guia');
 
-  let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == idGuia);
-  console.log(factura, idGuia, factura.factura.FACTURA);
-  console.log(i)
-if(i >=0){
-let facturas = this.listaGuias[i].facturas;
-this.listaGuias[i].numClientes -= 1
-console.log(facturas)
-  let f = this.listaGuias[i].facturas.findIndex(guia =>  guia.FACTURA == factura.factura.FACTURA);
-  console.log(f)
-if(f>=0){
-
-  this.listaGuias[i].facturas.splice(f,1);
-
-  if(idGuia!= nuevaGuia && this.listaGuias[i].facturas.length === 0){
-    this.listaGuias.splice(i,1)
+  
 
 
   }
 
 
-
-  factura.idGuia = '';
-
-
-
+  
 }
 
-}
 
-}
+
+
+
+
+
 
 
 

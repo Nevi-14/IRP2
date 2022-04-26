@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import {  ModalController, PopoverController } from '@ionic/angular';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
@@ -56,7 +56,7 @@ interface Marcadores {
     `
   ]
 })
-export class PlanificacionRutasPage implements OnInit {
+export class PlanificacionRutasPage  {
 
 @ViewChild('mapa') divMapa!:ElementRef;
 default: any = 'title';
@@ -95,23 +95,17 @@ features = [];
     }
 
 
+    ionViewWillEnter(){
 
-    ngOnInit(){
-
-      this.planificacionRutasService.marcadores = [];
-     // this.clientes.rutasClientes = [];
-     // this.clientes.nuevosClientes = [];
-    
+      this.limpiarDatos();
     }
+  
+
 
 //============================================================================= 
 // EL MAPA SE TIENE QUE INCIAR EN AFTER INIT POR SER UN VIEWCHILD 
 //=============================================================================
 
-
-   ionViewWillEnter(){
-    this.createmapa()
-  }
 
 
 //============================================================================= 
@@ -344,18 +338,17 @@ gestionErrores(){
 //=============================================================================
 
     limpiarDatos(){
+
       this.drag = false;
       this.modo = ' off';
       this.rutaZona = null
-      this.mapa.off('zoom', () => { });
-      this.mapa.off('zoomend', () => { });
-      this.mapa.off('move', () => { });
+
       this.features = [];
       this.geocoderArray = [];
+      
       this.planificacionRutasService.marcadores= [];
-      this.createmapa();
       this.planificacionRutasService.errorArray = []
-
+      this.createmapa();
     }
 
 

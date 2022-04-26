@@ -19,10 +19,12 @@ interface modeloCamiones {
 })
 export class ControlFacturasPage implements OnInit {
 @Input() factura:any
+@Input() facturas:any
   consultas = {
     nuevaGuia: true,
     guiaExistente:false,
-    otrasGuias:false
+    otrasGuias:false,
+    incluirFacturas: false
   }
   camiones :modeloCamiones[]= [];
   verdadero = true;
@@ -36,9 +38,33 @@ export class ControlFacturasPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.gestionCamiones.syncCamiones();
+    if(this.controlCamionesGuiasService.listaGuias.length > 0){
+      this.consultas.nuevaGuia = false;
+      this.consultas.otrasGuias = false;
+      this.consultas.guiaExistente = true;
+      this.camiones = [];
+      this.controlCamionesGuiasService.listaGuias.forEach(camion =>{
+        const  camionRuta = {
+  
+          placa: camion.camion.idCamion,
+          chofer:camion.camion.chofer,
+          volumen:camion.camion.volumen,
+          peso:camion.camion.peso,
+          numeroGuia:camion.idGuia,
+          ruta:camion.ruta
+        }
+        this.camiones.push(camionRuta)
+        console.log(this.camiones, 'guiasExistentes')
+  
+    
+      })
+    }else{
+
+      this.gestionCamiones.syncCamiones();
+    }
+ 
   this.nuevaGuia(this.consultas.nuevaGuia);
-    console.log(this.factura,'factura')
+    console.log(this.factura,'factura',this.facturas,'facturas')
   }
 
   async borrarFactura(factura){
@@ -70,9 +96,29 @@ export class ControlFacturasPage implements OnInit {
   }
 
   retornarCamion(camion){
-   
+   console.log('retornar camion', camion)
+
+/**
+ * for(let i = 0; i <  this.controlCamionesGuiasService.listaGuias.length; i++){
+
+  if( this.controlCamionesGuiasService.listaGuias[i].idGuia != camion.placa){
+    this.controlCamionesGuiasService.listaGuias.splice(i,1);
+
+  }
+}
+ */
+
+
+    if(this.consultas.incluirFacturas){
+
+console.log('incluir')
+
+return
+    }
+    
+    
     if(this.consultas.nuevaGuia || this.consultas.otrasGuias){
-      this.controlCamionesGuiasService.generarGuia(this.factura,camion)
+      this.controlCamionesGuiasService.generarGuia(this.factura,camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : null)
     }else if(this.consultas.guiaExistente){
       this.controlCamionesGuiasService.agregarFacturaGuia(this.factura,camion)
 
@@ -82,6 +128,15 @@ export class ControlFacturasPage implements OnInit {
   }
   cerrarModal(){
     this.modalCtrl.dismiss();
+  }
+
+  incluirFacturasEvent($event){
+    if($event.detail.checked){
+
+    
+    }
+
+
   }
 
 
@@ -110,6 +165,8 @@ export class ControlFacturasPage implements OnInit {
   }
   }
   nuevaGuia(validate){
+
+
 if(validate){
 
   this.consultas.guiaExistente = false;

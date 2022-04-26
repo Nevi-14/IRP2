@@ -82,7 +82,7 @@ export class ServicioClientePage implements OnInit {
      this.clientes.nuevosClientes = [];
 
   console.log('planificacion Rutas')
-  this.servicioClienteService.syncConsultarClientes('');
+
 
 
     
@@ -481,30 +481,63 @@ irMarcador(item) {
 
 refrescarVista(){
 
-  const ruteros =   this.ruteroService.syncRutero(this.guia.idGuia)
-        ruteros.then(rutero =>{
+  const ruteros =     this.ruteroService.syncRutero(this.guia.idGuia)
+  ruteros.then(rutero =>{
 
 this.clientesArray = rutero;
+this.coordinates = [];
+this.features = [];
+this.coordinates.push(this.lngLat);
+
+this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
+
+console.log('sorted',this.clientesArray )
+this.clientesArray.forEach(cliente =>{
+const coordinate = [cliente.longitud, cliente.latitud]
+
+if(cliente.longitud != 0 && cliente.latitud != 0){
+this.coordinates.push(coordinate);
+}
+const feature =    {
+title:  cliente.idCliente +' '+cliente.nombre,
+type: 'Feature',
+geometry: {
+type: 'Point',
+coordinates: [cliente.longitud, cliente.latitud]
+},
+properties: {
+title:  cliente.idCliente +' '+cliente.nombre,
+icon:   'music',
+client: cliente,
+color: null,
+}
+}
+this.features.push(feature)
+
+})
 this.createmapa();
 
+console.log(this.clientesArray,'this.clientesArray')
+
+this.alertasService.loadingDissmiss();
 
 
-        }), error =>{
-     
-          let errorObject = {
-            titulo: 'this.ruteroService.syncRutero(data.idGuia)',
-            fecha: new Date(),
-            metodo:'GET',
-            url:error.url,
-            message:error.message,
-            rutaError:'app/services/rutero-service.ts',
-            json:JSON.stringify(this.clientesArray)
-          }
-          this.servicioClienteService.errorArray.push(errorObject)
-          
-          console.log(error)
-         
-        }
+  }), error =>{
+    this.alertasService.loadingDissmiss();
+    let errorObject = {
+      titulo: 'this.ruteroService.syncRutero(data.idGuia)',
+      fecha: new Date(),
+      metodo:'GET',
+      url:error.url,
+      message:error.message,
+      rutaError:'app/services/rutero-service.ts',
+      json:JSON.stringify(this.clientesArray)
+    }
+    this.servicioClienteService.errorArray.push(errorObject)
+    
+    console.log(error)
+   
+  }
 }
 
 limpiarDatos() {

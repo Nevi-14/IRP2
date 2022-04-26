@@ -3,28 +3,33 @@
   'width': width
 }" >
 
-
-
-</div>
-
-<ion-list *ngIf="mostrar" style="position: absolute;height: 80%;width: 80%; left: 50%;
-transform: translate(-50%, 0);">
+<ion-list *ngIf="mostrar" style="  position: absolute;
+top: 50%;
+left: 50%;
+margin-right: -50%;
+width:80%;
+height: 80%;
+transform: translate(-50%, -50%);">
 <ion-item>
-  <ion-label>Detalles de Ruta</ion-label>
-  <ion-label>Total Clientes : {{guia.ordenEntregaCliente.length}} / Facturas: {{guia.facturas.length}}</ion-label>
+  <ion-label>Detalles de Ruta Total Clientes : {{guia.ordenEntregaCliente.length}} / Facturas: {{guia.facturas.length}}</ion-label>
+
   <ion-label>Distancia : {{guia.distancia}} km  / Duracion : {{guia.duracion}} minutos</ion-label>
  
 </ion-item>
   <ion-item *ngFor="let cliente of guia.ordenEntregaCliente" (click)="irMarcador([cliente.longitud,cliente.latitud])" detail>
-    <ion-badge slot="start" color="dark" mode="ios">{{cliente.order_visita}}</ion-badge>
+    <ion-badge slot="start" color="dark" mode="ios">{{cliente.orden_visita}}</ion-badge>
     <ion-label>{{cliente.cliente}} </ion-label>
   </ion-item>
 </ion-list>
+
+</div>
+
+
 <ion-fab vertical="top"  horizontal="end" slot="fixed">
   <ion-fab-button (click)="cerrarModal()"   color="danger"> 
     <ion-icon name="close-outline"></ion-icon>
   </ion-fab-button>
   <ion-fab-button (click)="mostrarDatos()" style="margin-top: 1rem;"   color="dark"> 
-    <ion-icon name="eye-outline"></ion-icon>
+    <ion-icon name="{{mostrar ? 'eye-outline' : 'eye-off-outline'}}"></ion-icon>
   </ion-fab-button>
 </ion-fab>

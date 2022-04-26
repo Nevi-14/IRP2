@@ -30,6 +30,6 @@ export class RuteroMH {
         public duracion:number,
         public direccion:string,
         public bultosTotales:number,
-        public order_visita: number,
+        public orden_visita: number,
         public asignado: boolean){}
 }

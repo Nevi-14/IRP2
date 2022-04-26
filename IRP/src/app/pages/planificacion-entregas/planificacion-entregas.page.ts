@@ -311,8 +311,10 @@ async controlFacturas(factura){
     component: ControlFacturasPage,
     cssClass: 'large-modal',
     componentProps:{
-      factura:factura
-    }
+      factura:factura,
+      facturas:this.planificacionEntregasService.formattedArray
+    },
+    id:'control-facturas'
   });
 
   modal.present();

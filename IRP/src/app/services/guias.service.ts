@@ -67,6 +67,7 @@ export class GuiasService {
      this.alertasService.loadingDissmiss();
         this.guiasArrayRuta = resp.slice(0);
         console.log('rutasEstado',this.guiasArrayRuta)
+
       }, error =>{
         this.alertasService.loadingDissmiss();
         let errorObject = {
