@@ -1,6 +1,6 @@
 export class Camiones{
     constructor(
-       public idCamion: number,
+       public idCamion: string,
         public descripcion: string,
         public marca: string,
         public modelo: string,
@@ -8,8 +8,8 @@ export class Camiones{
         public capacidadPeso: number,
         public capacidadVolumen: number,
         public activo: number,
-        public frio: number,
-        public seco: number,
+        public frio: string,
+        public seco: string,
         public chofer: string,
 
     ){}

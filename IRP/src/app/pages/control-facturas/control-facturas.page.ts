@@ -9,7 +9,9 @@ interface modeloCamiones {
   volumen:number,
   peso:number,
   numeroGuia:string,
-  ruta:string
+  ruta:string,
+  frio:string,
+  seco:string
 
 }
 @Component({
@@ -29,6 +31,7 @@ export class ControlFacturasPage implements OnInit {
   camiones :modeloCamiones[]= [];
   verdadero = true;
   falso = false;
+  textoBuscar = '';
   constructor(
     public alertCTrl: AlertController,
     public controlCamionesGuiasService: ControlCamionesGuiasService,
@@ -51,7 +54,9 @@ export class ControlFacturasPage implements OnInit {
           volumen:camion.camion.volumen,
           peso:camion.camion.peso,
           numeroGuia:camion.idGuia,
-          ruta:camion.ruta
+          ruta:camion.ruta,
+          frio:camion.camion.frio,
+          seco:camion.camion.seco,
         }
         this.camiones.push(camionRuta)
         console.log(this.camiones, 'guiasExistentes')
@@ -67,7 +72,7 @@ export class ControlFacturasPage implements OnInit {
     console.log(this.factura,'factura',this.facturas,'facturas')
   }
 
-  async borrarFactura(factura){
+  async borrarFactura(){
     const alert = await this.alertCTrl.create({
       cssClass: 'my-custom-class',
       header: 'Planificacion Entregas!',
@@ -110,8 +115,13 @@ export class ControlFacturasPage implements OnInit {
 
 
     if(this.consultas.incluirFacturas){
+      console.log(this.facturas)
+for (let i =0; i < this.facturas.length; i++)
 
-console.log('incluir')
+if(i === 1){
+  console.log( this.facturas[i], ' this.facturas')
+  this.controlCamionesGuiasService.generarGuia(this.factura,camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : null,this.facturas)
+}
 
 return
     }
@@ -138,7 +148,10 @@ return
 
 
   }
-
+  onSearchChange(event){
+    this.textoBuscar = event.detail.value;
+    
+   }
 
   guiasExistentes($event){ 
     if($event.detail.checked){
@@ -155,7 +168,9 @@ return
         volumen:camion.camion.volumen,
         peso:camion.camion.peso,
         numeroGuia:camion.idGuia,
-        ruta:camion.ruta
+        ruta:camion.ruta,
+        frio:camion.camion.frio,
+        seco:camion.camion.seco,
       }
       this.camiones.push(camionRuta)
       console.log(this.camiones, 'guiasExistentes')
@@ -185,7 +200,9 @@ if(validate){
         volumen:camion.capacidadVolumen,
         peso:camion.capacidadPeso,
         numeroGuia:null,
-        ruta:null
+        ruta:null,
+        frio:camion.frio,
+        seco:camion.seco,
       }
       this.camiones.push(camionRuta)
       console.log(this.camiones, 'this.camiones')
@@ -218,7 +235,9 @@ const  camionRuta = {
   volumen:camion.volumen,
   peso:camion.peso,
   numeroGuia:camion.idGuia,
-  ruta:camion.ruta
+  ruta:camion.ruta,
+  frio:this.gestionCamiones.camiones[datosCamion].frio,
+  seco:this.gestionCamiones.camiones[datosCamion].seco,
 }
 
 

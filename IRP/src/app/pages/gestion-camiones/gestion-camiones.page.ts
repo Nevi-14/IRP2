@@ -7,7 +7,8 @@ import { GestionCamionesService } from 'src/app/services/gestion-camiones.servic
   styleUrls: ['./gestion-camiones.page.scss'],
 })
 export class GestionCamionesPage implements OnInit {
-
+  snow = '<ion-icon name="snow-outline"></ion-icon>'
+  sun = '<ion-icon name="sun-outline"></ion-icon>'
   constructor(
 public camionesService: GestionCamionesService
 

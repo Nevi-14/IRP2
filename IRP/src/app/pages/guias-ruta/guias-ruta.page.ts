@@ -50,6 +50,17 @@ export class GuiasRutaPage implements OnInit {
     return
  
   }
+  toggleEvent($event){
+
+  let value = $event.detail.checked;
+if(value){
+  this.busquedaClientes = value
+  this.servicioClienteService.syncConsultarClientes('');
+
+    console.log($event, 'event')
+}
+
+  }
   async detalleClientes(cliente){
     this.ruteroService.syncRutero(this.idGuia).then(resp =>{
 
@@ -75,10 +86,10 @@ export class GuiasRutaPage implements OnInit {
     return await modal.present();
   }
 
-retornarModal(){
+retornarModal(idGuia){
 
  this.modalCtrl.dismiss({
-   idGuia:this.idGuia
+   idGuia:idGuia
  });
 }
   cerrarModal(){

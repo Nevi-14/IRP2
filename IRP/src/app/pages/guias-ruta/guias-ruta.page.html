@@ -6,7 +6,7 @@
         <ion-col size="7" style="display: flex; justify-content: space-between;align-items: center;">
           <ion-title class="ion-text-uppercase" style="text-align: left;">Lista de guias</ion-title>
           <ion-label      style="margin-right: 1rem;">{{busquedaClientes ? 'Cliente' : 'Factura'}}</ion-label>
-  <ion-toggle  mode="ios"  [(ngModel)]="busquedaClientes" ></ion-toggle>
+  <ion-toggle (ionChange)="toggleEvent($event)" mode="ios"  [(ngModel)]="busquedaClientes" ></ion-toggle>
         </ion-col>
         <ion-col size="5" style="display: flex; justify-content: center;align-items: right;">
       
@@ -22,14 +22,14 @@
 
   <ion-grid >
     <ion-row>
-      <ion-col size="6">
+      <ion-col size="12"  *ngIf="!busquedaClientes">
 
         <ion-list lines="none">
 
 
           <ion-radio-group allow-empty-selection="true"  >
         
-            <ion-item (click)="submit(item.idGuia)" *ngFor="let item of guiasService.guiasArrayRuta | filtro : textoBuscar:'idGuia'" >
+            <ion-item (click)="retornarModal(item.idGuia)" *ngFor="let item of guiasService.guiasArrayRuta | filtro : textoBuscar:'idGuia'" >
          
         
               <ion-label>   
@@ -51,9 +51,12 @@
         </ion-list>
 
       </ion-col>
-      <ion-col size="5">
-<ion-item  *ngFor="let item of servicioClienteService.consultaGuias | filtro : textoBuscarClientes:'nombre'">
+      <ion-col size="12" *ngIf="busquedaClientes">
+<ion-item  (click)="retornarModal(item.idGuia)"  *ngFor="let item of servicioClienteService.consultaGuias | filtro : textoBuscarClientes:'nombre'">
   <ion-label>
+    <h2>Guia :    {{item.idGuia}}</h2>
+
+
     {{ item.nombre}} <ion-badge color="dark" mode="ios">{{item.idcliente}}</ion-badge>
   </ion-label>
 </ion-item>
@@ -72,11 +75,5 @@
 <ion-fab vertical="top" horizontal="end" slot="fixed">
   <ion-fab-button (click)="cerrarModal()" size="small" color="danger"> 
     <ion-icon name="close-outline"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="retornarModal()" size="small" color="dark"> 
-    <ion-icon name="arrow-forward-outline"></ion-icon>
   </ion-fab-button>
 </ion-fab>

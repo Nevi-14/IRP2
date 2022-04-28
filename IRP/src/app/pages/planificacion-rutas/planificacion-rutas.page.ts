@@ -438,7 +438,7 @@ assignBtn.innerHTML = `
 <ion-list> 
 <ion-item>
 <ion-button fill="clear" class="ion-text-wrap">
-${feature.title}
+${feature.title + ' ' + feature.id}
 </ion-button>
 </ion-item>
 
