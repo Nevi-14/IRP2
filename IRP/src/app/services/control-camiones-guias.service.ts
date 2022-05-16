@@ -13,9 +13,9 @@ import { Rutero, RuteroMH } from '../models/Rutero';
 import { GuiasService } from './guias.service';
 import { RuteroService } from './rutero.service';
 import { ActualizarFacturasService } from './actualizar-facturas.service';
-import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Camiones } from '../models/camiones';
+import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
 interface modeloCamiones {
   placa:string,
   chofer:string,
@@ -260,27 +260,48 @@ facturas.forEach(item =>{
 
 
 
- agregarFacturaGuia(factura,camion:modeloCamiones){
-console.log(factura, 'agregarr', camion)
+ agregarFacturaGuia(factura:facturas,camion:modeloCamiones){
+
+  let index = this.listaGuias.findIndex(guia => guia.idGuia === camion.numeroGuia);
+  let indexFactura = this.listaGuias[index].facturas.findIndex(fact => fact.factura.FACTURA == factura.factura.FACTURA);
+
+  // PRE CONSULTA CAMION PESO
+ let capacidad = this.listaGuias[index].camion.capacidad;
+ let nuevoPeso = this.listaGuias[index].camion.peso  += factura.factura.TOTAL_PESO_NETO
+ let nuevoPesoRestante = capacidad - nuevoPeso;
+  
+ if(nuevoPesoRestante < 0 ){
+
+ this.alertasService.message('IRP', 'Sobrepasa la capacidad del camion')
+
+    return
+
+}
+  if(indexFactura >=0){
+
+    this.alertasService.message('IRP','La factura'+' '+factura.idFactura+' ya esxite')
+
+    return;
+
+  }
+
+  
 factura.idGuia = '';
 if(factura.idGuia){
 
-  //this.listaGuias[i].totalFacturas -= 1;
   this.borrarFactura(factura);
- 
+
 }
 
-let i = this.listaGuias.findIndex(guia => guia.idGuia === camion.numeroGuia);
 
 
-if(i >=0 && camion.numeroGuia ===  this.listaGuias[i].idGuia){
+if(index >=0 && camion.numeroGuia ===  this.listaGuias[index].idGuia){
 
+   this.listaGuias[index].camion.peso  += factura.factura.TOTAL_PESO_NETO
+   this.listaGuias[index].camion.volumen  += Number(factura.factura.RUBRO1)
+   this.listaGuias[index].camion.pesoRestante  = this.listaGuias[index].camion.capacidad - this.listaGuias[index].camion.peso
 
-   this.listaGuias[i].camion.peso  += factura.factura.TOTAL_PESO_NETO
-   this.listaGuias[i].camion.volumen  += Number(factura.factura.RUBRO1)
-   this.listaGuias[i].camion.pesoRestante  = this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
-
-   factura.idGuia =  this.listaGuias[i].idGuia
+   factura.idGuia =  this.listaGuias[index].idGuia
 
 
    let orderPush = {
@@ -298,22 +319,18 @@ if(i >=0 && camion.numeroGuia ===  this.listaGuias[i].idGuia){
   
   }
 
-   const f =  this.listaGuias[i].ordenEntregaCliente.findIndex(facturas => facturas.id == factura.factura.CLIENTE_ORIGEN );
+   const f =  this.listaGuias[index].ordenEntregaCliente.findIndex(facturas => facturas.id == factura.factura.CLIENTE_ORIGEN );
 
    if(f < 0){
-    this.listaGuias[i].ordenEntregaCliente.push(orderPush)
+    this.listaGuias[index].ordenEntregaCliente.push(orderPush)
 
    } 
 
+   this.listaGuias[index].facturas.push(factura)
 
 
- 
-
-   this.listaGuias[i].facturas.push(factura)
-
-
-   this.listaGuias[i].numClientes = this.listaGuias[i].ordenEntregaCliente.length;
-   this.listaGuias[i].totalFacturas = this.listaGuias[i].facturas.length
+   this.listaGuias[index].numClientes = this.listaGuias[index].ordenEntregaCliente.length;
+   this.listaGuias[index].totalFacturas = this.listaGuias[index].facturas.length
   
 }
 

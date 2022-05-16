@@ -9,6 +9,7 @@ import { ControlFacturasPageRoutingModule } from './control-facturas-routing.mod
 import { ControlFacturasPage } from './control-facturas.page';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 
+
 @NgModule({
   imports: [
     CommonModule,

@@ -198,7 +198,7 @@ this.rutaZona = null;
 async listaCamiones(factura){
 
   const modal = await this.modalCtrl.create({
-    component: ListaCamionesModalPageModule,
+    component: ListaCamionesModalPage,
     cssClass: 'large-modal'
   });
 
@@ -338,69 +338,7 @@ async controlFacturas(factura){
  
 
 }
-async onOpenMenu(factura) {
- 
-  let inputArray:any = []
 
-  let nuevaGuia :any =          {
-    name: 'radio1',
-    type: 'radio',
-    label: 'Generar Nueva Guia',
-    value: 'value1',
-    handler: () => {
-      console.log('Radio 1 selected');
-      this.controlCamionesGuiasService.borrarFactura(factura)
-    this.generarNuevaGuia(factura)
-      this.alertCTrl.dismiss();
-    }
-  }
-
-  let agregarFacturaGuiaExistente :any =     {
-    name: 'radio2',
-    type: 'radio',
-    label: 'Agregar Guia Existente',
-    value: 'value2',
-    handler: () => {
-      console.log('Radio 2 selected');
-
-  //  this.controlCamionesGuiasService.agregarFacturaGuia(factura)
-    this.alertCTrl.dismiss();
-    }
-  }
-
-  let eliminarFacturaGuiaExistente:any =    {
-    name: 'radio3',
-    type: 'radio',
-    label: 'Eliminar Factura Guia Existente',
-    value: 'value3',
-    handler: () => {
-
-      console.log('Radio 3 selected');
-
-      this.borrarFactura(factura, factura.idGuia);
-      this.alertCTrl.dismiss();
-    }
-  }
-
-  if(factura.idGuia){
-    inputArray.push(nuevaGuia,agregarFacturaGuiaExistente,eliminarFacturaGuiaExistente)
-  }else{
-    inputArray.push(nuevaGuia,agregarFacturaGuiaExistente)
-  }
-
-
-  const alert = await this.alertCTrl.create({
-    cssClass: 'alert-menu',
-    header: 'Administrar Factura ' + factura.factura.FACTURA,
-    message: `
-  Te permite generar nuevas guias, ademas de poder agregar facturas a guias existentes o eliminar una factura de una guia
-`,
-    inputs: inputArray
-   
-  });
-
-  await alert.present();
-}
 
 async onOpenMenuGuias() {
   
@@ -484,11 +422,7 @@ async borrarGuia(idGuia){
 }
 
 
-borrarFactura(factura, idGuia){
-  this.controlCamionesGuiasService.borrarFactura(factura)
 
-
-}
 
 verificarGuia(guia){
 
