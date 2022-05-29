@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { AlertasService } from './alertas.service';
 import { HttpClient } from '@angular/common/http';
-import { DataTableService } from './data-table.service';
 import { environment } from 'src/environments/environment';
+import { DatatableService } from './datatable.service';
 
 interface facturas {
 idFactura:string,
@@ -46,7 +46,7 @@ formattedArray :  facturas[]=[];
  constructor(
    
    private http: HttpClient,  
-   public datatableService: DataTableService,
+   public datatableService: DatatableService,
    public alertasService: AlertasService
    
    
@@ -86,132 +86,142 @@ formattedArray :  facturas[]=[];
 
 syncRutaFacturas(ruta:string, fecha:string){
  
-  this.planificacionEntregaArray = [];
-  this.fecha = fecha;
 
-  this.alertasService.presentaLoading('Cargando facturas Ruta ' + ruta);
-
-  this.getPlanificacionEntregas(ruta, fecha).subscribe(
-    resp =>{
-
-      console.log(resp, 'resp')
-
-
-      if(resp.length == 0 ){
-
-        this.alertasService.loadingDissmiss();
-    
-        return
-      }
-      
-
-
-
-      let clienteFactura :clientesFacturas;
-      
-      this.totalFacturas = 0;
-      this.pesoTotal = 0;
-      this.bultosTotales = 0;
-      this.volumenTotal = 0;
-      this.totalFacturas = resp.length;
-      this.totalClientes = 0;
-      this.formattedArray = []
-      for ( let i = 0; i < resp.length; i++){
-
-       
-        this.pesoTotal +=  resp[i].TOTAL_PESO_NETO;
-        this.bultosTotales += resp[i].TOTAL_UNIDADES;
-        this.volumenTotal += resp[i].TOTAL_VOLUMEN;
-
-        clienteFactura = {
-
-          id: resp[i].CLIENTE_ORIGEN,
-          cliente: resp[i].NOMBRE_CLIENTE,
-          direccion: resp[i].DIRECCION_FACTURA,
-          incluir: resp[i].LONGITUD  && resp[i].LATITUD ? true : false,
-          facturas:  [],
-          volumenTotal:  resp[i].TOTAL_VOLUMEN,
-          pesoTotal: resp[i].TOTAL_PESO_NETO,
-          bultosTotales: resp[i].TOTAL_UNIDADES
-      
-        
-        }
-
-
-
-
-let factura: facturas = {
-  idFactura:resp[i].FACTURA,
-  cliente: resp[i].NOMBRE_CLIENTE,
-  idGuia:null,
-  factura: resp[i]
+ return  this.getPlanificacionEntregas(ruta, fecha).toPromise();
 
 }
 
-this.formattedArray.push(factura)
-  
 
-clienteFactura.facturas.push(factura)
-
-let index = this.planificacionEntregaArray.findIndex( factura => factura.id == clienteFactura.id)
-
-if(index < 0){
-
-  clienteFactura.volumenTotal += resp[i].TOTAL_VOLUMEN;
-  clienteFactura.pesoTotal += resp[i].TOTAL_PESO_NETO;
-  clienteFactura.bultosTotales += Number( resp[i].RUBRO1);
-
-this.planificacionEntregaArray.push(clienteFactura)
-
-
-}else{
-  this.planificacionEntregaArray[index].facturas.push(factura)
-this.planificacionEntregaArray[index].volumenTotal += resp[i].TOTAL_VOLUMEN;
-this.planificacionEntregaArray[index].pesoTotal += resp[i].TOTAL_PESO_NETO;
-this.planificacionEntregaArray[index].bultosTotales += Number( resp[i].RUBRO1);
-
-
-}
-
-if(i === resp.length -1  ){
-
-  this.alertasService.loadingDissmiss();
-      
-  console.log(this.planificacionEntregaArray, 'this.planificacionEntregaArray ')
-  this.totalClientes = 0;
-  this.totalClientes = this.planificacionEntregaArray.length
-}
-
-
-
-      }
-
-
-      
-
-
-   this.datatableService.paginacion( this.planificacionEntregaArray, this.datatableService.resultsCount, this.datatableService.page)
-
-   
-    }, error  => {
-      this.alertasService.loadingDissmiss();
-      let errorObject = {
-        titulo: 'Planificacion Entregas',
-        metodo:'GET',
-        url:error.url,
-        message:error.message,
-        rutaError:'http://api_irp.di-apps.co.cr/api/Facturas/?ruta='+ruta+'HE01&entrega='+this.fecha,
-        json:JSON.stringify(this.planificacionEntregaArray)
-      }
-      this.alertasService.elementos.push(errorObject)
-      
-    }
-  )
-
-
+syncRutaFacturas2(ruta:string, fecha:string){
  
-}
-
+  /**
+   *   this.planificacionEntregaArray = [];
+    this.fecha = fecha;
+  
+    this.alertasService.presentaLoading('Cargando facturas Ruta ' + ruta);
+  
+   */
+    this.getPlanificacionEntregas(ruta, fecha).subscribe(
+      resp =>{
+  
+        console.log(resp, 'resp')
+  
+  
+        if(resp.length == 0 ){
+  
+          this.alertasService.loadingDissmiss();
+      
+          return
+        }
+        
+  
+  
+  
+        let clienteFactura :clientesFacturas;
+        
+        this.totalFacturas = 0;
+        this.pesoTotal = 0;
+        this.bultosTotales = 0;
+        this.volumenTotal = 0;
+        this.totalFacturas = resp.length;
+        this.totalClientes = 0;
+        this.formattedArray = []
+        for ( let i = 0; i < resp.length; i++){
+  
+         
+          this.pesoTotal +=  resp[i].TOTAL_PESO_NETO;
+          this.bultosTotales += resp[i].TOTAL_UNIDADES;
+          this.volumenTotal += resp[i].TOTAL_VOLUMEN;
+  
+          clienteFactura = {
+  
+            id: resp[i].CLIENTE_ORIGEN,
+            cliente: resp[i].NOMBRE_CLIENTE,
+            direccion: resp[i].DIRECCION_FACTURA,
+            incluir: resp[i].LONGITUD  && resp[i].LATITUD ? true : false,
+            facturas:  [],
+            volumenTotal:  resp[i].TOTAL_VOLUMEN,
+            pesoTotal: resp[i].TOTAL_PESO_NETO,
+            bultosTotales: resp[i].TOTAL_UNIDADES
+        
+          
+          }
+  
+  
+  
+  
+  let factura: facturas = {
+    idFactura:resp[i].FACTURA,
+    cliente: resp[i].NOMBRE_CLIENTE,
+    idGuia:null,
+    factura: resp[i]
+  
+  }
+  
+  this.formattedArray.push(factura)
+    
+  
+  clienteFactura.facturas.push(factura)
+  
+  let index = this.planificacionEntregaArray.findIndex( factura => factura.id == clienteFactura.id)
+  
+  if(index < 0){
+  
+    clienteFactura.volumenTotal += resp[i].TOTAL_VOLUMEN;
+    clienteFactura.pesoTotal += resp[i].TOTAL_PESO_NETO;
+    clienteFactura.bultosTotales += Number( resp[i].RUBRO1);
+  
+  this.planificacionEntregaArray.push(clienteFactura)
+  
+  
+  }else{
+    this.planificacionEntregaArray[index].facturas.push(factura)
+  this.planificacionEntregaArray[index].volumenTotal += resp[i].TOTAL_VOLUMEN;
+  this.planificacionEntregaArray[index].pesoTotal += resp[i].TOTAL_PESO_NETO;
+  this.planificacionEntregaArray[index].bultosTotales += Number( resp[i].RUBRO1);
+  
+  
+  }
+  
+  if(i === resp.length -1  ){
+  
+    this.alertasService.loadingDissmiss();
+        
+    console.log(this.planificacionEntregaArray, 'this.planificacionEntregaArray ')
+    this.totalClientes = 0;
+    this.totalClientes = this.planificacionEntregaArray.length
+  }
+  
+  
+  
+        }
+  
+  
+        
+  
+  
+  //   this.datatableService.paginacion( this.planificacionEntregaArray, this.datatableService.resultsCount, this.datatableService.page)
+  
+     
+      }, error  => {
+        this.alertasService.loadingDissmiss();
+        let errorObject = {
+          titulo: 'Planificacion Entregas',
+          metodo:'GET',
+          url:error.url,
+          message:error.message,
+          rutaError:'http://api_irp.di-apps.co.cr/api/Facturas/?ruta='+ruta+'HE01&entrega='+this.fecha,
+          json:JSON.stringify(this.planificacionEntregaArray)
+        }
+        this.alertasService.elementos.push(errorObject)
+        
+      }
+    )
+  
+  
+   
+  }
+  
 
 agruparPorClientes(identificador, factura){
 const i = this.planificacionEntregaArray.findIndex(factura => factura.id === identificador);
@@ -229,28 +239,42 @@ if(i >=0){
 
 borrarIdGuiaFacturas(){
 
-  for(let i = 0; i < this.datatableService.data.length; i++){
- 
-    this.datatableService.data[i].facturas.forEach(factura =>{
+  
 
-      factura.idGuia = '';
 
-    })
-  }
+  this.datatableService.dataTableArray.forEach(cliente =>{
+
+    for(let i =0; i < cliente.length; i++){
+
+      for( let j = 0; j < cliente[i].length; j++){
+        
+        cliente[i][j].idGuia = '';
+      }
+  
+    };
+  
+  });
  
  }
 
 borrarIdGuiaFactura(idGuia){
 
- console.log(idGuia)
- for(let i = 0; i < this.datatableService.data.length; i++){
+  this.datatableService.dataTableArray.forEach(cliente =>{
 
-  this.datatableService.data[i].facturas.forEach(factura =>{
-   if(factura.idGuia == idGuia){
-    factura.idGuia = '';
-   }
-  })
- }
+    for(let i =0; i < cliente.length; i++){
+
+      for( let j = 0; j < cliente[i].length; j++){
+       
+        if( cliente[i][j].idGuia == idGuia){
+          cliente[i][j].idGuia = '';
+         }
+      }
+  
+    };
+  
+  });
+  
+
 
 }
 

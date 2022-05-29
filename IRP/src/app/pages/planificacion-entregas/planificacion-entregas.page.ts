@@ -4,16 +4,14 @@ import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
-import { DataTableService } from 'src/app/services/data-table.service';
 import { ServiciosCompartidosService } from 'src/app/services/servicios-compartidos.service';
 import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
-import { ListaCamionesModalPageModule } from '../lista-camiones-modal/lista-camiones-modal.module';
 import { ListaCamionesModalPage } from '../lista-camiones-modal/lista-camiones-modal.page';
 import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
-
+import { DatatableService } from 'src/app/services/datatable.service';
 
 
 @Component({
@@ -32,17 +30,22 @@ export class PlanificacionEntregasPage implements OnInit {
     public rutaFacturas: RutaFacturasService , 
     public rutaZonas: RutaZonaService,
     public controlCamionesGuiasService: ControlCamionesGuiasService,
-    public datableService: DataTableService,
     public serviciosCompartidosService: ServiciosCompartidosService,
     public planificacionEntregasService:PlanificacionEntregasService,
     public alertasService: AlertasService,
-    public alertCTrl: AlertController
+    public alertCTrl: AlertController,
+    public datableService: DatatableService
 
 
   ) { }
+
   @ViewChild(IonSlides) slides: IonSlides;
+
   avatarSlide = {
+
     slidesPerView: 3
+
+    
   }
 
 //============================================================================= 
@@ -93,9 +96,37 @@ rutaZona = null;
 
   cargarDatos(){
 
-    this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha);
+    this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp =>{
+
+      this.datableService.totalElements = resp.length;
+   this.datableService.agruparElementos(resp, 'CLIENTE',[ {name:'idGuia',default:false},{name:'factura',default:true}]).then(array =>{
+
+    this.datableService.totalGroupElements = array.length;
+    console.log('arreglo agrupado',array)
+    
+     this.datableService.generarDataTable(array, 10).then(resp =>{
+       
+      this.datableService.totalPages = resp.length;
+
+  this.datableService.dataTableArray = resp;
+        console.log('arreglo paginado',resp)
+      
+       }) 
+ 
+
+    })
+;
+
+
+    });
+
+ 
     
   }
+
+
+
+
   slidePrev() {
     this.slides.slidePrev();
   }
@@ -222,26 +253,9 @@ async listaCamiones(factura){
   
 }
 
-//=============================================================================
-// REMUEVE UNA FACTURA  LA CUAL SE FILTRA POR MEDIO DEL PARAMETRO CONSECUTIVO 
-//QUE SERIA EL IDENTIFICADOR DE CADA GUIA DONDE GUARDAMOS LAS FACTURAS
-//=============================================================================
 
-removerGuia(consecutivo){
 
-  
-}
-
-//=============================================================================
-// MUESTRA UN MODAL CON TODOS LOS CLIENTES DENTRO DE UNA GUIA
-//=============================================================================
-mostrarDetalleGuia(consecutivo){
-
- 
-
-}
 async mapa(guia){
-
 
   const modal = await this.modalCtrl.create({
     component: RutaMapaComponent,
@@ -304,88 +318,68 @@ async generarNuevaGuia(factura){
  
 
 }
-async controlFacturas(factura){
 
 
-  const modal = await this.modalCtrl.create({
-    component: ControlFacturasPage,
-    cssClass: 'large-modal',
-    componentProps:{
-      factura:factura,
-      facturas:this.planificacionEntregasService.formattedArray
-    },
-    id:'control-facturas'
+ async obtenerArreglo(){
+
+  const facturas = [];
+
+   this.datableService.dataTableArray.forEach(cliente =>{
+
+    for(let i =0; i < cliente.length; i++){
+
+      for( let j = 0; j < cliente[i].length; j++){
+     let factura = cliente[i][j];
+
+        facturas.push(factura);
+    
+
+      }
+  
+    };
+  
   });
+  return facturas;
+}
+ controlFacturas(factura){
 
-  modal.present();
+ this.obtenerArreglo().then(resp =>{
+console.log(resp, 'fatura array')
+  this.modalControlFacturas(factura, resp)
+ })
+
+}
+
+async modalControlFacturas(factura, facturas){
+
+const modal = await this.modalCtrl.create({
+  component: ControlFacturasPage,
+  cssClass: 'large-modal',
+  componentProps:{
+    factura:factura,
+    facturas: facturas
+  },
+  id:'control-facturas'
+});
+console.log(facturas,'facturasfacturasfacturas')
+modal.present();
+    
       
-        
-  const { data } = await modal.onDidDismiss();
+const { data } = await modal.onDidDismiss();
 
-  if(data !== undefined){
+if(data !== undefined){
 
-    console.log(data, 'data')
-  //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
+  console.log(data, 'data')
+//  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
 //=============================================================================
 // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
 // LAS FACTURAS A UNA SOLA GUIA
 //=============================================================================
- 
- 
 
-      
-  }
- 
 
+
+    
 }
-
-
-async onOpenMenuGuias() {
-  
-  let inputArray:any = []
-
-
-
-  let post :any =          {
-    name: 'radio1',
-    type: 'radio',
-    label: 'Guardar Guias',
-    value: 'value1',
-    handler: () => {
-      console.log('Radio 1 selected');
-      this.controlCamionesGuiasService.exportarGuias();
- 
-      console.log('Guia: ', this.controlCamionesGuiasService.listaGuias);
-      this.alertCTrl.dismiss();
-    }
-  }
-
-
-
-  let eliminar :any =     {
-    name: 'radio2',
-    type: 'radio',
-    label: 'Asignar todas las factuas a una guia',
-    value: 'value2',
-    handler: () => {
-      console.log('Radio 2 selected');
-
-    this.alertCTrl.dismiss();
-    }
-  }
-
-  inputArray.push(post,eliminar)
-
-  const alert = await this.alertCTrl.create({
-    cssClass: 'alert-menu',
-    header: 'Administrar Guias',
-    message: `
-    Te permite gestionar las guias previamente creadas
-`,
-    inputs: inputArray,
-  });
-
-  await alert.present();
 }
 
 

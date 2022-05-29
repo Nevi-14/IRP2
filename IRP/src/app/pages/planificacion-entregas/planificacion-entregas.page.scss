@@ -25,11 +25,19 @@ ion-card {
 }
 .header-row{
 
-  font-weight: 500;
+  font-weight: bold;
   border-bottom: 2px solid black;
 }
 .data-row{
   border-bottom: 1px solid black;
+}
+.col-divider{
+border-right: 1px solid black;
+border-bottom: 1px solid black;
+
+}
+.border-bottom{
+  border-right: 1px solid black;
 }
 .even { 
   
@@ -43,4 +51,13 @@ ion-card {
       margin-bottom: 0.4rem;
     
     
+    }
+.text-left{
+  display: flex;justify-content: left;align-items: left;margin-left: 1rem;
+}
+    .scrolling{
+
+      overflow: auto;
+ height: 100%;
+
     }

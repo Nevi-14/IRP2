@@ -120,6 +120,7 @@ for (let i =0; i < this.facturas.length; i++)
 
 if(i === 1){
   console.log( this.facturas[i], ' this.facturas')
+  
   this.controlCamionesGuiasService.generarGuia(this.factura,camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : null,this.facturas)
 }
 
@@ -133,6 +134,8 @@ return
       this.controlCamionesGuiasService.agregarFacturaGuia(this.factura,camion)
 
     }
+
+    console.log(this.controlCamionesGuiasService.listaGuias, 'listaGuias')
    this.cerrarModal()
   
   }
@@ -159,7 +162,7 @@ return
      this.consultas.nuevaGuia = false;
     this.consultas.otrasGuias = false;
     this.camiones = [];
-    console.log( this.controlCamionesGuiasService.listaGuias,' this.controlCamionesGuiasService.listaGuias')
+
     this.controlCamionesGuiasService.listaGuias.forEach(camion =>{
       const  camionRuta = {
 
@@ -205,7 +208,7 @@ if(validate){
         seco:camion.seco,
       }
       this.camiones.push(camionRuta)
-      console.log(this.camiones, 'this.camiones')
+      console.log(this.controlCamionesGuiasService.listaGuias, 'listaGuias')
 
   
     })
