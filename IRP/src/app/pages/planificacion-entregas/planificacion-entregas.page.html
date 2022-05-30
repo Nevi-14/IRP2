@@ -58,7 +58,17 @@
 
     <ion-col *ngIf="controlCamionesGuiasService.listaGuias.length > 0" size="4">
         
-      <h4    class="ion-text-uppercase" style="letter-spacing: 0.1rem;">Lista De guias <ion-badge color="dark" mode="ios">{{controlCamionesGuiasService.listaGuias.length}}</ion-badge></h4>
+<ion-item>
+  <ion-label  slot="start"  class="ion-text-uppercase" style="letter-spacing: 0.1rem;">
+      
+    <strong class="ion-margin-right">Lista De guias</strong>
+    <ion-badge color="warning" mode="ios">{{controlCamionesGuiasService.listaGuias.length}}</ion-badge>
+ </ion-label >
+
+ <ion-button slot="end" size="large"  *ngIf="controlCamionesGuiasService.listaGuias.length > 0"    fill="clear"  (click)="exportarGuias()" >
+<ion-icon size="large" slot="icon-only" name="save-outline"></ion-icon>
+</ion-button>
+</ion-item>
    
     </ion-col>
 
@@ -69,20 +79,21 @@
        
         <ion-col   size="4">
         
-        <ion-label class="ion-margin">Peso Total : {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG </ion-label>
+        <ion-label class="ion-margin">Peso Total : {{pesoTotal.toFixed(2)}} KG </ion-label>
         
         </ion-col>
         
         
         <ion-col   size="4">
-        <ion-label class="ion-margin">Total Bultos:   {{planificacionEntregasService.bultosTotales.toFixed(2)}} Bultos</ion-label>
+        <ion-label class="ion-margin">Total Bultos:   {{totalBultos.toFixed(2)}} Bultos</ion-label>
         
         </ion-col>
         <ion-col  size="4">
           
-          <ion-label class="ion-margin">Fecha de entrega  {{planificacionEntregasService.fecha}}</ion-label>
+          <ion-label class="ion-margin">Fecha de entrega  <ion-badge color="warning" mode="ios">{{fecha}}</ion-badge></ion-label>
           
         </ion-col>
+
             </ion-row>
         
             <ion-row class="header-row ">
@@ -133,7 +144,7 @@
     <ion-row style="height: 100%;">
       <ion-col size="4" *ngIf="controlCamionesGuiasService.listaGuias.length > 0" class="scrolling">
         <ion-row >
-          <ion-col  size="12" *ngFor="let guia of controlCamionesGuiasService.listaGuias;let i = index" >
+          <ion-col  size="12" *ngFor="let guia of controlCamionesGuiasService.listaGuias;let i = index;" >
 
        
           <ion-card >
@@ -191,7 +202,7 @@
       <ion-col size="{{controlCamionesGuiasService.listaGuias.length > 0 ? 8 : 12}}" class="scrolling">
     
 
-    <ion-row *ngFor="let cliente of datableService.dataTableArray[datableService.page]; let i = index">
+    <ion-row *ngFor="let cliente of datableService.dataTableArray[datableService.page] let i = index">
   
       <ion-col size="3">
 
@@ -199,12 +210,17 @@
           <h4 > <strong>{{cliente[0].factura.NOMBRE_CLIENTE}}</strong>    <ion-badge color="warning" mode="ios">{{cliente[0].factura.CLIENTE}}</ion-badge></h4>
       
           <p class="ion-text-wrap">{{cliente[0].factura.DIRECCION_FACTURA}}</p>
+          <p *ngIf="!cliente[0].factura.LONGITUD || !cliente[0].factura.LATITUD" class="ion-text-warp">
 
+            <ion-label color="danger" class="ion-text-uppercase">  Clientes sin latitud ni longitud no pueden ser parte del proceso de planificacion de entrega</ion-label>
+
+
+            </p>
         </ion-label>
       </ion-col>
 
       <ion-col size="9">
-        <ion-item (click)="controlFacturas(factura)"   *ngFor="let factura of cliente" detail >
+        <ion-item (click)="controlFacturas(factura)"   *ngFor="let factura of cliente " detail >
    <ion-grid >
     <ion-row  >
       <ion-col   size="4" >
@@ -271,20 +287,9 @@
     <ion-grid >
       <ion-row>
      
-    <ion-col *ngIf="controlCamionesGuiasService.listaGuias.length > 0" size="4" class="ion-text-center">
+    <ion-col *ngIf="controlCamionesGuiasService.listaGuias.length > 0" size="4" >
 
-      <ion-toolbar class="ion-text-center">
-  
-      
-        <ion-title>
-          
-          <ion-label > Total Guias <ion-badge color="warning" mode="ios">{{controlCamionesGuiasService.listaGuias.length}}</ion-badge> </ion-label>
-         
 
-    </ion-title>
-    
-     
-      </ion-toolbar>
 
 
     </ion-col>

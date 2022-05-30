@@ -9,6 +9,7 @@ interface modeloCamiones {
   volumen:number,
   peso:number,
   numeroGuia:string,
+  ruta:string,
   frio:string,
   seco:string
 
@@ -53,6 +54,7 @@ export class ControlFacturasPage implements OnInit {
           volumen:camion.camion.volumen,
           peso:camion.camion.peso,
           numeroGuia:camion.idGuia,
+          ruta:camion.ruta,
           frio:camion.camion.frio,
           seco:camion.camion.seco,
         }
@@ -89,8 +91,7 @@ export class ControlFacturasPage implements OnInit {
           text: 'Continuar',
           id: 'confirm-button',
           handler: () => {
-            this.controlCamionesGuiasService.borrarFactura(this.factura);
-          
+            this.controlCamionesGuiasService.borrarFactura(this.factura)
 
           }
         }
@@ -125,7 +126,7 @@ for (let i =0; i < this.facturas.length; i++)
 if(i === 1){
   console.log( this.facturas[i], ' this.facturas')
   
-  this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false,this.facturas)
+  this.controlCamionesGuiasService.generarGuia(this.factura,camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : null,this.facturas)
 }
 
 return
@@ -133,11 +134,10 @@ return
     
     
     if(this.consultas.nuevaGuia || this.consultas.otrasGuias){
-
-   
-      this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false, [this.factura])
+    
+      this.controlCamionesGuiasService.generarGuia(this.factura,camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : null)
     }else if(this.consultas.guiaExistente){
-      this.controlCamionesGuiasService.agregarFacturaGuia(this.factura,camion, camion.numeroGuia)
+      this.controlCamionesGuiasService.agregarFacturaGuia(this.factura,camion)
 
     }
 
@@ -179,6 +179,7 @@ return
         volumen:camion.camion.volumen,
         peso:camion.camion.peso,
         numeroGuia:camion.idGuia,
+        ruta:camion.ruta,
         frio:camion.camion.frio,
         seco:camion.camion.seco,
       }
@@ -210,6 +211,7 @@ if(validate){
         volumen:camion.capacidadVolumen,
         peso:camion.capacidadPeso,
         numeroGuia:null,
+        ruta:null,
         frio:camion.frio,
         seco:camion.seco,
       }
@@ -242,6 +244,7 @@ const  camionRuta = {
   volumen:camion.volumen,
   peso:camion.peso,
   numeroGuia:camion.idGuia,
+  ruta:camion.ruta,
   frio:this.gestionCamiones.camiones[datosCamion].frio,
   seco:this.gestionCamiones.camiones[datosCamion].seco,
 }

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PlanificacionEntregasPageRoutingModule } from './planificacion-entregas-routing.module';
 
 import { PlanificacionEntregasPage } from './planificacion-entregas.page';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { PlanificacionEntregasPage } from './planificacion-entregas.page';
     FormsModule,
     IonicModule,
     PlanificacionEntregasPageRoutingModule,
+    PipesModule
 
 
   ],

@@ -6,14 +6,14 @@ import { FiltroPipe } from './filtro.pipe';
 @NgModule({
   declarations: [
     FiltroPipe,
-
+    
   ],
   imports: [
     CommonModule
   ],
   exports:[
    
-    FiltroPipe
+    FiltroPipe,
   ]
 })
 export class PipesModule { }

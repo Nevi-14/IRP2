@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { PlanificacionEntregas } from '../models/planificacionEntregas';
-import { DataTableService } from './data-table.service';
 import { AlertasService } from './alertas.service';
 
 interface facturaGuia{
@@ -44,8 +43,7 @@ export class RutaFacturasService {
 
   constructor(
     
-    private http: HttpClient,  
-    public datatableService: DataTableService,
+    private http: HttpClient, 
     public alertasService: AlertasService
     
     
@@ -160,7 +158,7 @@ syncRutaFacturas(ruta:string, fecha:string){
        
       console.log(this.pesoTotalBultosFactura, 'peso bultos')
       console.log(this.totalBultosFactura, 'total bultos')
-      this.datatableService.paginacion( this.facturas, this.datatableService.resultsCount, this.datatableService.page)
+   
     }
   )
 

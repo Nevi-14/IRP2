@@ -1,14 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ClientesService } from '../services/clientes.service';
 
 @Pipe({
   name: 'filtro'
 })
 export class FiltroPipe implements PipeTransform {
-  constructor(public clientes: ClientesService){}
+  constructor(){}
   transform(arreglo: any[],
     texto: string = '',
-    columna: string = ''): any[] {
+    columna: string = '' ): any[] {
       console.log(texto,columna)
    if(texto === ''){
      return arreglo;
@@ -22,9 +21,12 @@ export class FiltroPipe implements PipeTransform {
    if(typeof(texto) != 'boolean' ){
     texto = texto.toLocaleLowerCase();
 
+    
      //  return null;
  return arreglo.filter(
   //  item=> item.title.toLocaleLowerCase().includes(texto)
+
+
   item=> item[columna].toLocaleLowerCase().includes(texto) 
   );
 

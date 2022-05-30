@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonSlides, ModalController, AlertController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { ModalController, AlertController } from '@ionic/angular';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
@@ -8,7 +8,6 @@ import { ServiciosCompartidosService } from 'src/app/services/servicios-comparti
 import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
-import { ListaCamionesModalPage } from '../lista-camiones-modal/lista-camiones-modal.page';
 import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 import { DatatableService } from 'src/app/services/datatable.service';
@@ -19,7 +18,7 @@ import { DatatableService } from 'src/app/services/datatable.service';
   templateUrl: './planificacion-entregas.page.html',
   styleUrls: ['./planificacion-entregas.page.scss'],
 })
-export class PlanificacionEntregasPage implements OnInit {
+export class PlanificacionEntregasPage  {
 
 
   constructor(
@@ -38,15 +37,8 @@ export class PlanificacionEntregasPage implements OnInit {
 
 
   ) { }
-
-  @ViewChild(IonSlides) slides: IonSlides;
-
-  avatarSlide = {
-
-    slidesPerView: 3
-
-    
-  }
+  pesoTotal = 0;
+  totalBultos = 0;
 
 //============================================================================= 
 // IMAGEN DEL BOTON DE CAMION 
@@ -78,38 +70,86 @@ rutaZona = null;
 
  limpiarDatos(){
 
+this.pesoTotal = 0;
+this.totalBultos = 0;
+this.rutaZona = null;
+this.datableService.dataTableArray = [];
+this.controlCamionesGuiasService.listaGuias = [];
+this.datableService.page = 0;
+this.datableService.dataTableArray[this.datableService.page]
+
  }
 
-  ngOnInit() {
+ clearDatableArray(){
 
-    // RESET DATATABLE SERVICE
-    // RESET PLANIFICACION ENTREGAS SERVICE
-    // RESET CAMIONES GUIAS SERVICE
+this.datableService.dataTableArray.forEach(cliente =>{
 
-    this.limpiarDatos();
-  }
+    for(let i =0; i < cliente.length; i++){
+
+      for( let j = 0; j < cliente[i].length; j++){
+
+     let factura = cliente[i][j];
+
+     factura.idGuia = '';
+
+      }
+  
+    };
+  
+  });
+ }
+
+
+
+
+ ionViewWillEnter(){
+
+  this.limpiarDatos();
+}
+
+
+ 
 
 
 //=============================================================================
 // SINCRONIZA LAS RUTAS Y FACTURAS BASADO EN LA RUTA Y FECHA
 //=============================================================================
 
+async exportarGuias() {
+  this.controlCamionesGuiasService.exportarGuias();
+
+  
+}
   cargarDatos(){
 
-    this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp =>{
+  this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp =>{
 
-      this.datableService.totalElements = resp.length;
-   this.datableService.agruparElementos(resp, 'CLIENTE',[ {name:'idGuia',default:false},{name:'factura',default:true}]).then(array =>{
+    if(resp.length == 0){
 
-    this.datableService.totalGroupElements = array.length;
-    console.log('arreglo agrupado',array)
+      this.alertasService.message('IRP', 'No hay datos que mostrar   fecha : ' + this.fecha);
+    }
+
+       for(let i =0; i  < resp.length; i++){
+
+       this.pesoTotal += resp[i].TOTAL_PESO;
+       this.totalBultos +=  Number(resp[i].RUBRO1);
+
+
+      }
+  
+
+  this.datableService.totalElements = resp.length;
+  this.datableService.agruparElementos(resp, 'CLIENTE',[ {name:'idGuia',default:false},{name:'factura',default:true}]).then(array =>{
+
+  this.datableService.totalGroupElements = array.length;
+
     
-     this.datableService.generarDataTable(array, 10).then(resp =>{
+  this.datableService.generarDataTable(array, 10).then(resp =>{
        
-      this.datableService.totalPages = resp.length;
+  this.datableService.totalPages = resp.length;
 
   this.datableService.dataTableArray = resp;
-        console.log('arreglo paginado',resp)
+
       
        }) 
  
@@ -125,15 +165,6 @@ rutaZona = null;
   }
 
 
-
-
-  slidePrev() {
-    this.slides.slidePrev();
-  }
-  slideNext() {
-    
-    this.slides.slideNext();
-  }
 
 //=============================================================================
 // DESPLIEGA UN MODAL CON LAS RUTAS Y ZONAS UNA VEZ SELECCIONADA LA OPCION 
@@ -184,14 +215,15 @@ configuracionZonaRuta(){
 //=============================================================================
   calendarioModal(){
 
-   const valorRetorno = this.serviciosCompartidosService.calendarioModal('/');
+this.serviciosCompartidosService.calendarioModal('/').then(valor =>{
 
-   valorRetorno.then(valor =>{
     if(valor !== undefined){
- 
+      this.limpiarDatos();
       this.fecha = valor
+
       this.controlCamionesGuiasService.fecha = valor;
-   this.cargarDatos();
+     
+       this.cargarDatos();
 
      }
 
@@ -206,51 +238,6 @@ configuracionZonaRuta(){
 gestionErrores(){
 
   this.alertasService.gestorErroresModal(this.planificacionEntregasService.errorArray);
-}
-
-
-//=============================================================================
-// GENERA EL POST DE ACTUALIZAR FACTURAS, INSERTAR GUIAS Y INSERTAR RUTERO
-//=============================================================================
-
-generarPost(){
-
-
-
-this.rutaZona = null;
-
-}
-
-
-//=============================================================================
-// SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA LA LISTA DE CAMIONES Y DEVUELVE EL VALOR SELECCIONADO
-//=============================================================================
-
-async listaCamiones(factura){
-
-  const modal = await this.modalCtrl.create({
-    component: ListaCamionesModalPage,
-    cssClass: 'large-modal'
-  });
-
-  modal.present();
-      
-        
-  const { data } = await modal.onDidDismiss();
-
-  if(data !== undefined){
-    this.controlCamionesGuiasService.borrarFactura(factura)
-    this.controlCamionesGuiasService.generarGuia(factura, data);
-//=============================================================================
-// UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
-// LAS FACTURAS A UNA SOLA GUIA
-//=============================================================================
- 
- 
-
-      
-  }
-  
 }
 
 
@@ -285,39 +272,7 @@ async mapa(guia){
  
 
 }
-//=============================================================================
-// NOS PERMITE GENERAR UNA NUEVA GUIA POR MEDIO DE UNA FACTURA
-//=============================================================================
 
-async generarNuevaGuia(factura){
-
-
-  const modal = await this.modalCtrl.create({
-    component: ListaCamionesModalPage,
-    cssClass: 'large-modal'
-  });
-
-  modal.present();
-      
-        
-  const { data } = await modal.onDidDismiss();
-
-  if(data !== undefined){
-
-    console.log(data, 'data')
-    this.controlCamionesGuiasService.generarGuia(factura, data.camion);
-//=============================================================================
-// UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
-// LAS FACTURAS A UNA SOLA GUIA
-//=============================================================================
- 
- 
-
-      
-  }
- 
-
-}
 
 
  async obtenerArreglo(){
@@ -330,6 +285,8 @@ async generarNuevaGuia(factura){
 
       for( let j = 0; j < cliente[i].length; j++){
      let factura = cliente[i][j];
+
+           
 
         facturas.push(factura);
     

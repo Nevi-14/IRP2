@@ -129,7 +129,9 @@ textoBuscar = '';
     const { data } = await modal.onDidDismiss();
   
     if(data !== undefined){
-  
+      if(this.controlCamionesGuiasService.listaGuias.length == 0){
+        this.modalCtrl.dismiss(null,null,'detalle-guia');
+      }
       console.log(data, 'data')
     //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
   //=============================================================================

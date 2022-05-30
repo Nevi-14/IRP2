@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
 import { AlertasService } from './alertas.service';
-import { DataTableService } from './data-table.service';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
 import { RutaFacturasService } from './ruta-facturas.service';
 
@@ -19,7 +18,6 @@ url = null;
     
     private http: HttpClient,
     public alertasService: AlertasService,
-    public datatableService: DataTableService,
     public rutasFacturas: RutaFacturasService,
     public planificacionEntregasService: PlanificacionEntregasService
     
@@ -71,8 +69,6 @@ url = null;
         this.rutasFacturas.pesoTotalBultosFactura =0
         this.rutasFacturas.pesoTotalBultosFactura =0
         this.rutasFacturas.rutaFacturasArray = []
-        this.datatableService.dataArrayToShow = [];
-        this.datatableService.data = [];
         this.planificacionEntregasService.bultosTotales = 0;
         this.planificacionEntregasService.totalFacturas = 0;
         this.planificacionEntregasService.fecha = null;

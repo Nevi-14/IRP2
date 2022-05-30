@@ -16,7 +16,7 @@ transform: translate(-50%, -50%);">
   <ion-label>Distancia : {{guia.distancia}} km  / Duracion : {{guia.duracion}} minutos</ion-label>
  
 </ion-item>
-  <ion-item *ngFor="let cliente of guia.ordenEntregaCliente" (click)="irMarcador([cliente.longitud,cliente.latitud])" detail>
+  <ion-item *ngFor="let cliente of elementosAgrupados[page]" (click)="irMarcador([cliente.longitud,cliente.latitud])" detail>
     <ion-badge slot="start" color="dark" mode="ios">{{cliente.orden_visita}}</ion-badge>
     <ion-label>{{cliente.cliente}} </ion-label>
   </ion-item>
@@ -31,5 +31,12 @@ transform: translate(-50%, -50%);">
   </ion-fab-button>
   <ion-fab-button (click)="mostrarDatos()" style="margin-top: 1rem;"   color="dark"> 
     <ion-icon name="{{mostrar ? 'eye-outline' : 'eye-off-outline'}}"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-button (click)="next(page)" *ngIf="page < elementosAgrupados.length -1"  style="margin-top: 1rem;"   color="dark"> 
+    <ion-icon name="arrow-forward-outline"></ion-icon>
+  </ion-fab-button>
+
+  <ion-fab-button (click)="prev(page)"  *ngIf="page > 0"  style="margin-top: 1rem;"   color="dark"> 
+    <ion-icon name="arrow-back-outline"></ion-icon>
   </ion-fab-button>
 </ion-fab>
