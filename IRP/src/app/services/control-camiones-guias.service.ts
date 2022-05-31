@@ -254,7 +254,7 @@ this.listaGuias.push(guia)
 if(facturas && facturas.length > 0){
 
 facturas.forEach(factura =>{
-if(factura.factura.LONGITUD != null  || factura.factura.LONGITUD != undefined  && factura.factura.LATITUD != null || factura.factura.LATITUD != undefined )
+if(factura.factura.LONGITUD != null  || factura.factura.LONGITUD != undefined  && factura.factura.LONGITUD != 0 ||factura.factura.LATITUD != 0   )
   this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
 });
   
