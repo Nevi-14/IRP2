@@ -39,6 +39,7 @@ formattedArray :  facturas[]=[];
  fecha: string;
  totalFacturas: number = 0;
  pesoTotal: number = 0;
+ totalBultos:number =0;
  volumenTotal: number = 0;
  bultosTotales: number = 0;
  totalClientes: number = 0;
@@ -53,6 +54,23 @@ formattedArray :  facturas[]=[];
    
    ) { }
 
+
+   limpiarDatos(){
+
+    this.rutaFacturasArray =[];
+    this.paginationArray =[];
+    this.planificacionEntregaArray  =[];
+    this.formattedArray  =[];
+    this.fecha = null;
+    this.totalFacturas = 0;
+    this.pesoTotal  = 0;
+    this.totalBultos  =0;
+    this.volumenTotal  = 0;
+    this.bultosTotales  = 0;
+    this.totalClientes  = 0;
+    this.errorArray =[]
+
+   }
 
    getURL(api: string, id: string, fecha: string){
 

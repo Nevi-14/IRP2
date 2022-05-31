@@ -27,6 +27,14 @@ export class GuiasService {
     
     ) { }
 
+
+    limpiarDatos(){
+      this.guiasArray =[];
+      this.guiasArrayExistentes =[];
+      this.guiasArrayRuta =[];
+      this.url = null;
+
+    }
   getIRPURL( api: string ){
     let test: string = ''
     if ( !environment.prdMode ) {

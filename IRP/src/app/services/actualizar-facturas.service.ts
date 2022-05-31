@@ -25,6 +25,11 @@ url = null;
     
     ) { }
 
+    limpiarDatos(){
+
+      this.actualizaFacturasArray =[];
+      this.url = null;
+    }
   getIRPURL( api: string ){
     let test: string = ''
     if ( !environment.prdMode ) {
@@ -59,42 +64,10 @@ url = null;
   insertarFacturas(facturas){
 
     console.log(facturas, 'facturas post')
-    this.postActualizarFactura(facturas).subscribe(
 
-      resp => {
-        console.log(facturas, 'completed')
-  
-        this.rutasFacturas.rutaFacturasArray = []
-        
-        this.rutasFacturas.pesoTotalBultosFactura =0
-        this.rutasFacturas.pesoTotalBultosFactura =0
-        this.rutasFacturas.rutaFacturasArray = []
-        this.planificacionEntregasService.bultosTotales = 0;
-        this.planificacionEntregasService.totalFacturas = 0;
-        this.planificacionEntregasService.fecha = null;
-        this.planificacionEntregasService.pesoTotal = 0;
-        this.planificacionEntregasService.rutaFacturasArray = [];
-     
+    
 
-
-
-      }, error => {
-      //  this.alertasService.loadingDissmiss();
-      // nombre controlador
-        let errorObject = {
-          titulo: 'Insertar Facturas',
-          metodo:'POST',
-          url:error.url,
-          message:error.message,
-          rutaError:'app/services/actualiza-clientes-factura.ts',
-          json:JSON.stringify(this.actualizaFacturasArray)
-        }
-        this.planificacionEntregasService.errorArray.push(errorObject)
-        console.log(JSON.stringify(this.actualizaFacturasArray), ' lista facturas json  error')
-       ;
-        
-    }
-      )
+   return  this.postActualizarFactura(facturas).toPromise();
 
    // this.actualizaFacturasArray = [];
 

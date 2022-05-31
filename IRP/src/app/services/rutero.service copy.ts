@@ -22,15 +22,6 @@ url = null;
   ) { }
 
 
-  limpiarDatos(){
-
-    this.ruteroArray =[];
-    this.rutertoPostArray =[];
-    this.rutertoPostArrayExistentes =[];
-    this.url = null;
-
-  }
-
 getRuteroURL(api, id){
 let test : string = '';
 
@@ -132,11 +123,37 @@ putRutero(){
 insertarPostRutero(postRutero){
   console.log(postRutero, 'postRutero')
 
-
+  return
  //this.alertasService.presentaLoading('Insertando Rutero')
 if(postRutero.length > 0){
   
- return this.postRutero(postRutero).toPromise();
+  this.postRutero(postRutero).subscribe(
+
+    resp => {
+      console.log('completed', resp)
+  
+  
+  //    this.alertasService.loadingDissmiss();
+
+  
+      this.rutertoPostArray = []
+  
+    }, error =>{
+     // this.alertasService.loadingDissmiss();
+      let errorObject = {
+        titulo: 'Insertar rutero',
+        fecha: new Date(),
+        metodo:'POST',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/rutero-service.ts',
+        json:JSON.stringify(this.rutertoPostArray)
+      }
+      this.planificacionEntregasService.errorArray.push(errorObject)
+      console.log(error)
+     
+    }
+  )
 }
 
 }

@@ -12,6 +12,17 @@ export class DatatableService {
   constructor() { }
 
 
+
+
+  limpiarDatos(){
+    
+    this.totalElements  = 0;
+    this.totalGroupElements = 0;
+    this.totalPages  = 0;
+    this.dataTableArray = [];
+     this.page  = 0;
+
+  }
   paginarArreglo (arr, size) {
 
     return arr.reduce((acc, val, i) => {

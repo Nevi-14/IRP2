@@ -44,7 +44,7 @@ textoBuscar = '';
    irMarcador(item){
  
     this.modalCtrl.dismiss({
-     'item': item
+     'cliente': item
    });
   }
 

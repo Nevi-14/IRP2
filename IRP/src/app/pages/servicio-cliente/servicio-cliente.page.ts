@@ -1,9 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ModalController, AlertController, PopoverController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
-import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
-import * as MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
@@ -16,6 +13,7 @@ import { ServicioClienteService } from 'src/app/services/servicio-cliente.servic
 import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
 import { ServicioClienteMarcadoresPage } from '../servicio-cliente-marcadores/servicio-cliente-marcadores.page';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
+import { Rutero } from 'src/app/models/Rutero';
 interface Marcadores {
   id: string,
   cliente: any,
@@ -34,7 +32,7 @@ interface Marcadores {
   templateUrl: './servicio-cliente.page.html',
   styleUrls: ['./servicio-cliente.page.scss'],
 })
-export class ServicioClientePage implements OnInit {
+export class ServicioClientePage  {
 
 
 
@@ -47,13 +45,19 @@ export class ServicioClientePage implements OnInit {
   result: any;
   mapa!: mapboxgl.Map;
   geocoder: any;
-  zoomLevel: number = 10.5;
+  zoomLevel: number = 12;
   array: any;
   lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
   marcadores: Marcadores[] = [];
   clientesArray = [];
   coordinates = [];
   features = [];
+
+  // NEW 
+  elementosAgrupados = []
+  totalClientes = 0;
+  page = 0;
+  mostrar = false;
     constructor(
       
       public modalCtrl: ModalController, 
@@ -76,17 +80,6 @@ export class ServicioClientePage implements OnInit {
 
 
 
-    ngOnInit(){
-
-     this.clientes.rutasClientes = [];
-     this.clientes.nuevosClientes = [];
-
-  console.log('planificacion Rutas')
-
-
-
-    
-    }
 
 //============================================================================= 
 // MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
@@ -101,11 +94,216 @@ gestionErrores(){
 
   
    ionViewWillEnter(){
+
     this.limpiarDatos()
   }  
- 
-    async informacionMarcadores() {
 
+  extrarCoordenadas(){
+    
+    this.clientesArray.sort( ( a, b ) => a.orden_visita - b.orden_visita )
+  
+  this.elementosAgrupados = this.paginarArreglo( this.clientesArray, 24);
+
+   this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
+   
+  }
+
+
+  cargarElementosAlMapa(array:Rutero[]){
+    this.alertasService.presentaLoading('Generando mapa....')
+    let primerElemento = {
+      nombre: 'ISLEÑA' ,
+      longitud : this.lngLat[0],
+      latitud : this.lngLat[1],
+      estado:  '',
+      color:  "#000000",
+    }
+
+    this.coordinates = [];
+
+    if(this.page == 0){
+
+      this.coordinates.push(primerElemento)
+
+
+    }
+    if(  array != undefined   || array != null  ){
+
+      for(let i =0; i < array.length; i++){
+
+
+        let clienteCoordenada = {
+          nombre: 'Orden : ' + array[i].orden_Visita  + ' / Cliente : '+ array[i].idCliente ,
+          longitud :array[i].longitud,
+          latitud : array[i].latitud,
+          estado:   array[i].estado,
+          color: '',
+        }
+        this.coordinates.push(clienteCoordenada)
+      
+        if(i === array.length -1){
+          this.crearMapa();
+        }
+  
+      }
+
+
+
+  
+    }else{
+
+      this.crearMapa();
+
+    }
+
+   
+  }
+
+
+  paginarArreglo (arr, size) {
+
+    return arr.reduce((acc, val, i) => {
+
+      let idx = Math.floor(i / size)
+      let page = acc[idx] || (acc[idx] = [])
+      page.push(val)
+      return acc
+    }, [])
+  }
+  prev(page){
+
+    this.page =  page <= 0 ? 0: page -1;
+    this.elementosAgrupados[this.page]
+    this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
+   
+      }
+    
+   // NOS PERMITE PASAR A LA SIGUIENTE PAGINA
+   
+    next(page){
+   
+    this.page =  page+1 == this.elementosAgrupados.length ?  this.elementosAgrupados.length -1 : page+1;
+    this.elementosAgrupados[this.page]
+    this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
+   
+      }
+
+      crearMapa(){
+        if(this.mapa){
+          this.mapa.remove();
+        }
+    
+        this.mapa = new mapboxgl.Map({
+          container: this.divMapa.nativeElement,
+          style: 'mapbox://styles/mapbox/light-v10', // Specify which map style to use
+          center: this.lngLat,
+          zoom: this.zoomLevel,
+          interactive: true,
+        });
+    
+        // Create a default Marker and add it to the map.
+    
+        const newMarker = new mapboxgl.Marker({
+          color:"#000000",
+          draggable: false
+        })
+    
+     if(this.page == 0){
+      newMarker.setLngLat(this.lngLat)
+      .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
+      .addTo(this.mapa)
+      .togglePopup();
+     }
+    
+      if(this.coordinates.length > 1){
+        for (let i =0; i < this.coordinates.length; i++) {
+    
+        
+    
+          const { newMarker , color } =  this.generarMarcadorColor(this.coordinates[i].estado)
+          let coordinate :any = [this.coordinates[i].longitud, this.coordinates[i].latitud]
+       
+          newMarker.setLngLat(coordinate)
+          .addTo(this.mapa)
+        
+          const miniPopup = new  mapboxgl.Popup({closeOnClick: false, closeButton: false});
+          miniPopup.setText(this.coordinates[i].nombre)
+        
+          newMarker.setPopup(miniPopup)
+        }
+    
+        this.mapa.on('load', () => {
+          this.trazarRuta()
+          this.mapa.resize();
+        });
+      }else{
+  
+        this.alertasService.loadingDissmiss()
+      }
+      }
+      async  trazarRuta() {
+
+        let firstPart =  'https://api.mapbox.com/directions/v5/mapbox/driving/'
+        let middle = '';
+    
+        for (let i = 0; i < this.coordinates.length; i++){
+      
+          if(this.coordinates.length -1  == i){
+            middle += this.coordinates[i].longitud+','+this.coordinates[i].latitud
+          }else{
+            middle += this.coordinates[i].longitud+','+this.coordinates[i].latitud+';'
+          }
+      
+        }
+      
+       
+        let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
+        let final = firstPart + middle +secondPart;
+      
+        if(this.coordinates.length > 0){
+          const query = await fetch(
+            final,
+            { method: 'GET' }
+          );
+          const json = await query.json();
+          
+        
+          const data = json.routes[0];
+          const route = data.geometry.coordinates;
+          let geojson :any = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: route
+            }
+          };
+          this.mapa.addLayer({
+            id: 'route',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: geojson
+            },
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#3887be',
+              'line-width': 5,
+              'line-opacity': 0.75
+            }
+          });
+
+     
+
+        
+        }
+        this.alertasService.loadingDissmiss()
+      }
+    async informacionMarcadores() {
+      this.features.sort( ( a, b ) => a.properties.client.orden_Visita - b.properties.client.orden_Visita )
       const modal = await this.modalCtrl.create({
         component: ServicioClienteMarcadoresPage,
         cssClass: 'auto-size-modal',
@@ -120,19 +318,36 @@ gestionErrores(){
       const {data} = await modal.onDidDismiss();
  
      if(data !=undefined){
- 
-        const item = data.item
- 
-        this.irMarcador(item)
+      const item = [data.cliente.longitud ,data.cliente.latitud]
+    
+
+      for(let i =0; i < this.elementosAgrupados.length; i++){
+
+      for(let j = 0; j < this.elementosAgrupados[i].length; j++){
+    
+        if(this.elementosAgrupados[i][j].idCliente == data.cliente.idCliente){
+       
+          this.irMarcador(item)
+
+          if(this.page != i){
+            this.page = i 
+            this.cargarElementosAlMapa(this.elementosAgrupados[i])
+          this.irMarcador(item)
+          }else{
+            this.irMarcador(item)
+          }
+          return;
+        }
+      }
+      }
         
  
      }
     
     }
 
-
     
-            
+         
  
 async configuracionZonaRuta() {
 
@@ -148,50 +363,22 @@ async configuracionZonaRuta() {
 
     if(data !== undefined && data.idGuia != ''){
       
-       console.log(data, 'return')
+    
 
        this.guia = data
 this.alertasService.presentaLoading('Cargando lista de clientes')
     const ruteros =   this.ruteroService.syncRutero(data.idGuia)
           ruteros.then(rutero =>{
+            this.clientesArray = rutero;
+            this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
 
-  this.clientesArray = rutero;
-this.coordinates = [];
-this.features = [];
-this.coordinates.push(this.lngLat);
-
-this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
-
-console.log('sorted',this.clientesArray )
-  this.clientesArray.forEach(cliente =>{
-const coordinate = [cliente.longitud, cliente.latitud]
-
-if(cliente.longitud != 0 && cliente.latitud != 0){
-  this.coordinates.push(coordinate);
-}
-const feature =    {
-  title:  cliente.idCliente +' '+cliente.nombre,
-  type: 'Feature',
-  geometry: {
-    type: 'Point',
-    coordinates: [cliente.longitud, cliente.latitud]
-  },
-  properties: {
-    title:  cliente.idCliente +' '+cliente.nombre,
-    icon:   'music',
-    client: cliente,
-    color: null,
-  }
-}
-this.features.push(feature)
-   
-  })
-this.createmapa();
-
-console.log(this.clientesArray,'this.clientesArray')
-
-this.alertasService.loadingDissmiss();
-
+             this.features = []
+            this.cargarMarcagores();
+          
+            this.elementosAgrupados = this.paginarArreglo( rutero, 24);
+           
+            this.alertasService.loadingDissmiss();
+            this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
   
           }), error =>{
             this.alertasService.loadingDissmiss();
@@ -216,6 +403,32 @@ this.alertasService.loadingDissmiss();
 
   }
 
+
+  cargarMarcagores(){
+    this.clientesArray.forEach(cliente =>{
+      const coordinate = [cliente.longitud, cliente.latitud]
+      
+      if(cliente.longitud != 0 && cliente.latitud != 0){
+      this.coordinates.push(coordinate);
+      }
+      const feature =    {
+      title:  cliente.idCliente +' '+cliente.nombre,
+      type: 'Feature',
+      geometry: {
+      type: 'Point',
+      coordinates: [cliente.longitud, cliente.latitud]
+      },
+      properties: {
+      title:  cliente.idCliente +' '+cliente.nombre,
+      icon:   'music',
+      client: cliente,
+      color: null,
+      }
+      }
+      this.features.push(feature)
+      
+      })
+  }
 
 //============================================================================= 
 // MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
@@ -248,7 +461,7 @@ if(this.coordinates.length -1  == i){
    }
 
 
-console.log(middle,'middle')
+
   let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
   let final = firstPart + middle +secondPart;
@@ -259,7 +472,7 @@ if(this.coordinates.length > 0){
     { method: 'GET' }
   );
   const json = await query.json();
-console.log(json, 'json return')
+
 
   const data = json.routes[0];
   const route = data.geometry.coordinates;
@@ -288,12 +501,14 @@ console.log(json, 'json return')
       'line-opacity': 0.75
     }
 })
+
+
 }
 
 }
 createmapa() {
 
-  
+
 if(this.mapa){
 
   this.mapa.remove();
@@ -438,26 +653,26 @@ generarMarcadorColor(estado){
   let warning = "#EED202"
   let danger = "#FF0000"
   let dark = "#010203"
- switch(estado){
-   case 'P':
-color = primary
-   break;
 
-    case 'I':
-     color = warning
 
-    break;
-    case 'E':
-      color = success
+    switch(estado){
+      case 'P':
+   color = primary
       break;
-      case 'V':
-        color = danger
-        break;
-      default :
-
-  
-
-
+   
+       case 'I':
+        color = warning
+   
+       break;
+       case 'E':
+         color = success
+         break;
+         case 'V':
+           color = danger
+           break;
+     
+         default :
+         color = dark;
  }
   const i = this.marcadores.findIndex(marcador => marcador.color === color);
 
@@ -470,7 +685,7 @@ color = primary
   return {newMarker , color}
 
 }
-irMarcador(item) {
+ irMarcador(item) {
   if (item) {
     this.mapa.flyTo(
       { center: item, zoom: 18 }
@@ -491,7 +706,7 @@ this.coordinates.push(this.lngLat);
 
 this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
 
-console.log('sorted',this.clientesArray )
+
 this.clientesArray.forEach(cliente =>{
 const coordinate = [cliente.longitud, cliente.latitud]
 
@@ -517,7 +732,7 @@ this.features.push(feature)
 })
 this.createmapa();
 
-console.log(this.clientesArray,'this.clientesArray')
+
 
 this.alertasService.loadingDissmiss();
 
@@ -541,11 +756,16 @@ this.alertasService.loadingDissmiss();
 }
 
 limpiarDatos() {
+  this.clientesArray = []
+  this.clientes.rutasClientes = [];
+  this.clientes.nuevosClientes = [];
+  this.elementosAgrupados = [];
+  this.page = 0;
   this.guia = null;
   this.rutaZonaData= { rutaID: '', ruta: '', zonaId:'', zona:'' }
   this.coordinates = []
   this.features = [];
-  this.createmapa();
+  this.extrarCoordenadas();
 
 
 }

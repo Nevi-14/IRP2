@@ -37,8 +37,7 @@ export class PlanificacionEntregasPage  {
 
 
   ) { }
-  pesoTotal = 0;
-  totalBultos = 0;
+
 
 //============================================================================= 
 // IMAGEN DEL BOTON DE CAMION 
@@ -70,13 +69,10 @@ rutaZona = null;
 
  limpiarDatos(){
 
-this.pesoTotal = 0;
-this.totalBultos = 0;
-this.rutaZona = null;
-this.datableService.dataTableArray = [];
-this.controlCamionesGuiasService.listaGuias = [];
-this.datableService.page = 0;
-this.datableService.dataTableArray[this.datableService.page]
+  this.rutaZona = null;
+  this.controlCamionesGuiasService.listaGuias = [];
+  this.datableService.limpiarDatos();
+  this.planificacionEntregasService.limpiarDatos();
 
  }
 
@@ -116,10 +112,42 @@ this.datableService.dataTableArray.forEach(cliente =>{
 //=============================================================================
 
 async exportarGuias() {
-  this.controlCamionesGuiasService.exportarGuias();
+
+  const alert = await this.alertCTrl.create({
+    cssClass: 'my-custom-class',
+    header: 'Exportar Guias',
+    message: '¿Desea exportar las guias al sistema?',
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        cssClass: 'secondary',
+        id: 'cancel-button',
+        handler: (blah) => {
+       
+        }
+      }, {
+        text: 'Confirmar',
+        id: 'confirm-button',
+        handler: () => {
+
+          this.controlCamionesGuiasService.exportarGuias();
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+
+
 
   
 }
+
+
+
+
+
   cargarDatos(){
 
   this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp =>{
@@ -130,9 +158,9 @@ async exportarGuias() {
     }
 
        for(let i =0; i  < resp.length; i++){
-
-       this.pesoTotal += resp[i].TOTAL_PESO;
-       this.totalBultos +=  Number(resp[i].RUBRO1);
+        this.planificacionEntregasService.pesoTotal  += resp[i].TOTAL_PESO;
+        this.planificacionEntregasService.totalBultos +=  Number(resp[i].RUBRO1);
+  
 
 
       }

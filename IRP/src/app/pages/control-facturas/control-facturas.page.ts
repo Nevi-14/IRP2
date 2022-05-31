@@ -172,6 +172,8 @@ return
     this.camiones = [];
 
     this.controlCamionesGuiasService.listaGuias.forEach(camion =>{
+
+      console.log(camion, ' camion guia existente')
       const  camionRuta = {
 
         placa: camion.camion.idCamion,
@@ -232,6 +234,8 @@ if($event.detail.checked){
   this.guiasService.syncGuiasEnRutaPromise('INI').then(resp =>{
 
     resp.forEach(camion =>{
+
+
       const datosCamion = this.gestionCamiones.camiones.findIndex(camion => camion.idCamion == camion.idCamion )
 
 if(datosCamion >=0){
@@ -248,6 +252,8 @@ const  camionRuta = {
 
 
 if(camion.estado == 'INI'){
+  
+  console.log(camion, ' camion otras guias')
 this.camiones.push(camionRuta)
 }
 

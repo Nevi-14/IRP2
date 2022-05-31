@@ -58,16 +58,16 @@
 
     <ion-col *ngIf="controlCamionesGuiasService.listaGuias.length > 0" size="4">
         
-<ion-item>
+<ion-item lines="none">
   <ion-label  slot="start"  class="ion-text-uppercase" style="letter-spacing: 0.1rem;">
       
     <strong class="ion-margin-right">Lista De guias</strong>
     <ion-badge color="warning" mode="ios">{{controlCamionesGuiasService.listaGuias.length}}</ion-badge>
  </ion-label >
+<ion-fab-button color="dark" size="small" *ngIf="controlCamionesGuiasService.listaGuias.length > 0" slot="end" (click)="exportarGuias()">
+  <ion-icon   name="save-outline"></ion-icon>
+</ion-fab-button>
 
- <ion-button slot="end" size="large"  *ngIf="controlCamionesGuiasService.listaGuias.length > 0"    fill="clear"  (click)="exportarGuias()" >
-<ion-icon size="large" slot="icon-only" name="save-outline"></ion-icon>
-</ion-button>
 </ion-item>
    
     </ion-col>
@@ -79,13 +79,13 @@
        
         <ion-col   size="4">
         
-        <ion-label class="ion-margin">Peso Total : {{pesoTotal.toFixed(2)}} KG </ion-label>
+        <ion-label class="ion-margin">Peso Total : {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG </ion-label>
         
         </ion-col>
         
         
         <ion-col   size="4">
-        <ion-label class="ion-margin">Total Bultos:   {{totalBultos.toFixed(2)}} Bultos</ion-label>
+        <ion-label class="ion-margin">Total Bultos:   {{planificacionEntregasService.totalBultos.toFixed(2)}} Bultos</ion-label>
         
         </ion-col>
         <ion-col  size="4">

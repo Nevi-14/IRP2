@@ -12,6 +12,7 @@ import { ActualizarFacturasService } from './actualizar-facturas.service';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Camiones } from '../models/camiones';
 import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
+import { DatatableService } from './datatable.service';
 interface modeloCamiones {
   placa:string,
   chofer:string,
@@ -112,6 +113,7 @@ camionLleno = false;
 
     ruteros = []
     idGuiasArray = [];
+    contadorPost = 0;
 
  constructor( 
     public modalCtrl: ModalController,
@@ -120,7 +122,8 @@ camionLleno = false;
     public guiasService: GuiasService,
     public ruteroService: RuteroService,
     public actualizarFacturasService: ActualizarFacturasService,
-    public gestionCamionesService: GestionCamionesService
+    public gestionCamionesService: GestionCamionesService,
+    public datatableService: DatatableService
 
   ) {
   
@@ -132,6 +135,32 @@ camionLleno = false;
 // LIMPIA LOS DATOS DEL SERVICIO
 //=============================================================================
 
+limpiarDatos(){
+  this.camionLleno = false;
+  this.rutaZona = null;
+  this.fecha = null;
+  this.lngLat  = [ -84.14123589305028, 9.982628288210657 ];
+  this.listaGuias  = [];
+  this.orderArray = [];
+  this.compareArray    = [];
+  this.complete = 0;
+
+  // Variables proceso de ordenamiento MAURICIO HERRA
+
+  this.listos  = 1;
+  this.total  = 1;
+  this.actual  = 0;
+  this.menor  = 0;
+  this.i = 0;
+  this.p  = 0;
+  this.rutero  = [];
+
+  this.ruteros = []
+  this.idGuiasArray = [];
+  this.contadorPost = 0;
+
+
+}
 
 
 
@@ -180,7 +209,7 @@ informacionCamion = this.gestionCamionesService.camiones[indexCamion]
   let capacidad = informacionCamion.capacidadPeso;
   let guia = {
 
-    idGuia: this.generarIDGuia(),
+    idGuia: camion.numeroGuia != undefined || camion.numeroGuia != null ? camion.numeroGuia : this.generarIDGuia(),
     guiaExistente:existente ? existente : false,
     verificada: false,
     totalFacturas:0,
@@ -198,10 +227,10 @@ informacionCamion = this.gestionCamionesService.camiones[indexCamion]
    idCamion: camion.placa,
    capacidad: capacidad,
    pesoRestante: 0,
-   peso: 0,
+   peso: existente ? camion.peso : 0,
    estado : 'INI',
    HH : 'nd',
-   volumen: 0,
+   volumen: existente ?  camion.volumen : 0,
    frio:informacionCamion.frio,
    seco:informacionCamion.seco
   },
@@ -579,7 +608,7 @@ if(verificarGuias.length > 0){
 
  return
 }
-
+this.alertasService.presentaLoading('Guardando Datos..')
   for(let i = 0; i < this.listaGuias.length; i++){
   if(this.listaGuias[i].verificada){
    console.log(this.listaGuias[i],'exporting')
@@ -593,7 +622,7 @@ if(verificarGuias.length > 0){
 
    let rutero = this.listaGuias[i].ordenEntregaCliente;
 
-   this.completePost(guia,facturas,rutero)
+   this.completePost(guia,facturas,rutero);
   }
 
  }
@@ -601,7 +630,7 @@ if(verificarGuias.length > 0){
 }   
 
 
-completePost(guia: GuiaEntregaArray, facturas:facturas[], ruteros:ordenEntregaCliente[]){
+ completePost(guia: GuiaEntregaArray, facturas:facturas[], ruteros:ordenEntregaCliente[]){
 
 
 
@@ -679,19 +708,33 @@ postFacturas.push(actualizarFactura)
           let index =  this.listaGuias.findIndex(filtrar => filtrar.idGuia == guia.idGuia);
           if(index >=0){
          //   this.listaGuias.splice(index,1)
-    this.complete += 1;
-            this.guiasService.insertarGuias(guiaCamion); 
-            this.ruteroService.insertarPostRutero(postRutero);
-          this.actualizarFacturasService.insertarFacturas(postFacturas)
-  
-        
-          if(this.complete == this.listaGuias.length){
-        this.listaGuias = [];
-        this.rutaZona = null;
-        this.planificacionEntregasService.planificacionEntregaArray = [];
-            this.complete  = 0;
-            this.guiasPost();
-          }
+
+            this.guiasService.insertarGuias(guiaCamion).then(resp =>{
+              this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
+                this.actualizarFacturasService.insertarFacturas(postFacturas).then(resp =>{
+                  this.complete += 1;
+                  console.log('compeltado')
+
+                  if(this.complete == this.listaGuias.length){
+                    this.guiasPost();
+                    this.guiasService.limpiarDatos();
+                    this.ruteroService.limpiarDatos();
+                    this.actualizarFacturasService.limpiarDatos();
+                    this.datatableService.limpiarDatos()
+                    this.planificacionEntregasService.limpiarDatos();
+                    this.limpiarDatos();
+                    this.alertasService.loadingDissmiss();
+                  
+                  }
+                  
+       
+                });
+
+              })
+           
+            })
+      
+ 
         
         
           }
@@ -724,6 +767,7 @@ postFacturas.push(actualizarFactura)
 async guiasPost(){
 const modal = await this.modalCtrl.create({
 component:ListaGuiasPostPage,
+mode:'ios',
 componentProps:{
   idGuiasArray:this.idGuiasArray
 }

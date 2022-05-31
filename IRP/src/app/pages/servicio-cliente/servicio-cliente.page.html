@@ -83,3 +83,15 @@
 </ion-grid>
 
 </ion-content>
+
+<ion-fab  style="position:fixed ; top: 6rem;right:2rem">
+  
+
+  <ion-fab-button (click)="next(page)" *ngIf="page < elementosAgrupados.length -1"  style="margin-top: 1rem;"   color="dark"> 
+    <ion-icon name="arrow-forward-outline"></ion-icon>
+  </ion-fab-button>
+
+  <ion-fab-button (click)="prev(page)"  *ngIf="page > 0"  style="margin-top: 1rem;"   color="dark"> 
+    <ion-icon name="arrow-back-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
