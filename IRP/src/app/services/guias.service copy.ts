@@ -134,12 +134,31 @@ URL = URL + environment.idParam + ID
  
   }
 
-putGuias(guia){
+putGuias(){
 
+this.guiasArrayExistentes.forEach(guia =>{
+  this.putActualizarGuias(guia, guia.idGuia).subscribe(
 
- return  this.putActualizarGuias(guia, guia.idGuia).toPromise();
+    resp =>{
+  console.log('guia actualizada', guia)
 
+    }, error =>{
+      let errorObject = {
+        titulo: 'actualizar guias',
+        metodo:'PUT',
+        url:error.url,
+        message:error.message,
+        rutaError:'app/services/guias-service.ts',
+        json:JSON.stringify(this.guiasArray)
+      }
+      this.planificacionEntregasService.errorArray.push(errorObject)
+      console.log('error actualizando guia', guia, error)
 
+    }
+  )
+})
+
+this.guiasArrayExistentes = [];
 }
 
 

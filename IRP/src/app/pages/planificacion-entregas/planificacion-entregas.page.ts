@@ -328,6 +328,13 @@ async mapa(guia){
 }
  controlFacturas(factura){
 
+  if(factura.factura.LONGITUD == null  || factura.factura.LONGITUD == undefined  || factura.factura.LONGITUD == 0 || factura.factura.LATITUD == 0   )
+  {
+
+    this.alertasService.message('IRP','Facturas sin longitud ni latitud no pueden ser parte del proceso.')
+    return
+  }
+
  this.obtenerArreglo().then(resp =>{
 console.log(resp, 'fatura array')
   this.modalControlFacturas(factura, resp)

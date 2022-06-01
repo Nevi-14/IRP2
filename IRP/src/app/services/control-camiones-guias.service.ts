@@ -254,8 +254,9 @@ this.listaGuias.push(guia)
 if(facturas && facturas.length > 0){
 
 facturas.forEach(factura =>{
-if(factura.factura.LONGITUD != null  || factura.factura.LONGITUD != undefined  && factura.factura.LONGITUD != 0 ||factura.factura.LATITUD != 0   )
+
   this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
+  
 });
   
 }
@@ -709,31 +710,66 @@ postFacturas.push(actualizarFactura)
           if(index >=0){
          //   this.listaGuias.splice(index,1)
 
-            this.guiasService.insertarGuias(guiaCamion).then(resp =>{
-              this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
-                this.actualizarFacturasService.insertarFacturas(postFacturas).then(resp =>{
-                  this.complete += 1;
-                  console.log('compeltado')
+         if(this.listaGuias[index].guiaExistente){
+          this.guiasService.putGuias(guiaCamion).then(resp =>{
+            this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
+              this.actualizarFacturasService.insertarFacturas(postFacturas).then(resp =>{
+                this.complete += 1;
+                console.log('compeltado')
 
-                  if(this.complete == this.listaGuias.length){
-                    this.guiasPost();
-                    this.guiasService.limpiarDatos();
-                    this.ruteroService.limpiarDatos();
-                    this.actualizarFacturasService.limpiarDatos();
-                    this.datatableService.limpiarDatos()
-                    this.planificacionEntregasService.limpiarDatos();
-                    this.limpiarDatos();
-                    this.alertasService.loadingDissmiss();
-                  
-                  }
-                  
-       
-                });
+                if(this.complete == this.listaGuias.length){
+                  this.guiasPost();
+                  this.guiasService.limpiarDatos();
+                  this.ruteroService.limpiarDatos();
+                  this.actualizarFacturasService.limpiarDatos();
+                  this.datatableService.limpiarDatos()
+                  this.planificacionEntregasService.limpiarDatos();
+                  this.limpiarDatos();
+                  this.alertasService.loadingDissmiss();
+                
+                }
+                
+     
+              });
 
-              })
-           
             })
-      
+          });
+
+         }else{
+
+          this.guiasService.insertarGuias(guiaCamion).then(resp =>{
+            this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
+              this.actualizarFacturasService.insertarFacturas(postFacturas).then(resp =>{
+                this.complete += 1;
+                console.log('compeltado')
+
+                if(this.complete == this.listaGuias.length){
+                  this.guiasPost();
+                  this.guiasService.limpiarDatos();
+                  this.ruteroService.limpiarDatos();
+                  this.actualizarFacturasService.limpiarDatos();
+                  this.datatableService.limpiarDatos()
+                  this.planificacionEntregasService.limpiarDatos();
+                  this.limpiarDatos();
+                  this.alertasService.loadingDissmiss();
+                
+                }
+                
+     
+              });
+
+            })
+         
+          })
+    
+
+         }
+console.log(guiaCamion, this.listaGuias[index])
+this.alertasService.loadingDissmiss();
+return
+       
+
+    
  
         
         
