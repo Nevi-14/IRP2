@@ -201,12 +201,14 @@ gestionErrores(){
           interactive: true,
         });
     
+        
         // Create a default Marker and add it to the map.
     
         const newMarker = new mapboxgl.Marker({
           color:"#000000",
           draggable: false
         })
+
     
      if(this.page == 0){
       newMarker.setLngLat(this.lngLat)
@@ -214,32 +216,91 @@ gestionErrores(){
       .addTo(this.mapa)
       .togglePopup();
      }
+
+
+
+
+     if(this.elementosAgrupados.length > 0){
+
+      
+     for(let i = 0; i <  this.elementosAgrupados[this.page].length;i++){
+
+      const estado = this.elementosAgrupados[this.page][i].estado;
+      const coordenadas :[number, number] = [this.elementosAgrupados[this.page][i].longitud,this.elementosAgrupados[this.page][i].latitud];
+
+      const { newMarker , color } =  this.generarMarcadorColor(estado)
     
-      if(this.coordinates.length > 1){
-        for (let i =0; i < this.coordinates.length; i++) {
+      newMarker.setLngLat(coordenadas)
+      .addTo(this.mapa)
     
-        
+      const miniPopup = new  mapboxgl.Popup({closeOnClick: false, closeButton: false});
+      miniPopup.setText((i+1) + ' - ' +this.elementosAgrupados[this.page][i].nombre +' '+ this.elementosAgrupados[this.page][i].idCliente)
     
-          const { newMarker , color } =  this.generarMarcadorColor(this.coordinates[i].estado)
-          let coordinate :any = [this.coordinates[i].longitud, this.coordinates[i].latitud]
+      newMarker.setPopup(miniPopup)
+
+
+      const el = document.createElement('div');
+      const elwidth = 60;
+      const elheight = 60;
+      el.className = 'marker';
+
+      el.style.width = `${elwidth}px`;
+      el.style.height = `${elheight}px`;
+      el.style.backgroundSize = '100%';
        
-          newMarker.setLngLat(coordinate)
-          .addTo(this.mapa)
-        
-          const miniPopup = new  mapboxgl.Popup({closeOnClick: false, closeButton: false});
-          miniPopup.setText(this.coordinates[i].nombre)
-        
-          newMarker.setPopup(miniPopup)
-        }
-    
+      if(estado === 'E'){
+        el.style.backgroundImage = `url(assets/icons/shipped.svg)`;
+        new mapboxgl.Marker(el)
+      .setLngLat(coordenadas)
+      .addTo(this.mapa);
+
+      }else if (estado === 'I'){
+        el.style.backgroundImage = `url(assets/icons/delivery-man.svg)`;
+        new mapboxgl.Marker(el)
+      .setLngLat(coordenadas)
+      .addTo(this.mapa);
+      }
+
+  
+      const store = document.createElement('div');
+      const storewidth = 40;
+      const storeheight = 40;
+      store.className = 'marker-icon';
+      store.style.backgroundImage = `url(assets/icons/store.svg)`;
+      store.style.width = `${storewidth}px`;
+      store.style.height = `${storeheight}px`;
+      store.style.backgroundSize = '100%';
+  
+      store.addEventListener('click', () => {
+       if(estado === 'I'){
+         this.detalleClientes(this.elementosAgrupados[this.page][i], color, 'url(assets/icons/delivery-man.svg)')
+       }else if(estado === 'E'){
+         this.detalleClientes(this.elementosAgrupados[this.page][i], color, 'url(assets/icons/shipped.svg)')
+       }else{
+        this.detalleClientes(this.elementosAgrupados[this.page][i], color, null)
+       }
+       });
+  
+  
+      new mapboxgl.Marker(store)
+      .setLngLat(coordenadas)
+      .addTo(this.mapa);
+      console.log(' this.elementosAgrupados[this.page]',  this.elementosAgrupados[this.page][i])
+     }
+     
+
+
         this.mapa.on('load', () => {
           this.trazarRuta()
           this.mapa.resize();
         });
+      
       }else{
   
         this.alertasService.loadingDissmiss()
       }
+
+
       }
       async  trazarRuta() {
 
@@ -373,6 +434,7 @@ this.alertasService.presentaLoading('Cargando lista de clientes')
             this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
 
              this.features = []
+             
             this.cargarMarcagores();
           
             this.elementosAgrupados = this.paginarArreglo( rutero, 24);
@@ -428,6 +490,8 @@ this.alertasService.presentaLoading('Cargando lista de clientes')
       this.features.push(feature)
       
       })
+
+    
   }
 
 //============================================================================= 
@@ -506,130 +570,6 @@ if(this.coordinates.length > 0){
 }
 
 }
-createmapa() {
-
-
-if(this.mapa){
-
-  this.mapa.remove();
-
-  }
-
-let geojsonCoordinates : any = {
-  'type': 'FeatureCollection',
-  'features': [
-  {
-  'type': 'Feature',
-  'properties': {},
-  'geometry': {
-  'coordinates': this.coordinates,
-  'type': 'LineString'
-  }
-  }
-  ]
-  };
-const geojson: any = {
-  'type': 'FeatureCollection',
-  'features': this.features
-  };
-  this.mapa = new mapboxgl.Map({
-    container: this.divMapa.nativeElement,
-    style: 'mapbox://styles/mapbox/light-v10', // Specify which map style to use
-    center: this.lngLat,
-    zoom: this.zoomLevel,
-    interactive: true,
-
-  });
-
-
-
-
-
-    // Create a default Marker and add it to the map.
-
-    const newMarker = new mapboxgl.Marker({
-      color:"#010203",
-      draggable: false
-  
-  })
- 
-  newMarker.setLngLat(this.lngLat)
-    .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
-    .addTo(this.mapa)
-    .togglePopup();
-
-// add markers to map
-for (const feature of geojson.features) {
-
-
-     // Create a DOM element for each marker.
-     const el = document.createElement('div');
-     const elwidth = 60;
-     const elheight = 60;
-     el.className = 'marker';
-     el.style.backgroundImage = `url(assets/icons/shipped.svg)`;
-     el.style.width = `${elwidth}px`;
-     el.style.height = `${elheight}px`;
-     el.style.backgroundSize = '100%';
-      
-     el.addEventListener('click', () => {
-           if(feature.properties.client.estado === 'I'){
-          this.detalleClientes(feature.properties.client, color, 'url(assets/icons/shipped.svg)')
-        }else{
-          this.detalleClientes(feature.properties.client, color, null)
-        }
-     });
-
-       // Create a DOM element for each marker.
-       const store = document.createElement('div');
-       const storewidth = 40;
-       const storeheight = 40;
-       store.className = 'marker-icon';
-       store.style.backgroundImage = `url(assets/icons/store.svg)`;
-       store.style.width = `${storewidth}px`;
-       store.style.height = `${storeheight}px`;
-       store.style.backgroundSize = '100%';
-
-       store.addEventListener('click', () => {
-        if(feature.properties.client.estado === 'I'){
-          this.detalleClientes(feature.properties.client, color, 'url(assets/icons/shipped.svg)')
-        }else{
-          this.detalleClientes(feature.properties.client, color, null)
-        }
-        });
-
-
-       new mapboxgl.Marker(store)
-       .setLngLat(feature.geometry.coordinates)
-       .addTo(this.mapa);
-         
-         
-  const { newMarker , color } =  this.generarMarcadorColor(feature.properties.client.estado)
-
-  feature.properties.color = color
-  if(feature.properties.client.estado === 'I'){
-         // Add markers to the map.
-         new mapboxgl.Marker(el)
-         .setLngLat(feature.geometry.coordinates)
-         .addTo(this.mapa);
-  }
-  newMarker.setLngLat(feature.geometry.coordinates)
-  .addTo(this.mapa)
-
-  const miniPopup = new  mapboxgl.Popup();
-  miniPopup.setText(feature.properties.title)
-
-  newMarker.setPopup(miniPopup)
-  //.togglePopup();
-}
-this.mapa.on('load', () => {
-  this.getRoute()
-this.mapa.resize();
-  });
-
-
-
-}
 
 
 async detalleClientes(cliente, color , imagen){
@@ -696,46 +636,19 @@ generarMarcadorColor(estado){
 
 refrescarVista(){
 
-  const ruteros =     this.ruteroService.syncRutero(this.guia.idGuia)
+  const ruteros =   this.ruteroService.syncRutero(this.guia.idGuia)
   ruteros.then(rutero =>{
+    this.clientesArray = rutero;
+    this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
 
-this.clientesArray = rutero;
-this.coordinates = [];
-this.features = [];
-this.coordinates.push(this.lngLat);
-
-this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
-
-
-this.clientesArray.forEach(cliente =>{
-const coordinate = [cliente.longitud, cliente.latitud]
-
-if(cliente.longitud != 0 && cliente.latitud != 0){
-this.coordinates.push(coordinate);
-}
-const feature =    {
-title:  cliente.idCliente +' '+cliente.nombre,
-type: 'Feature',
-geometry: {
-type: 'Point',
-coordinates: [cliente.longitud, cliente.latitud]
-},
-properties: {
-title:  cliente.idCliente +' '+cliente.nombre,
-icon:   'music',
-client: cliente,
-color: null,
-}
-}
-this.features.push(feature)
-
-})
-this.createmapa();
-
-
-
-this.alertasService.loadingDissmiss();
-
+     this.features = []
+     
+    this.cargarMarcagores();
+  
+    this.elementosAgrupados = this.paginarArreglo( rutero, 24);
+   
+    this.alertasService.loadingDissmiss();
+    this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
 
   }), error =>{
     this.alertasService.loadingDissmiss();

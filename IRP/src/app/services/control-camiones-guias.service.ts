@@ -159,6 +159,12 @@ limpiarDatos(){
   this.idGuiasArray = [];
   this.contadorPost = 0;
 
+  this.guiasService.limpiarDatos();
+  this.ruteroService.limpiarDatos();
+  this.actualizarFacturasService.limpiarDatos();
+  this.datatableService.limpiarDatos()
+  this.planificacionEntregasService.limpiarDatos();
+
 
 }
 
@@ -719,11 +725,6 @@ postFacturas.push(actualizarFactura)
 
                 if(this.complete == this.listaGuias.length){
                   this.guiasPost();
-                  this.guiasService.limpiarDatos();
-                  this.ruteroService.limpiarDatos();
-                  this.actualizarFacturasService.limpiarDatos();
-                  this.datatableService.limpiarDatos()
-                  this.planificacionEntregasService.limpiarDatos();
                   this.limpiarDatos();
                   this.alertasService.loadingDissmiss();
                 
@@ -745,11 +746,6 @@ postFacturas.push(actualizarFactura)
 
                 if(this.complete == this.listaGuias.length){
                   this.guiasPost();
-                  this.guiasService.limpiarDatos();
-                  this.ruteroService.limpiarDatos();
-                  this.actualizarFacturasService.limpiarDatos();
-                  this.datatableService.limpiarDatos()
-                  this.planificacionEntregasService.limpiarDatos();
                   this.limpiarDatos();
                   this.alertasService.loadingDissmiss();
                 

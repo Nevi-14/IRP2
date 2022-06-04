@@ -40,7 +40,7 @@ export class MiniMapaComponent implements AfterViewInit {
         const width = 60;
         const height = 60;
         el.className = 'marker';
-        el.style.backgroundImage = `url(assets/icons/shipped.svg)`;
+        el.style.backgroundImage =  this.imagen !=null && this.imagen !=undefined ? this.imagen : `url(assets/icons/shipped.svg)`;
         el.style.width = `${width}px`;
         el.style.height = `${height}px`;
         el.style.backgroundSize = '100%';
