@@ -156,7 +156,8 @@
               <p> {{guia.camion.chofer}}</p>
               <p>Placa : {{guia.camion.idCamion}}</p>
               <p>Consecutivo : {{guia.idGuia}}</p>
-              <p>Total Facturas : <ion-badge  color="dark" mode="ios">{{guia.totalFacturas}}</ion-badge></p>
+              <p>Total Clientes : <ion-badge  color="warning" mode="ios">{{guia.ordenEntregaCliente.length}}</ion-badge></p>
+              <p>Total Facturas : <ion-badge  color="warning" mode="ios">{{guia.totalFacturas}}</ion-badge></p>
               <p>Total Bultos : {{guia.camion.volumen.toFixed(2) }}</p>
               <p>Capacidad Total : {{guia.camion.capacidad.toFixed(2) }}</p>
               <p>Capacidad Actual : {{guia.camion.peso.toFixed(2) }}</p>

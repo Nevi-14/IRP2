@@ -30,4 +30,5 @@ export const environment = {
   zonasURL:'Zonas',
   camionesURL:'Camiones',
   prdMode: false,
+  facturasUrl:'Facturas/?id=',
 };

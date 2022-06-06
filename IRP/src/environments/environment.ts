@@ -34,6 +34,7 @@ export const environment = {
   actualizaFacLinUrl:'ActualizaFacLin/',
   clientesGuias:'ClientesGuia/',
   prdMode: true,
+  facturasUrl:'Facturas/?id=',
 };
 
 

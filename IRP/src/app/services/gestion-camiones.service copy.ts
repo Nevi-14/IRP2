@@ -12,7 +12,7 @@ import { PlanificacionEntregas } from '../models/planificacionEntregas';
 export class GestionCamionesService {
   camiones: Camiones[]=[];
 
-  
+  GuiaEntrega
 
   constructor(
     private http: HttpClient,
@@ -71,10 +71,7 @@ this.alertasService.loadingDissmiss();
     return  this.getFacturasGuia(id).toPromise();
     }
 
-    syncCamionesToPromise(){
 
-      return this.getCamiones().toPromise();
-     }
  async syncPromiseCamiones(){
 
    return  this.getCamiones().toPromise();

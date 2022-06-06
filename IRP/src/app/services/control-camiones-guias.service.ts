@@ -197,11 +197,11 @@ let    consecutivo  = null,
 //=============================================================================
 
 
-generarGuia(camion:modeloCamiones, existente:boolean, facturas:facturas[]) {
+generarGuia(camion:any, existente:boolean, facturas:facturas[]) {
 
 
 
-let indexCamion = this.gestionCamionesService.camiones.findIndex(consultaCamion => consultaCamion.idCamion == camion.placa)
+let indexCamion = this.gestionCamionesService.camiones.findIndex(consultaCamion => consultaCamion.idCamion == camion.idCamion)
 let informacionCamion:Camiones = null;
 
 if(indexCamion>=0){
@@ -209,13 +209,13 @@ if(indexCamion>=0){
 informacionCamion = this.gestionCamionesService.camiones[indexCamion]
 
 }
-
+console.log('camion generar', camion)
 
 
   let capacidad = informacionCamion.capacidadPeso;
   let guia = {
 
-    idGuia: camion.numeroGuia != undefined || camion.numeroGuia != null ? camion.numeroGuia : this.generarIDGuia(),
+    idGuia: camion.numeroGuia != undefined && camion.numeroGuia != null && camion.numeroGuia != ''? camion.numeroGuia : this.generarIDGuia(),
     guiaExistente:existente ? existente : false,
     verificada: false,
     totalFacturas:0,
@@ -230,7 +230,7 @@ informacionCamion = this.gestionCamionesService.camiones[indexCamion]
   camion:{
     numeroGuia: null,
    chofer:camion.chofer,  
-   idCamion: camion.placa,
+   idCamion: camion.idCamion,
    capacidad: capacidad,
    pesoRestante: 0,
    peso: existente ? camion.peso : 0,
@@ -255,13 +255,22 @@ console.log('facturas', facturas)
 console.log('guia', guia)
 console.log('rutaZona', this.rutaZona)
 
-this.modalCtrl.dismiss(null,null,'control-facturas');
+//this.modalCtrl.dismiss(null,null,'control-facturas');
 this.listaGuias.push(guia)
 if(facturas && facturas.length > 0){
 
 facturas.forEach(factura =>{
+  if(factura.idGuia){
 
-  this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
+    this.borrarFactura(factura ).then(resp =>{
+  
+      this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
+    })
+  
+  }else{
+    this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
+  }
+ 
   
 });
   
@@ -269,12 +278,95 @@ facturas.forEach(factura =>{
 
 
 }
+generarGuiaEnRuta(camion:any,rutero:any[], facturas:facturas[]) {
 
 
- agregarFacturaGuia(factura:facturas,camion:modeloCamiones , numeroGuia){
+  console.log(camion,rutero,facturas, 'newwwjdmdm')
 
+  let indexCamion = this.gestionCamionesService.camiones.findIndex(consultaCamion => consultaCamion.idCamion == camion.idCamion)
+  let informacionCamion:Camiones = null;
+  
+  if(indexCamion>=0){
+   
+  informacionCamion = this.gestionCamionesService.camiones[indexCamion]
+  
+  }
+  console.log('camion generar', camion)
+  
+  
+    let capacidad = informacionCamion.capacidadPeso;
+    let guia = {
+  
+      idGuia: camion.numeroGuia != undefined && camion.numeroGuia != null && camion.numeroGuia != ''? camion.numeroGuia : this.generarIDGuia(),
+      guiaExistente:false,
+      verificada: false,
+      totalFacturas:0,
+      distancia: 0,
+      duracion:0,
+      zona: this.rutaZona.Ruta,
+      ruta: this.rutaZona.Zona,
+      fecha: this.fecha,
+      numClientes: 0,
+  
+     
+    camion:{
+      numeroGuia: null,
+     chofer:camion.chofer,  
+     idCamion: camion.placa,
+     capacidad: capacidad,
+     pesoRestante: 0,
+     peso:  camion.peso,
+     estado : 'INI',
+     HH : 'nd',
+     volumen:  camion.volumen,
+     frio:informacionCamion.frio,
+     seco:informacionCamion.seco
+    },
+      facturas:[],
+      ordenEntregaCliente:[]
+   
+  }
+  
+  camion.numeroGuia = guia.idGuia;
+  
+  
+  console.log('informacionCamion', informacionCamion)
+  console.log('camion', camion)
+
+  console.log('facturas', facturas)
+  console.log('guia', guia)
+  console.log('rutaZona', this.rutaZona)
+  
+  //this.modalCtrl.dismiss(null,null,'control-facturas');
+  this.listaGuias.push(guia)
+  if(facturas && facturas.length > 0){
+  
+  facturas.forEach(factura =>{
+    if(factura.idGuia){
+  
+      this.borrarFactura(factura ).then(resp =>{
+    
+        this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
+      })
+    
+    }else{
+      this.agregarFacturaGuia(factura,camion , camion.numeroGuia)
+    }
+   
+    
+  });
+    
+  }
+  
+  
+  }
+
+ agregarFacturaGuia(factura:facturas,camion:any , numeroGuia){
+console.log('numero guia factura', factura)
   this.camionLleno = false;
   let index = this.listaGuias.findIndex(guia => guia.idGuia === numeroGuia);
+
+  console.log('this.listaGuias[index]', this.listaGuias[index],'numeroGuia')
   let indexFactura = this.listaGuias[index].facturas.findIndex(fact => fact.factura.FACTURA == factura.factura.FACTURA);
   if(indexFactura >=0){
 
@@ -284,7 +376,9 @@ facturas.forEach(factura =>{
 
   }
 
-
+  this.borrarFactura(factura ).then(resp =>{
+  
+  })
 
       // PRE CONSULTA CAMION PESO
  let capacidad = this.listaGuias[index].camion.capacidad;
@@ -313,12 +407,8 @@ return
 
 
 console.log('factura', factura)
-if(factura.idGuia){
 
-  this.borrarFactura(factura );
-
-}
-
+  console.log( this.listaGuias[index].idGuia, ' this.listaGuias[index]')
 if(index >=0 && camion.numeroGuia ===  this.listaGuias[index].idGuia){
 
    this.listaGuias[index].camion.peso  += factura.factura.TOTAL_PESO_NETO
@@ -356,6 +446,8 @@ if(index >=0 && camion.numeroGuia ===  this.listaGuias[index].idGuia){
    this.listaGuias[index].totalFacturas = this.listaGuias[index].facturas.length
   
 }
+
+
 
 
 }
@@ -813,7 +905,7 @@ return modal.present();
 //=============================================================================
 
 
-borrarFactura(factura:facturas){
+async borrarFactura(factura:facturas){
 
 
   if(  factura.idGuia){
@@ -868,6 +960,7 @@ borrarFactura(factura:facturas){
 
  if( this.listaGuias[i].facturas.length == 0){
    this.listaGuias.splice(i, 1)
+   
    this.modalCtrl.dismiss();
  }
  
@@ -878,7 +971,7 @@ borrarFactura(factura:facturas){
   }
 
   }
-
+return factura
   }
 
 

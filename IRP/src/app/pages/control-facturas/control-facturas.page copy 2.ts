@@ -1,24 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { GuiaEntrega } from 'src/app/models/guiaEntrega';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { GuiasService } from 'src/app/services/guias.service';
 import { RuteroService } from 'src/app/services/rutero.service';
 interface modeloCamiones {
-  idGuia:string,
-  numeroGuia:string,
-  fecha:Date,
-  zona:string,
-  ruta:string,
-  idCamion:string,
-  numClientes:number,
-  peso:number,
-  estado:string,
-  HH:string,
-  volumen:number,
+  placa:string,
   chofer:string,
+  volumen:number,
+  peso:number,
+  numeroGuia:string,
   frio:string,
   seco:string
 
@@ -37,7 +29,6 @@ export class ControlFacturasPage implements OnInit {
     otrasGuias:false,
     incluirFacturas: false
   }
-  guiaEnRuta:GuiaEntrega;
   camiones :modeloCamiones[]= [];
   verdadero = true;
   falso = false;
@@ -55,31 +46,21 @@ export class ControlFacturasPage implements OnInit {
 
   ngOnInit() {
     if(this.controlCamionesGuiasService.listaGuias.length > 0){
-      this.guiaEnRuta = null;
       this.consultas.nuevaGuia = false;
       this.consultas.otrasGuias = false;
       this.consultas.guiaExistente = true;
       this.camiones = [];
       this.controlCamionesGuiasService.listaGuias.forEach(camion =>{
-       
         const  camionRuta = {
-          idGuia:camion.idGuia,
-          numeroGuia:camion.idGuia,
-          fecha:new Date(),
-          zona:camion.zona,
-          ruta:camion.ruta,
-          idCamion:camion.camion.idCamion,
-          numClientes:camion.numClientes,
-          peso:camion.camion.peso,
-          estado:camion.camion.estado,
-          HH:camion.camion.HH,
-          volumen:camion.camion.volumen,
+  
+          placa: camion.camion.idCamion,
           chofer:camion.camion.chofer,
+          volumen:camion.camion.volumen,
+          peso:camion.camion.peso,
+          numeroGuia:camion.idGuia,
           frio:camion.camion.frio,
-          seco:camion.camion.seco
+          seco:camion.camion.seco,
         }
-
-
         this.camiones.push(camionRuta)
         console.log(this.camiones, 'guiasExistentes')
   
@@ -126,13 +107,27 @@ export class ControlFacturasPage implements OnInit {
 
   retornarCamion(camion){
 
- if(this.consultas.incluirFacturas){
+    
+
+/**
+ * for(let i = 0; i <  this.controlCamionesGuiasService.listaGuias.length; i++){
+
+  if( this.controlCamionesGuiasService.listaGuias[i].idGuia != camion.placa){
+    this.controlCamionesGuiasService.listaGuias.splice(i,1);
+
+  }
+}
+ */
+
+
+    if(this.consultas.incluirFacturas){
       this.controlCamionesGuiasService.listaGuias = [];
       console.log(this.facturas)
 for (let i =0; i < this.facturas.length; i++)
 
 if(i === 1){
-
+  console.log( this.facturas[i], ' this.facturas')
+  
   this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false,this.facturas)
 }
 
@@ -146,9 +141,13 @@ return
       if( this.consultas.otrasGuias){
          // CARGAMOS RUTERO
 this.alertasService.presentaLoading('Consultando rutero');
-     this.ruteroService.syncRutero(camion.numeroGuia).then(rutero =>{
-      const ruteros =  rutero;
+        const ruteros =   this.ruteroService.syncRutero(camion.numeroGuia)
+        ruteros.then(rutero =>{
           this.alertasService.loadingDissmiss();
+        
+          console.log('ruterosss', rutero)
+          this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false, [this.factura])
+
           const guiaCamion = { 
             idGuia:camion.numeroGuia,
             fecha: camion.fecha,
@@ -157,51 +156,34 @@ this.alertasService.presentaLoading('Consultando rutero');
             idCamion: camion.idCamion,
             numClientes: camion.numClientes,
             peso: camion.peso,
-            estado: 'DEL',
+            estado:  camion.estado,
             HH: camion.HH,
             volumen: camion.volumen
            }
 
-        
-          this.guiasService.putGuias(guiaCamion).then(resp =>{
-            this.gestionCamionesService.syncGetFacturasGuia(camion.numeroGuia).then(resp =>{
-              const facturas:any[] = [];
-             console.log('retornar camion', camion)
-             console.log('guiaCamion', guiaCamion)
-             console.log('ruteros', ruteros)
-             console.log('facturas', resp)
-             facturas.push(this.factura)
-             for(let i =0; i < resp.length; i++){
-            
- facturas.push({idGuia: '', factura: resp[i]})
- if(i === resp.length -1){
-   this.controlCamionesGuiasService.generarGuiaEnRuta(guiaCamion,ruteros,facturas);
- }
-             }
- 
-      
-            })
-         
-           }), error =>{
-                
-                
-        
-           console.log(error)
-                 
-                }
-     
-
-      
-
     
-
+           this.gestionCamionesService.syncGetFacturasGuia(camion.numeroGuia).then(resp =>{
+            console.log('retornar camion', camion)
+            console.log('guiaCamion', guiaCamion)
+            console.log('ruteros', ruteros)
+            console.log('facturas', resp)
+           })
           
-          
-     // this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false, [this.factura])
+     
               // EFECTUAMOS EL PUT DE GUIA
 
      /**
-      *    
+      *         this.guiasService.putGuias(guiaCamion).then(resp =>{
+                  
+              this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false, [this.factura])
+
+             }), error =>{
+                  
+                  
+          
+             console.log(error)
+                   
+                  }
       */
           
 
@@ -231,10 +213,6 @@ this.alertasService.presentaLoading('Consultando rutero');
       
     }else if(this.consultas.guiaExistente){
       this.controlCamionesGuiasService.agregarFacturaGuia(this.factura,camion, camion.numeroGuia)
- 
-
-
-  
 
     }
 
@@ -271,25 +249,16 @@ this.alertasService.presentaLoading('Consultando rutero');
     this.controlCamionesGuiasService.listaGuias.forEach(camion =>{
 
       console.log(camion, ' camion guia existente')
- 
-
       const  camionRuta = {
-        idGuia:camion.idGuia,
-        numeroGuia:camion.idGuia,
-        fecha:new Date(),
-        zona:camion.zona,
-        ruta:camion.ruta,
-        idCamion:camion.camion.idCamion,
-        numClientes:camion.numClientes,
-        peso:camion.camion.peso,
-        estado:camion.camion.estado,
-        HH:camion.camion.HH,
-        volumen:camion.camion.volumen,
-        chofer:camion.camion.chofer,
-        frio:camion.camion.frio,
-        seco:camion.camion.seco
-      }
 
+        placa: camion.camion.idCamion,
+        chofer:camion.camion.chofer,
+        volumen:camion.camion.volumen,
+        peso:camion.camion.peso,
+        numeroGuia:camion.idGuia,
+        frio:camion.camion.frio,
+        seco:camion.camion.seco,
+      }
       this.camiones.push(camionRuta)
       console.log(this.camiones, 'guiasExistentes')
 
@@ -312,22 +281,15 @@ if(validate){
     console.log(resp,'nuevaGuia')
     resp.forEach(camion =>{
       const  camionRuta = {
-        idGuia:'',
-        numeroGuia:'',
-        fecha:new Date(),
-        zona:'',
-        ruta:'',
-        idCamion:camion.idCamion,
-        numClientes:0,
-        peso:camion.capacidadPeso,
-        estado:'INI',
-        HH:'INI',
-        volumen:camion.capacidadVolumen,
-        chofer:camion.chofer,
-        frio:camion.frio,
-        seco:camion.seco
-      }
 
+        placa: String(camion.idCamion),
+        chofer:camion.chofer,
+        volumen:camion.capacidadVolumen,
+        peso:camion.capacidadPeso,
+        numeroGuia:null,
+        frio:camion.frio,
+        seco:camion.seco,
+      }
       this.camiones.push(camionRuta)
       console.log(this.controlCamionesGuiasService.listaGuias, 'listaGuias')
 
@@ -348,37 +310,29 @@ if($event.detail.checked){
 
     resp.forEach(camion =>{
 
-      console.log('camioncamioncamion', camion)
 
-      const camiones =  this.gestionCamiones.camiones;
-          
-      for(let i =0; i < camiones.length; i++){
+      const datosCamion = this.gestionCamiones.camiones.findIndex(camion => camion.idCamion == camion.idCamion )
 
-        if(camiones[i].idCamion === camion.idCamion){
+if(datosCamion >=0){
+const  camionRuta = {
+
+  placa: camion.idCamion,
+  chofer:this.gestionCamiones.camiones[datosCamion].chofer,
+  volumen:camion.volumen,
+  peso:camion.peso,
+  numeroGuia:camion.idGuia,
+  frio:this.gestionCamiones.camiones[datosCamion].frio,
+  seco:this.gestionCamiones.camiones[datosCamion].seco,
+}
+
+
+if(camion.estado == 'INI'){
   
-          const  camionRuta = {
-            idGuia:camion.idGuia,
-            numeroGuia:camion.idGuia,
-            fecha:camion.fecha,
-            zona:camion.zona,
-            ruta:camion.ruta,
-            idCamion:camion.idCamion,
-            numClientes:camion.numClientes,
-            peso:camion.peso,
-            estado:camion.estado,
-            HH:camion.HH,
-            volumen:camion.volumen,
-            chofer:camiones[i].chofer,
-            frio:camiones[i].frio,
-            seco:camiones[i].seco
-          }
-          
-          this.camiones.push(camionRuta)
-        }
+  console.log(camion, ' camion otras guias')
+this.camiones.push(camionRuta)
+}
 
-      }
-
-
+}
   
     })
   
@@ -389,14 +343,6 @@ if($event.detail.checked){
 } else{
   this.camiones = [];
 }
-
-
-  }
-
-  generarGuiaExterna(camion){
-
-
-
 
 
   }

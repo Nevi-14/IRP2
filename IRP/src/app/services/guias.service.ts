@@ -64,7 +64,7 @@ export class GuiasService {
   private getEstado(estado ){
     const URL = this.getIRPURLEstado( environment.guiasURL, estado);
 
-    console.log(URL,'URL guias')
+    console.log(URL,'GUIAS INI')
     return this.http.get<GuiaEntrega[]>( URL );
   }
 
