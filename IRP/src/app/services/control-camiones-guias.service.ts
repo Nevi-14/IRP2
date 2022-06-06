@@ -312,7 +312,7 @@ generarGuiaEnRuta(camion:any,rutero:any[], facturas:facturas[]) {
     camion:{
       numeroGuia: null,
      chofer:camion.chofer,  
-     idCamion: camion.placa,
+     idCamion: camion.idCamion,
      capacidad: capacidad,
      pesoRestante: 0,
      peso:  camion.peso,
