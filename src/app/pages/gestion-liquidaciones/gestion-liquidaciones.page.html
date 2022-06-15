@@ -4,11 +4,13 @@
 
     <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
       <ion-item>
-        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Liquidacion Camiones <span *ngIf="idGuia">Guia {{idGuia}}</span></ion-title>
+        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Liquidacion Camiones <span *ngIf="guia">Guia {{guia.idGuia}}</span></ion-title>
 
  
 <ion-buttons slot="end" >
 
+
+  
   <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
     <ion-icon name="home-outline"></ion-icon>
       </ion-button>
@@ -60,8 +62,14 @@
           
           
               </ion-col>
-              <ion-col   size="8" > <ion-label >Detalle Producto</ion-label></ion-col>
+              <ion-col   size="8"  style="display: flex ;align-items: center;"> <ion-label >Detalle Producto</ion-label>
+                <ion-button style="position: absolute;
+                right: 0;"  (click)="liquidarGuia()" fill="clear" shape="round" color="dark"  >
+                  <ion-icon size="large" name="save-outline"></ion-icon>
+                    </ion-button>
+              </ion-col>
           
+
             </ion-row >
             
     </ion-col>
@@ -72,54 +80,70 @@
        
 
   <ion-grid *ngIf="datableService.dataTableArray.length > 0 "  style="height: 100%;">
-        <ion-row    *ngFor="let factura of datableService.dataTableArray[datableService.page] let i = index;let even = even" style="border-bottom: 1px solid black;">
+    <ng-template ngFor let-facturas [ngForOf]="datableService.dataTableArray"   let-i="index">
+
+
         
-        
-        
-          <ion-col size="2"  >
- <ion-label>{{factura.numFactura}}</ion-label>
- 
-         
-          </ion-col>
-          <ion-col   size="1" >
- <ion-badge color="warning" mode="ios">{{factura.tipoDocumento}}</ion-badge>
-            
-            
-          </ion-col>
-          <ion-col   size="1">
-            <ion-label >{{factura.idCliente}}</ion-label>
-      
-      
-          </ion-col>
-          <ion-col   size="8" > 
-  <ion-row>
-    <ion-col size="12">
-      <p>{{factura.descripcion}}</p>
-    </ion-col>
-    <ion-col size="3">
-      <ion-label>Articulo : {{factura.articulo}}</ion-label>
+          <ng-template ngFor let-factura [ngForOf]="facturas"
+          let-j="index"  >
+          <ion-row    >
+            <ion-col size="2"  >
+              <ion-label>{{factura[0].factura.numFactura}}</ion-label>
+              
+                      
+                       </ion-col>
+          
+                       <ion-col   size="1" >
+              <ion-badge color="warning" mode="ios">{{factura[0].factura.tipoDocumento}}</ion-badge>
+                         
+                         
+                       </ion-col>
+                       <ion-col   size="1">
+                         <ion-label >{{factura[0].factura.idCliente}}</ion-label>
+                   
+                   
+                       </ion-col>
+       
 
-      
-
-
-    </ion-col>
-    <ion-col size="3">
-      <ion-label>Cantidad Entregar : <ion-badge color="dark" mode="ios">{{factura.cantEntregar}}</ion-badge></ion-label>
-
-    </ion-col>
-    <ion-col size="3">
-      <ion-label>Cantidad Entregada :  <ion-badge color="dark" mode="ios">{{factura.cantEntregada}}</ion-badge> </ion-label>
-
-    </ion-col>
-    <ion-col size="3">
-      <ion-label>Cantidad Pendiente : <ion-badge color="dark" mode="ios">{{factura.cantEntregar - factura.cantEntregada}}</ion-badge></ion-label>
-
-    </ion-col>
-  </ion-row>
-          </ion-col>
-      
+       
+                         <ion-col   size="8" style="margin-bottom: 0.5rem;" > 
+                               <ng-template ngFor let-fact [ngForOf]="factura">
+                 <ion-row style="border-bottom: 1px solid black;" >
+                   <ion-col size="12">
+                     <p>{{fact.factura.descripcion}}</p>
+                   </ion-col>
+                   <ion-col size="3">
+                     <ion-label>Articulo : {{fact.factura.articulo}}</ion-label>
+               
+                     
+               
+               
+                   </ion-col>
+                   <ion-col size="3">
+                     <ion-label>Cantidad Entregar : <ion-badge color="dark" mode="ios">{{fact.factura.cantEntregar}}</ion-badge></ion-label>
+               
+                   </ion-col>
+                   <ion-col size="3">
+                     <ion-label>Cantidad Entregada :  <ion-badge color="dark" mode="ios">{{fact.factura.cantEntregar}}</ion-badge> </ion-label>
+               
+                   </ion-col>
+                   <ion-col size="3">
+                     <ion-label>Cantidad Pendiente : <ion-badge color="dark" mode="ios">{{fact.factura.cantEntregar - fact.factura.cantEntregada}}</ion-badge></ion-label>
+               
+                   </ion-col>
+                  </ion-row>
+                </ng-template>
+                </ion-col>
+       
+       
         </ion-row >
+        </ng-template>
         
+        
+
+      
+   
+            </ng-template>
   </ion-grid>
 
 
@@ -144,45 +168,3 @@
 
   
   </ion-content>
-  <ion-footer *ngIf="datableService.dataTableArray.length > 0 " >
-    <ion-grid >
-      <ion-row>
-     
-    <ion-col *ngIf="controlCamionesGuiasService.listaGuias.length > 0" size="4" >
-
-
-
-
-    </ion-col>
-
-
-    <ion-col  size="12" >
-
-      <ion-toolbar class="ion-text-center">
-  
-        <ion-fab-button color="dark" slot="start" (click)="datableService.prev(datableService.page)" size="small">
-          <ion-icon name="chevron-back-outline"></ion-icon>
-        </ion-fab-button>
-
-        <ion-title>
-          
-      
-<ion-label>
-  Pagina {{ datableService.page + 1}}  de  {{datableService.totalPages}} 
-</ion-label>
-    
-    </ion-title>
-    <ion-fab-button  color="dark"  size="small" slot="end" (click)="datableService.next(datableService.page)">
-      <ion-icon    name="chevron-forward-outline"></ion-icon>
-    </ion-fab-button>
- 
-      </ion-toolbar>
-
-    </ion-col>
-      </ion-row>
-    </ion-grid>
-
-
-  
-  </ion-footer>
-  

@@ -90,10 +90,10 @@ if(value){
     return await modal.present();
   }
 
-retornarModal(idGuia){
+retornarModal(guia){
 
  this.modalCtrl.dismiss({
-   idGuia:idGuia
+  guia:guia
  });
 }
   cerrarModal(){

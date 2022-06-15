@@ -426,13 +426,13 @@ async configuracionZonaRuta() {
 
   const { data } = await modal.onDidDismiss();
 
-    if(data !== undefined && data.idGuia != ''){
+    if(data !== undefined && data.guia.idGuia != ''){
       
-    
+    console.group(data.guia, 'fatahaj')
 
-       this.guia = data
+       this.guia = data.guia
 this.alertasService.presentaLoading('Cargando lista de clientes')
-    const ruteros =   this.ruteroService.syncRutero(data.idGuia)
+    const ruteros =   this.ruteroService.syncRutero(data.guia.idGuia)
           ruteros.then(rutero =>{
             this.clientesArray = rutero;
             this.clientesArray.sort((a, b) => a.orden_Visita-b.orden_Visita)
