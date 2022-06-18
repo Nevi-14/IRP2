@@ -761,10 +761,12 @@ this.alertasService.presentaLoading('Guardando Datos..')
       const actualizarFactura = {
         numFactura: facturas[i].factura.FACTURA,
         tipoDocumento:facturas[i].factura.TIPO_DOCUMENTO,
+        Fecha:facturas[i].factura.FECHA,
         despachado: 'S',
         rubro3:  guia.idGuia,
         U_LATITUD: facturas[i].factura.LATITUD,
-        U_LONGITUD: facturas[i].factura.LONGITUD
+        U_LONGITUD: facturas[i].factura.LONGITUD,
+        Fecha_Entrega: facturas[i].factura.FECHA_ENTREGA,
 
    }
 

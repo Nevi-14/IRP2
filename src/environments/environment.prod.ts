@@ -22,7 +22,7 @@ export const environment = {
   actualizaFacLinUrl:'ActualizaFacLin/',
   guiasURLEstadoParam:'?estado=',
   guiasURL:'Guias',
-  actualizaFacturasURL:'ActualizaFacturas',
+  actualizaFacturasURL:'ActFac',
   entregaParam:'&entrega=',
   rutaParam:'?ruta=',
   rutaZonaURL:'Ruta_Zona',

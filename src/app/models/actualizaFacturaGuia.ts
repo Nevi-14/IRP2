@@ -5,7 +5,9 @@ export class ActualizaFacturaGuia{
         public despachado: string,
         public rubro3: string,
         public U_LATITUD: number,
-        public U_LONGITUD: number
+        public U_LONGITUD: number,
+        public Fecha_Entrega: Date,
+        public  Fecha:Date
 
     ){}
 }

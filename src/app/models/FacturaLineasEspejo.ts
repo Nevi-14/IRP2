@@ -11,6 +11,6 @@ export class FacturaLineasEspejo {
     public tipoJusti:  string,
     public descripcion: string, // DESCRIPCION DEL ARTICULO
     public justificacion:  string, // DESCRIPCION DE LA JUSTIFICACION
-    public idCliente:  string
+    public idCliente:  string,
     ){}
 }
