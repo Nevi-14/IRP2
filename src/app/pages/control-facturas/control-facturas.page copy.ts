@@ -134,9 +134,19 @@ console.log(this.consultas)
       this.controlCamionesGuiasService.listaGuias = [];
       console.log(this.facturas)
       console.log('retonar cmaion',  this.facturas)
-      this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false,this.facturas)
-      this.cerrarModal()
-return
+for (let i =0; i < this.facturas.length; i++){
+
+ 
+  if(i === 1){
+
+    this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false,this.facturas)
+  }
+  
+  return
+
+}
+
+
 
 
     }
