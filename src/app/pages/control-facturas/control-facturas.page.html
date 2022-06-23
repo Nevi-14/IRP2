@@ -72,7 +72,7 @@
  
 <ion-card *ngFor="let camion of camiones | filtro: textoBuscar:'placa'" (click)="retornarCamion(camion)">
   <ion-item>
-    <ion-label>{{camion.chofer}} <ion-badge color="dark" mode="ios">Placa : {{camion.placa}}</ion-badge></ion-label>
+    <ion-label>{{camion.chofer}} <ion-badge color="dark" mode="ios">Placa : {{camion.idCamion}}</ion-badge></ion-label>
     <ion-icon slot="end"  size="large"  color="primary" *ngIf="camion.frio" name="snow-outline"></ion-icon>
     <ion-icon   slot="end"  size="large"   color="warning" *ngIf="camion.seco" name="sunny-outline"></ion-icon>
   </ion-item>

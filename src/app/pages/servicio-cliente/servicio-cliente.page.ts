@@ -107,7 +107,7 @@ gestionErrores(){
    this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
    
   }
-
+  
 
   cargarElementosAlMapa(array:Rutero[]){
     this.alertasService.presentaLoading('Generando mapa....')
