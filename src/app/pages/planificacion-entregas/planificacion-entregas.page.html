@@ -169,8 +169,12 @@
             </ion-label>
         
           </ion-card-content>
-          
+ 
+      
           <span style="position: absolute; top: -15px; right: 0; display: flex;justify-content: space-around;">
+            <ion-fab-button  (click)="time(guia)"   size="small" class="custom-button" color="primary"  >
+              <ion-icon   name="time-outline"></ion-icon>
+            </ion-fab-button>
             <ion-fab-button  (click)="verificarGuia(guia)" size="small" class="custom-button" color="primary"  >
               <ion-icon   name="settings-outline"></ion-icon>
             </ion-fab-button>

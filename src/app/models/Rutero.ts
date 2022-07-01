@@ -31,5 +31,7 @@ export class RuteroMH {
         public direccion:string,
         public bultosTotales:number,
         public orden_visita: number,
-        public asignado: boolean){}
+        public asignado: boolean,
+        public HoraInicio:Date,
+        public HoraFin:Date){}
 }

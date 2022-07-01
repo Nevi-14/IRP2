@@ -13,13 +13,47 @@ transform: translate(-50%, -50%);">
 <ion-item>
   <ion-label>Detalles de Ruta Total Clientes : {{guia.ordenEntregaCliente.length}} / Facturas: {{guia.facturas.length}}</ion-label>
 
-  <ion-label>Distancia : {{guia.distancia}} km  / Duracion : {{guia.duracion}} minutos</ion-label>
- 
+  <ion-label>Distancia : {{guia.distancia}} km  / Duracion : {{guia.duracion.toFixed(2)}} minutos</ion-label>
+
 </ion-item>
-  <ion-item *ngFor="let cliente of elementosAgrupados[page]" (click)="irMarcador([cliente.longitud,cliente.latitud])" detail>
-    <ion-badge slot="start" color="dark" mode="ios">{{cliente.orden_visita}}</ion-badge>
+
+
+<ion-row>
+  <ion-col size="4"> Cliente</ion-col>
+  <ion-col size="8">
+    <ion-row>
+      <ion-col size="3">Distancia  </ion-col>
+      <ion-col size="3">Duración  </ion-col>
+      <ion-col size="3">Hora Inicio</ion-col>
+      <ion-col size="3">Hora Fin</ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngFor="let cliente of elementosAgrupados[page]" (click)="irMarcador([cliente.longitud,cliente.latitud])">
+  <ion-col size="4" class="ion-text-left">
+<ion-row>
+  <ion-col size="2">
+    <ion-badge   color="dark" mode="ios">{{cliente.orden_visita}}</ion-badge>
+ 
+  </ion-col>
+  <ion-col size="10">
     <ion-label>{{cliente.cliente}} </ion-label>
-  </ion-item>
+  </ion-col>
+</ion-row>
+
+  </ion-col>
+<ion-col size="8">
+<ion-row>
+  <ion-col size="3"> {{cliente.distancia.toFixed(2)}} KM </ion-col>
+  <ion-col size="3">{{cliente.duracion.toFixed(2)}} Min </ion-col>
+  <ion-col size="3"> {{cliente.HoraInicio | date:'shortTime'}}</ion-col>
+  <ion-col size="3"> {{cliente.HoraFin | date:'shortTime'}}</ion-col>
+</ion-row>
+
+</ion-col>
+</ion-row>
+
 </ion-list>
 
 </div>

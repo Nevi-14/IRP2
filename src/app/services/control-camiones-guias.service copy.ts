@@ -629,9 +629,10 @@ ordenaMH(a: number, guia){
   let m: number;
   let o: number;
   let Fecha = this.formatoFecha(guia.fecha, '-');
+let HoraInicio = new Date(Fecha +' '+  guia.camion.HoraInicio+':00');
 
 console.log('hora fin ', guia.camion.HoraFin.substring(0,2))
-
+let HoraFin = new Date(Fecha  +' '+ guia.camion.HoraInicio.substring(0,2)+':20'+':00');
   this.getDistancia(a)
     .then( x =>console.log(x, 'final'))
     .then( x => {
@@ -660,15 +661,7 @@ console.log('hora fin ', guia.camion.HoraFin.substring(0,2))
         this.rutero.sort( ( a, b ) => a.orden_visita - b.orden_visita )
 
         for(let t =1; t < this.rutero.length; t++){
-
-          console.log('inicio',guia.camion.HoraInicio.substring(0,2))
-          console.log('duration',this.rutero[t].duracion)
-          console.log('Fecha',Fecha)
-          console.log('mls',':00')
-          let HoraInicio = new Date(Fecha +' '+  guia.camion.HoraInicio.substring(0,2)+':'+ this.rutero[t].duracion.toFixed(0)+':00');
-
-          this.rutero[t].HoraInicio =  t === 1 ?  HoraInicio : this.retornarHora(this.rutero[t-1].HoraInicio, this.rutero[t].duracion)
-          let HoraFin =     this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion); // new Date(Fecha  +' '+ guia.camion.HoraInicio.substring(0,2)+':20'+':00');
+          this.rutero[t].HoraInicio =  t === 1 ? HoraInicio : this.retornarHora(this.rutero[t-1].HoraInicio, this.rutero[t].duracion)
           this.rutero[t].HoraFin = t === 1  ?  HoraFin  : this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion);
 
           if(t == this.rutero.length -1){

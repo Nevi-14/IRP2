@@ -108,7 +108,49 @@ this.datableService.dataTableArray.forEach(cliente =>{
 
 
 
+ async time(guia) {
 
+  console.log('guia', guia)
+  const alert = await this.alertCTrl.create({
+    cssClass: 'my-custom-class',
+    header: 'Horario Ruta Camion',
+    mode:'ios',
+    inputs: [
+      {
+        name: 'HoraInicio',
+        type: 'time',
+        placeholder: 'Hora Inicio',
+        value: guia.camion.HoraInicio
+      },
+      {
+        name: 'HoraFin',
+        type: 'time',
+        placeholder: 'Hora Fin',
+        value: guia.camion.HoraFin
+      },
+      
+    ],
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          console.log('Confirm Cancel');
+        }
+      }, {
+        text: 'Ok',
+        handler: (data) => {
+          guia.camion.HoraInicio = data.HoraInicio;
+          guia.camion.HoraFin = data.HoraFin;
+          console.log('data',data, guia);
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+}
  
 
 
@@ -416,6 +458,12 @@ async borrarGuia(idGuia){
 
 
 verificarGuia(guia){
+
+  if(guia.camion.HoraInicio == null || guia.camion.HoraInicio == undefined || guia.camion.HoraFin == null || guia.camion.HoraFin == undefined){
+this.alertasService.message('IRP', 'Es necesario especificar la hora de inicio y fin de nuestra guia!.')
+
+    return
+  }
 
 this.controlCamionesGuiasService.llenarRutero(guia)
 
