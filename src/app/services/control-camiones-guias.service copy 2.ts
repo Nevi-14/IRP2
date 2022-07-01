@@ -593,8 +593,9 @@ formatoFecha(date:Date, format:string){
 
 }
 
-retornarHora(fecha:Date, duracion, add, guia,end? ){
+retornarHora(fecha:Date, duracion, add, end ){
 
+  console.log(fecha, 'fechaa' , this.formatoFecha(fecha, '-') , 'jdjd', new Date( this.formatoFecha(fecha, '-')))
 let date = this.formatoFecha(fecha, '-');
 let hours = fecha.getHours();
 let minutes = fecha.getMinutes();
@@ -615,17 +616,14 @@ if(increaseTime > 1){
   let newHours = hours+Number(increaseTime.toFixed(0))
   hours = newHours
   minutes = reminder
+if(newHours >= end){
 
- if(end != undefined || end !=null){
-  if(newHours >= end){
-    guia.verificada = false;
-      this.alertasService.loadingDissmiss();
-      this.alertasService.message('IRP', 'Sobrepasa el tiempo del recorrido permitido.')
-      throw new Error("Sobrepasa el tiempo del recorrido permitido");
-  }
- }
+  this.alertasService.message('IRP', 'SOBREPASA EL TIEMPO EN')
+  return
+}
+}
 
- }
+
 return  new Date(date +' '+ String(hours)+':'+String(minutes.toFixed(0))+':00');
 
   
@@ -636,7 +634,8 @@ ordenaMH(a: number, guia){
   let m: number;
   let o: number;
   let Fecha = this.formatoFecha(guia.fecha, '-');
-  let closeTime = Number( guia.camion.HoraFin.substring(0,2))
+  let closeTime = Number(guia.camion.HoraFin.substring(0,2));
+console.log('hora fin ', guia.camion.HoraFin.substring(0,2))
 
   this.getDistancia(a)
     .then( x =>console.log(x, 'final'))
@@ -663,9 +662,9 @@ ordenaMH(a: number, guia){
           console.log('mls',':00')
           let HoraInicio = new Date(Fecha +' '+  guia.camion.HoraInicio.substring(0,2)+':'+ this.rutero[t].duracion.toFixed(0)+':00');
 
-          this.rutero[t].HoraInicio =  t === 1 ?  HoraInicio : this.retornarHora(this.rutero[t-1].HoraInicio, this.rutero[t].duracion, true,guia,closeTime)
-          let HoraFin =     this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion, false,guia); // new Date(Fecha  +' '+ guia.
-          this.rutero[t].HoraFin = t === 1  ?  HoraFin  : this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion , true,guia,closeTime);
+          this.rutero[t].HoraInicio =  t === 1 ?  HoraInicio : this.retornarHora(this.rutero[t-1].HoraInicio, this.rutero[t].duracion, true,closeTime)
+          let HoraFin =     this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion, false,closeTime); // new Date(Fecha  +' '+ guia.camion.HoraInicio.substring(0,2)+':20'+':00');
+          this.rutero[t].HoraFin = t === 1  ?  HoraFin  : this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion , true,closeTime);
 
           if(t == this.rutero.length -1){
             console.log('ready to export')
@@ -673,7 +672,7 @@ ordenaMH(a: number, guia){
           }
 
         }
- 
+     //   this.alertasService.loadingDissmiss();  
      
 
       //  this.alertasService.loadingDissmiss();  
