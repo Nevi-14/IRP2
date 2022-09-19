@@ -1,136 +1,136 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
-import { ClientesService } from 'src/app/services/clientes.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { NgZone } from '@angular/core';
-import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
-import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
-interface Modulos {
-  imagen: string,
-  titulo: string,
-  descripcion: string,
-  ruta: string,
-}
+import { MenuController, Platform } from '@ionic/angular';
+import { AppSettingsService } from 'src/app/services/app_settings.service';
+
+import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'inicio.page.html',
-  styleUrls: ['inicio.page.scss'],
+  selector: 'app-inicio',
+  templateUrl: './inicio.page.html',
+  styleUrls: ['./inicio.page.scss'],
 })
 export class InicioPage implements OnInit {
-  modulosArray:Modulos[]=[];
-  textoBuscar = '';
-
-
-  constructor(public _router: Router, public rutas: RutasService, public clientes:ClientesService, public zonas: ZonasService, public clienteEspejo: ClienteEspejoService,  private ngZone:NgZone, public planificacionRutasService: PlanificacionRutasService, public servicioClienteService: ServicioClienteService) {}
-
-
-  redirect(to) {
-    // call with ngZone, so that ngOnOnit of component is called
-    this.ngZone.run(()=>this._router.navigate([to]));
-  }
-    
-  logOut(){
-
-    this.redirect('log-in')
-  }
-  home(){
-  
-  this.redirect('inicio')
-  }
-  ngOnInit(){  
-    console.log('0s') 
-
-    this.modulosArray.push(
-      {
-        imagen: '../assets/home/maintenance.png',
-        titulo: 'Configuracion de Rutas',
-        descripcion: 'Permite gestionar la relación de Rutas y Zonas',
-        ruta: '/mantenimiento-rutas',
-      },
-   
-      {
-        imagen: '../assets/home/delivery.svg',
-        titulo: 'Gestion de camiones',
-        descripcion: 'Permite gestionar los camiones en ruta',
-        ruta: '/gestion-camiones',
-      },
-      {
-        imagen: '../assets/home/route.png',
-        titulo: 'Planificacion de Rutas',
-        descripcion: 'Permite definir la configuracion de Rutas - Clientes',
-        ruta: '/planificacion-rutas',
-      },
-      {
-        imagen: '../assets/png/receipt.png',
-        titulo: 'Planificacion de Entregas',
-        descripcion: 'Permite gestionar la factura por cliente de cada ruta',
-        ruta: '/planificacion-entregas',
-      },
-      {
-        imagen: '../assets/png/customer-service.svg',
-        titulo: 'Atencion al cliente',
-        descripcion: 'Permite gestionar las entregas en ruta',
-        ruta: '/servicio-cliente',
-      },
-      {
-        imagen: '../assets/png/return.svg',
-        titulo: 'Gestion Liquidaciones',
-        descripcion: 'Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.',
-        ruta: '/gestion-liquidaciones',
-      }
-    )
-    
-
-  }
-
-
-
-
-
-  onSearchChange(event){
-
-    // alert('h')
-     //console.log(event.detail.value);
-     this.textoBuscar = event.detail.value;
-   }
+  public appPages = [
+    {
+      image: '../assets/home/maintenance.png',
+      title: 'Configuracion de Rutas',
+      description: 'Permite gestionar la relación de Rutas y Zonas',
+      url: '/inicio/mantenimiento-rutas',
+    },
  
-
-   refirect(id, element){
-
-switch(id){
-     case 1: 
-
-     this.redirect(element.ruta);
-     
-     break;
-     case 2: 
-     this.redirect(element.ruta);
-     break;
-     case 3:
-      this.planificacionRutasService.marcadores = []; 
-     this.redirect(element.ruta);
-  
-     break;
-     case 4: 
-     this.redirect(element.ruta);
-     break;
+    {
+      image: '../assets/home/delivery.svg',
+      title: 'Gestion de camiones',
+      description: 'Permite gestionar los camiones en ruta',
+      url: '/inicio/gestion-camiones',
+    },
+    {
+      image: '../assets/home/route.png',
+      title: 'Planificacion de Rutas',
+      description: 'Permite definir la configuracion de Rutas - Clientes',
+      url: '/planificacion-rutas',
+    },
+    {
+      image: '../assets/png/receipt.png',
+      title: 'Planificacion de Entregas',
+      description: 'Permite gestionar la factura por cliente de cada ruta',
+      url: '/planificacion-entregas',
+    },
+    {
+      image: '../assets/png/customer-service.svg',
+      title: 'Atencion al cliente',
+      descripcion: 'Permite gestionar las entregas en ruta',
+      url: '/servicio-cliente',
+    },
+    {
+      image: '../assets/png/return.svg',
+      title: 'Liquidaciones',
+      description: 'Permite gestionar las liquidaciones de los camiones que han completado su ruta de entrega.',
+      url: '/inicio/gestion-liquidaciones',
+    }
    
-     case 5: 
-     this.redirect(element.ruta);
-     this.servicioClienteService.consultaGuias = []; 
-     break;
-     case 6: 
-     this.redirect(element.ruta);
+  ];
+
+  titulo = 'Inicio'
+  class:boolean =false;
+  width:number;
+  url = '';
+  showMenu = false;
+  large:boolean;
+  small:boolean;
+  image = '../assets/islena.png';
+  constructor(
+    public router: Router,
+    public menuCtrl: MenuController,
+    public plt:Platform,
+    public usuariosService:UsuariosService,
+    public appSettingService: AppSettingsService
     
-     break;
-  default:
+    
+    
+    ) {}
 
+  ngOnInit() {
+
+     
+    //console.log( this.userService.usuarioActual.Foto)
+      this.width = this.plt.width();
+    this.toggleMenu()
+      }
+
+  // REMVOE MENU ON BIGGER SCREENS
+  toggleMenu(){
+   
+    if(this.width > 768){
+      this.large = true;
+      this.small = false;
+      //this.class = true;
+     // this.menuCtrl.toggle('myMenu');
   
+    }else{
+      this.class = false;
+      this.large = false;
+   //   this.small = true;
+       // this.menuCtrl.toggle('myMenu');
+
+     
+   
+  
+    }
+  
+    }
+
+    toggle(){
+      this.class = true;
+      this.menuCtrl.toggle('myMenu');
+
+    }
+  // CHECKS SCREEN RESIZE LIVE
+
+  @HostListener('window:resize',['$event'])
+
+  private onResize(event){
+
+    this.width = event.target.innerWidth;
+
+    this.toggleMenu();
+
+  }
+
+setTitle(data){
+
+
+if(data.url == '/inicio/planificacion-rutas'){
+alert('jjdd')
+  return;
 }
+this.titulo = data.title;
+this.router.navigateByUrl(data.url)
 
-   }
-
+}
+cerrarSesion(){
+  this.usuariosService.usuario = null;
+  this.router.navigate(['/log-in']);
+}
 }

@@ -1,54 +1,32 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="dark">
-
-    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
-      <ion-item>
-        <ion-title style="color: white;">Distribuidora ISLEÑA</ion-title>
-
-<ion-buttons slot="end" >
-  <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
-    <ion-icon name="home-outline"></ion-icon>
-      </ion-button>
-  <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
-    <ion-label slot="start">Salir</ion-label>
-    <ion-icon name="close" slot="end"> </ion-icon>
-  </ion-button>
-</ion-buttons>
-      </ion-item>
-    
-    </ion-list>
-  </ion-toolbar>
 
 
-</ion-header>
-
-<ion-toolbar class="ion-padding">
+<ion-content class="ion-padding">
 
   <ion-grid >
     <ion-row>
-      <ion-col size="6">
+<ion-col size="6" style="display: flex;justify-content:center;align-items:center;">
 
-        <ion-card-header>
-          <ion-card-title class="ion-text-left" style="font-size: 1.2rem;letter-spacing: 0.5rem; text-transform: uppercase;">Gestion de camiones</ion-card-title>
-        </ion-card-header>
-   
-       </ion-col>
-<ion-col size="6">
-  <ion-searchbar mode="ios" placeholder="Buscar camión" inputmode="text"  debounce="250" ></ion-searchbar>
+       
+  <img height="250" src="../assets/home/delivery.svg">
 </ion-col>
-    </ion-row>
-
-  </ion-grid>
- 
-</ion-toolbar>
-
-<ion-content>
-
-  <ion-grid >
-    <ion-row>
-      <ion-col   size="12" size-md="3" *ngFor="let camion of camionesService.camiones" style="position:relative">
-
-        <ion-card >
+          
+      <ion-col size="6">
+              
+        <ion-item-divider >
+          <ion-label slot="start" class="ion-text-uppercase">
+            <ion-badge color="dark"> <h3>Camiones</h3></ion-badge>
+            
+          </ion-label>
+              <!-- Default Searchbar -->
+      <ion-searchbar mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+        </ion-item-divider>
+    
+    
+     
+          <ion-row>
+            <ion-col size="12" class="fixed-content">
+          
+        <ion-card  *ngFor="let camion of camionesService.camiones | filtro : textoBuscarRuta:'chofer'" >
           <ion-item>
             <ion-label>{{camion.chofer}} <ion-badge color="dark" mode="ios">Placa : {{camion.idCamion}}</ion-badge></ion-label>
             <ion-icon slot="end"  size="large"  color="primary" *ngIf="camion.frio" name="snow-outline"></ion-icon>
@@ -64,12 +42,21 @@
           </ion-card-content>
         </ion-card>
 
-
-
+            </ion-col>
     
+            
+          </ion-row>
+    
+    
+    
+    
+    
+    
+      </ion-col>
 
-    </ion-col>
     </ion-row>
   </ion-grid>
 
-</ion-content>
+
+  </ion-content>
+  

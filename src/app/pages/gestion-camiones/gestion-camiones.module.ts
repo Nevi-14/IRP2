@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { GestionCamionesPageRoutingModule } from './gestion-camiones-routing.module';
 
 import { GestionCamionesPage } from './gestion-camiones.page';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { GestionCamionesPage } from './gestion-camiones.page';
     FormsModule,
     IonicModule,
     GestionCamionesPageRoutingModule,
+    PipesModule
       
   ],
   declarations: [GestionCamionesPage ]

@@ -43,10 +43,6 @@ const routes: Routes = [
     redirectTo: 'mapas'
   },
   {
-    path: 'mantenimiento-rutas',
-    loadChildren: () => import('./pages/mantenimiento-rutas/mantenimiento-rutas.module').then( m => m.MantenimientoRutasPageModule)
-  },
-  {
     path: 'cliente-factura',
     loadChildren: () => import('./pages/cliente-factura/cliente-factura.module').then( m => m.ClienteFacturaPageModule)
   },
@@ -135,10 +131,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/control-facturas/control-facturas.module').then( m => m.ControlFacturasPageModule)
   },
 
-  {
-    path: 'gestion-liquidaciones',
-    loadChildren: () => import('./pages/gestion-liquidaciones/gestion-liquidaciones.module').then( m => m.GestionLiquidacionesPageModule)
-  },
 
 
 

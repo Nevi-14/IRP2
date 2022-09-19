@@ -5,10 +5,10 @@ import { RuteroService } from 'src/app/services/rutero.service';
 import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
-import { GestionCamionesService } from '../../services/gestion-camiones.service copy';
 import { ActualizaFacLinService } from '../../services/actualizaFacLin';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { GuiasService } from 'src/app/services/guias.service';
+import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 
 @Component({
   selector: 'app-gestion-liquidaciones',

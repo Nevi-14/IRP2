@@ -593,7 +593,7 @@ formatoFecha(date:Date, format:string){
 
 }
 
-retornarHora(fecha:Date, duracion, add, guia,end? ){
+async retornarHora(fecha:Date, duracion, add, guia,end? ){
 
 let date = this.formatoFecha(fecha, '-');
 let hours = fecha.getHours();
@@ -655,29 +655,11 @@ ordenaMH(a: number, guia){
 
         this.rutero.sort( ( a, b ) => a.orden_visita - b.orden_visita )
 
-        for(let t =1; t < this.rutero.length; t++){
-
-          console.log('inicio',guia.camion.HoraInicio.substring(0,2))
-          console.log('duration',this.rutero[t].duracion)
-          console.log('Fecha',Fecha)
-          console.log('mls',':00')
-          let HoraInicio = new Date(Fecha +' '+  guia.camion.HoraInicio.substring(0,2)+':'+ this.rutero[t].duracion.toFixed(0)+':00');
-
-          this.rutero[t].HoraInicio =  t === 1 ?  HoraInicio : this.retornarHora(this.rutero[t-1].HoraInicio, this.rutero[t].duracion, true,guia,closeTime)
-          let HoraFin =     this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion, false,guia); // new Date(Fecha  +' '+ guia.
-          this.rutero[t].HoraFin = t === 1  ?  HoraFin  : this.retornarHora(this.rutero[t].HoraInicio,this.rutero[t].duracion , true,guia,closeTime);
-
-          if(t == this.rutero.length -1){
-            console.log('ready to export')
-            this.exportarRuteros()
-          }
-
-        }
- 
+         this.agregarTiempo(guia);
      
 
       //  this.alertasService.loadingDissmiss();  
-        return console.log('finished', this.rutero)
+        
       }
     },error =>{
       this.alertasService.loadingDissmiss();
@@ -687,33 +669,202 @@ ordenaMH(a: number, guia){
     
 }
 
-exportarRuteros(){
+borrarGuiaF(guia:GuiaEntregaArray, factura){
+    
+  let guiaFacturas = guia.facturas;
+  let guiaCamion = guia.camion;
+  let guiaClientes = guia.ordenEntregaCliente;
+  let numFactura = factura.factura.FACTURA;
+  let indexOrdenEntrega  = guiaClientes.findIndex(facturas=> facturas.id = factura.CLIENTE_ORIGEN);
+
+/**
+ *   console.log('guiaFacturas', guiaFacturas, 'camion', guiaCamion, 'clientes', guiaClientes, 'index', indexOrdenEntrega,'numeroFactura', numFactura)
+
+ */
+  for(let f = 0; f < guiaFacturas.length; f ++){
+    const totalFacturasCliente = guiaFacturas.filter((b) => { return b.factura.CLIENTE_ORIGEN ==guia.facturas[f].factura.CLIENTE_ORIGEN});
+    guia.facturas.splice(f, 1);
+if(totalFacturasCliente.length == 1){
+    guia.numClientes  -= 1;
+}
+  }
+/**
+ *   for(let f = 0; f < guiaFacturas.length; f ++){
+
+    if(guiaFacturas[f].factura.FACTURA == factura.FACTURA){
+            
+      let  conteoFacturasCliente = guiaFacturas.filter(clienteFactura =>clienteFactura.factura.FACTURA ==  factura.factura.FACTURA )
+
+      guia.verificada = false;
+      guia.distancia = 0;
+      guia.duracion = 0;
+      guia.totalFacturas = guiaFacturas.length
+      guiaCamion.peso -= guiaFacturas[f].factura.TOTAL_PESO_NETO
+      guiaCamion.pesoRestante =     guiaCamion.peso - guiaFacturas[f].factura.TOTAL_PESO
+      guiaCamion.volumen -= Number(guiaFacturas[f].factura.RUBRO1)
+      guiaFacturas[f].idGuia = ''
+      guiaFacturas[f].factura.TIPO_DOCUMENTO = 'F';
+      guiaFacturas.splice(f, 1)
+  
+
+      if(conteoFacturasCliente.length == 0){
+
+        if(indexOrdenEntrega>=0){
+          guiaClientes.splice(indexOrdenEntrega,1)
+          guia.numClientes = guiaClientes.length
+
+           }
+
+      }
+
+      guia.totalFacturas = guiaFacturas.length
+
+    }
+    
+    
+        
+        }
+ */
+}
+
+agregarTiempo(guia:GuiaEntregaArray){
+
+  let date = guia.fecha;
+  let start =  guia.camion.HoraInicio.substring(0,2);
+  let end =  guia.camion.HoraFin.substring(0,2);
+
+
+for(let t =1; t < this.rutero.length; t++){
+  let defaultStartTime = null;
+  let defaultEndTime = null;
+  if(t == 1){
+    defaultStartTime =   new Date(date +' '+  start+':'+ this.rutero[t].duracion.toFixed(0)+':00');
+    
+   defaultEndTime =  new Date(date +' '+ defaultStartTime.getHours()+':'+String(defaultStartTime.getMinutes()+20)+':00');
+  defaultEndTime.setMinutes(defaultStartTime.getMinutes()+20);
+  }else{
+    defaultStartTime = new Date(date +' '+  this.rutero[t-1].HoraFin.getHours().toFixed(0)+':00'  +':00');
+    defaultStartTime.setMinutes(this.rutero[t-1].HoraFin.getMinutes()+this.rutero[t].duracion);
+
+     defaultEndTime = new Date(date +' '+ String(defaultStartTime.getHours())+':00'+':00');
+     defaultEndTime.setMinutes(defaultStartTime.getMinutes()+20)
+  }
+
+  console.log('time', defaultStartTime, defaultEndTime)
+  if(defaultStartTime.getHours() >=  Number(end) || defaultEndTime.getHours() >=  Number(end)){
+    this.alertasService.loadingDissmiss();
+    //alert('finished')
+
+   let remaining = this.rutero.slice(t);
+   this.rutero.splice(t);
+    console.log('remaining', remaining)
+    this.gestionCamionesService.syncCamionesToPromise().then(resp =>{
+
+      let facturas = [];
+      remaining.forEach(cliente =>{
+     
+       let facturasCliente = guia.facturas.filter((b) => { return b.factura.CLIENTE_ORIGEN == cliente.id;});
+       let index2 = guia.ordenEntregaCliente.findIndex(c => c.id == cliente.id);
+       if(index2 >=0){
+     guia.ordenEntregaCliente.splice(index2, 1);
+     guia.numClientes -= 1;
+       };
+
+       console.log('cliente f', facturasCliente)
+       facturas.push(...facturasCliente);
+      
+      })
+      console.log('facturas',facturas)
+
+      
+     facturas.forEach((factura, index) =>{
+      let Ifactura =  guia.facturas.findIndex(f => f.factura.CLIENTE_ORIGEN == factura.factura.CLIENTE_ORIGEN);
+      if(Ifactura >=0){
+        guia.facturas.splice(Ifactura, 1)
+      }
+   //   factura.idGuia = '';
+      guia.totalFacturas = guia.facturas.length
+      guia.camion.peso -= factura.factura.TOTAL_PESO_NETO
+      guia.camion.pesoRestante =     guia.camion.peso - factura.factura.TOTAL_PESO
+      guia.camion.volumen -= Number(factura.factura.RUBRO1)
+      //factura.factura.idGuia = ''
+      factura.factura.TIPO_DOCUMENTO = 'F';
+
+    console.log('length', facturas.length, 'index', index, 'index-1', index-1)
+     if(index == facturas.length-1){
+      
+     this.exportarRuteros()
+    
+     this.generarGuia(resp[0],false, facturas);
+     }
+     
+     })
+   
+     
+     })
+    
+  return
+  }
+
+  console.log('start', defaultStartTime);
+  console.log('end', defaultEndTime);
+this.rutero[t].HoraInicio  = defaultStartTime;
+this.rutero[t].HoraFin = defaultEndTime;
+
+
+if(t == this.rutero.length -1){
+  console.log('ready to export')
+  console.log('guia', guia)
+  console.log('inicio',guia.camion.HoraInicio.substring(0,2))
+  console.log('duration',this.rutero[t].duracion)
+  console.log('Fecha',guia.fecha)
+  console.log('mls',':00')
+   this.alertasService.loadingDissmiss();
+   console.log('rutero', this.rutero)
+ 
+ this.exportarRuteros();
+}
+
+ 
+
+ 
+
+  }
+
+}
+
+async exportarRuteros(){
    let distancia = 0;
    let duracion = 0;
-  console.log('exporting')
+  console.log('exporting', this.rutero)
   for(let i =0; i <  this.rutero.length; i++){
 
     distancia += this.rutero[i].distancia
     duracion += this.rutero[i].duracion
     if(i ==  this.rutero.length -1){
-      this.alertasService.loadingDissmiss();
-      console.log(this.rutero[i] ,'this.rutero[i].idGuia 1')
+    
+
       let index = this.listaGuias.findIndex(guia => guia.idGuia ==this.rutero[i].idGuia )
-      console.log(this.rutero[i].idGuia ,'this.rutero[i].idGuia 2')
+   
 
       
 if(index >=0){
-  console.log(this.rutero[i].idGuia ,'this.rutero[i].idGuia 3')
+
   this.listaGuias[index].ordenEntregaCliente = [];
   this.listaGuias[index].verificada = true;
   this.listaGuias[index].distancia = distancia;
   this.listaGuias[index].duracion = duracion;
   this.listaGuias[index].ordenEntregaCliente  = this.rutero.slice(1);
   let guia = this.listaGuias[index]
-  console.log('trueee','sshshs')
+
+ 
 }
    
 
+    }
+
+    if(i == this.rutero.length-1 ){
+      return this.rutero;
     }
   }
 
@@ -1014,7 +1165,9 @@ return modal.present();
 // OPCIONES DE FACTURAS
 //=============================================================================
 
-
+borrarFacturaGuia(){
+  
+}
 async borrarFactura(factura:facturas){
 
 
@@ -1034,7 +1187,7 @@ async borrarFactura(factura:facturas){
 
     for(let f = 0; f < guiaFacturas.length; f ++){
  
-      if(guiaFacturas[f].factura.FACTURA == factura.factura.FACTURA){
+      if(guiaFacturas[f].factura.FACTURA == factura.factura.FACTURA && guiaFacturas[f].factura.CLIENTE_ORIGEN ==  factura.factura.CLIENTE_ORIGEN){
               
         let  conteoFacturasCliente = guiaFacturas.filter(clienteFactura =>clienteFactura.factura.FACTURA ==  factura.factura.FACTURA )
 
@@ -1084,6 +1237,72 @@ async borrarFactura(factura:facturas){
 return factura
   }
 
+
+async borrarFactura2(factura:facturas){
+
+
+  if(  factura.idGuia){
+
+    let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == factura.idGuia);
+
+
+  if(i >=0){
+
+    let guia = this.listaGuias[i]
+    let guiaCamion  = this.listaGuias[i].camion
+    let guiaFacturas  = this.listaGuias[i].facturas
+    let guiaOrdenEntrega  = this.listaGuias[i].ordenEntregaCliente
+
+    let indexOrdenEntrega  = guiaOrdenEntrega.findIndex(facturas=> facturas.id = factura.factura.CLIENTE_ORIGEN);
+
+    for(let f = 0; f < guiaFacturas.length; f ++){
+ 
+      if(guiaFacturas[f].factura.FACTURA == factura.factura.FACTURA){
+              
+        let  conteoFacturasCliente = guiaFacturas.filter(clienteFactura =>clienteFactura.factura.FACTURA ==  factura.factura.FACTURA )
+
+        guia.totalFacturas = guiaFacturas.length
+        guiaCamion.peso -= guiaFacturas[f].factura.TOTAL_PESO_NETO
+        guiaCamion.pesoRestante =     guiaCamion.peso - guiaFacturas[f].factura.TOTAL_PESO
+        guiaCamion.volumen -= Number(guiaFacturas[f].factura.RUBRO1)
+        guiaFacturas[f].idGuia = ''
+        guiaFacturas[f].factura.TIPO_DOCUMENTO = 'F';
+        guiaFacturas.splice(f, 1)
+    
+
+        if(conteoFacturasCliente.length == 0){
+  
+          if(indexOrdenEntrega>=0){
+            guiaOrdenEntrega.splice(indexOrdenEntrega,1)
+            guia.numClientes = guiaOrdenEntrega.length
+  
+             }
+  
+        }
+  
+        this.listaGuias[i].totalFacturas = guiaFacturas.length
+
+      }
+      
+      
+          
+          }
+
+ if( this.listaGuias[i].facturas.length == 0){
+   this.listaGuias.splice(i, 1)
+   
+   this.modalCtrl.dismiss();
+ }
+ 
+
+ 
+
+  console.log(this.listaGuias, 'listaaa')
+  }
+
+  }
+return factura
+  }
 
   
 

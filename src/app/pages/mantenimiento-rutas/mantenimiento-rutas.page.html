@@ -1,130 +1,102 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="dark">
-
-    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
-      <ion-item>
-        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Mantenimiento de Rutas</ion-title>
-
-
-<ion-buttons slot="end" >
-  <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
-    <ion-icon name="home-outline"></ion-icon>
-      </ion-button>
-
-  
-  <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
-    <ion-label slot="start">Salir</ion-label>
-    <ion-icon name="close" slot="end"> </ion-icon>
-  </ion-button>
-</ion-buttons>
-      </ion-item>
-    
-    </ion-list>
-  </ion-toolbar>
-
-
-</ion-header>
-
-
-
 
 
 <ion-content class="ion-padding">
 
-    <ion-grid  style="height: 100%;">
+  <ion-grid  style="height: 100%;">
      
 
 
-      <ion-row  style="height: 100%; display: flex;justify-content: center;align-items: center;">
+    <ion-row  style="height: 100%; display: flex;justify-content: center;align-items: center;">
 
-       
-        <ion-col size="6">
-                
-          <ion-item-divider >
-            <ion-label slot="start" class="ion-text-uppercase">
-              <ion-badge color="dark"> <h3>Rutas</h3></ion-badge>
+     
+      <ion-col size="6">
               
-            </ion-label>
-                <!-- Default Searchbar -->
-        <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-          </ion-item-divider>
-      
-      
-       
-            <ion-row>
-              <ion-col size="12" class="fixed-content">
-                <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)" >
-                  <ng-template ngFor let-item [ngForOf]="rutas.rutas  | filtro : textoBuscarRuta:'DESCRIPCION'" let-i="index" >
-                    <ion-item     >
-                      
-                      <ion-label  slot="start" >{{ item.DESCRIPCION }}</ion-label> 
-                      <ion-label slot="end"><ion-badge color="dark">{{item.RUTA}}</ion-badge> </ion-label>
-                   
-                        <ion-radio [value]="item"    slot="end" ></ion-radio>
-                   
-                     
-                    </ion-item>
-                  </ng-template>
-      
-                  
-                </ion-radio-group>
-           
-              </ion-col>
-      
-              
-            </ion-row>
-      
-      
-      
-      
-      
-      
-        </ion-col>
-      
-                  
-        <ion-col size="6">
-                          
-          <ion-item-divider >
-            <ion-label slot="start" class="ion-text-uppercase">
-              <ion-badge color="dark"> <h3>Zona</h3></ion-badge>
-              
-            </ion-label>
-            <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChangeZona($event)" debounce="250" ></ion-searchbar>
-          
-      
-          </ion-item-divider>
-      
-      
-      
-         
-            <ion-row>
-              <ion-col size="12" class="fixed-content">
-                
-                <ion-radio-group allow-empty-selection="true" (ionChange)="zonaRadioButtuon($event)" [(ngModel)]="zonaRuta.zonaID">
-        <ion-item class="ion-no-padding" *ngFor="let zona of zonas.zonas  | filtro : textoBuscarZona:'NOMBRE'">
-
-          <ion-label >{{zona.NOMBRE}}</ion-label>
-          <ion-label slot="end">
-            <ion-badge>
-              {{zona.ZONA}}
-            </ion-badge>
+        <ion-item-divider >
+          <ion-label slot="start" class="ion-text-uppercase">
+            <ion-badge color="dark"> <h3>Rutas</h3></ion-badge>
+            
           </ion-label>
-          <ion-radio  slot="end" color="success" [value]="zona.ZONA"></ion-radio>
+              <!-- Default Searchbar -->
+      <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+        </ion-item-divider>
+    
+    
+     
+          <ion-row>
+            <ion-col size="12" class="fixed-content">
+              <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)" >
+                <ng-template ngFor let-item [ngForOf]="rutas.rutas  | filtro : textoBuscarRuta:'DESCRIPCION'" let-i="index" >
+                  <ion-item     >
+                    
+                    <ion-label  slot="start" >{{ item.DESCRIPCION }}</ion-label> 
+                    <ion-label slot="end"><ion-badge color="dark">{{item.RUTA}}</ion-badge> </ion-label>
+                 
+                      <ion-radio [value]="item"    slot="end" ></ion-radio>
+                 
+                   
+                  </ion-item>
+                </ng-template>
+    
+                
+              </ion-radio-group>
          
-      
-      
-      
-        </ion-item>
-      </ion-radio-group>
-              </ion-col>
- 
-            </ion-row>
-      
-      
-         
-        </ion-col>
+            </ion-col>
+    
+            
+          </ion-row>
+    
+    
+    
+    
+    
+    
+      </ion-col>
+    
+                
+      <ion-col size="6">
+                        
+        <ion-item-divider >
+          <ion-label slot="start" class="ion-text-uppercase">
+            <ion-badge color="dark"> <h3>Zona</h3></ion-badge>
+            
+          </ion-label>
+          <ion-searchbar mode="ios" palceholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChangeZona($event)" debounce="250" ></ion-searchbar>
+        
+    
+        </ion-item-divider>
+    
+    
+    
+       
+          <ion-row>
+            <ion-col size="12" class="fixed-content">
+              
+              <ion-radio-group allow-empty-selection="true" (ionChange)="zonaRadioButtuon($event)" [(ngModel)]="zonaRuta.zonaID">
+      <ion-item class="ion-no-padding" *ngFor="let zona of zonas.zonas  | filtro : textoBuscarZona:'NOMBRE'">
 
-      </ion-row>
-    </ion-grid>
+        <ion-label >{{zona.NOMBRE}}</ion-label>
+        <ion-label slot="end">
+          <ion-badge>
+            {{zona.ZONA}}
+          </ion-badge>
+        </ion-label>
+        <ion-radio  slot="end" color="success" [value]="zona.ZONA"></ion-radio>
+       
+    
+    
+    
+      </ion-item>
+    </ion-radio-group>
+            </ion-col>
 
-</ion-content>
+          </ion-row>
+    
+    
+       
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+  </ion-content>
+  
