@@ -13,6 +13,12 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 export class InicioPage implements OnInit {
   public appPages = [
     {
+      image: '../assets/home/home.svg',
+      title: 'Inicio',
+      description: '',
+      url: '/inicio/detalle',
+    },
+    {
       image: '../assets/home/maintenance.png',
       title: 'Configuracion de Rutas',
       description: 'Permite gestionar la relación de Rutas y Zonas',
