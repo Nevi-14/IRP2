@@ -11,6 +11,7 @@ import { AlertasService } from 'src/app/services/alertas.service';
 import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 import { DatatableService } from 'src/app/services/datatable.service';
+import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 
 
 @Component({
@@ -196,43 +197,31 @@ async exportarGuias() {
 
 
   cargarDatos(){
+    let arreglo: PlanificacionEntregas[] = [];
 
-  this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp =>{
+    this.planificacionEntregasService.syncRutaFacturas( this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp =>{
 
-    if(resp.length == 0){
+      if(resp.length == 0){
+        this.alertasService.message('IRP', 'No hay datos que mostrar   fecha : ' + this.fecha);
+      }
+      console.log('Cant Facturas: ', resp.length)
+      arreglo = resp.sort((a, b) => +a.CLIENTE_ORIGEN - +b.CLIENTE_ORIGEN);
+      console.log('Arreglo: ', arreglo)
+      
 
-      this.alertasService.message('IRP', 'No hay datos que mostrar   fecha : ' + this.fecha);
-    }
-
-       for(let i =0; i  < resp.length; i++){
+      for(let i =0; i  < resp.length; i++){
         this.planificacionEntregasService.pesoTotal  += resp[i].TOTAL_PESO;
         this.planificacionEntregasService.totalBultos +=  Number(resp[i].RUBRO1);
-  
-
-
       }
   
-
-  this.datableService.totalElements = resp.length;
-  this.datableService.agruparElementos(resp, 'CLIENTE',[ {name:'idGuia',default:false},{name:'factura',default:true}]).then(array =>{
-
-  this.datableService.totalGroupElements = array.length;
-
-    
-  this.datableService.generarDataTable(array, 10).then(resp =>{
-       
-  this.datableService.totalPages = resp.length;
-
-  this.datableService.dataTableArray = resp;
-
-      
-       }) 
- 
-
-    })
-;
-
-
+      this.datableService.totalElements = resp.length;
+      this.datableService.agruparElementos(arreglo, 'CLIENTE',[ {name:'idGuia',default:false},{name:'factura',default:true}]).then(array =>{
+        this.datableService.totalGroupElements = array.length;
+        this.datableService.generarDataTable(array, array.length).then(resp =>{  
+          this.datableService.totalPages = resp.length;
+          this.datableService.dataTableArray = resp;
+        }) 
+      });
     });
 
  
@@ -290,17 +279,17 @@ configuracionZonaRuta(){
 //=============================================================================
   calendarioModal(){
 
-this.serviciosCompartidosService.calendarioModal('/').then(valor =>{
+    this.serviciosCompartidosService.calendarioModal('/').then(valor =>{
 
-    if(valor !== undefined){
-      this.limpiarDatos();
-      this.fecha = valor
+      if(valor !== undefined){
+        this.limpiarDatos();
+        this.fecha = valor
 
-      this.controlCamionesGuiasService.fecha = valor;
-     
-       this.cargarDatos();
+        this.controlCamionesGuiasService.fecha = valor;
+      
+        this.cargarDatos();
 
-     }
+      }
 
    
   })
@@ -350,75 +339,65 @@ async mapa(guia){
 
 
 
- async obtenerArreglo(){
+  async obtenerArreglo(){
 
-  const facturas = [];
+    const facturas = [];
 
-   this.datableService.dataTableArray.forEach(cliente =>{
+    this.datableService.dataTableArray.forEach(cliente =>{
 
-    for(let i =0; i < cliente.length; i++){
+      for(let i =0; i < cliente.length; i++){
 
-      for( let j = 0; j < cliente[i].length; j++){
-     let factura = cliente[i][j];
-
-           
-
-        facturas.push(factura);
-    
-
-      }
+        for( let j = 0; j < cliente[i].length; j++){
+          let factura = cliente[i][j];
+          facturas.push(factura);
+        }
   
-    };
-  
-  });
-  return facturas;
-}
- controlFacturas(factura){
-
-  if(factura.factura.LONGITUD == null  || factura.factura.LONGITUD == undefined  || factura.factura.LONGITUD == 0 || factura.factura.LATITUD == 0   )
-  {
-
-    this.alertasService.message('IRP','Facturas sin longitud ni latitud no pueden ser parte del proceso.')
-    return
+      };
+    });
+    return facturas;
   }
 
- this.obtenerArreglo().then(resp =>{
-console.log(resp, 'fatura array')
-  this.modalControlFacturas(factura, resp)
- })
+  controlFacturas(factura){
 
-}
+    if(factura.factura.LONGITUD == null  || factura.factura.LONGITUD == undefined  || factura.factura.LONGITUD == 0 || factura.factura.LATITUD == 0   )
+    {
+      this.alertasService.message('IRP','Facturas sin longitud ni latitud no pueden ser parte del proceso.')
+      return
+    }
+
+    this.obtenerArreglo().then(resp =>{
+      console.log(resp, 'fatura array')
+      this.modalControlFacturas(factura, resp)
+    })
+
+  }
 
 async modalControlFacturas(factura, facturas){
 
-const modal = await this.modalCtrl.create({
-  component: ControlFacturasPage,
-  cssClass: 'large-modal',
-  componentProps:{
-    factura:factura,
-    facturas: facturas
-  },
-  id:'control-facturas'
-});
-console.log(facturas,'facturasfacturasfacturas')
-modal.present();
+  const modal = await this.modalCtrl.create({
+    component: ControlFacturasPage,
+    cssClass: 'large-modal',
+    componentProps:{
+      factura:factura,
+      facturas: facturas
+    },
+    id:'control-facturas'
+  });
+  console.log(facturas,'facturasfacturasfacturas')
+  modal.present();
     
-      
-const { data } = await modal.onDidDismiss();
+  const { data } = await modal.onDidDismiss();
 
-if(data !== undefined){
+  if(data !== undefined){
 
-  console.log(data, 'data')
-//  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
-//=============================================================================
-// UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
-// LAS FACTURAS A UNA SOLA GUIA
-//=============================================================================
+    console.log(data, 'data')
+  //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
+  //=============================================================================
+  // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
+  // LAS FACTURAS A UNA SOLA GUIA
+  //=============================================================================
 
-
-
-    
-}
+  }
 }
 
 
@@ -460,12 +439,11 @@ async borrarGuia(idGuia){
 verificarGuia(guia){
 
   if(guia.camion.HoraInicio == null || guia.camion.HoraInicio == undefined || guia.camion.HoraFin == null || guia.camion.HoraFin == undefined){
-this.alertasService.message('IRP', 'Es necesario especificar la hora de inicio y fin de nuestra guia!.')
-
+    this.alertasService.message('IRP', 'Es necesario especificar la hora de inicio y fin de nuestra guia!.')
     return
   }
 
-this.controlCamionesGuiasService.llenarRutero(guia)
+  this.controlCamionesGuiasService.llenarRutero(guia)
 
 }
 }

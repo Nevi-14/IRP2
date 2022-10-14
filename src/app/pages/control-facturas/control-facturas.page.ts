@@ -42,6 +42,7 @@ export class ControlFacturasPage implements OnInit {
   verdadero = true;
   falso = false;
   textoBuscar = '';
+
   constructor(
     public alertCTrl: AlertController,
     public controlCamionesGuiasService: ControlCamionesGuiasService,
@@ -90,7 +91,7 @@ export class ControlFacturasPage implements OnInit {
       this.gestionCamiones.syncCamiones();
     }
  
-  this.nuevaGuia(this.consultas.nuevaGuia);
+    this.nuevaGuia(this.consultas.nuevaGuia);
   
     console.log(this.factura,'factura',this.facturas,'facturas')
   }
@@ -336,45 +337,39 @@ this.controlCamionesGuiasService.generarGuiaEnRuta(guiaCamion,ruteros,facturas);
     })
   }
   }
+
+
   nuevaGuia(validate){
+    if(validate){
 
+      this.consultas.guiaExistente = false;
+      this.consultas.otrasGuias = false;
+      this.camiones = [];
+      this.gestionCamiones.syncPromiseCamiones().then(resp =>{
+        console.log(resp,'nuevaGuia')
+        resp.forEach(camion =>{
+          const  camionRuta = {
+            idGuia:'',
+            numeroGuia:'',
+            fecha:new Date(),
+            zona:'',
+            ruta:'',
+            idCamion:camion.idCamion,
+            numClientes:0,
+            peso:camion.capacidadPeso,
+            estado:'INI',
+            HH:'INI',
+            volumen:camion.capacidadVolumen,
+            chofer:camion.chofer,
+            frio:camion.frio,
+            seco:camion.seco
+          }
 
-if(validate){
-
-  this.consultas.guiaExistente = false;
-  this.consultas.otrasGuias = false;
-
-  this.camiones = [];
-  this.gestionCamiones.syncPromiseCamiones().then(resp =>{
-
-
-    console.log(resp,'nuevaGuia')
-    resp.forEach(camion =>{
-      const  camionRuta = {
-        idGuia:'',
-        numeroGuia:'',
-        fecha:new Date(),
-        zona:'',
-        ruta:'',
-        idCamion:camion.idCamion,
-        numClientes:0,
-        peso:camion.capacidadPeso,
-        estado:'INI',
-        HH:'INI',
-        volumen:camion.capacidadVolumen,
-        chofer:camion.chofer,
-        frio:camion.frio,
-        seco:camion.seco
-      }
-
-      this.camiones.push(camionRuta)
-      console.log(this.controlCamionesGuiasService.listaGuias, 'listaGuias')
-
-  
-    })
-  })
-
-}
+          this.camiones.push(camionRuta)
+          console.log(this.controlCamionesGuiasService.listaGuias, 'listaGuias')
+        })
+      })
+    }
   }
 
   otrasGuias($event){
