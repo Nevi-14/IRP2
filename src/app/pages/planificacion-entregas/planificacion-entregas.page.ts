@@ -21,6 +21,7 @@ import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 })
 export class PlanificacionEntregasPage  {
 
+  textFactura: string = '';
 
   constructor(
 
@@ -71,7 +72,7 @@ rutaZona = null;
  ionViewWillEnter(){
   console.log('before', this.datableService.dataTableArray)
   this.limpiarDatos();
-  console.log('ksksks', this.datableService.dataTableArray)
+  console.log('after', this.datableService.dataTableArray)
 }
 
 ngOnDestroy(){
@@ -87,27 +88,17 @@ ngOnDestroy(){
 
  }
 
- clearDatableArray(){
+  clearDatableArray(){
+    this.datableService.dataTableArray.forEach(cliente =>{
+      for(let i =0; i < cliente.length; i++){
 
-this.datableService.dataTableArray.forEach(cliente =>{
-
-    for(let i =0; i < cliente.length; i++){
-
-      for( let j = 0; j < cliente[i].length; j++){
-
-     let factura = cliente[i][j];
-
-     factura.idGuia = '';
-
-      }
-  
-    };
-  
-  });
- }
-
-
-
+        for( let j = 0; j < cliente[i].length; j++){
+          let factura = cliente[i][j];
+          factura.idGuia = '';
+        }
+      };
+    });
+  }
 
  async time(guia) {
 
@@ -154,7 +145,6 @@ this.datableService.dataTableArray.forEach(cliente =>{
 }
  
 
-
 //=============================================================================
 // SINCRONIZA LAS RUTAS Y FACTURAS BASADO EN LA RUTA Y FECHA
 //=============================================================================
@@ -186,15 +176,7 @@ async exportarGuias() {
   });
 
   await alert.present();
-
-
-
-  
 }
-
-
-
-
 
   cargarDatos(){
     let arreglo: PlanificacionEntregas[] = [];
@@ -206,8 +188,6 @@ async exportarGuias() {
       }
       console.log('Cant Facturas: ', resp.length)
       arreglo = resp.sort((a, b) => +a.CLIENTE_ORIGEN - +b.CLIENTE_ORIGEN);
-      console.log('Arreglo: ', arreglo)
-      
 
       for(let i =0; i  < resp.length; i++){
         this.planificacionEntregasService.pesoTotal  += resp[i].TOTAL_PESO;
@@ -220,12 +200,10 @@ async exportarGuias() {
         this.datableService.generarDataTable(array, array.length).then(resp =>{  
           this.datableService.totalPages = resp.length;
           this.datableService.dataTableArray = resp;
-        }) 
+          console.log('Arreglo: ', this.datableService.dataTableArray);
+        });
       });
     });
-
- 
-    
   }
 
 
@@ -235,48 +213,42 @@ async exportarGuias() {
 // DESPLIEGA UN CALENDARIO PARA SELECCIONAR LA FECHA 
 //=============================================================================
 
-configuracionZonaRuta(){
+  configuracionZonaRuta(){
 
-//=============================================================================
-// SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA LAS RUTAS DISPONIBLES 
-// Y DEVUELVE EL VALOR SELECCIONADO
-//=============================================================================
+    //=============================================================================
+    // SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA LAS RUTAS DISPONIBLES 
+    // Y DEVUELVE EL VALOR SELECCIONADO
+    //=============================================================================
 
- const ruta =  this.serviciosCompartidosService.listaRutasModal();
-//=============================================================================
-// PROMESA QUE CONSULTA QUE HAYA DEVUELTO UN VALOR
-//=============================================================================
+    const ruta =  this.serviciosCompartidosService.listaRutasModal();
+    //=============================================================================
+    // PROMESA QUE CONSULTA QUE HAYA DEVUELTO UN VALOR
+    //=============================================================================
 
-
-  ruta.then(valor =>{
+    ruta.then(valor =>{
   
-    if(valor !== undefined){
-    
-      this.controlCamionesGuiasService.rutaZona = null;
-      this.controlCamionesGuiasService.rutaZona = valor;
+      if(valor !== undefined){
+        this.controlCamionesGuiasService.rutaZona = null;
+        this.controlCamionesGuiasService.rutaZona = valor;
       
-//=============================================================================
-// SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA UN CALENDARIO Y RETORNA 
-// EL VALOR DE LA FECHA A CONSULTAR 
-//=============================================================================
+        //=============================================================================
+        // SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA UN CALENDARIO Y RETORNA 
+        // EL VALOR DE LA FECHA A CONSULTAR 
+        //=============================================================================
 
-      this.calendarioModal();
-  
-     }
-  
-   
-  })
-  
+        this.calendarioModal();
+      }
+    })
   }
   
 
-//=============================================================================
-// SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA UN CALENDARIO Y RETORNA EL VARLOR
-// DE LA FECHA A CONSULTAR Y LUEGO SINCRONIZA 
-// LAS RUTAS Y FACTURAS BASADO EN LA RUTA Y FECHA EL PARAMETRO HACE REFERENCIA 
-// AL TIPO DE FORMATO QUE LE QUEREMOS ASIGNAR A LA FECHA 
-// YA SEA '/' -> 2022/03/03, '-' 2022-03-03 Y EN CASO DE SER VACIO RETORNA EL VALOR COMO NEW DATE()
-//=============================================================================
+  //=============================================================================
+  // SERVICIO COMPARTIDO EN VARIAS VITAS QUE MUESTRA UN CALENDARIO Y RETORNA EL VARLOR
+  // DE LA FECHA A CONSULTAR Y LUEGO SINCRONIZA 
+  // LAS RUTAS Y FACTURAS BASADO EN LA RUTA Y FECHA EL PARAMETRO HACE REFERENCIA 
+  // AL TIPO DE FORMATO QUE LE QUEREMOS ASIGNAR A LA FECHA 
+  // YA SEA '/' -> 2022/03/03, '-' 2022-03-03 Y EN CASO DE SER VACIO RETORNA EL VALOR COMO NEW DATE()
+  //=============================================================================
   calendarioModal(){
 
     this.serviciosCompartidosService.calendarioModal('/').then(valor =>{
@@ -288,54 +260,43 @@ configuracionZonaRuta(){
         this.controlCamionesGuiasService.fecha = valor;
       
         this.cargarDatos();
-
       }
-
-   
-  })
-}
-//============================================================================= 
-// MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
-//=============================================================================
-
-
-gestionErrores(){
-
-  this.alertasService.gestorErroresModal(this.planificacionEntregasService.errorArray);
-}
-
-
-
-async mapa(guia){
-
-  const modal = await this.modalCtrl.create({
-    component: RutaMapaComponent,
-    cssClass: 'large-modal',
-    componentProps:{
-      guia:guia,
-      lngLat: [ -84.14123589305028, 9.982628288210657 ],
-      height: '100%',
-      width:' 100%',
-      interactive: true
-    }
-  });
-
-  modal.present();
-      
-        
-  const { data } = await modal.onDidDismiss();
-
-  if(data !== undefined){
-
-    console.log(data, 'data')
-
- 
-
-      
+    })
   }
- 
 
-}
+
+  //============================================================================= 
+  // MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
+  //=============================================================================
+
+  gestionErrores(){
+    this.alertasService.gestorErroresModal(this.planificacionEntregasService.errorArray);
+  }
+
+
+
+  async mapa(guia){
+
+    const modal = await this.modalCtrl.create({
+      component: RutaMapaComponent,
+      cssClass: 'large-modal',
+      componentProps:{
+        guia:guia,
+        lngLat: [ -84.14123589305028, 9.982628288210657 ],
+        height: '100%',
+        width:' 100%',
+        interactive: true
+      }
+    });
+
+    modal.present();
+      
+    const { data } = await modal.onDidDismiss();
+
+    if(data !== undefined){
+      console.log(data, 'data')    
+    }
+  }
 
 
 
@@ -357,6 +318,33 @@ async mapa(guia){
     return facturas;
   }
 
+  async buscarFactura(ev: any){
+    let encontre = false;
+    let factura: any;
+
+    if (this.textFactura.length > 0){ 
+      console.log(this.textFactura)
+      const facturas = await this.obtenerArreglo();
+      facturas.forEach( x => {
+        console.log(x)
+        if (x.factura.FACTURA === this.textFactura){
+          if ( x.idGuia === '' ){
+            encontre = true;
+            factura = x;
+          } else {
+            this.alertasService.message(`Factura ${this.textFactura}`, 'Ya fue agregada a la guia...!!!');
+          }
+        }
+      });
+      this.textFactura = '';
+      if (!encontre){
+        this.alertasService.message(`Factura ${this.textFactura}`, 'No encontrada...!!!');
+      } else {
+        this.controlFacturas(factura)
+      }
+    }
+  }
+
   controlFacturas(factura){
 
     if(factura.factura.LONGITUD == null  || factura.factura.LONGITUD == undefined  || factura.factura.LONGITUD == 0 || factura.factura.LATITUD == 0   )
@@ -366,39 +354,37 @@ async mapa(guia){
     }
 
     this.obtenerArreglo().then(resp =>{
-      console.log(resp, 'fatura array')
+      console.log('Factura Seleccionada: ',  factura)
       this.modalControlFacturas(factura, resp)
     })
 
   }
 
-async modalControlFacturas(factura, facturas){
+  async modalControlFacturas(factura, facturas){
 
-  const modal = await this.modalCtrl.create({
-    component: ControlFacturasPage,
-    cssClass: 'large-modal',
-    componentProps:{
-      factura:factura,
-      facturas: facturas
-    },
-    id:'control-facturas'
-  });
-  console.log(facturas,'facturasfacturasfacturas')
-  modal.present();
-    
-  const { data } = await modal.onDidDismiss();
+    const modal = await this.modalCtrl.create({
+      component: ControlFacturasPage,
+      cssClass: 'large-modal',
+      componentProps:{
+        factura:factura,
+        facturas: facturas
+      },
+      id:'control-facturas'
+    });
+    console.log(facturas,'facturasfacturasfacturas')
+    modal.present();
+      
+    const { data } = await modal.onDidDismiss();
 
-  if(data !== undefined){
-
-    console.log(data, 'data')
-  //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
-  //=============================================================================
-  // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
-  // LAS FACTURAS A UNA SOLA GUIA
-  //=============================================================================
-
+    if(data !== undefined){
+      console.log(data, 'data')
+      //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
+      //=============================================================================
+      // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
+      // LAS FACTURAS A UNA SOLA GUIA
+      //=============================================================================
+    }
   }
-}
 
 
 detalleGuia(guia){

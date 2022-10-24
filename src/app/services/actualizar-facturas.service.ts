@@ -25,23 +25,22 @@ url = null;
     
     ) { }
 
-    limpiarDatos(){
+  limpiarDatos(){
 
-      this.actualizaFacturasArray =[];
-      this.url = null;
-    }
+    this.actualizaFacturasArray =[];
+    this.url = null;
+  }
+
   getIRPURL( api: string ){
     let test: string = ''
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test +environment.postURL + api ;
+    const URL = environment.preURL  + test + environment.postURL + api ;
     this.url = URL
- console.log(URL, 'POST ACTUALIZAR FACTURAAS')
+    console.log(URL, 'POST ACTUALIZAR FACTURAS')
     return URL;
-
-
   }
 
 
@@ -65,14 +64,10 @@ url = null;
 
     console.log(facturas, 'facturas post')
 
-    
+    return  this.postActualizarFactura(facturas).toPromise();
 
-   return  this.postActualizarFactura(facturas).toPromise();
-
-   // this.actualizaFacturasArray = [];
-
-
-}
+    // this.actualizaFacturasArray = [];
+  }
 
 
 

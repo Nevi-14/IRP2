@@ -29,8 +29,8 @@ interface modeloCamiones {
   styleUrls: ['./control-facturas.page.scss'],
 })
 export class ControlFacturasPage implements OnInit {
-@Input() factura:any
-@Input() facturas:any
+  @Input() factura:any
+  @Input() facturas:any
   consultas = {
     nuevaGuia: true,
     guiaExistente:false,
@@ -61,8 +61,8 @@ export class ControlFacturasPage implements OnInit {
       this.consultas.otrasGuias = false;
       this.consultas.guiaExistente = true;
       this.camiones = [];
-      this.controlCamionesGuiasService.listaGuias.forEach(camion =>{
-       
+
+      this.controlCamionesGuiasService.listaGuias.forEach(camion =>{ 
         const  camionRuta = {
           idGuia:camion.idGuia,
           numeroGuia:camion.idGuia,
@@ -80,20 +80,13 @@ export class ControlFacturasPage implements OnInit {
           seco:camion.camion.seco
         }
 
-
         this.camiones.push(camionRuta)
         console.log(this.camiones, 'guiasExistentes')
-  
-    
       })
     }else{
-
       this.gestionCamiones.syncCamiones();
     }
- 
     this.nuevaGuia(this.consultas.nuevaGuia);
-  
-    console.log(this.factura,'factura',this.facturas,'facturas')
   }
 
   async borrarFactura(){
@@ -126,26 +119,17 @@ export class ControlFacturasPage implements OnInit {
     await alert.present();
   }
 
- async retornarCamion(camion){
-console.log(this.consultas)
-
-   
-
- if(this.consultas.incluirFacturas){
+  async retornarCamion(camion){
+    console.log('Selección del camión: ', this.consultas)
+    if(this.consultas.incluirFacturas){
       this.controlCamionesGuiasService.listaGuias = [];
       console.log(this.facturas)
       console.log('retonar cmaion',  this.facturas)
       this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false,this.facturas)
       this.cerrarModal()
-return
-
-
+      return
     }
-    
-    
     if(this.consultas.nuevaGuia || this.consultas.otrasGuias){
-
-
       if( this.consultas.otrasGuias){
         const alert = await this.alertCTrl.create({
           cssClass: 'my-custom-class',
@@ -166,87 +150,53 @@ return
               handler: () => {
                 this.cerrarModal()
                       // CARGAMOS RUTERO
-this.alertasService.presentaLoading('Consultando rutero');
-this.ruteroService.syncRutero(camion.numeroGuia).then(rutero =>{
- const ruteros =  rutero;
-     this.alertasService.loadingDissmiss();
-     const guiaCamion = { 
-       idGuia:camion.numeroGuia,
-       fecha: camion.fecha,
-       zona: camion.zona,
-       ruta: camion.ruta,
-       idCamion: camion.idCamion,
-       numClientes: camion.numClientes,
-       peso: camion.peso,
-       estado: 'DEL',
-       HH: camion.HH,
-       volumen: camion.volumen
-      }
-
-   
-     this.guiasService.putGuias(guiaCamion).then(resp =>{
-       this.gestionCamionesService.syncGetFacturasGuia(camion.numeroGuia).then(resp =>{
-         const facturas:any[] = [];
-        console.log('retornar camion', camion)
-        console.log('guiaCamion', guiaCamion)
-        console.log('ruteros', ruteros)
-        console.log('facturas', resp)
-    
-
-        facturas.push(this.factura)
-        for(let i =0; i < resp.length; i++){
-       
-facturas.push({idGuia: '', factura: resp[i]})
-if(i === resp.length -1){
-this.controlCamionesGuiasService.generarGuiaEnRuta(guiaCamion,ruteros,facturas);
-}
-        }
-
- 
-       })
-    
-      }), error =>{
-           
-           
-   
-      console.log(error)
-            
-           }
-
-
- 
-
-
-
-     
-     
-// this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false, [this.factura])
-         // EFECTUAMOS EL PUT DE GUIA
-
-/**
- *    
- */
-     
-
-
-   }), error =>{
-     this.alertasService.loadingDissmiss();
-     let errorObject = {
-       titulo: 'this.ruteroService.syncRutero(data.idGuia)',
-       fecha: new Date(),
-       metodo:'GET',
-       url:error.url,
-       message:error.message,
-       rutaError:'app/services/rutero-service.ts',
-       json:JSON.stringify('')
-     }
-   
-     
-     console.log(error)
-    
-   }
-              
-    
+                this.alertasService.presentaLoading('Consultando rutero');
+                this.ruteroService.syncRutero(camion.numeroGuia).then(rutero =>{
+                  const ruteros =  rutero;
+                  this.alertasService.loadingDissmiss();
+                  const guiaCamion = { 
+                    idGuia:camion.numeroGuia,
+                    fecha: camion.fecha,
+                    zona: camion.zona,
+                    ruta: camion.ruta,
+                    idCamion: camion.idCamion,
+                    numClientes: camion.numClientes,
+                    peso: camion.peso,
+                    estado: 'DEL',
+                    HH: camion.HH,
+                    volumen: camion.volumen
+                  }
+                  this.guiasService.putGuias(guiaCamion).then(resp =>{
+                    this.gestionCamionesService.syncGetFacturasGuia(camion.numeroGuia).then(resp =>{
+                      const facturas:any[] = [];
+                      console.log('retornar camion', camion)
+                      console.log('guiaCamion', guiaCamion)
+                      console.log('ruteros', ruteros)
+                      console.log('facturas', resp)
+                      facturas.push(this.factura)
+                      for(let i =0; i < resp.length; i++){
+                        facturas.push({idGuia: '', factura: resp[i]})
+                        if(i === resp.length -1){
+                          this.controlCamionesGuiasService.generarGuiaEnRuta(guiaCamion,ruteros,facturas);
+                        }
+                      }
+                    })
+                  }), error =>{
+                    console.log(error)
+                  }
+                }), error =>{
+                  this.alertasService.loadingDissmiss();
+                  let errorObject = {
+                    titulo: 'this.ruteroService.syncRutero(data.idGuia)',
+                    fecha: new Date(),
+                    metodo:'GET',
+                    url:error.url,
+                    message:error.message,
+                    rutaError:'app/services/rutero-service.ts',
+                    json:JSON.stringify('')
+                  }
+                  console.log(error)
+                }
               }
             }
           ]
@@ -254,30 +204,17 @@ this.controlCamionesGuiasService.generarGuiaEnRuta(guiaCamion,ruteros,facturas);
       
         await alert.present();
   
-    
-
-
       }else{
-
         this.controlCamionesGuiasService.generarGuia(camion, this.consultas.otrasGuias ? this.consultas.otrasGuias  : false, [this.factura])
         this.cerrarModal()
       }
-   
-      
     }else if(this.consultas.guiaExistente){
-     
       this.controlCamionesGuiasService.agregarFacturaGuia(this.factura,camion, camion.numeroGuia)
- 
       this.cerrarModal()
-
-  
-
     }
-
     console.log(this.controlCamionesGuiasService.listaGuias, 'listaGuias')
-
-  
   }
+
   cerrarModal(){
     this.modalCtrl.dismiss();
   }
@@ -341,7 +278,6 @@ this.controlCamionesGuiasService.generarGuiaEnRuta(guiaCamion,ruteros,facturas);
 
   nuevaGuia(validate){
     if(validate){
-
       this.consultas.guiaExistente = false;
       this.consultas.otrasGuias = false;
       this.camiones = [];

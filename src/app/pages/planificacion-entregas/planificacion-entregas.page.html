@@ -66,14 +66,17 @@
 
       <ion-col  size="{{controlCamionesGuiasService.listaGuias.length > 0 ? 8 : 12}}" >
         <ion-row class="ion-text-left">
-          <ion-col   size="4">
+          <ion-col   size="3">
             <ion-label class="ion-margin">Peso Total : {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG </ion-label>
           </ion-col>
-          <ion-col   size="4">
+          <ion-col   size="3">
             <ion-label class="ion-margin">Total Bultos:   {{planificacionEntregasService.totalBultos.toFixed(2)}} Bultos</ion-label>
           </ion-col>
-          <ion-col  size="4">
+          <ion-col  size="3">
             <ion-label class="ion-margin">Fecha de entrega  <ion-badge color="warning" mode="ios">{{fecha}}</ion-badge></ion-label>
+          </ion-col>
+          <ion-col  size="3">
+            <ion-searchbar color="dark" placeholder="Buscar Factura" inputmode="numeric" type="numeric" [(ngModel)]="textFactura" (ionChange)="buscarFactura($event)" [debounce]="1500" showCancelButton="focus"></ion-searchbar>
           </ion-col>
         </ion-row>
         <ion-row class="header-row ">
@@ -155,7 +158,7 @@
         <ion-row *ngFor="let cliente of datableService.dataTableArray[datableService.page] let i = index">
           <ion-col size="3">
             <ion-label>
-              <h4 > <strong>{{cliente[0].factura.NOMBRE_CLIENTE}}</strong>    <ion-badge color="warning" mode="ios">{{cliente[0].factura.CLIENTE}}</ion-badge></h4>
+              <h4 > <strong>{{cliente[0].factura.NOMBRE_CLIENTE}}</strong>    <ion-badge color="warning" mode="ios">{{cliente[0].factura.CLIENTE_ORIGEN}}</ion-badge></h4>
               <p class="ion-text-wrap">{{cliente[0].factura.DIRECCION_FACTURA}}</p>
               <p *ngIf="!cliente[0].factura.LONGITUD || !cliente[0].factura.LATITUD" class="ion-text-warp">
               <ion-label color="danger" class="ion-text-uppercase">  Clientes sin latitud ni longitud no pueden ser parte del proceso de planificacion de entrega</ion-label>
