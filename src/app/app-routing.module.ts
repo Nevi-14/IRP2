@@ -130,9 +130,24 @@ const routes: Routes = [
     path: 'control-facturas',
     loadChildren: () => import('./pages/control-facturas/control-facturas.module').then( m => m.ControlFacturasPageModule)
   },
+  {
+    path: 'calendario',
+    loadChildren: () => import('./pages/calendario/calendario.module').then( m => m.CalendarioPageModule)
+  },
+  {
+    path: 'consultar-facturas',
+    loadChildren: () => import('./pages/consultar-facturas/consultar-facturas.module').then( m => m.ConsultarFacturasPageModule)
+  },
 
 
+  {
+    path: 'calendario-popover',
+    loadChildren: () => import('./pages/calendario-popover/calendario-popover.module').then( m => m.CalendarioPopoverPageModule)
 
+  },  {
+    path: 'facturas-no-agregadas',
+    loadChildren: () => import('./pages/facturas-no-agregadas/facturas-no-agregadas.module').then( m => m.FacturasNoAgregadasPageModule)
+  },
 
  
  

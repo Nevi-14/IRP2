@@ -1,7 +1,7 @@
 
 export class PlanificacionEntregas{
-
-    constructor(
+constructor(
+ public ID_GUIA:string,
  public TIPO_DOCUMENTO:string,
  public FACTURA: string,
  public ESTA_DESPACHADO: string,
@@ -37,7 +37,7 @@ public ZONA: string,
 public VENDEDOR: string,
 public CLIENTE_DIRECCION: string,
 public CLIENTE_CORPORAC: string,
-public CLIENTE_ORIGEN: string,
+public CLIENTE_ORIGEN: number,
 public CLIENTE: string,
 public PAIS: string,
 public TOTAL_PESO_NETO: number,

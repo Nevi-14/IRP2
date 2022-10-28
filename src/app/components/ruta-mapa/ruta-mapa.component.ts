@@ -67,7 +67,7 @@ export class RutaMapaComponent implements AfterViewInit {
   ionViewWillEnter(){
 
   if(this.guia.verificada){
-    console.log(this.guia, this.guia.ordenEntregaCliente)
+    console.log(this.guia, this.guia.clientes)
     this.coordinates = [];
     this.extrarCoordenadas();
   }
@@ -78,10 +78,10 @@ export class RutaMapaComponent implements AfterViewInit {
   extrarCoordenadas(){
  
     
-    this.guia.ordenEntregaCliente.sort( ( a, b ) => a.orden_visita - b.orden_visita )
+    this.guia.clientes.sort( ( a, b ) => a.orden_visita - b.orden_visita )
     
 
-     this.elementosAgrupados = this.paginarArreglo( this.guia.ordenEntregaCliente, 24);
+     this.elementosAgrupados = this.paginarArreglo( this.guia.clientes, 24);
 
      console.log(     this.elementosAgrupados, 'elementos')
 

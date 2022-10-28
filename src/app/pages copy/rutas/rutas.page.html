@@ -1,0 +1,24 @@
+
+<ion-list lines="none">
+<ion-list-header>
+  <ion-label  color="primary" class="ion-text-center">Lista de Rutas</ion-label>
+
+</ion-list-header>
+  <ion-item>
+    <ion-searchbar mode="ios" placeholder="Buscar ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+  </ion-item>
+  <ion-radio-group allow-empty-selection="true" (ionChange)="rutaRadioButtuon($event)"  >
+
+    <ion-item *ngFor="let item of rutaZona.rutasZonasArray | filtro : textoBuscar:'Descripcion'">
+ 
+
+      <ion-label>   {{ item.Descripcion }}</ion-label>
+     <ion-radio [value]="item.Ruta"    slot="end" ></ion-radio>
+          
+  
+    </ion-item>
+  </ion-radio-group>
+
+
+  
+</ion-list>

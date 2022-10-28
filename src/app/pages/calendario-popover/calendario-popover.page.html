@@ -1,0 +1,11 @@
+
+
+<ion-content>
+  <ion-datetime
+ [value]="fecha"
+        #popoverDatetime2
+        presentation="date"
+        
+        (ionChange)=" formatDate(popoverDatetime2.value)"
+      ></ion-datetime>
+</ion-content>

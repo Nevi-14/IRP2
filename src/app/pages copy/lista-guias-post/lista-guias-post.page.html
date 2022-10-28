@@ -1,0 +1,37 @@
+<ion-toolbar>
+
+
+  <ion-title class="title">
+    
+    <ion-label>Lista de guias guardadas </ion-label> 
+    <ion-badge>{{idGuiasArray.length}}</ion-badge></ion-title>
+
+
+</ion-toolbar>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label><strong>Numero de guia</strong></ion-label>
+    </ion-item>
+    <ion-item lines="full" *ngFor="let item of idGuiasArray; let i = index;">
+
+      <ion-badge color="warning" mode="ios" slot="start">{{i+1}}</ion-badge>
+      <ion-label slot="start" class="ion-text-wrap">
+    
+         {{item}}
+    
+        
+    
+       </ion-label>
+    
+    </ion-item>
+  </ion-list>
+  
+</ion-content>
+
+
+<ion-fab  (click)="cerrarModal()" vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button size="small"  color="danger">
+    <ion-icon  name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

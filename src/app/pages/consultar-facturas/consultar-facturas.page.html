@@ -1,0 +1,91 @@
+ 
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-button  slot="start"  (click)="cerrarModal()" expand="block" fill="clear" shape="round">
+        <ion-icon color="dark" size="large" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+          <ion-title>Seleccionar Facturas a Importar</ion-title>
+      
+      
+        </ion-toolbar>
+
+      
+      </ion-header>
+
+<ion-content>
+  <ion-row *ngIf="!cliente">
+    <ion-col size="8">
+      <ion-searchbar    mode="ios" placeholder="Buscar Cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+    </ion-col>
+    <ion-col size="4">
+      <ion-item>
+        <ion-input [value]="date"></ion-input>
+        <ion-button fill="clear" (click)="calendarioPopover()">
+          <ion-icon icon="calendar"></ion-icon>
+        </ion-button>
+      
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-list *ngIf="!cliente" lines="none" class="fixed-content">
+
+
+      <ion-radio-group allow-empty-selection="true" (ionChange)="seleccionarCliente($event)"  >
+    
+        <ion-item  *ngFor="let item of clientes | filtro: textoBuscar:'Descripcion'">
+     
+    
+          <ion-label>   {{ item.Descripcion }}</ion-label>
+         <ion-radio [value]="item"    slot="end" ></ion-radio>
+              
+      
+        </ion-item>
+      </ion-radio-group>
+    
+    
+      
+    </ion-list>
+
+
+    <ion-row *ngIf="cliente">
+      <ion-col size="8">
+        <ion-searchbar    mode="ios" placeholder="Buscar Facturas" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+       
+      </ion-col>
+      <ion-col size="4" style="display: flex;justify-content:center;align-items:center">
+        <ion-button color="dark" (click)="cargarListaClientes()" expand="block" >
+          <ion-icon name="refresh-outline"></ion-icon>
+          </ion-button>
+          <ion-button color="dark" (click)="unCheckAll()" expand="block" >
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </ion-button>
+                  
+<ion-button color="dark" (click)="checkAll()" expand="block" >
+  <ion-icon name="checkmark-circle-outline"></ion-icon>
+</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-list lines="none" class="fixed-content" *ngIf="cliente">
+
+
+      
+
+<div  >
+  <ion-item *ngFor="let member of testList">
+    <ion-label>{{member?.testName || 'N/A'}}</ion-label>
+    <ion-checkbox color="dark" (click)="selectMember(member)" [(ngModel)]="member.checked"></ion-checkbox>
+  </ion-item>
+</div>
+
+
+
+ 
+      
+        
+      </ion-list>
+
+
+
+</ion-content>
+

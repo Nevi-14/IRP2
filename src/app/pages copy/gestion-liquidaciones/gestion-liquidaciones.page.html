@@ -1,0 +1,148 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar >
+
+
+    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
+      <ion-item>
+        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Liquidacion Camiones <span *ngIf="guia">Guia {{guia.idGuia}}</span></ion-title>
+
+        <ion-fab-button size="small" slot="end" *ngIf="datableService.dataTableArray.length > 0 "  (click)="liquidarGuia()" color="dark" >
+          <ion-icon name="save"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button size="small" slot="end"   color="dark" (click)="configuracionZonaRuta()" >
+          <ion-icon class="spin-element"  name="settings"></ion-icon>
+        </ion-fab-button>
+ 
+
+      </ion-item>
+    
+    </ion-list>
+  </ion-toolbar>
+
+  <ion-grid *ngIf="datableService.dataTableArray.length > 0 ">
+    <ion-row style="border-bottom:2px solid black; font-weight: bold;">
+  
+   
+  
+  
+      <ion-col  size="12" >
+  
+          
+              <ion-row class="header-row ">
+          
+          
+          
+                <ion-col size="3"  >
+       <ion-label># Factura</ion-label>
+               
+                </ion-col>
+                <ion-col   size="1" >
+                  <ion-label>Tipo D</ion-label>
+                  
+                  
+                </ion-col>
+                <ion-col   size="1">
+                  <ion-label >ID Cliente</ion-label>
+            
+            
+                </ion-col>
+                <ion-col   size="7"  > <ion-label >Detalle Producto</ion-label>
+      
+                </ion-col>
+            
+  
+              </ion-row >
+              
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
+
+<ion-content class="ion-padding">
+       
+
+  <ion-grid *ngIf="datableService.dataTableArray.length > 0 "  style="height: 100%;">
+    <ng-template ngFor let-facturas [ngForOf]="datableService.dataTableArray"   let-i="index">
+
+
+        
+          <ng-template ngFor let-factura [ngForOf]="facturas"
+          let-j="index"  >
+          <ion-row    >
+            <ion-col size="3"  >
+              <ion-label>{{factura[0].factura.numFactura}}</ion-label>
+              
+                      
+                       </ion-col>
+          
+                       <ion-col   size="1" >
+              <ion-badge color="warning" mode="ios">{{factura[0].factura.tipoDocumento}}</ion-badge>
+                         
+                         
+                       </ion-col>
+                       <ion-col   size="1">
+                         <ion-label >{{factura[0].factura.idCliente}}</ion-label>
+                   
+                   
+                       </ion-col>
+       
+
+       
+                         <ion-col   size="7" style="margin-bottom: 0.5rem;" > 
+                               <ng-template ngFor let-fact [ngForOf]="factura">
+                 <ion-row style="border-bottom: 1px solid black;margin-top: 1rem;" >
+                   <ion-col size="12" style="display: flex;justify-content:space-between;">
+                     <p><strong>{{fact.factura.descripcion}}</strong> ({{fact.factura.articulo}})</p>
+               
+                   </ion-col>
+                   <ion-col size="4" style="margin-bottom: 0.5rem;">
+                    <ion-label>Cantidad Entregar : <ion-badge color="dark" mode="ios">{{fact.factura.cantEntregar}}</ion-badge></ion-label>
+               
+                   </ion-col>
+              
+             
+                   <ion-col size="4" style="margin-bottom: 0.5rem;">
+                     <ion-label>Cantidad Entregada :  <ion-badge color="dark" mode="ios">{{fact.factura.cantEntregar}}</ion-badge> </ion-label>
+               
+                   </ion-col>
+                   <ion-col size="4" style="margin-bottom: 0.5rem;">
+                     <ion-label>Cantidad Pendiente : <ion-badge color="dark" mode="ios">{{fact.factura.cantEntregar - fact.factura.cantEntregada}}</ion-badge></ion-label>
+               
+                   </ion-col>
+                  </ion-row>
+                </ng-template>
+                </ion-col>
+       
+       
+        </ion-row >
+        </ng-template>
+        
+        
+
+      
+   
+            </ng-template>
+  </ion-grid>
+
+
+  <ion-grid *ngIf="datableService.dataTableArray.length == 0" style="display: flex;justify-content: center;align-items: center; height: 100%;">
+    <ion-row style="display: flex;justify-content: center;align-items: center; height: 100%;">
+      <ion-col size="5" style="margin: 0 auto;">
+       
+          <img height="250"  class="slide-image" src="../assets/png/return.svg" />
+     <ion-card-content>
+     <h2 class="ion-text-uppercase"> Gestiona la Liquidacion  de guias  presionando el boton de configuracion en la parte superior derecha</h2>
+     </ion-card-content>
+          
+    
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+
+
+
+  
+  </ion-content>

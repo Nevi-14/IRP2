@@ -1,0 +1,21 @@
+ 
+       
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-button  slot="start"  (click)="cerrarModal()"  fill="clear" shape="round">
+        <ion-icon color="dark" size="large" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+          <ion-title>Fecha de entrega</ion-title>
+      
+      
+        </ion-toolbar>
+ 
+      
+      </ion-header>
+<ion-content  class="ion-padding">
+  <ion-datetime style="background-color: white;" presentation="date" mode="ios" required  #dateTime [value]="fecha" size="cover" (ionChange)="retornarFecha($event)"  >
+  </ion-datetime>
+
+
+</ion-content>
+ 

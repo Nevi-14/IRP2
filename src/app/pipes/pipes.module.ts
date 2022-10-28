@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FiltroPipe } from './filtro.pipe';
 
 
@@ -14,6 +14,7 @@ import { FiltroPipe } from './filtro.pipe';
   exports:[
    
     FiltroPipe,
+    DatePipe
   ]
 })
 export class PipesModule { }

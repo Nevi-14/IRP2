@@ -664,14 +664,7 @@ ion-checkbox.checkbox-disabled {
   opacity: 1 !important;
 }
 
-ion-modal .calendario-modal{
-  --width: 50px;
-  --height: 32px;
-  --border-radius: 8px;
-        ion-datetime {
-          height: 32px;
-        }
-}
+
 
 .marker {
 display: block;
@@ -750,3 +743,35 @@ left: -3rem;
     --width: 60%;
     --max-width: 80%;
   }
+
+  ion-modal.ui-modal {
+    --border-radius: 0px!important;
+     .modal-wrapper {
+       --background: rgba(44, 39, 45, 0.2);
+   }
+     --backdrop-opacity: 0.8 !important;
+     align-items: start;
+     justify-content: center; 
+     &::part(content){
+       position: fixed;
+       width: 50vw;
+       height: 100vh; 
+     }
+ 
+   
+   }
+
+   
+
+   .my-custom-alert .alert-wrapper {
+    min-width: 450px !important;
+  }
+
+  .no-class {
+    &::part(content){
+      position: fixed;
+      width: 50vw;
+      height: 100vh; 
+    }
+   z-index: 9999;
+}

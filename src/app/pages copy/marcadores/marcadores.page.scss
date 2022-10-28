@@ -1,0 +1,49 @@
+
+.button-message {
+    display: none;
+  }
+
+  ion-button:hover .button-message{
+   display: block;
+  }
+
+  ion-toggle {
+    zoom: 1.5;
+  }
+
+  // tooltip
+
+ .tooltip-btn{
+  position: relative!important;
+}
+  ion-button::before ,
+  iob-button::after {
+    --scale: 0;
+    --tooltip-color:#333;
+    --arrow-size: 10px;
+  position: absolute;
+  top:  -.25rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(var(--translate-y,0)) scale(var(--scale));
+  }
+
+ .tooltip-btn::before{
+    --translate-y: -100%;
+    content: attr(data-tooltip);
+    color: #FFF;
+    padding: .5rem;
+    border-radius: .3rem;
+    text-align: center;
+    width: max-content;
+   // max-width: 100%;
+    background: var(--tooltip-color) ;
+    transition: 150ms transform;
+    transform-origin: bottom center;
+    z-index: 999;
+  }
+
+ .tooltip-btn:hover::before,
+  .tooltip-btn:hover::after{
+    --scale: 1;
+  }
+  
