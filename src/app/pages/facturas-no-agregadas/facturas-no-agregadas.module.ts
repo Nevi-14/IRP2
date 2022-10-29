@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FacturasNoAgregadasPageRoutingModule } from './facturas-no-agregadas-routing.module';
 
 import { FacturasNoAgregadasPage } from './facturas-no-agregadas.page';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FacturasNoAgregadasPageRoutingModule
+    FacturasNoAgregadasPageRoutingModule,
+    PipesModule
   ],
   declarations: [FacturasNoAgregadasPage]
 })

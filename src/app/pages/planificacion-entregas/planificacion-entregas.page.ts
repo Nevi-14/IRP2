@@ -17,62 +17,8 @@ import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas
 import { FacturasService } from 'src/app/services/facturas.service';
 import { ListaClientesGuiasPage } from '../lista-clientes-guias/lista-clientes-guias.page';
 import { ConsultarFacturasPage } from '../consultar-facturas/consultar-facturas.page';
- 
-interface cliente {
-  id: number,
-  idGuia: string,
-  cliente: string,
-  latitud: number,
-  longitud: number,
-  distancia: number,
-  duracion: number,
-  direccion: string,
-  bultosTotales: number,
-  orden_visita: number,
-  HoraInicio: Date,
-  HoraFin: Date
-}
+import { ClientesGuia, Guias } from 'src/app/models/guia';
 
-
-
-//=============================================================================
-// INTERFACE DE  MODELO GUIA DE ENTREGA
-//=============================================================================
-
-interface Guias {
-
-  idGuia: string,
-  verificada: boolean,
-  guiaExistente: boolean,
-  zona: string,
-  ruta: string,
-  fecha: string,
-  numClientes: number,
-  totalFacturas: number
-  distancia: number,
-  duracion: number
-  camion: {
-    HoraInicio: string,
-    HoraFin: string,
-    chofer: string,
-    idCamion: string,
-    capacidad: number,
-    pesoRestante: number,
-    peso: number,
-    estado: string,
-    HH: string,
-    volumen: number,
-    frio: string,
-    seco: string
-  }
-  clientes: cliente[],
-  facturas: PlanificacionEntregas[]
-}
-interface clientes {
-  id: number,
-  nombre: string,
-  facturas: PlanificacionEntregas[]
-}
 
 @Component({
   selector: 'app-planificacion-entregas',
@@ -80,9 +26,9 @@ interface clientes {
   styleUrls: ['./planificacion-entregas.page.scss'],
 })
 export class PlanificacionEntregasPage {
-  clientes: clientes[] = []
-  facturas: clientes[] = []
-  facturasOriginal: clientes[] = []
+  clientes: ClientesGuia[] = []
+  facturas: ClientesGuia[] = []
+  facturasOriginal: ClientesGuia[] = []
   textFactura: string = '';
 
   constructor(
@@ -112,9 +58,8 @@ export class PlanificacionEntregasPage {
 
 
   ionViewWillEnter() {
-    console.log('before', this.datableService.dataTableArray)
     this.limpiarDatos();
-    console.log('after', this.datableService.dataTableArray)
+
   }
 
   ngOnDestroy() {
@@ -126,7 +71,7 @@ export class PlanificacionEntregasPage {
 
   cargarDatos() {
 
-    let clientes: clientes[] = []
+    let clientes: ClientesGuia[] = []
     this.planificacionEntregasService.syncRutaFacturas(this.controlCamionesGuiasService.rutaZona.Ruta, this.fecha).then(resp => {
 
       for (let i = 0; i < resp.length; i++) {
@@ -232,7 +177,7 @@ this.facturas = [];
 
     if (data !== undefined) {
      
-      this.fecha = format(new Date(data.fecha), 'yyy-MM-dd');
+      this.fecha = format(new Date(data.fecha), 'yyy/MM/dd');
       this.controlCamionesGuiasService.fecha = data.fecha;
       this.cargarDatos();
 
@@ -390,6 +335,39 @@ async consultarFacturas(){
   if (data !== undefined) {
     console.log(data, 'data')
 
+    data.data.forEach(factura => {
+       
+    let cliente = {
+      id: factura.CLIENTE_ORIGEN,
+    nombre: factura.NOMBRE_CLIENTE,
+    facturas: [factura]
+              }
+
+              let i = this.facturas.findIndex(client => client.id ==factura.CLIENTE_ORIGEN)
+
+              if(i >=0){
+
+                let f =  this.facturas[i].facturas.findIndex(factu => factu.CLIENTE_ORIGEN ==  factura.CLIENTE_ORIGEN)
+              if(f < 0){
+           
+                this.facturas[i].facturas.push(factura)
+                console.log('this.clientes push factura', factura)
+                this.controlCamionesGuiasService.pesoTotal += factura.TOTAL_PESO
+                this.controlCamionesGuiasService.volumenTotal += factura.TOTAL_VOLUMEN
+                this.controlCamionesGuiasService.totalClientes  = this.facturas.length;
+                this.controlCamionesGuiasService.totalBultos += Number(factura.RUBRO1)
+              }
+              
+              }else{
+         
+                this.facturas.push(cliente)
+                this.controlCamionesGuiasService.pesoTotal += factura.TOTAL_PESO
+                this.controlCamionesGuiasService.volumenTotal += factura.TOTAL_VOLUMEN
+                this.controlCamionesGuiasService.totalClientes  = this.facturas.length;
+                this.controlCamionesGuiasService.totalBultos += Number(factura.RUBRO1)
+                console.log('this.facturas push', this.facturas)
+              }
+    });
 
   }
 

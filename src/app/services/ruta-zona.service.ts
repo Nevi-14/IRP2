@@ -57,7 +57,11 @@ console.log(URL);
 
     );
   }
+  syncRutasToPromise(){
+ 
+   return this.getRutasZonas().toPromise();
 
+    }
 
   // ACTUALIZAR RUTA - ZONA
 

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { ClientesGuia, Guias } from 'src/app/models/guia';
 import { GuiaEntrega } from 'src/app/models/guiaEntrega';
 import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 import { AlertasService } from 'src/app/services/alertas.service';
@@ -7,61 +8,9 @@ import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-g
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { GuiasService } from 'src/app/services/guias.service';
 import { RuteroService } from 'src/app/services/rutero.service';
-interface cliente {
-  id: number,
-  idGuia:string,
-  cliente: string,
-  latitud: number,
-  longitud:number,
-  distancia: number,
-  duracion:number,
-  direccion:string,
-  bultosTotales:number,
-  orden_visita: number,
-  HoraInicio:Date,
-  HoraFin:Date
-}
+import { FacturasNoAgregadasPage } from '../facturas-no-agregadas/facturas-no-agregadas.page';
 
- 
 
-//=============================================================================
-// INTERFACE DE  MODELO GUIA DE ENTREGA
-//=============================================================================
-
-interface  Guias{
-
-  idGuia: string,
-  verificada:boolean,
-  guiaExistente:boolean,
-  zona: string,
-  ruta: string,
-  fecha: string,
-  numClientes: number,
-  totalFacturas:number
-  distancia: number,
-  duracion:number
-  camion:{
-    HoraInicio:string,
-    HoraFin:string,
-    chofer:string,  
-    idCamion: string,
-    capacidad: number,
-    pesoRestante: number,
-    peso: number,
-    estado: string,
-    HH: string,
-    volumen: number,
-    frio:string,
-    seco:string
-  }
-  clientes:cliente[],
-  facturas: PlanificacionEntregas[]
-}
-interface clientes {
-  id: number,
-  nombre: string,
-  facturas: PlanificacionEntregas[]
-}
 @Component({
   selector: 'app-control-facturas',
   templateUrl: './control-facturas.page.html',
@@ -69,8 +18,8 @@ interface clientes {
 })
 export class ControlFacturasPage implements OnInit {
   @Input() factura:PlanificacionEntregas
-  @Input() facturas:clientes[]
-  facturasOriginal:clientes[] = [];
+  @Input() facturas:ClientesGuia[]
+  facturasOriginal:ClientesGuia[] = [];
   facturasArray:any[] = [];
   guias:Guias[]=[];
  titulo = null;
@@ -97,6 +46,17 @@ export class ControlFacturasPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
+
+    if(this.factura == null){
+      
+      this.incluirFacturas = true;
+this.facturasArray = this.facturas
+
+
+console.log('this.facturas', this.facturas)
+      return
+    }
  this.titulo = this.factura.NOMBRE_CLIENTE;
 
  console.log(this.facturas, 'facturas')
@@ -115,100 +75,20 @@ this.guiasExistentes();
     }
   }
 
-  async filtrar() {
 
-
-    if(this.facturas.length > this.facturasOriginal.length){
-      this.facturasOriginal = this.facturas;
-
-    }
-    
-
-    let inputs = [];
-
-
-    for (let c = 0; c < this.facturas.length; c++) {
-
-      inputs.push({
-        label: this.facturas[c].nombre,
-        type: 'radio',
-        value: {
-          id:this.facturas[c].id,
-          nombre:this.facturas[c].nombre
-        },
-      })
-      if (c == this.facturas.length - 1) {
- inputs.push({
-        label: 'Todos los clientes',
-        type: 'radio',
-        value: 'all',
-      })
-      inputs.push({
-        label: 'Remover Filtro',
-        type: 'radio',
-        value: null,
-      })
-      inputs.sort((a, b) => +(a.label > b.label) || -(a.label < b.label))
-        const alert = await this.alertCTrl.create({
-          header: 'SDE RP CLIENTES',
-          cssClass: 'my-custom-alert',
-          buttons: [
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              handler: () => {
-
- this.incluirFacturas = false;
-
-              },
-            },
-            {
-              text: 'OK',
-              role: 'confirm',
-              handler: (data) => {
-         
-                this.facturasArray = []
-                if(data == null){
-                  this.titulo = this.factura.NOMBRE_CLIENTE;
-                  this.incluirFacturas = false;
-                  this.facturas = this.facturasOriginal;
-                  return;
-                }
-
-                if(data == 'all'){
-                  this.titulo = 'Todas las Facturas';
-                  this.incluirFacturas = true;
-                  this.facturas = this.facturasOriginal;
-                  this.agregarTodasFacturas();  
-
-            
-                  return;
-                }
-                this.titulo = data.nombre;
-                this.incluirFacturas = true;
-this.facturas = this.facturasOriginal.filter(x => x.id === data.id);
-this.agregarTodasFacturas();     
-              },
-            },
-          ],
-          inputs: inputs
-        });
-
-        await alert.present();
-      }
-    }
-
-  }
 
   onSearchChange(event){
     this.textoBuscar = event.detail.value;
     
    }
 
-  agregarTodasFacturas(){
-
-
-    console.log(' this.facturas', this.facturas)
+  agregarTodasFacturas($event){
+console.log($event)
+ let next  = $event.detail.checked;
+ this.incluirFacturas = next;
+ if(next){
+  this.incluirFacturas = true;
+  console.log(' this.facturas', this.facturas)
     this.facturas.forEach(cliente => {
       console.log('cliente', cliente)
       cliente.facturas.forEach(factura => {
@@ -220,16 +100,38 @@ this.agregarTodasFacturas();
  
       
     });
+
+ } 
+
+  
   }
 
-
+  async facturasNoAgregadas(){
+  
+    const modal = await this.modalCtrl.create({
+      component: FacturasNoAgregadasPage,
+      cssClass: 'ui-modal',
+      componentProps:{
+        facturas:this.controlCamionesGuiasService.facturasNoAgregadas
+      }
+    });
+    modal.present();
+  
+ 
+  
+  
+      
+  }
   async retornarCamion(camion:any){
 
 
    let id = this.controlCamionesGuiasService.generarIDGuia();
 
-   if(this.factura.ID_GUIA){
-    this.controlCamionesGuiasService.borrarFacturaGuia(this.factura)
+   if(this.factura){
+    if(this.factura.ID_GUIA){
+      this.controlCamionesGuiasService.borrarFacturaGuia(this.factura)
+    }
+
 
    }
 
@@ -241,15 +143,26 @@ this.agregarTodasFacturas();
 
   if(this.incluirFacturas){
 
-    this.facturasArray.forEach( factura =>{
+    this.controlCamionesGuiasService.facturasNoAgregadas = [];
     
-    
-      this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factura);
-    })
-
-    this.cerrarModal();
-    return
+    for(let i =0; i< this.facturasArray.length; i++){
+      this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, this.facturasArray[i]);
+      if(i == this.facturasArray.length -1 ){
+        this.cerrarModal();
+        if(this.controlCamionesGuiasService.facturasNoAgregadas.length >0){
+          
+      
+ this.facturasNoAgregadas()
+  
+  console.log('this.controlCamionesGuiasService.facturasNoAgregadas', this.controlCamionesGuiasService.facturasNoAgregadas)
+          return
+        }
+  
+      }
     }
+   
+  return
+    } 
 
 
 
@@ -268,7 +181,7 @@ this.agregarTodasFacturas();
     if(i == this.facturasArray.length -1 ){
       
       if(this.controlCamionesGuiasService.facturasNoAgregadas.length >0){
-alert('not added')
+this.alertasService.message('SDE RP', 'Lo sentimos no se pueden agregar las facturas, excede el peso del camion.')
 
 console.log('this.controlCamionesGuiasService.facturasNoAgregadas', this.controlCamionesGuiasService.facturasNoAgregadas)
         return

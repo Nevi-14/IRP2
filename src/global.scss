@@ -770,8 +770,8 @@ left: -3rem;
   .no-class {
     &::part(content){
       position: fixed;
-      width: 50vw;
-      height: 100vh; 
+      width: 350px;
+      height: 350px; 
     }
    z-index: 9999;
 }

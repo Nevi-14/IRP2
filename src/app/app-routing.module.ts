@@ -70,10 +70,6 @@ const routes: Routes = [
   },
 
   {
-    path: 'guia-detalles',
-    loadChildren: () => import('./pages/guia-detalles/guia-detalles.module').then( m => m.GuiaDetallesPageModule)
-  },
-  {
     path: 'lista-guias',
     loadChildren: () => import('./pages/lista-guias/lista-guias.module').then( m => m.ListaGuiasPageModule)
   },
@@ -144,7 +140,8 @@ const routes: Routes = [
     path: 'calendario-popover',
     loadChildren: () => import('./pages/calendario-popover/calendario-popover.module').then( m => m.CalendarioPopoverPageModule)
 
-  },  {
+  },
+  {
     path: 'facturas-no-agregadas',
     loadChildren: () => import('./pages/facturas-no-agregadas/facturas-no-agregadas.module').then( m => m.FacturasNoAgregadasPageModule)
   },

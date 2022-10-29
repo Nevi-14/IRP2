@@ -7,7 +7,7 @@ import { format, parseISO } from 'date-fns';
   styleUrls: ['./calendario-popover.page.scss'],
 })
 export class CalendarioPopoverPage implements OnInit {
-  @Input() fecha: Date;
+  fecha = new Date().toISOString();;
 
   constructor(
     public popOverCtrl: PopoverController,

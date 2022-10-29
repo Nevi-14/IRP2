@@ -1,7 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { RutaZonaService } from '../../services copy/ruta-zona.service';
+import { RutaZonaService } from '../../services/ruta-zona.service';
 import { CalendarioPopoverPage } from '../calendario-popover/calendario-popover.page';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
+import { format } from 'date-fns';
+import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
+import { AlertasService } from 'src/app/services/alertas.service';
+interface facturas {
+  factura: PlanificacionEntregas,
+  checked:boolean
+}
+interface Clientes {
+  id: number,
+  nombre: string,
+  facturas:facturas[]
+}
 
 @Component({
   selector: 'app-consultar-facturas',
@@ -10,28 +23,18 @@ import { CalendarioPopoverPage } from '../calendario-popover/calendario-popover.
 })
 export class ConsultarFacturasPage implements OnInit {
   textoBuscar = '';
-  cliente = null;
-  clientes = []
+  ruta = null;
+  clientes:Clientes[] = []
+  rutas = []
   date = new Date();
   constructor(
    public modalCtrl: ModalController,
    public rutaZonasService: RutaZonaService,
-   public popOverCtrl:PopoverController
+   public popOverCtrl:PopoverController,
+   public planificacionEntregasService: PlanificacionEntregasService,
+   public alertasService:AlertasService
   ) { }
-  testList: any = [
-    {testID: 1, testName: " test1", checked: false},
-    {testID: 2, testName: " test2", checked: false},
-    {testID: 3, testName: "dgdfgd", checked: false},
-    {testID: 4, testName: "UricAcid", checked: false}
- ]
- clientList: any = [
-  {testID: 1, testName: " client1", checked: false},
-  {testID: 2, testName: " client2", checked: false},
-  {testID: 3, testName: "client3", checked: false},
  
-  
-
-]
 selectedArray :any = [];
   ngOnInit() {
     this.cargarListaClientes();
@@ -42,19 +45,21 @@ selectedArray :any = [];
   }
 
   seleccionarCliente($event){
-let cliente = $event.detail.value;
- this.cliente = cliente;
+let ruta = $event.detail.value;
+ this.ruta = ruta;
+
+ this.cargarDatos();
   }
 
   cargarListaClientes(){
-    this.cliente = null;
+    this.ruta = null;
     this.rutaZonasService.syncRutasToPromise().then(resp =>{
 
 
       resp.forEach(element => {
-        let cliente =
+        let ruta =
         {Ruta: element.Ruta, Zona: element.Zona,Descripcion:element.Descripcion, checked: false}
-        this.clientes.push(cliente)
+        this.rutas.push(ruta)
       });
      
      
@@ -62,27 +67,16 @@ let cliente = $event.detail.value;
  
      //this.unCheckAll();
       }
-checkAll(){
-  for(let i =0; i <= this.testList.length; i++) {
-    this.testList[i].checked = true;
-  }
- console.log(this.testList);
-}
+ 
 
-unCheckAll(){
+selectMember(factura:facturas){
 
-  for(let i =0; i <= this.testList.length; i++) {
-    this.testList[i].checked = false;
-  }
-
-}
-
-selectMember(data){
- if (data.checked == true) {
-    this.selectedArray.push(data);
+  console.log(factura)
+ if (factura.checked == false) {
+    this.selectedArray.push(factura);
   } else {
    let newArray = this.selectedArray.filter(function(el) {
-     return el.testID !== data.testID;
+     return el.factura.FACTURA !== factura.factura.FACTURA;
   });
    this.selectedArray = newArray;
  }
@@ -110,11 +104,101 @@ selectMember(data){
     console.log('onDidDismiss resolved with role', data);
     if(data != undefined){
       this.date  = new Date(data.fecha)
-      
+      this.cargarDatos();
     }
    
       
     
   }
+
+  agregarFacturas(){
+
+let facturas = [];
+  for(let i =0; i < this.selectedArray.length; i++){
+  facturas.push(this.selectedArray[i].factura)
+ 
+    if (i == this.selectedArray.length-1){
+
+    
+      this.modalCtrl.dismiss({
+        data:facturas
+      })
+
+    }
+  }
+
+
+  }
+
+  
+  cargarDatos() {
+
+    let clientes: Clientes[] = []
+    this.planificacionEntregasService.syncRutaFacturas(this.ruta.Ruta, format(new Date(this.date),'yyyy-MM-dd')).then(resp => {
+      if(resp.length ==0){
+
+        this.alertasService.message('SDE RP', 'No se encontraron faturas para la ruta '+ this.ruta.Ruta +' selecciona otro cliente')
+        this.cargarListaClientes();
+
+        return;
+      }
+      for (let i = 0; i < resp.length; i++) {
+        let id = resp[i].CLIENTE_ORIGEN;
+        let c = clientes.findIndex(client => client.id == id);
+
+        if (c >= 0) {
+          clientes[c].facturas.push(
+            {
+              factura:resp[i],
+              checked:false
+            }
+          )
+
+        }else{
+          let cliente = {
+            id: resp[i].CLIENTE_ORIGEN,
+            nombre: resp[i].NOMBRE_CLIENTE,
+            facturas:  [],
+            checked:false
+          }
+          clientes.push(cliente)
+        }
+ 
+
+       
+if(i ==  resp.length -1){
+let data = [];
+  for(let c =0; c < clientes.length; c++){
+    console.log('clientes[c].facturas.length', clientes[c].facturas.length)
+   
+if(clientes[c].facturas.length > 0){
+  data.push(clientes[c])
+ 
+}
+    if(c == clientes.length -1){
+      this.clientes = data;
+
+      if(this.clientes.length ==0){
+
+        this.alertasService.message('SDE RP', 'No se encontraron faturas para la ruta '+ this.ruta.Ruta +' selecciona otro cliente')
+        this.cargarListaClientes();
+      }
+      console.log('clientes',clientes)
+    }
+  }
+
+ 
+}
+      }
+
+
+
+    });
+
+
+
+  }
+
+
 
 }

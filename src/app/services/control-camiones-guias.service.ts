@@ -10,64 +10,20 @@ import { ActualizarFacturasService } from './actualizar-facturas.service';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Camiones } from '../models/camiones';
 import { DatatableService } from './datatable.service';
-import { GuiaEntrega } from '../models/guiaEntrega';
-import { format } from 'date-fns';
 import * as  mapboxgl from 'mapbox-gl';
 import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
+import { Cliente, Guias } from '../models/guia';
 //=============================================================================
 // INTERFACE DE ORDEN ENTREGA CLIENTES
 //=============================================================================
 
-interface cliente {
-  id: number,
-  idGuia:string,
-  cliente: string,
-  latitud: number,
-  longitud:number,
-  distancia: number,
-  duracion:number,
-  direccion:string,
-  bultosTotales:number,
-  orden_visita: number,
-  HoraInicio:Date,
-  HoraFin:Date
-}
+
 
  
 
 //=============================================================================
 // INTERFACE DE  MODELO GUIA DE ENTREGA
 //=============================================================================
-
-interface  Guias{
-
-  idGuia: string,
-  verificada:boolean,
-  guiaExistente:boolean,
-  zona: string,
-  ruta: string,
-  fecha: string,
-  numClientes: number,
-  totalFacturas:number
-  distancia: number,
-  duracion:number
-  camion:{
-    HoraInicio:string,
-    HoraFin:string,
-    chofer:string,  
-    idCamion: string,
-    capacidad: number,
-    pesoRestante: number,
-    peso: number,
-    estado: string,
-    HH: string,
-    volumen: number,
-    frio:string,
-    seco:string
-  }
-  clientes:cliente[],
-  facturas: PlanificacionEntregas[]
-}
 @Injectable({
 
   providedIn: 'root'
@@ -89,7 +45,7 @@ camionLleno = false;
     fecha:string;
     lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
     orderArray = [];
-    compareArray  : cliente[] = [];
+    compareArray  : Cliente[] = [];
     complete = 0;
 
     // Variables proceso de ordenamiento MAURICIO HERRA
@@ -252,9 +208,11 @@ return guia;
 agregarFacturaGuiaNueva(idGuia,factura:PlanificacionEntregas){
 
 
+  console.log('idGuia', idGuia, 'factura', factura)
+
 let i = this.listaGuias.findIndex(guia => guia.idGuia == idGuia);
 
-let cliente:cliente =  {
+let cliente:Cliente =  {
   id: factura.CLIENTE_ORIGEN,
   idGuia:null,
   cliente: factura.NOMBRE_CLIENTE,
@@ -283,9 +241,7 @@ let capacidadCamion = this.listaGuias[i].camion.capacidad;
 let pesoFactura = factura.TOTAL_PESO;
  let consultarPesoAntesDeAgregarFactura = pesoActual+pesoFactura;
  
- console.log(consultarPesoAntesDeAgregarFactura)
- console.log(capacidadCamion)
- console.log(consultarPesoAntesDeAgregarFactura < capacidadCamion)
+
 if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
 
   if(c < 0){
@@ -329,19 +285,12 @@ if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
 
     let cliente = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == factura.CLIENTE_ORIGEN);
   let conteoFacturasCliente = this.listaGuias[i].facturas.filter(cliente => cliente.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
-console.log('cliente', cliente)
-console.log('factura', factura)
-  console.log('conteoFacturasCliente', conteoFacturasCliente)
+
   if(conteoFacturasCliente.length  == 0){
     this.listaGuias[i].clientes.splice(cliente, 1)
     this.listaGuias[i].numClientes -= 1;
   }
  
- 
-
-
-  console.log(factura)
-  console.log(this.listaGuias[i])
   if(this.listaGuias[i].numClientes == 0 && this.listaGuias[i].totalFacturas == 0){
     this.listaGuias.splice(i, 1);
   }
@@ -661,7 +610,7 @@ this.alertasService.presentaLoading('Guardando Datos..')
  }
  
 }   
-completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:cliente[]){
+completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
   let postFacturas = [];
   let postRutero = [];
 
@@ -793,8 +742,8 @@ borrarGuia(idGuia){
 
     for(let f =0; f < facturas.length; f++){
       console.log('facturas[i]', facturas[i])
-      facturas[i].ID_GUIA = null;
-      console.log('facturas[i]', facturas[i])
+      facturas[f].ID_GUIA = null;
+      console.log('facturas[i]', facturas[f])
       if(f === facturas.length -1){
         this.listaGuias.splice(i,1);
       }

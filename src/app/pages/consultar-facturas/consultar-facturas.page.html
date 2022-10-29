@@ -13,9 +13,9 @@
       </ion-header>
 
 <ion-content>
-  <ion-row *ngIf="!cliente">
+  <ion-row *ngIf="!ruta">
     <ion-col size="8">
-      <ion-searchbar    mode="ios" placeholder="Buscar Cliente" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+      <ion-searchbar    mode="ios" placeholder="Buscar Ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
     </ion-col>
     <ion-col size="4">
       <ion-item>
@@ -27,12 +27,12 @@
       </ion-item>
     </ion-col>
   </ion-row>
-  <ion-list *ngIf="!cliente" lines="none" class="fixed-content">
+  <ion-list *ngIf="!ruta" lines="none" class="fixed-content">
 
 
       <ion-radio-group allow-empty-selection="true" (ionChange)="seleccionarCliente($event)"  >
     
-        <ion-item  *ngFor="let item of clientes | filtro: textoBuscar:'Descripcion'">
+        <ion-item  *ngFor="let item of rutas | filtro: textoBuscar:'Descripcion'">
      
     
           <ion-label>   {{ item.Descripcion }}</ion-label>
@@ -47,7 +47,7 @@
     </ion-list>
 
 
-    <ion-row *ngIf="cliente">
+    <ion-row *ngIf="ruta">
       <ion-col size="8">
         <ion-searchbar    mode="ios" placeholder="Buscar Facturas" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
        
@@ -56,27 +56,55 @@
         <ion-button color="dark" (click)="cargarListaClientes()" expand="block" >
           <ion-icon name="refresh-outline"></ion-icon>
           </ion-button>
-          <ion-button color="dark" (click)="unCheckAll()" expand="block" >
-            <ion-icon name="close-circle-outline"></ion-icon>
-          </ion-button>
-                  
-<ion-button color="dark" (click)="checkAll()" expand="block" >
-  <ion-icon name="checkmark-circle-outline"></ion-icon>
-</ion-button>
+
       </ion-col>
     </ion-row>
 
-    <ion-list lines="none" class="fixed-content" *ngIf="cliente">
+    <ion-list lines="none" class="fixed-content" *ngIf="ruta">
 
+
+  <ion-grid *ngFor="let data of clientes">
+    <ion-row>
+      <ion-col size="12">
+        <ion-item >
+          <ion-label>{{data.nombre}}</ion-label>
 
       
+      
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" >
+        <ion-row class="header-row">
+          <ion-col size="6" class="ion-text-wrap">Factura</ion-col>
+          <ion-col size="4" class="ion-text-wrap">Fecha Pedido</ion-col>
+         
+          <ion-col size="2" class="ion-text-wrap"></ion-col>
 
-<div  >
-  <ion-item *ngFor="let member of testList">
-    <ion-label>{{member?.testName || 'N/A'}}</ion-label>
-    <ion-checkbox color="dark" (click)="selectMember(member)" [(ngModel)]="member.checked"></ion-checkbox>
-  </ion-item>
-</div>
+
+        </ion-row>
+
+        <ion-row class="data-row"  *ngFor="let factura of data.facturas" >
+          <ion-col size="6">
+            <ion-label class="ion-text-wrap">{{factura.factura.FACTURA}}</ion-label>
+          </ion-col>
+      
+          <ion-col size="4">
+            <ion-label class="ion-text-wrap">{{factura.factura.FECHA_PEDIDO  | date:'mediumDate' }}</ion-label>
+          </ion-col>
+   
+   
+          <ion-col size="2" class="ion-text-center ion-text-wrap" >
+            <ion-checkbox color="dark" (click)="selectMember(factura)" [(ngModel)]="factura.checked"></ion-checkbox>
+          </ion-col>
+        </ion-row>
+
+  
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
 
 
 
@@ -89,3 +117,6 @@
 
 </ion-content>
 
+<ion-footer class="ion-no-border ion-text-center ion-padding" >
+  <ion-button  color="dark" expand="block" (click)="agregarFacturas()">Agregar Facturas</ion-button>
+</ion-footer>

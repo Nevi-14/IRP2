@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { CalendarioPopoverPageRoutingModule } from './calendario-popover-routing.module';
 
 import { CalendarioPopoverPage } from './calendario-popover.page';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CalendarioPopoverPageRoutingModule
+    CalendarioPopoverPageRoutingModule,
+    PipesModule
   ],
   declarations: [CalendarioPopoverPage]
 })

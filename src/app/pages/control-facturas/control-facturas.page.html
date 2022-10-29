@@ -23,10 +23,11 @@
         </span>
         
      
- 
-       <ion-fab-button slot="end" color="dark" (click)="filtrar()" class="ion-margin-right"  size="small">
-        <ion-icon name="funnel-outline"></ion-icon>
-       </ion-fab-button>
+        <span style="display: flex;justify-content: center;align-items: center;">
+          <ion-label>Todas Las Facturas</ion-label>
+          <ion-toggle     (ionChange)="agregarTodasFacturas($event)"></ion-toggle>
+        </span>
+  
               </ion-item>
         </ion-col>
         <ion-col size="4" style="display:flex; justify-content: center;align-items: center;">
