@@ -8,18 +8,16 @@
       
       
         </ion-toolbar>
+<ion-toolbar >
 
-      
-      </ion-header>
 
-<ion-content>
-  <ion-row *ngIf="!ruta">
-    <ion-col size="8">
+  <ion-row *ngIf="!ruta" style="display: flex;justify-content:center;align-items:center;">
+    <ion-col size="8" >
       <ion-searchbar    mode="ios" placeholder="Buscar Ruta" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
     </ion-col>
     <ion-col size="4">
-      <ion-item>
-        <ion-input [value]="date"></ion-input>
+      <ion-item lines="none">
+        <ion-input [value]="date | date"></ion-input>
         <ion-button fill="clear" (click)="calendarioPopover()">
           <ion-icon icon="calendar"></ion-icon>
         </ion-button>
@@ -27,6 +25,35 @@
       </ion-item>
     </ion-col>
   </ion-row>
+
+  <ion-row *ngIf="ruta">
+    <ion-col size="6">
+<ion-toolbar>
+  <ion-title>{{ruta.Descripcion}}</ion-title>
+</ion-toolbar>
+ 
+    </ion-col>
+    <ion-col size="6">
+      <ion-item lines="none">
+        <ion-input [value]="date | date"></ion-input>
+        <ion-button fill="clear" (click)="calendarioPopover()">
+          <ion-icon icon="calendar"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="ruta"  (click)="cargarListaClientes()" expand="block" fill="clear">
+      <ion-icon   slot="icon-only" name="refresh-outline"></ion-icon>
+           </ion-button>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+ 
+
+</ion-toolbar>
+      
+      </ion-header>
+
+<ion-content>
+
   <ion-list *ngIf="!ruta" lines="none" class="fixed-content">
 
 
@@ -47,18 +74,7 @@
     </ion-list>
 
 
-    <ion-row *ngIf="ruta">
-      <ion-col size="8">
-        <ion-searchbar    mode="ios" placeholder="Buscar Facturas" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-       
-      </ion-col>
-      <ion-col size="4" style="display: flex;justify-content:center;align-items:center">
-        <ion-button color="dark" (click)="cargarListaClientes()" expand="block" >
-          <ion-icon name="refresh-outline"></ion-icon>
-          </ion-button>
 
-      </ion-col>
-    </ion-row>
 
     <ion-list lines="none" class="fixed-content" *ngIf="ruta">
 
@@ -83,7 +99,7 @@
 
         </ion-row>
 
-        <ion-row class="data-row"  *ngFor="let factura of data.facturas" >
+        <ion-row class="data-row"  *ngFor="let factura of data.facturas">
           <ion-col size="6">
             <ion-label class="ion-text-wrap">{{factura.factura.FACTURA}}</ion-label>
           </ion-col>
@@ -117,6 +133,6 @@
 
 </ion-content>
 
-<ion-footer class="ion-no-border ion-text-center ion-padding" >
+<ion-footer *ngIf="selectedArray.length > 0" class="ion-no-border ion-text-center ion-padding" >
   <ion-button  color="dark" expand="block" (click)="agregarFacturas()">Agregar Facturas</ion-button>
 </ion-footer>

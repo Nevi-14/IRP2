@@ -102,11 +102,16 @@ selectMember(factura:facturas){
   
     const { data } = await popover.onDidDismiss();
     console.log('onDidDismiss resolved with role', data);
-    if(data != undefined){
+    if(data != undefined ){
       this.date  = new Date(data.fecha)
-      this.cargarDatos();
+
+   if(this.ruta){
+
+    this.cargarDatos();
+   }
     }
    
+ 
       
     
   }
@@ -134,17 +139,24 @@ let facturas = [];
   cargarDatos() {
 
     let clientes: Clientes[] = []
+
     this.planificacionEntregasService.syncRutaFacturas(this.ruta.Ruta, format(new Date(this.date),'yyyy-MM-dd')).then(resp => {
       if(resp.length ==0){
 
-        this.alertasService.message('SDE RP', 'No se encontraron faturas para la ruta '+ this.ruta.Ruta +' selecciona otro cliente')
-        this.cargarListaClientes();
-
+        this.alertasService.message('SDE RP', 'No se encontraron faturas para la ruta '+ this.ruta.Descripcion +' selecciona otra fecha')
+       // this.cargarListaClientes();
+this.clientes = [];
         return;
       }
+
+ 
       for (let i = 0; i < resp.length; i++) {
+
+
+    
         let id = resp[i].CLIENTE_ORIGEN;
         let c = clientes.findIndex(client => client.id == id);
+
 
         if (c >= 0) {
           clientes[c].facturas.push(
@@ -158,7 +170,12 @@ let facturas = [];
           let cliente = {
             id: resp[i].CLIENTE_ORIGEN,
             nombre: resp[i].NOMBRE_CLIENTE,
-            facturas:  [],
+            facturas:  [
+              {
+                factura:resp[i],
+                checked:false
+              }
+            ],
             checked:false
           }
           clientes.push(cliente)

@@ -50,6 +50,7 @@ public camion: {
     peso: number,
     estado: string,
     HH: string,
+    bultos:number,
     volumen: number,
     frio:string,
     seco:string

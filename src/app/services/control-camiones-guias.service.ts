@@ -12,7 +12,7 @@ import { Camiones } from '../models/camiones';
 import { DatatableService } from './datatable.service';
 import * as  mapboxgl from 'mapbox-gl';
 import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
-import { Cliente, Guias } from '../models/guia';
+import { Cliente, ClientesGuia, Guias } from '../models/guia';
 //=============================================================================
 // INTERFACE DE ORDEN ENTREGA CLIENTES
 //=============================================================================
@@ -33,14 +33,17 @@ import { Cliente, Guias } from '../models/guia';
 export class ControlCamionesGuiasService {
 
   
-preListaGuias:Guias[] = []
-listaGuias : Guias[] = [];
-facturasNoAgregadas: PlanificacionEntregas[] = [];
+    clientes: ClientesGuia[] = []
+    facturas: ClientesGuia[] = []
+    facturasOriginal: ClientesGuia[] = []
+    facturasNoAgregadas: PlanificacionEntregas[] = [];
+    preListaGuias:Guias[] = []
+    listaGuias : Guias[] = [];
 
 //=============================================================================
 // VARIABLES GLOBALES
 //=============================================================================
-camionLleno = false;
+    camionLleno = false;
     rutaZona = null;
     fecha:string;
     lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
@@ -67,6 +70,8 @@ camionLleno = false;
     volumenTotal: number = 0;
     bultosTotales: number = 0;
     totalClientes: number = 0;
+
+
    
  constructor( 
     public modalCtrl: ModalController,
@@ -89,11 +94,17 @@ camionLleno = false;
 //=============================================================================
 
 limpiarDatos(){
+
+  this.clientes  = [];
+  this.facturas = [];
+  this.facturasOriginal = [];
+  this.facturasNoAgregadas = [];
+  this.preListaGuias = [];
+  this.listaGuias  = [];
+
   this.camionLleno = false;
   this.rutaZona = null;
   this.fecha = null;
-  this.lngLat  = [ -84.14123589305028, 9.982628288210657 ];
-  this.listaGuias  = [];
   this.orderArray = [];
   this.compareArray    = [];
   this.complete = 0;
@@ -111,6 +122,12 @@ limpiarDatos(){
   this.ruteros = []
   this.idGuiasArray = [];
   this.contadorPost = 0;
+  this.totalFacturas  = 0;
+  this.pesoTotal = 0;
+  this.totalBultos = 0;
+  this.volumenTotal = 0;
+  this.bultosTotales = 0;
+  this.totalClientes = 0;
 
   this.guiasService.limpiarDatos();
   this.ruteroService.limpiarDatos();
@@ -142,7 +159,29 @@ limpiarDatos(){
   }
 
 
+actualizarValores(){
+  this.totalFacturas  = 0;
+  this.pesoTotal = 0;
+  this.totalBultos = 0;
+  this.volumenTotal = 0;
+  this.bultosTotales = 0;
+  this.totalClientes = 0;
 
+
+  this.facturas.forEach(clientes =>{
+
+    let facturas = clientes.facturas;
+    facturas.forEach(factura =>{
+      this.pesoTotal += factura.TOTAL_PESO;
+this.volumenTotal += factura.TOTAL_VOLUMEN;
+this.totalClientes  = this.facturas.length;
+this.totalBultos += Number(factura.RUBRO1);
+this.bultosTotales += Number(factura.RUBRO1);
+this.totalFacturas +=1;
+
+    })
+  })
+}
 
 
 //=============================================================================
@@ -190,6 +229,7 @@ for(let i =0; i < camiones.length; i++){
         peso: 0 ,
         estado : 'INI',
         HH : 'nd',
+        bultos: 0,
         volumen:   camion.capacidadVolumen,
         frio:camion.frio,
         seco:camion.seco,
@@ -221,7 +261,7 @@ let cliente:Cliente =  {
   distancia: 0,
   duracion:0,
   direccion:factura.DIRECCION_FACTURA,
-  bultosTotales:0,
+  bultosTotales:Number(factura.RUBRO1),
   orden_visita:0,
   HoraInicio:null,
   HoraFin:null
@@ -248,10 +288,18 @@ if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
     this.listaGuias[i].clientes.push(cliente)
     this.listaGuias[i].numClientes += 1;
   } 
-  this.listaGuias[i].facturas.push(factura)
-  this.listaGuias[i].totalFacturas += 1;
-  this.listaGuias[i].camion.peso  += factura.TOTAL_PESO;
-  this.listaGuias[i].camion.pesoRestante  =  this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
+  let f =this.listaGuias[i].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA);
+  if(f < 0){
+    
+  
+    this.listaGuias[i].facturas.push(factura)
+    this.listaGuias[i].totalFacturas += 1;
+    this.listaGuias[i].camion.bultos += Number(factura.RUBRO1);
+    this.listaGuias[i].camion.peso  += factura.TOTAL_PESO;
+    this.listaGuias[i].camion.pesoRestante  =  this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
+
+  }
+
     }else{
    factura.ID_GUIA = null;
       this.facturasNoAgregadas.push(factura)
@@ -259,11 +307,12 @@ if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
   
 }
 
- 
+this.actualizarValores();
  
 
 }
  borrarFacturaGuia(factura:PlanificacionEntregas){
+
 
   let i = this.listaGuias.findIndex(guia => guia.idGuia == factura.ID_GUIA);
   
@@ -611,6 +660,8 @@ this.alertasService.presentaLoading('Guardando Datos..')
  
 }   
 completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
+
+
   let postFacturas = [];
   let postRutero = [];
 
@@ -671,7 +722,7 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
     postRutero.push(rut)
     
     if(j === ruteros.length -1){
-
+      this.alertasService.presentaLoading('Guardando guias..')
       console.log(postFacturas,'postFacturas',)
       let index =  this.listaGuias.findIndex(filtrar => filtrar.idGuia == guia.idGuia);
       if(index >=0){
@@ -710,7 +761,7 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
           })
         }
         console.log(guiaCamion, this.listaGuias[index])
-        this.alertasService.loadingDissmiss();
+     
         return
       }
         //  postFacturas = []

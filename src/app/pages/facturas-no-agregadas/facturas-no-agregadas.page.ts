@@ -10,6 +10,7 @@ import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 })
 export class FacturasNoAgregadasPage implements OnInit {
 @Input() facturas:PlanificacionEntregas[]
+textoBuscar = '';
   constructor(
     public modalCtrl:ModalController
   ) { }
@@ -37,4 +38,10 @@ this.cerrarModal();
     modal.present();
 
   }
+
+  
+  onSearchChange(event){
+    this.textoBuscar = event.detail.value;
+    
+   }
 }

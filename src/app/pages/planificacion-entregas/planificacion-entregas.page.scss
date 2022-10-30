@@ -14,10 +14,18 @@ text-transform: capitalize;
   overflow: auto;
   height: 62vh;
 }  ion-card {
-  font-size: 12px;
-
   overflow: unset !important;
-  min-height:250px;
+  max-height:250px;
+  ion-row{
+    ion-col{
+      font-size: 12px;
+      .ion-text-wrap{
+
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+  }
 }
 .fixed-content-facturas {        //comments showing what I replaced.
   overflow: auto;

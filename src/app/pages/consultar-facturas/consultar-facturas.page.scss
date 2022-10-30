@@ -3,3 +3,16 @@ ion-content{
 
 }
 
+ion-searchbar {
+max-width: 95%;
+    --border-radius: 10px;
+  //  --background: white;
+    --color: black;
+   
+  
+  }
+  
+      ion-buttons {
+        margin-top: 0.2rem;
+        align-self: start;
+      }
