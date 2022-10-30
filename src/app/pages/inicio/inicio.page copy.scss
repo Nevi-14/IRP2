@@ -1,9 +1,7 @@
 div{
   width: 100vw;
 }
-ion-content{
-  overflow: hidden!important;
-}
+ 
 .split-pane-visible >.split-pane-side {
   overflow: hidden!important;
     min-width: 140px!important;
@@ -17,11 +15,30 @@ ion-content{
   }
   
   
-  
+  .no-scroll {
+    --offset-bottom: auto!important;
+
+    --overflow: hidden;
+    
+    overflow: auto;
+    
+    &::-webkit-scrollbar {
+    
+      display: none;
+    
+    }
+}
   .split-pane-visible >.expand-menu  {
+    overflow-y: scroll;
     min-width: 250px!important;
     max-width: 250px!important;
   
+  }
+  #inbox-list
+  {
+    overflow: auto;
+    height: 30vh;
+
   }
   ion-item {
     --background: transparent!important;
