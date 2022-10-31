@@ -5,6 +5,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { PlanificacionEntregas } from '../../models/planificacionEntregas';
 import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
+import { ClientesGuia } from '../../models/guia';
 interface cliente {
   id: number,
   idGuia:string,
@@ -66,6 +67,7 @@ export class ListaClientesGuiasPage implements OnInit {
 @Input() fecha;
 @Input()  idGuia
 @Input()  guia:Guias
+clientes:ClientesGuia[]=[];
 verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
@@ -77,7 +79,9 @@ textoBuscar = '';
   ) { }
 
   ngOnInit() {
-   console.log( this.guia,'guiia')
+    console.log( this.guia,'guiia')
+  this.clientes =   this.controlCamionesGuiasService.importarFacturas(this.guia.facturas);
+  console.log( this.clientes,'clientes')
   }
 
   actualizarFactura(factura){

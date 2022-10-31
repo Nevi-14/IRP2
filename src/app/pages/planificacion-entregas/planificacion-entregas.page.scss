@@ -15,7 +15,7 @@ text-transform: capitalize;
   height: 62vh;
 }  ion-card {
   overflow: unset !important;
-  max-height:250px;
+  min-height:250px;
   ion-row{
     ion-col{
       font-size: 12px;

@@ -91,7 +91,7 @@
       
       <ion-col   class="ion-padding fixed-content" size="12" >
   
-        <ion-card *ngFor="let guia of controlCamionesGuiasService.listaGuias;let i = index;" >
+        <ion-card style="margin-bottom: 2rem;" *ngFor="let guia of controlCamionesGuiasService.listaGuias;let i = index;" >
     
           <ion-card-content style="text-align: left;">
             <ion-grid >
@@ -99,7 +99,7 @@
          
                 <ion-col size="6">
                   <ion-badge color="dark" mode="ios">{{ guia.guiaExistente ? 'Guia existente' : 'Nueva Guia'}}</ion-badge></ion-col>
-                  <ion-col size="6"> {{guia.idGuia}}</ion-col>
+                  <ion-col size="6" class="ion-padding"> <strong>{{guia.idGuia}}</strong></ion-col>
                 <ion-col size="12">{{guia.camion.chofer}}</ion-col>
                 <ion-col size="{{guia.verificada ? 6 : 12}}"><strong>Placa</strong> : {{guia.camion.idCamion}}</ion-col>
                 <ion-col size="6" *ngIf="guia.verificada">
@@ -135,7 +135,7 @@
       
           </ion-card-content>
   
-          <span style="position: absolute; top: -2rem; right: -1rem; display: flex;justify-content: space-around;">
+          <span style="position: absolute; top: -1.5rem; right: -1rem; display: flex;justify-content: space-around;">
             <ion-fab-button  (click)="time(guia)"   size="small" class="custom-button" color="primary"  >
               <ion-icon   name="time-outline"></ion-icon>
             </ion-fab-button>

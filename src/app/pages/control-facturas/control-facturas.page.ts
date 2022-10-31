@@ -50,11 +50,11 @@ export class ControlFacturasPage implements OnInit {
     console.log(' this.facturas',  this.facturas)
 
     if(this.factura == null){
-      
+      this.listaGuias = true;
       this.incluirFacturas = true;
 this.facturasArray = this.facturas
 
-
+this.guiasNuevas();
 console.log('this.facturas', this.facturas)
       return
     }
@@ -133,12 +133,12 @@ console.log($event)
   
   
     this.controlCamionesGuiasService.listaGuias.push(camion);
-    
+    console.log('camion', camion)
     for(let i =0; i< this.facturasArray.length; i++){
 console.log('this.facturasArray', this.facturasArray)
       let facturasArray2 = this.facturasArray[i].facturas;
       facturasArray2.forEach(factu  => {
-
+console.log('facturaaaaa inmpor', factu)
         if(factu.ID_GUIA   ){
  console.log('deleting')
           this.controlCamionesGuiasService.borrarFacturaGuia(factu)
@@ -167,6 +167,9 @@ console.log('this.facturasArray', this.facturasArray)
   return
     }
 
+
+
+    
    
     if(this.factura.ID_GUIA){
 

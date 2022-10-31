@@ -225,7 +225,7 @@ for(let i =0; i < camiones.length; i++){
         chofer:camion.chofer,  
         idCamion: camion.idCamion,
         capacidad: capacidad,
-        pesoRestante: 0,
+        pesoRestante: capacidad,
         peso: 0 ,
         estado : 'INI',
         HH : 'nd',
@@ -268,6 +268,7 @@ let cliente:Cliente =  {
 }
 
 if(i >=0){
+
   this.listaGuias[i].verificada = false;
   
 cliente.idGuia = this.listaGuias[i].idGuia; 
@@ -275,13 +276,14 @@ factura.ID_GUIA =  this.listaGuias[i].idGuia;;
 let c = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == cliente.id);
 
 // validamos el peso
+console.log('this.listaGuias[i', this.listaGuias[i].camion.peso+factura.TOTAL_PESO)
 
-let pesoActual = this.listaGuias[i].camion.peso;
 let capacidadCamion = this.listaGuias[i].camion.capacidad;
+let pesoActual = this.listaGuias[i].camion.peso;
 let pesoFactura = factura.TOTAL_PESO;
  let consultarPesoAntesDeAgregarFactura = pesoActual+pesoFactura;
  
-
+console.log('consultarPesoAntesDeAgregarFactura', consultarPesoAntesDeAgregarFactura)
 if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
 
   if(c < 0){
@@ -302,6 +304,15 @@ if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
 
     }else{
    factura.ID_GUIA = null;
+   let guia = this.listaGuias.findIndex(guia => guia.idGuia == idGuia );
+
+   if(guia > 0){
+
+    if(this.listaGuias[guia].clientes.length == 0 || this.listaGuias[guia].facturas.length == 0 ){
+this.listaGuias.splice(guia, 1);
+
+    }
+   }
       this.facturasNoAgregadas.push(factura)
     }
   
@@ -812,7 +823,32 @@ borrarTodasLasGuias(){
 };
 
 
+importarFacturas(facturas:any[]) {
+  let data:ClientesGuia[] = [];
+ 
 
+  facturas.forEach(factura =>{
+    let cliente = {
+      id: factura.CLIENTE_ORIGEN,
+      nombre: factura.NOMBRE_CLIENTE,
+      facturas: [factura]
+    }
+    let c = data.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
+    if(c>=0){
+let f = data[c].facturas.findIndex(fact => fact.CLIENTE_ORIGEN ==  factura.CLIENTE_ORIGEN)
+if (f < 0){
+  data[c].facturas.push(factura)
+
+}
+    }else{
+      data.push(cliente)
+    }
+
+
+  })
+return data;
+
+}
 
 }
 
