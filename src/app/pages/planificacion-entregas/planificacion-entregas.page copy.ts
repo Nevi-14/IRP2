@@ -47,6 +47,10 @@ export class PlanificacionEntregasPage {
   ) { }
 
 
+  image = '../assets/icons/delivery-truck.svg'
+
+  verdadero = true;
+  falso = false;
 
 
   ionViewWillEnter() {
@@ -68,6 +72,7 @@ export class PlanificacionEntregasPage {
 
       for (let i = 0; i < resp.length; i++) {
 
+
         let id = resp[i].CLIENTE_ORIGEN;
         let c = clientes.findIndex(client => client.id == id);
 
@@ -86,14 +91,11 @@ export class PlanificacionEntregasPage {
 
         if (i == resp.length - 1) {
 
-      
-
-          this.controlCamionesGuiasService.facturas = this.odenar(clientes);
-     
+          this.controlCamionesGuiasService.facturas = clientes;
+          this.controlCamionesGuiasService.facturas.sort((a, b) => -(a.id < b.id) || +(a.id > b.id))
           this.controlCamionesGuiasService.actualizarValores();
 
-     
-          
+
         }
 
       }
@@ -105,30 +107,6 @@ export class PlanificacionEntregasPage {
 
 
   }
-
-odenar(array:any[])
-
-{
-  for (let a = 1; a < array.length; a++){
-    for (let b = 0; b < a ; b++){
-      if (Number(array[b].id) < Number(array[a].id)) {
-        var x = array[a];
-        array[a] = array[b];
-        array[b] = x;
-        console.log('a b', a, b)
-      }      
-    }
-    if(a == array.length -1){
-  
-return array;
-   
-    }
-  }
-
-}
-
-
-
 
 
   limpiarDatos() {
@@ -149,6 +127,8 @@ return array;
 
     if (data !== undefined) {
       this.limpiarDatos();
+      console.log(data.ruta, 'data retorno', data !== undefined)
+      console.log(data)
       let ruta = data.ruta;
       this.controlCamionesGuiasService.rutaZona = ruta;
 
@@ -180,6 +160,11 @@ return array;
   }
 
   async filtrar() {
+    /**
+     *  FRIO_SECO
+        ID_GUIA
+        CLIENTE_ORIGEN
+     */
 
     let inputs: any = [
  
@@ -233,6 +218,8 @@ return array;
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
+
+
 
           },
         },
@@ -386,19 +373,7 @@ return array;
 
 
   }
-  async agregarFacturas(cliente:ClientesGuia){
-    console.log(cliente)
-        const modal = await this.modalCtrl.create({
-          component: ControlFacturasPage,
-          cssClass: 'large-modal',
-          componentProps: {
-            factura: null,
-            facturas:this.controlCamionesGuiasService.importarFacturas(cliente.facturas)
-          },
-        });
-        modal.present();
-    
-      }
+
   controlFacturas(factura) {
 
     if (factura.LONGITUD == null || factura.LONGITUD == undefined || factura.LONGITUD == 0 || factura.LATITUD == 0) {
@@ -454,8 +429,7 @@ return array;
         this.importarFacturas(factura)
 
         if(index == data.data.length -1){
-          this.controlCamionesGuiasService.facturas = this.odenar(this.controlCamionesGuiasService.facturas);
-     
+          this.controlCamionesGuiasService.facturas.sort((a, b) => -(a.id < b.id) || +(a.id > b.id))
           this.controlCamionesGuiasService.actualizarValores();
    
 
@@ -492,7 +466,7 @@ return array;
       this.controlCamionesGuiasService.facturas.push(cliente)
     }
 
-
+   // this.controlCamionesGuiasService.actualizarValores();
 
 
   }
@@ -512,9 +486,9 @@ return array;
       for (let i = 0; i < this.controlCamionesGuiasService.facturas.length; i++) {
         let facturas = this.controlCamionesGuiasService.facturas[i].facturas;
         for (let f = 0; f < facturas.length; f++) {
-     
+          console.log('facturas[f]', facturas[f])
           if (facturas[f].FACTURA === this.textFactura) {
-          
+            console.log('foundx|')
             if (facturas[f].ID_GUIA === '' || !facturas[f].ID_GUIA) {
               encontre = true;
               factura = facturas[f];
@@ -531,6 +505,7 @@ return array;
           if (!encontre) {
             this.facturasService.syncGetFacturaToPromise(this.textFactura).then(factura => {
 
+              console.log('external', factura)
               if (factura.length > 0) {
 
 
@@ -612,6 +587,69 @@ return array;
   }
 
 
+  async buscarCliente() {
+    const alert = await this.alertCtrl.create({
+      header: 'Please enter your info',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+
+          },
+        },
+        {
+          text: 'OK',
+          role: 'confirm',
+          handler: () => {
+
+          },
+        },
+      ],
+      inputs: [
+ 
+        {
+          type: 'text',
+          placeholder: 'Nombre Cliente',
+          min: 1,
+          max: 100,
+        }
+      ],
+    });
+
+    await alert.present();
+  }
+
+
+
+
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Alert!',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+
+          },
+        },
+        {
+          text: 'OK',
+          role: 'confirm',
+          handler: () => {
+
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+
+    const { role } = await alert.onDidDismiss();
+
+
+  }
   async detalleGuia(guia) {
 
     const modal = await this.modalCtrl.create({

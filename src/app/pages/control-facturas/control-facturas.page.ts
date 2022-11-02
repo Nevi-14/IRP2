@@ -224,6 +224,8 @@ if(this.incluirFacturas){
     
     this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
     this.controlCamionesGuiasService.actualizarValores();
+    
+  this.cerrarModal();
 }
  
 

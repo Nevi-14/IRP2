@@ -205,12 +205,17 @@
     <ion-grid >
       <ion-row>
         <ion-col size="12" >
-    <ion-item lines="none">
+    <ion-item lines="none"  >
       <ion-label color="primary" class="ion-text-wrap ion-text-uppercase" slot="start"  style="display: flex;justify-content:left;align-items:center">
         
         <ion-badge style="margin-right: 1rem;"  color="warning" mode="ios" >{{cliente.id}}</ion-badge>
-        <strong>{{cliente.nombre}}</strong></ion-label>
+        <strong>{{cliente.nombre}}</strong>
       
+        <ion-button   (click)="agregarFacturas(cliente)"  fill="clear"  >
+          <ion-icon color="dark" slot="icon-only" name="create"></ion-icon>
+         </ion-button>
+      </ion-label>
+    
     </ion-item>
         </ion-col>
 

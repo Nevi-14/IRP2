@@ -247,9 +247,6 @@ return guia;
 
 agregarFacturaGuiaNueva(idGuia,factura:PlanificacionEntregas){
 
-
-  console.log('idGuia', idGuia, 'factura', factura)
-
 let i = this.listaGuias.findIndex(guia => guia.idGuia == idGuia);
 
 let cliente:Cliente =  {
@@ -269,31 +266,36 @@ let cliente:Cliente =  {
 
 if(i >=0){
 
-  this.listaGuias[i].verificada = false;
-  
+
+  this.listaGuias[i].verificada = false; 
 cliente.idGuia = this.listaGuias[i].idGuia; 
 factura.ID_GUIA =  this.listaGuias[i].idGuia;;
-let c = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == cliente.id);
 
-// validamos el peso
-console.log('this.listaGuias[i', this.listaGuias[i].camion.peso+factura.TOTAL_PESO)
+let c = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == factura.CLIENTE_ORIGEN);
 
 let capacidadCamion = this.listaGuias[i].camion.capacidad;
 let pesoActual = this.listaGuias[i].camion.peso;
 let pesoFactura = factura.TOTAL_PESO;
  let consultarPesoAntesDeAgregarFactura = pesoActual+pesoFactura;
  
-console.log('consultarPesoAntesDeAgregarFactura', consultarPesoAntesDeAgregarFactura)
 if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
 
-  if(c < 0){
+  if(c >= 0){
+    let f =this.listaGuias[i].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA);
+    if(f < 0){
+      
+    
+      this.listaGuias[i].facturas.push(factura)
+      this.listaGuias[i].totalFacturas += 1;
+      this.listaGuias[i].camion.bultos += Number(factura.RUBRO1);
+      this.listaGuias[i].camion.peso  += factura.TOTAL_PESO;
+      this.listaGuias[i].camion.pesoRestante  =  this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
+  
+    }
+  } else{
+
     this.listaGuias[i].clientes.push(cliente)
     this.listaGuias[i].numClientes += 1;
-  } 
-  let f =this.listaGuias[i].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA);
-  if(f < 0){
-    
-  
     this.listaGuias[i].facturas.push(factura)
     this.listaGuias[i].totalFacturas += 1;
     this.listaGuias[i].camion.bultos += Number(factura.RUBRO1);
@@ -301,6 +303,7 @@ if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
     this.listaGuias[i].camion.pesoRestante  =  this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
 
   }
+
 
     }else{
    factura.ID_GUIA = null;
@@ -823,7 +826,7 @@ borrarTodasLasGuias(){
 };
 
 
-importarFacturas(facturas:any[]) {
+importarFacturas(facturas:PlanificacionEntregas[]) {
   let data:ClientesGuia[] = [];
  
 
@@ -835,13 +838,14 @@ importarFacturas(facturas:any[]) {
     }
     let c = data.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
     if(c>=0){
-let f = data[c].facturas.findIndex(fact => fact.CLIENTE_ORIGEN ==  factura.CLIENTE_ORIGEN)
+let f = data[c].facturas.findIndex(fact => fact.FACTURA ==  factura.FACTURA)
 if (f < 0){
   data[c].facturas.push(factura)
 
 }
     }else{
       data.push(cliente)
+      
     }
 
 
