@@ -8,12 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class DetallePage implements OnInit {
   image = '../assets/islena.png';
   public appPages = [
-   {
-      image: '../assets/home/maintenance.png',
-      title: 'Configuracion de Rutas',
-      description: 'Permite gestionar la relación de Rutas y Zonas',
-      url: '/mantenimiento-rutas',
-    },
+ 
  
     {
       image: '../assets/home/delivery.svg',

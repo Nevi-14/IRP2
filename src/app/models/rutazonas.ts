@@ -1,7 +1,7 @@
 export class RutaZonas{
     constructor(
-       public Ruta: string,
+       public RUTA: string,
        public Zona: string,
-        public Descripcion: string
+        public DESCRIPCION: string
     ){}
 }

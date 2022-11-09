@@ -23,10 +23,10 @@
  
       <ion-radio-group allow-empty-selection="true" (ionChange)="retornarRuta($event)"  >
     
-        <ion-item  *ngFor="let item of rutaZonas.rutasZonasArray | filtro: textoBuscar:'Descripcion'">
+        <ion-item  *ngFor="let item of rutaZonas.rutasZonasArray | filtro: textoBuscar:'DESCRIPCION'">
      
     
-          <ion-label>   {{ item.Descripcion }}</ion-label>
+          <ion-label>   {{ item.DESCRIPCION }}</ion-label>
          <ion-radio [value]="item"    slot="end" ></ion-radio>
               
       

@@ -27,7 +27,7 @@ console.log(URL);
     return URL;
   }
   private getRutasZonas( ){
-    const URL = this.getIRPURL( environment.rutaZonaURL,'');
+    const URL = this.getIRPURL( environment.getRutasZonasURL,'');
     return this.http.get<RutaZonas[]>( URL );
   }
 
@@ -66,7 +66,7 @@ console.log(URL);
   // ACTUALIZAR RUTA - ZONA
 
   private putRutaZona(i: number){
-    const URL = this.getIRPURL(environment.rutaZonaURL, this.rutasZonasArray[i].Ruta);
+    const URL = this.getIRPURL(environment.rutaZonaURL, this.rutasZonasArray[i].RUTA);
     const options = {
       headers: {
         'Content-Type': 'application/json',

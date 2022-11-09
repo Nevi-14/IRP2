@@ -25,6 +25,7 @@ export const environment = {
   rutaParam:'?ruta=',
   rutaZonaURL:'Ruta_Zona',
   rutaFacturasURL:'Facturas/',
+  getRutasZonasURL:'Rutas',
   zonasURL:'Zonas',
   idParam:'?ID=',
   camionesURL:'Camiones',

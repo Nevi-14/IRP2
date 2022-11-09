@@ -58,7 +58,7 @@ let ruta = $event.detail.value;
 
       resp.forEach(element => {
         let ruta =
-        {Ruta: element.Ruta, Zona: element.Zona,Descripcion:element.Descripcion, checked: false}
+        {Ruta: element.RUTA, Zona: element.Zona,Descripcion:element.DESCRIPCION, checked: false}
         this.rutas.push(ruta)
       });
      

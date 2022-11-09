@@ -64,7 +64,7 @@ export class PlanificacionEntregasPage {
   cargarDatos() {
 
     let clientes: ClientesGuia[] = []
-    this.planificacionEntregasService.syncRutaFacturas(this.controlCamionesGuiasService.rutaZona.Ruta, this.controlCamionesGuiasService.fecha).then(resp => {
+    this.planificacionEntregasService.syncRutaFacturas(this.controlCamionesGuiasService.rutaZona.RUTA, this.controlCamionesGuiasService.fecha).then(resp => {
 
       for (let i = 0; i < resp.length; i++) {
 
@@ -454,6 +454,7 @@ return array;
         this.importarFacturas(factura)
 
         if(index == data.data.length -1){
+       
           this.controlCamionesGuiasService.facturas = this.odenar(this.controlCamionesGuiasService.facturas);
      
           this.controlCamionesGuiasService.actualizarValores();

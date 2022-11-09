@@ -18,12 +18,7 @@ export class InicioPage implements OnInit {
       description: '',
       url: '/inicio/detalle',
     },
-    {
-      image: '../assets/home/maintenance.png',
-      title: 'Configuracion de Rutas',
-      description: 'Permite gestionar la relación de Rutas y Zonas',
-      url: '/inicio/mantenimiento-rutas',
-    },
+  
  
     {
       image: '../assets/home/delivery.svg',
