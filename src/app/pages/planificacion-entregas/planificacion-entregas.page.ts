@@ -77,6 +77,7 @@ export class PlanificacionEntregasPage {
         } else {
           let cliente = {
             id: resp[i].CLIENTE_ORIGEN,
+            direccion:resp[i].DIRECCION_FACTURA,
             nombre: resp[i].NOMBRE_CLIENTE,
             facturas: [resp[i]]
           }
@@ -286,6 +287,7 @@ return array;
                     facturas.forEach(factura => {
                       let cliente = {
                         id: factura.CLIENTE_ORIGEN,
+                        direccion:factura.DIRECCION_FACTURA,
                         nombre: factura.NOMBRE_CLIENTE,
                         facturas: [factura]
                       }
@@ -471,6 +473,7 @@ return array;
   importarFacturas(factura) {
     let cliente = {
       id: factura.CLIENTE_ORIGEN,
+      direccion:factura.DIRECCION_FACTURA,
       nombre: factura.NOMBRE_CLIENTE,
       facturas: [factura]
     }

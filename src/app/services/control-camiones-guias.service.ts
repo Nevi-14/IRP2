@@ -834,6 +834,7 @@ importarFacturas(facturas:PlanificacionEntregas[]) {
     let cliente = {
       id: factura.CLIENTE_ORIGEN,
       nombre: factura.NOMBRE_CLIENTE,
+      direccion:factura.DIRECCION_FACTURA,
       facturas: [factura]
     }
     let c = data.findIndex(client => client.id == factura.CLIENTE_ORIGEN);

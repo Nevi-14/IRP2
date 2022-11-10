@@ -22,6 +22,7 @@ export class ClientesGuia {
 constructor(
     public   id: number,
     public   nombre: string,
+    public direccion:string,
      public  facturas: PlanificacionEntregas[]
 ){}
       
