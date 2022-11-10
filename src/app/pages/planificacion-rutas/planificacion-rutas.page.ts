@@ -229,7 +229,7 @@ this.features = []
            this.planificacionRutasService.rutaZona = valor;
           this.alertasService.presentaLoading('Generando lista de clientes')
 
-         const clientes =   this.clienteEspejo.syncRutas( this.rutaZona.Ruta);
+         const clientes =   this.clienteEspejo.syncRutas( this.rutaZona.RUTA);
         
          clientes.then((result) => {
 
