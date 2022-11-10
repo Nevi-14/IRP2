@@ -152,7 +152,7 @@ limpiarDatos(){
     month              = (date.getMonth() + 1).toString().padStart(2, "0"), // MES ACTUAL FORMATO 2 DIGITOS EJEMPLO 01
     day                = date.getDate().toString().padStart(2, "0"), // DIA ACTUAL FORMATO FECHA
     ramdomNumber = Math.floor(1000 + Math.random() * 9000);  // DEVUELVE NUMERO ALEATORIO DE 4 DIGITOS
-    consecutivo   = year+''+month+''+day+this.rutaZona.Ruta+'V'+ramdomNumber; // CONCATENAMOS LOS VALORES Y GENERAMOS CONSECUTIVO
+    consecutivo   = year+''+month+''+day+this.rutaZona.RUTA+'V'+ramdomNumber; // CONCATENAMOS LOS VALORES Y GENERAMOS CONSECUTIVO
 
     return consecutivo; // DEVUELVE CONSECUTIVO
 
@@ -216,8 +216,8 @@ for(let i =0; i < camiones.length; i++){
       totalFacturas:0,
       distancia: 0,
       duracion:0,
-      zona: this.rutaZona.Ruta,
-      ruta: this.rutaZona.Zona,
+      zona: this.rutaZona.RUTA,
+      ruta: this.rutaZona.RUTA,
       fecha: this.fecha,
       numClientes: 0,
       camion:{

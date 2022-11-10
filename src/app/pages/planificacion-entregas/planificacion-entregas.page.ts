@@ -535,10 +535,10 @@ return array;
               if (factura.length > 0) {
 
 
-                let rutaActual = this.controlCamionesGuiasService.rutaZona.Ruta;
-                let zonaActual = this.controlCamionesGuiasService.rutaZona.Ruta;
+                let rutaActual = this.controlCamionesGuiasService.rutaZona.RUTA;
+                let zonaActual = this.controlCamionesGuiasService.rutaZona.RUTA;
 
-                if (factura[0].RUTA == rutaActual && factura[0].ZONA == zonaActual) {
+                if (factura[0].RUTA == rutaActual ) {
 
                   this.controlFacturas(factura[0])
 
@@ -577,7 +577,7 @@ return array;
   async alertaRutaZona(factura: PlanificacionEntregas) {
     const alert = await this.alertCtrl.create({
       header: 'SDE RP',
-      subHeader: 'La factura es de la ruta ' + factura.RUTA + ' ¿Desea incluirla en la ruta actual ' + this.controlCamionesGuiasService.rutaZona.Ruta + '?',
+      subHeader: 'La factura es de la ruta ' + factura.RUTA + ' ¿Desea incluirla en la ruta actual ' + this.controlCamionesGuiasService.rutaZona.RUTA + '?',
       buttons: [
         {
           text: 'CANCELAR',
