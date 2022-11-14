@@ -85,7 +85,7 @@ export class ClienteEspejoService {
     };
 
 
-
+console.log('URL postClienteEspejo', URL, 'ruta', ruta)
 
     return this.http.post( URL, JSON.stringify(ruta), options );
  
@@ -93,10 +93,9 @@ export class ClienteEspejoService {
 
   insertarClienteEspejo(ruta){
 
-    console.log(ruta, 'rutaaaaaa insertada')
+  
 
      this.alertasService.presentaLoading('Guardando cambios')
-;
        this.postClienteEspejo(ruta).subscribe(
       
 

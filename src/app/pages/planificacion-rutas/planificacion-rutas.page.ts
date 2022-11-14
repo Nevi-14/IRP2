@@ -681,7 +681,7 @@ for(let i =0; i < this.planificacionRutasService.marcadores.length; i ++){
       IdCliente:this.planificacionRutasService.marcadores[i].id,
       Fecha: new Date().toISOString(),
       Usuario: 'IRP',
-      Zona: this.rutaZona.ZONA ,
+      Zona: 'ND',
       Ruta:this.rutaZona.RUTA   ,
       Latitud: this.planificacionRutasService.marcadores[i].properties.client.LATITUD,
       Longitud: this.planificacionRutasService.marcadores[i].properties.client.LONGITUD
