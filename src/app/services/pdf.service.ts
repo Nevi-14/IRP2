@@ -11,6 +11,7 @@ import { FacturaLineasEspejo } from '../models/FacturaLineasEspejo';
 import { GuiaEntrega } from '../models/guiaEntrega';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Manifiesto } from '../models/manieifiesto';
+import { format } from 'date-fns';
 
 
 
@@ -52,7 +53,7 @@ if(i >=0){
     pdf.pageMargins(20);
 
     pdf.info({
-      title:'titilo',
+      title:'Manifiesto '+ guia.idGuia,
       author: 'usuario',
       subject: titulo +' de compra',
   });
@@ -93,7 +94,7 @@ if(i >=0){
 
 
         ] ],
-        [  guia.idGuia, guia.fecha,guia.ruta ]
+        [  guia.idGuia, format( new Date( guia.fecha),'yyy-MM-dd') ,guia.ruta ]
       ]
     }
     }
