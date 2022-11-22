@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FacturaLineasEspejo } from '../models/FacturaLineasEspejo';
 import { environment } from 'src/environments/environment';
+import { Manifiesto } from '../models/manieifiesto';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,13 @@ private getActualizaFacLin(id){
 
 }
 
+private getManifiesto(id){
+
+  const URL = this.getURL(environment.manifiestoURL,id);
+  return this.http.get<Manifiesto[]>(URL);
+
+}
+
 private getActualizaFacLinGuia(id){
 
   let URL = this.getURLAPI(environment.actualizaFacLinUrl);
@@ -64,6 +72,14 @@ private getActualizaFacLinGuia(id){
 
 syncGetActualizaFacLin(id){
 return  this.getActualizaFacLinGuia(id).toPromise();
+}
+syncGetManifiesto(id){
+
+  return  this.getManifiesto(id).toPromise();
+  }
+syncFacturasToPromise(id){
+
+return  this.getActualizaFacLin(id).toPromise();
 }
 syncActualizaFacLin(id, idCliente){
 

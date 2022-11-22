@@ -18,6 +18,8 @@ import { FacturasService } from 'src/app/services/facturas.service';
 import { ListaClientesGuiasPage } from '../lista-clientes-guias/lista-clientes-guias.page';
 import { ConsultarFacturasPage } from '../consultar-facturas/consultar-facturas.page';
 import { ClientesGuia, Guias } from 'src/app/models/guia';
+import { PdfService } from '../../services/pdf.service';
+import { ReporteFacturasPage } from '../reporte-facturas/reporte-facturas.page';
 
 
 @Component({
@@ -41,7 +43,8 @@ export class PlanificacionEntregasPage {
     public alertasService: AlertasService,
     public datableService: DatatableService,
     public alertCtrl: AlertController,
-    public facturasService: FacturasService
+    public facturasService: FacturasService,
+    public pdfService:PdfService
 
 
   ) { }
@@ -615,7 +618,25 @@ return array;
 
   }
 
+  async reporteFacturas(){
 
+    const modal = await this.modalCtrl.create({
+      component: ReporteFacturasPage,
+      cssClass: 'ui-modal',
+    });
+    modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data !== undefined) {
+      console.log(data, 'data')
+ 
+
+    }
+
+
+  }
+ 
   async detalleGuia(guia) {
 
     const modal = await this.modalCtrl.create({

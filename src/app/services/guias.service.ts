@@ -94,7 +94,11 @@ export class GuiasService {
 
     );
   }
+  syncGuiasRutaToPtomise(estado){
 
+ return   this.getEstado(estado).toPromise();
+
+  }
 
   syncGuiasEnRutaPromise(estado){
 

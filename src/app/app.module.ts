@@ -9,7 +9,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-
+import { PdfMakeWrapper } from 'pdfmake-wrapper';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+// set font to PDF
+PdfMakeWrapper.setFonts(pdfFonts);
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

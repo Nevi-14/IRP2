@@ -11,8 +11,9 @@ import { GestionCamionesService } from './gestion-camiones.service';
 import { Camiones } from '../models/camiones';
 import { DatatableService } from './datatable.service';
 import * as  mapboxgl from 'mapbox-gl';
-import { ListaGuiasPostPage } from '../pages/lista-guias-post/lista-guias-post.page';
 import { Cliente, ClientesGuia, Guias } from '../models/guia';
+import { ReporteFacturasPage } from '../pages/reporte-facturas/reporte-facturas.page';
+import { GuiaEntrega } from 'src/app/models/guiaEntrega';
 //=============================================================================
 // INTERFACE DE ORDEN ENTREGA CLIENTES
 //=============================================================================
@@ -32,7 +33,7 @@ import { Cliente, ClientesGuia, Guias } from '../models/guia';
 
 export class ControlCamionesGuiasService {
 
-  
+   guiasGeneradas:GuiaEntrega[] = [];
     clientes: ClientesGuia[] = []
     facturas: ClientesGuia[] = []
     facturasOriginal: ClientesGuia[] = []
@@ -678,7 +679,21 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
 
   let postFacturas = [];
   let postRutero = [];
+ 
 
+  let guiaaa:GuiaEntrega = {
+     idGuia: guia.idGuia,
+     fecha:new Date( guia.fecha),
+     zona: guia.zona,
+     ruta: guia.ruta,
+     idCamion: guia.camion.idCamion,
+     numClientes: guia.numClientes,
+     peso: guia.camion.peso,
+     estado: '',
+     HH: '',
+     volumen: 0
+  }
+  this.guiasGeneradas.push(guiaaa)
   const guiaCamion = { 
       idGuia: guia.idGuia,
       fecha: guia.fecha,
@@ -786,11 +801,11 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
 }
 async guiasPost(){
   const modal = await this.modalCtrl.create({
-    component:ListaGuiasPostPage,
+    component:ReporteFacturasPage,
     mode:'ios',
     cssClass:'ui-modal',
     componentProps:{
-      idGuiasArray:this.idGuiasArray
+      guias:this.guiasGeneradas
     }
   });
 

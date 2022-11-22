@@ -35,6 +35,12 @@
           <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
             <ion-icon class="spin-element"  name="settings"></ion-icon>
           </ion-button>
+          <ion-button  shape="round" fill="solid" color="dark" (click)="reporteFacturas()">
+            <ion-icon name="search-outline"></ion-icon>
+
+          </ion-button>
+        
+
           <ion-button *ngIf="controlCamionesGuiasService.rutaZona" shape="round" fill="solid" color="dark" (click)="calendarioModal()">
             <ion-icon   name="calendar"></ion-icon>
           </ion-button>

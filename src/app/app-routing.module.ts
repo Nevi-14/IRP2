@@ -118,10 +118,7 @@ const routes: Routes = [
     path: 'gestor-errores-modal',
     loadChildren: () => import('./pages/gestor-errores-modal/gestor-errores-modal.module').then( m => m.GestorErroresModalPageModule)
   },
-  {
-    path: 'lista-guias-post',
-    loadChildren: () => import('./pages/lista-guias-post/lista-guias-post.module').then( m => m.ListaGuiasPostPageModule)
-  },
+  
   {
     path: 'control-facturas',
     loadChildren: () => import('./pages/control-facturas/control-facturas.module').then( m => m.ControlFacturasPageModule)
@@ -145,6 +142,11 @@ const routes: Routes = [
     path: 'facturas-no-agregadas',
     loadChildren: () => import('./pages/facturas-no-agregadas/facturas-no-agregadas.module').then( m => m.FacturasNoAgregadasPageModule)
   },
+  {
+    path: 'reporte-facturas',
+    loadChildren: () => import('./pages/reporte-facturas/reporte-facturas.module').then( m => m.ReporteFacturasPageModule)
+  },
+
 
  
  
