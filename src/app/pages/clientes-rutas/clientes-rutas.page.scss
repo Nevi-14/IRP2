@@ -5,4 +5,7 @@
   }
   .data-row{
     border-bottom: 1px solid black;
+  }.fixed-content-facturas {        //comments showing what I replaced.
+    overflow: auto;
+    height: 60vh;
   }

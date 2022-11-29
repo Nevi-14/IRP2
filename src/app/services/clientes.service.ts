@@ -9,6 +9,7 @@ import { DetalleClientesPage } from 'src/app/pages/detalle-clientes/detalle-clie
 import { ZonasService } from './zonas.service';
 import { RutasService } from './rutas.service';
 import { ClienteFacturaPage } from '../pages/cliente-factura/cliente-factura.page';
+import { ClientesCierre } from '../models/clientesCierre';
 
 
 @Injectable({
@@ -32,13 +33,44 @@ nuevosClientes: Clientes[]=[];
 
 
 
+  getIRPURL( api: string, id: string ){
+    let test = '';
+
+    if(!environment.prdMode){
+
+      test = environment.TestURL;
+
+    }
+    const URL = environment.preURL+ test  + environment.postURL + api +id;
+
+
+
+    return URL;
+
+  }
+
+
+
+  
+  private getClientesCierre(fecha){
+
+    const URL = this.getIRPURL( environment.clientesClierre , fecha);
+    console.log('URL',URL)
+    return this.http.get<ClientesCierre[]>( URL );
+
+  }
+
+  
 
 
 
 
 
+syncGetClientesCierre(fecha){
 
+  return this.getClientesCierre(fecha).toPromise()
 
+}
 
 
 

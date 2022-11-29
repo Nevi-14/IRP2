@@ -146,6 +146,10 @@ const routes: Routes = [
     path: 'reporte-facturas',
     loadChildren: () => import('./pages/reporte-facturas/reporte-facturas.module').then( m => m.ReporteFacturasPageModule)
   },
+  {
+    path: 'rutero-clientes',
+    loadChildren: () => import('./pages/rutero-clientes/rutero-clientes.module').then( m => m.RuteroClientesPageModule)
+  },
 
 
  

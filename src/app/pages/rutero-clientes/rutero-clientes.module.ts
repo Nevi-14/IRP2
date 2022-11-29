@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GestionLiquidacionesPageRoutingModule } from './gestion-liquidaciones-routing.module';
+import { RuteroClientesPageRoutingModule } from './rutero-clientes-routing.module';
 
-import { GestionLiquidacionesPage } from './gestion-liquidaciones.page';
+import { RuteroClientesPage } from './rutero-clientes.page';
 import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
@@ -14,10 +14,9 @@ import { PipesModule } from '../../pipes/pipes.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    GestionLiquidacionesPageRoutingModule,
-    PipesModule,
+    RuteroClientesPageRoutingModule,
     PipesModule
   ],
-  declarations: [GestionLiquidacionesPage]
+  declarations: [RuteroClientesPage]
 })
-export class GestionLiquidacionesPageModule {}
+export class RuteroClientesPageModule {}

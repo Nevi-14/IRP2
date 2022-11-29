@@ -9,7 +9,26 @@ import { ActualizaFacLinService } from '../../services/actualizaFacLin';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { GuiasService } from 'src/app/services/guias.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
-
+import { CalendarioPage } from '../calendario/calendario.page';
+import { format } from 'date-fns';
+import { ClientesService } from '../../services/clientes.service';
+import { ClientesCierre } from '../../models/clientesCierre';
+import { RuteroClientesPage } from '../rutero-clientes/rutero-clientes.page';
+import { Rutero } from 'src/app/models/Rutero';
+import { Guias } from '../../models/guia';
+ 
+interface guias {
+idGuia:string,
+totalClientes:number,
+estado:{
+  color:string,
+  completada:number,
+  incompleta:number,
+  pendiente:number,
+  reprogramado:number
+},
+clientes:Rutero[]
+}
 @Component({
   selector: 'app-gestion-liquidaciones',
   templateUrl: './gestion-liquidaciones.page.html',
@@ -17,6 +36,8 @@ import { GestionCamionesService } from 'src/app/services/gestion-camiones.servic
 })
 export class GestionLiquidacionesPage implements OnInit {
 guia =null;
+rutero: guias[]=[]
+textoBuscar = ''
   constructor(
 public datableService: DatatableService,
 public controlCamionesGuiasService: ControlCamionesGuiasService,
@@ -27,7 +48,8 @@ public gestionCamionesService: GestionCamionesService,
 public actualizaFactLinService: ActualizaFacLinService,
 public alertasService: AlertasService,
 public guiasService: GuiasService,
-public alerCtrl: AlertController
+public alerCtrl: AlertController,
+public ClientesService: ClientesService
   ) { }
 
   ngOnInit() {
@@ -49,8 +71,165 @@ ngOnDestroy(){
   this.limpiarDatos();
 }
 
+async calendarioModal() {
 
-async configuracionZonaRuta() {
+  const modal = await this.modalCtrl.create({
+    component: CalendarioPage,
+    cssClass: 'ui-modal',
+    backdropDismiss: false,
+    swipeToClose: false,
+    mode: 'ios',
+  });
+  modal.present();
+
+
+
+  const { data } = await modal.onDidDismiss();
+
+  if (data !== undefined) {
+
+  let fecha = format(new Date(data.fecha), 'yyy/MM/dd');
+   // this.cargarDatos();
+
+   this.ClientesService.syncGetClientesCierre(fecha).then(guias =>{
+console.log('guis', guias)
+    let guiasClientes:guias[] = []
+
+    for(let i =0; i < guias.length; i ++){
+
+      let clienteGuia = {
+        idGuia: guias[i].idGuia,
+        idCliente:  guias[i].idCliente,
+        nombre:  guias[i].nombre,
+        direccion: guias[i].direccion,
+        latitud:guias[i].latitud,
+        longitud:guias[i].longitud,
+        checkin: new Date( guias[i].checkin),
+        latitud_check: guias[i].latitud_check,
+        longitud_check: guias[i].longitud_Check,
+        observaciones:guias[i].observaciones,
+        estado:  guias[i].estado,
+        bultos: guias[i].bultos,
+        checkout:new Date( guias[i].checkout),
+        orden_Visita:  guias[i].orden_Visita,
+        Duracion: guias[i].Duracion,
+        distancia: guias[i].distancia
+     }
+
+
+     let c = guiasClientes.findIndex(cliente => cliente.idGuia == guias[i].idGuia)
+     if( c >=0){
+       guiasClientes[c].clientes.push(clienteGuia) 
+     }else{
+
+       guiasClientes.push({
+        totalClientes:null,
+         idGuia:guias[i].idGuia,
+         estado:{
+          color:null,
+          completada:0,
+          incompleta:0,
+          pendiente:0,
+          reprogramado:0
+        },
+         clientes:[clienteGuia]
+}) 
+     }
+
+
+      if(i == guias.length -1){
+
+        // Verificamos que no hayan resultados de x estado en caso de haber entonces se marca como pendiente
+
+        guiasClientes.forEach((guia, index) => {
+let color = null;
+let totalClientes = guia.clientes.length;
+let totalEstadoE =   guia.clientes.filter(g => g.estado == 'E').length
+let totalEstadoI =   guia.clientes.filter(g => g.estado == 'I').length
+let totalEstadoP =   guia.clientes.filter(g => g.estado == 'P').length
+let totalEstadoR =   guia.clientes.filter(g => g.estado == 'R').length
+
+if(totalClientes == totalEstadoE){
+
+color = 'success'
+}else if (totalEstadoI > 0){
+  color = 'warning'
+
+}else{
+  color = 'danger'
+}
+
+guia.totalClientes = totalClientes;
+guia.estado.color = color;
+guia.estado.completada = totalEstadoE;
+guia.estado.incompleta = totalEstadoI;
+guia.estado.pendiente = totalEstadoP;
+guia.estado.reprogramado = totalEstadoR;
+console.log(
+
+  'totalClientes' , totalClientes, 'totalEstadoE',totalEstadoE,'totalEstadoI',totalEstadoI,'totalEstadoP',totalEstadoP,'totalEstadoR',totalEstadoR
+)
+
+if(index == guiasClientes.length -1){
+  this.rutero = guiasClientes;
+  this.rutero.sort((a,b)=>+a.idGuia - +b.idGuia)
+  console.log('guiasClientes', guiasClientes)
+}
+
+        })
+    
+
+      }
+    }
+
+
+
+
+
+
+
+   })
+
+  }
+}
+onSearchChange(event){
+  this.textoBuscar = event.detail.value;
+
+}
+async ruteroClientes(rutero:Guias) {
+console.log('rutero', rutero)
+  const modal = await this.modalCtrl.create({
+    component: RuteroClientesPage,
+    cssClass: 'ui-modal',
+    backdropDismiss: false,
+    swipeToClose: false,
+    mode: 'ios',
+    componentProps:{
+      guia:rutero.idGuia,
+      ruteroInput:rutero.clientes
+    }
+  });
+  modal.present();
+
+
+
+  const { data } = await modal.onDidDismiss();
+
+  if (data !== undefined) {
+
+
+
+  }
+}
+
+
+
+
+isIos() {
+  const win = window as any;
+  return win && win.Ionic && win.Ionic.mode === 'ios';
+}
+async configuracionZonaRuta2() {
 
   const modal = await this.modalCtrl.create({
     component: GuiasRutaPage,

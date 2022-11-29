@@ -39,7 +39,7 @@
       </ion-col>
 
     
-      <ion-col size="12" size-md="7">
+      <ion-col size="12" size-md="7" >
 
         <ion-row style="font-size: 1rem;">
           <ion-col size="6">
@@ -68,39 +68,46 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="data-row"  *ngFor="let facturaDetalle of actualizaFacLinService.facturaLineasEspejoArray | filtro:textoBuscar:'numFactura'">
-          <ion-col size="4">
-    <ion-label>
+        <ion-row class="fixed-content-facturas">
+          <ion-col size="12">
+
+            <ion-row class="data-row"  *ngFor="let facturaDetalle of actualizaFacLinService.facturaLineasEspejoArray | filtro:textoBuscar:'numFactura'">
+              <ion-col size="4">
+        <ion-label>
+          
+    <h2>{{facturaDetalle.numFactura}}</h2>
+    <p>Tipo Documento: {{facturaDetalle.tipoDocumento}}</p>
+    <p>Descripción: {{facturaDetalle.descripcion}}</p>
+        </ion-label>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label>
+          
+                  {{facturaDetalle.articulo}}
+                  
+                      </ion-label>
+              </ion-col>
+              <ion-col size="2">
+               <ion-label>
+                {{facturaDetalle.cantEntregar}}
+               </ion-label>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label>
+                  {{facturaDetalle.cantEntregada}}
+                 </ion-label>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label>
+                  {{facturaDetalle.justificacion}}
+                 </ion-label>
+              </ion-col>
+            </ion-row>
       
-<h2>{{facturaDetalle.numFactura}}</h2>
-<p>Tipo Documento: {{facturaDetalle.tipoDocumento}}</p>
-<p>Descripción: {{facturaDetalle.descripcion}}</p>
-    </ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>
-      
-              {{facturaDetalle.articulo}}
-              
-                  </ion-label>
-          </ion-col>
-          <ion-col size="2">
-           <ion-label>
-            {{facturaDetalle.cantEntregar}}
-           </ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>
-              {{facturaDetalle.cantEntregada}}
-             </ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>
-              {{facturaDetalle.justificacion}}
-             </ion-label>
           </ion-col>
         </ion-row>
-  
+
+   
 
       </ion-col>
 
