@@ -20,6 +20,8 @@ import { Guias } from '../../models/guia';
 interface guias {
 idGuia:string,
 totalClientes:number,
+chofer:string,
+placa:string,
 estado:{
   color:string,
   completada:number,
@@ -38,6 +40,7 @@ export class GestionLiquidacionesPage implements OnInit {
 guia =null;
 rutero: guias[]=[]
 textoBuscar = ''
+fecha =  format(new Date(), 'yyy/MM/dd');
   constructor(
 public datableService: DatatableService,
 public controlCamionesGuiasService: ControlCamionesGuiasService,
@@ -59,7 +62,9 @@ public ClientesService: ClientesService
 
  limpiarDatos(){
   this.guia = null;
-  this.datableService.limpiarDatos();
+  this.rutero = []
+  this.textoBuscar =''
+  
 
  }
 
@@ -89,9 +94,19 @@ async calendarioModal() {
   if (data !== undefined) {
 
   let fecha = format(new Date(data.fecha), 'yyy/MM/dd');
+  this.fecha = fecha
    // this.cargarDatos();
-
+   this.limpiarDatos();
+   this.alertasService.presentaLoading('Cargando Datos')
    this.ClientesService.syncGetClientesCierre(fecha).then(guias =>{
+
+    if(guias.length ==0){
+
+      this.limpiarDatos()
+      this.alertasService.loadingDissmiss()
+      this.alertasService.message('IRP','No se encontraron resultados')
+      return
+    }
 console.log('guis', guias)
     let guiasClientes:guias[] = []
 
@@ -125,6 +140,8 @@ console.log('guis', guias)
        guiasClientes.push({
         totalClientes:null,
          idGuia:guias[i].idGuia,
+         chofer:guias[i].chofer,
+         placa:guias[i].idCamion,
          estado:{
           color:null,
           completada:0,
@@ -184,10 +201,12 @@ if(index == guiasClientes.length -1){
 
 
 
+this.alertasService.loadingDissmiss();
 
 
 
-
+   }, error =>{
+    this.alertasService.loadingDissmiss();
    })
 
   }

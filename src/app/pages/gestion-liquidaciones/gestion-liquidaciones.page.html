@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-padding">
-<ion-title>Lista Guias        <ion-badge color="dark" mode="ios">{{rutero.length}}</ion-badge></ion-title>
+<ion-title>Lista Guias  - {{fecha}} <ion-badge color="dark" mode="ios">{{rutero.length}}</ion-badge> </ion-title> 
 <ion-searchbar slot="end" style="margin-top: 0.5rem; width:60%"   mode="ios" placeholder="Buscar guia" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
 
 <ion-buttons slot="end">
@@ -8,6 +8,10 @@
     <ion-icon   name="calendar"></ion-icon>
   </ion-fab-button> 
   
+ 
+  <ion-fab-button *ngIf="rutero.length > 0"     size="small"     color="dark" (click)="limpiarDatos()" >
+    <ion-icon   name="refresh"></ion-icon>
+  </ion-fab-button> 
 </ion-buttons>
 
   </ion-toolbar>
@@ -24,7 +28,7 @@
 <span *ngFor="let guia of rutero | filtro:textoBuscar:'idGuia'" style="padding: 0.5rem;">
   <ion-list color="light" lines="full" >
     <ion-list-header>
-      <ion-label>Detalle Guia <ion-badge [color]="guia.estado.color" mode="ios">{{ guia.idGuia }}</ion-badge></ion-label>
+      <ion-label><strong>Detalle Guia</strong> <ion-badge [color]="guia.estado.color" mode="ios">{{ guia.idGuia }}</ion-badge>  <span style="margin-left: 0.5rem;"><strong> CHOFER {{guia.chofer}}</strong></span> Placa <ion-badge color="primary" mode="ios">{{guia.placa}}</ion-badge></ion-label>
     <ion-fab-button (click)="ruteroClientes(guia)" color="dark" size="small">
       <ion-icon name="eye-outline"></ion-icon>
     </ion-fab-button>

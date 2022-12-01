@@ -2,20 +2,18 @@
 <ion-app>
   <ion-split-pane contentId="main-split"   >
     <ion-menu  [ngClass]="appSettingService.menu   ? 'expand-menu' :'menu-hide'"  contentId="main-content"  type="overlay"   menuId="myMenu">
-      <ion-header class="ion-no-border">
-        <ion-toolbar   color="dark">
-<ion-avatar   style="width: 180px;height:180px;margin-top:1rem;margin:0 auto;">
-  <img   src="assets/icons/logo_menu.png" />
-</ion-avatar>
-     
-          <ion-button *ngIf="small"   (click)="toggle()"  slot="end"  fill="clear" >
-            <ion-icon color="danger" name="close" size="large"></ion-icon>
-          </ion-button>
-      
-      
-        </ion-toolbar>
-      </ion-header>
-            <ion-content class="no-scroll">
+      <ion-toolbar   color="dark">
+        <ion-avatar slot="start" style="margin-left: 0.5rem">
+          <img src="../assets/icons/wine.svg" />
+        </ion-avatar>
+    <ion-title>IRP</ion-title>
+        <ion-button *ngIf="small"   (click)="toggle()"  slot="end"  fill="clear" >
+          <ion-icon color="danger" name="close" size="large"></ion-icon>
+        </ion-button>
+    
+    
+      </ion-toolbar>
+            <ion-content  >
             
              
               <ion-list id="inbox-list" lines="none"  >
@@ -32,24 +30,29 @@
                   <ion-label class="ion-text-wrap" *ngIf="appSettingService.menu">{{this.usuariosService.usuario.Email }}</ion-label>
                 </ion-item>
       
-                <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-                  <ion-item button (click)="setTitle(p)"    style="margin-top:0.5rem" routerDirection="root" routerLinkActive="active-item"  lines="none" detail="false" routerLinkActive="selected">
+            
+                  <ion-item  *ngFor="let p of appPages; let i = index" button (click)="setTitle(p)"    style="margin-top:0.5rem" routerDirection="root" routerLinkActive="active-item"  lines="none" detail="false" routerLinkActive="selected">
                     <ion-avatar   [ngStyle]="{'margin': !appSettingService.menu ? '0 auto' : ''}" slot="{{appSettingService.menu ? 'start':''}}"  >
                       <img [src]="p.image" />
                     </ion-avatar>
             
                     <ion-label class="ion-text-wrap" *ngIf="appSettingService.menu">{{ p.title }}</ion-label>
                   </ion-item>
-                </ion-menu-toggle>
+         
+          
+
+                
+                  <ion-item  button (click)="cerrarSesion()">
+                    <ion-avatar   [ngStyle]="{'margin': !appSettingService.menu ? '0 auto' : ''}" slot="{{appSettingService.menu ? 'start':''}}"  >
+                      <img src="../assets/icons/logout.svg" />
+                    </ion-avatar>
+      
+                          <ion-label *ngIf="appSettingService.menu">Cerrar Sesión</ion-label>
+                        </ion-item>
+             
 
               </ion-list>
-             <ion-item  button (click)="cerrarSesion()">
-              <ion-avatar   [ngStyle]="{'margin': !appSettingService.menu ? '0 auto' : ''}" slot="{{appSettingService.menu ? 'start':''}}"  >
-                <img src="../assets/icons/logout.svg" />
-              </ion-avatar>
-
-                    <ion-label *ngIf="appSettingService.menu">Cerrar Sesión</ion-label>
-                  </ion-item>
+     
          
             </ion-content>
           </ion-menu>
