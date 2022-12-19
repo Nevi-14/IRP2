@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { FiltroPipe } from './filtro.pipe';
 import { ColonesPipe } from './colones.pipe';
 
@@ -17,6 +17,7 @@ import { ColonesPipe } from './colones.pipe';
    
     FiltroPipe,
     DatePipe,
+    DecimalPipe,
     ColonesPipe
   ]
 })

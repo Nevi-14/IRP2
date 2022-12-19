@@ -1,3 +1,4 @@
+import { Marker } from "mapbox-gl";
 import { PlanificacionEntregas } from "./planificacionEntregas";
 
 export class Cliente {
@@ -20,10 +21,25 @@ export class Cliente {
 export class ClientesGuia {
 
 constructor(
-    public   id: number,
-    public   nombre: string,
+    public  id: number,
+    public idGuia:string,
+    public nombre: string,
+    public marcador:Marker,
+    public color:string,
+    public cambioColor:string,
+    public latitud: number,
+    public longitud: number,
+    public frio:boolean,
+    public seco:boolean,
+    public frioSeco: boolean,
+    public totalFrio:number,
+    public totalSeco:number,
+    public totalBultos:number,
+    public totalPeso:number,
     public direccion:string,
      public  facturas: PlanificacionEntregas[]
+   
+
 ){}
       
       

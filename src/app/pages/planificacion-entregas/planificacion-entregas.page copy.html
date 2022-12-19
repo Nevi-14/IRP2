@@ -5,34 +5,20 @@
     <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
       <ion-item>
         <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Planificación de Entregas</ion-title>
-     
-        <ion-label color="light">
-          <h2 class="ion-text-uppercase">Ruta</h2>
-          <p *ngIf="controlCamionesGuiasService.rutaZona">
-            <ion-badge color="primary" mode="ios" >{{controlCamionesGuiasService.rutaZona.RUTA}}</ion-badge>
-          </p>
-        </ion-label>
-        <ion-label color="light">
-          <h2 class="ion-text-uppercase">Zona</h2>
-          <p  *ngIf="controlCamionesGuiasService.rutaZona">
-            <ion-badge color="primary" mode="ios">{{controlCamionesGuiasService.rutaZona.DESCRIPCION}}</ion-badge>
-          </p>
-        </ion-label>
+
    
         <ion-buttons slot="end" >
 
           <ion-button  (click)="presentPopover($event)"    shape="round" color="dark" size="small">
-            <ion-icon color="light" name="bus-outline"></ion-icon>n>
-            <ion-badge color="primary" mode="ios">{{controlCamionesGuiasService.rutas.length}}</ion-badge>
+            <ion-icon color="light" name="storefront-outline"></ion-icon>
+            <ion-badge color="primary" mode="ios">{{rutas.length}}</ion-badge>
           </ion-button>
           <ion-popover mode="ios"  #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
             <ng-template>
               <ion-content class="ion-padding">
 
                 <ion-list>
-                  <ion-radio-group [value]="controlCamionesGuiasService.rutaZona"  (ionChange)="rutasRacioGroup($event)">
-                  <ion-item *ngFor="let ruta of controlCamionesGuiasService.rutas">
-                    <ion-radio slot="start" [value]="ruta"></ion-radio>
+                  <ion-item *ngFor="let ruta of rutas">
                     <ion-label class="ion-text-wrap">{{ruta.DESCRIPCION}}</ion-label>
            
                     <button (click)="removerRuta(ruta)"  size="small" color="clear">
@@ -41,8 +27,6 @@
 
                     </button>
                   </ion-item>
-
-                </ion-radio-group>
                 </ion-list>
 
 
@@ -57,7 +41,7 @@
             <ion-icon name="home-outline"></ion-icon>
           </ion-button>
 
-          <ion-button *ngIf="controlCamionesGuiasService.clientes.length > 0" (click)="gestionGuias()" color="primary"  fill="solid" shape="round">
+          <ion-button (click)="gestionGuias()" color="primary"  fill="solid" shape="round">
             Gestionar Guias
           </ion-button>
 
@@ -65,7 +49,12 @@
             <ion-icon  name="bug"></ion-icon>
             <ion-badge color="primary" mode="ios">{{planificacionEntregasService.errorArray.length}}</ion-badge>
           </ion-button>
-  
+ 
+          <ion-button  shape="round" fill="solid" color="dark" (click)="listaGuias()">
+            <ion-icon name="bus-outline"></ion-icon>
+            <ion-badge color="primary" mode="ios">0</ion-badge>
+          </ion-button>
+
 
        
           <ion-button   *ngIf="controlCamionesGuiasService.rutaZona" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
@@ -118,27 +107,6 @@
   
   </ion-row>
   </ion-grid>
-
-
-  <ion-accordion-group *ngIf="controlCamionesGuiasService.clientes.length > 0" style="  position: fixed;
-  top: 160px;
-  right: 130px;
-  width:250px;">
-    <ion-accordion value="first">
-      <ion-item slot="header" color="light">
-        <ion-label>Clientes <ion-badge color="primary" mode="ios">{{controlCamionesGuiasService.clientes.length}}</ion-badge> </ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">
- <ion-item *ngFor="let cliente of controlCamionesGuiasService.clientes">
-  <ion-label button (click)="detalleClientes(cliente)" class="ion-text-wrap" style="font-size: 12px;">{{cliente.nombre}}</ion-label>
-  <ion-button (click)="borrarCliente(cliente)"   slot="end"  fill="clear"  >
-<ion-icon   color="danger" slot="icon-only" size="large" name="close-outline"></ion-icon>
-  </ion-button>
- </ion-item>
-      </div>
-    </ion-accordion>
-
-  </ion-accordion-group>
-
+  
   </ion-content>
   

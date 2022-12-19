@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { RutaZonaService } from '../../services/ruta-zona.service';
 
@@ -9,8 +9,6 @@ import { RutaZonaService } from '../../services/ruta-zona.service';
 })
 export class ListaRutasZonasModalPage implements OnInit {
 textoBuscar = '';
-rutas = []
- 
   constructor(
 
     public modalCtrl: ModalController,
@@ -23,33 +21,17 @@ rutas = []
     console.log(this.rutaZonas.rutasZonasArray, 'array')
   }
   retornarRuta(ev:any){
-if(ev.currentTarget.checked){
-  this.rutas.push(ev.target.value)
-}else{
-let i = this.rutas.findIndex(ruta => ruta.RUTA == ev.target.value.RUTA)
-this.rutas.splice(i,1)
 
-}
-console.log('this.rutas', this.rutas)
- 
-  /**
-   *   this.modalCtrl.dismiss({
+    console.log(ev.target.value,'ev.target.value')
+    this.modalCtrl.dismiss({
 
       ruta: ev.target.value
      });
-   */
 
   }
 
   onSearchChange(event){
 this.textoBuscar = event.detail.value
-  }
-
-  devolverRutas(){
-    this.modalCtrl.dismiss({
-
-      rutas: this.rutas
-     });
   }
 
   cerrarModal(){

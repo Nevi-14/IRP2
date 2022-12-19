@@ -14,6 +14,7 @@ import * as  mapboxgl from 'mapbox-gl';
 import { Cliente, ClientesGuia, Guias } from '../models/guia';
 import { ReporteFacturasPage } from '../pages/reporte-facturas/reporte-facturas.page';
 import { GuiaEntrega } from 'src/app/models/guiaEntrega';
+import { Rutas } from '../models/rutas';
 //=============================================================================
 // INTERFACE DE ORDEN ENTREGA CLIENTES
 //=============================================================================
@@ -40,7 +41,7 @@ export class ControlCamionesGuiasService {
     facturasNoAgregadas: PlanificacionEntregas[] = [];
     preListaGuias:Guias[] = []
     listaGuias : Guias[] = [];
-
+  //  clientes:ClientesGuia[] = []
 //=============================================================================
 // VARIABLES GLOBALES
 //=============================================================================
@@ -51,7 +52,7 @@ export class ControlCamionesGuiasService {
     orderArray = [];
     compareArray  : Cliente[] = [];
     complete = 0;
-
+    rutas:Rutas[] = []
     // Variables proceso de ordenamiento MAURICIO HERRA
 
     listos: number = 1;
@@ -95,7 +96,7 @@ export class ControlCamionesGuiasService {
 //=============================================================================
 
 limpiarDatos(){
-
+this.rutas = [];
   this.clientes  = [];
   this.facturas = [];
   this.facturasOriginal = [];
@@ -322,7 +323,7 @@ this.listaGuias.splice(guia, 1);
   
 }
 
-this.actualizarValores();
+//this.actualizarValores();
  
 
 }
@@ -780,6 +781,7 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
                 console.log('completado')
 
                 if(this.complete == this.listaGuias.length){
+                  this.modalCtrl.dismiss(true);
                   this.guiasPost();
                   this.limpiarDatos();
                   this.alertasService.loadingDissmiss();
@@ -848,7 +850,20 @@ importarFacturas(facturas:PlanificacionEntregas[]) {
   facturas.forEach(factura =>{
     let cliente = {
       id: factura.CLIENTE_ORIGEN,
+      idGuia:null,
       nombre: factura.NOMBRE_CLIENTE,
+      marcador:null,
+      color:null,
+      cambioColor: '#00FF00',
+      latitud: factura.LATITUD,
+      longitud: factura.LONGITUD,
+      frio:false,
+      seco:false,
+      frioSeco:false,
+      totalFrio:0,
+      totalSeco:0,
+      totalBultos:0,
+      totalPeso:0,
       direccion:factura.DIRECCION_FACTURA,
       facturas: [factura]
     }

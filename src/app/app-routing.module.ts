@@ -149,7 +149,19 @@ const routes: Routes = [
   {
     path: 'rutero-clientes',
     loadChildren: () => import('./pages/rutero-clientes/rutero-clientes.module').then( m => m.RuteroClientesPageModule)
+  },  {
+    path: 'planificacion-lista-guias',
+    loadChildren: () => import('./pages/planificacion-lista-guias/planificacion-lista-guias.module').then( m => m.PlanificacionListaGuiasPageModule)
   },
+  {
+    path: 'gestion-guias-entrega',
+    loadChildren: () => import('./pages/gestion-guias-entrega/gestion-guias-entrega.module').then( m => m.GestionGuiasEntregaPageModule)
+  },
+  {
+    path: 'planificacion-entrega-cliente-detalle',
+    loadChildren: () => import('./pages/planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.module').then( m => m.PlanificacionEntregaClienteDetallePageModule)
+  },
+
 
 
  

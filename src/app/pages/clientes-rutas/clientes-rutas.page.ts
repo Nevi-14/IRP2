@@ -9,7 +9,7 @@ import { ActualizaFacLinService } from 'src/app/services/actualizaFacLin';
   styleUrls: ['./clientes-rutas.page.scss'],
 })
 export class ClientesRutasPage implements OnInit {
-@Input() cliente:Rutero;
+@Input() cliente:any;
 @Input() color:string;
 @Input() imagen:string;
 textoBuscar = '';
@@ -20,7 +20,15 @@ public actualizaFacLinService: ActualizaFacLinService
   ) { }
 
   ngOnInit() {
-    this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia, this.cliente.idCliente);
+console.log('cliente', this.cliente)
+    if(this.cliente.facturas.length > 0){
+
+alert('hh')
+
+    }else{
+      this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia, this.cliente.idCliente);
+    }
+ 
     
   }
   onSearchChange(event){

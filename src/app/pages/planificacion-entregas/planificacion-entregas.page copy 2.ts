@@ -24,9 +24,6 @@ import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { PlanificacionListaGuiasPage } from '../planificacion-lista-guias/planificacion-lista-guias.page';
 import { Rutas } from 'src/app/models/rutas';
-import { GestionGuiasEntregaPage } from '../gestion-guias-entrega/gestion-guias-entrega.page';
-import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
-import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.page';
 
 @Component({
   selector: 'app-planificacion-entregas',
@@ -47,7 +44,7 @@ import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega
 export class PlanificacionEntregasPage {
   @ViewChild('mapa') divMapa!:ElementRef;
   default: any = 'title';
-  zoomLevel: number = 6.5;
+  zoomLevel: number = 12;
   geocoderArray: any;
   lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
   marcadores = []
@@ -58,6 +55,7 @@ export class PlanificacionEntregasPage {
   modo = 'off'
   mapa!: mapboxgl.Map;
   features = [];
+  rutas:Rutas[] = []
   textFactura: string = '';
   @ViewChild('popover') popover;
   isOpen = false;
@@ -82,7 +80,7 @@ export class PlanificacionEntregasPage {
 
   presentPopover(e: Event) {
 
-    if(this.controlCamionesGuiasService.rutas.length >0){
+    if(this.rutas.length >0){
       this.popover.event = e;
       this.isOpen = true;
 
@@ -90,18 +88,11 @@ export class PlanificacionEntregasPage {
  
   }
   removerRuta(ruta:Rutas){
-    let i:any = this.controlCamionesGuiasService.rutas.findIndex(rutas => rutas.RUTA == ruta.RUTA);
+    let i:any = this.rutas.findIndex(rutas => rutas.RUTA == ruta.RUTA);
  
  
  if(i >=0){
-  this.controlCamionesGuiasService.rutas.splice(i,1)
-  if(ruta.RUTA == this.controlCamionesGuiasService.rutaZona.RUTA){
-
-    this.controlCamionesGuiasService.rutaZona =   this.controlCamionesGuiasService.rutas[0]
-  }
-
-  this.cargarDatos();
- // this.limpiarDatos();
+  this.rutas.splice(i,1)
  }
 
   }
@@ -115,28 +106,76 @@ export class PlanificacionEntregasPage {
   }
 
 
+  cargarMarcadores(clientes:any[]){
 
-  borrarCliente(cliente:ClientesGuia){
-
-let i = this.controlCamionesGuiasService.clientes.findIndex(c => c.id == cliente.id);
-
-if(i >=0 && this.controlCamionesGuiasService.clientes[i]){
+    
+    this.controlCamionesGuiasService.facturas
+    for(let i =0; i <      this.controlCamionesGuiasService.facturas.length  ; i++){
 
 
-for(let f = 0; f < this.controlCamionesGuiasService.clientes[i].facturas.length ; f++){
+      
+      if(i == this.controlCamionesGuiasService.facturas.length -1){
 
-  this.controlCamionesGuiasService.borrarFacturaGuia(this.controlCamionesGuiasService.clientes[i].facturas[f])
-  if(f == this.controlCamionesGuiasService.clientes[i].facturas.length -1){
-    this.controlCamionesGuiasService.clientes.splice(i,1)
 
-  }
+      }
+    }
 
+    let newCount = 0;
+    let duplicateCount = 0;
   
-}
-
+  
+    this.marcadores.forEach(client=>{
+  
+      client.duplicate = false;
+   
+    })
+    
+  
+    clientes.forEach(cliente =>{
+      const feature =    {
+        id: cliente.IdCliente,
+        title:  cliente.IdCliente +' '+cliente.NOMBRE,
+        marker: null,
+        select:false,
+        modify: false,
+        new: null,
+        exclude:false,
+        color: null,
+        type: 'Feature',
+        duplicate:false,
+        geometry: {
+          type: 'Point',
+          coordinates: [cliente.LONGITUD, cliente.LATITUD]
+        },
+        properties: {
+          client: cliente,
+        }
+      }
+  
+      
  
-}
-
+  this.features.push(feature)
+      
+         
+        })
+  
+  
+     if(duplicateCount  > 0) {
+          this.default = 'duplicate';
+    //    this.informacionMarcadores(this.default );
+  
+       
+     }else if(newCount  > 0){
+      this.default = 'new';
+ //     this.informacionMarcadores(this.default );
+  
+     
+     }
+  
+        this.marcadores = [];
+        this.marcadores = this.features;
+        console.log( this.marcadores,'marr')
+  
   }
 
   createmapa( ) {
@@ -149,7 +188,7 @@ for(let f = 0; f < this.controlCamionesGuiasService.clientes[i].facturas.length 
           interactive: true
         });
     
-      new mapboxgl.Marker()
+        const newMarker = new mapboxgl.Marker()
         .setLngLat(this.lngLat)
         .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
         .addTo(this.mapa)
@@ -184,143 +223,88 @@ for(let f = 0; f < this.controlCamionesGuiasService.clientes[i].facturas.length 
         })
     
   
-
-
-          for(let i =0; i < this.controlCamionesGuiasService.facturas.length; i++){
-            this.controlCamionesGuiasService.facturas[i].marcador  = new mapboxgl.Marker({
-              color: this.controlCamionesGuiasService.facturas[i].color,
-              draggable: this.drag
-        
-        })
-
-        this.controlCamionesGuiasService.facturas[i].marcador.setLngLat([this.controlCamionesGuiasService.facturas[i].longitud, this.controlCamionesGuiasService.facturas[i].latitud])
-        
-
-        this.controlCamionesGuiasService.facturas[i].marcador.addTo(this.mapa)
-        const divElement = document.createElement('div');
-        const assignBtn = document.createElement('div');
-        assignBtn.innerHTML = `
-        
-        <ion-list> 
-        <ion-item  button lines="none"  >
-    
-
-        <ion-label class="ion-text-wrap">
-        ${this.controlCamionesGuiasService.facturas[i].id+ ' ' + this.controlCamionesGuiasService.facturas[i].nombre}
-        </ion-label>
-
-
-        </ion-item>
-   
-        
-        </ion-list>
-        `;
-        const assignBtn2 = document.createElement('div');
-        assignBtn2.innerHTML = `
-        
-        <ion-list> 
+        const geojson: any = {
+          'type': 'FeatureCollection',
+          'features': null
+          };
+  
+  
+          // add markers to map
+  for (const feature of geojson.features) {
      
-        <ion-item lines="none">
-        Facturas Totales :  ${this.controlCamionesGuiasService.facturas[i].facturas.length}
-        </ion-item>
-        
-        </ion-list>
-        `;
-        divElement.appendChild(assignBtn);
-       // divElement.appendChild(assignBtn2);
-       // divElement.append(assignBtn);
-        assignBtn.addEventListener('click', (e) => {
-          this.detalleClientes(this.controlCamionesGuiasService.facturas[i])
-          });
-        const miniPopup = new  mapboxgl.Popup({offset: 32}).setDOMContent(divElement)
-
-        miniPopup.on('open', () => {
-
-          let index = this.controlCamionesGuiasService.clientes.findIndex(c => c.id == this.controlCamionesGuiasService.facturas[i].id );
-
-          if(index >=0){
-this.alertasService.message('ERP', 'El cliente ya es parte de la lista.')
-          }else{
-            this.controlCamionesGuiasService.clientes.push(this.controlCamionesGuiasService.facturas[i])
-
-          }
-       
-        //  this.detalleClientes(this.controlCamionesGuiasService.facturas[i], null, null);
-           
-   /**
-    *        this.controlCamionesGuiasService.facturas[i].marcador =  new mapboxgl.Marker({
-            color: this.controlCamionesGuiasService.facturas[i].cambioColor,
-            draggable: true
-        });
-          
-    */
-          
-          
- 
-        })
-        miniPopup.on('close', () => {
-       /**
-        *    this.controlCamionesGuiasService.facturas[i].marcador = new mapboxgl.Marker({
-            color: this.controlCamionesGuiasService.facturas[i].color,
-            draggable: false
-        });
-        */
-          
-          
- 
-        })
+  //const { newMarker , color } =  this.generarMarcadorColor( feature.properties.color)
+  
+ // feature.properties.color = color
+  feature.marker = newMarker
+  newMarker.setLngLat(feature.geometry.coordinates)
+  .addTo(this.mapa)
+  const name = 'abc';
+  
+  
+  const divElement = document.createElement('div');
+  const assignBtn = document.createElement('div');
+  assignBtn.innerHTML = `
+  
+  <ion-list> 
+  <ion-item>
+  <ion-button fill="clear" class="ion-text-wrap">
+  ${feature.title + ' ' + feature.id}
+  </ion-button>
+  </ion-item>
+  
+  </ion-list>
+  `;
+  divElement.appendChild(assignBtn);
+  // btn.className = 'btn';
+/**
+ *   assignBtn.addEventListener('click', (e) => {
+  this.detalleClientes(feature.properties.client)
+  });
+  newMarker.setPopup(new mapboxgl.Popup({offset: 32})
+  .setDOMContent(divElement))
+      
+  newMarker.on('dragend', () => {
+  
+    const { lng, lat } = newMarker.getLngLat();
+  const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcador.id == feature.id);
+  
+  if(i >=0){
+    this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = lng;
+    this.planificacionRutasService.marcadores[i].properties.client.LATITUD = lat;
+    this.planificacionRutasService.marcadores[i].modify = true;
+    this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
+    this.planificacionRutasService.marcadores[i].geometry.coordinates = [lng, lat]
+  
+  }
+  
+  //   this.createmapa(this.divMapa,false, true);
+    this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
+  
+  })
+ */
+//.addTo(this.mapa);
+  
+  //.togglePopup();
+  }
     
-        this.controlCamionesGuiasService.facturas[i].marcador.setPopup(miniPopup);
-
-            if(i == this.controlCamionesGuiasService.facturas.length -1){
-
-              this.mapa .on('load', () => {
+        this.mapa .on('load', () => {
   
           
-                this.mapa .resize();
-        
-              });
-
-            }
-
-
-
-          }
-
-   
+          this.mapa .resize();
+  
+        });
   
       }
-
-
-      async detalleClientes(cliente){
-
- 
-        const modal = await this.modalCtrl.create({
-          component: PlanificacionEntregaClienteDetallePage,
-          cssClass: 'ui-modal',
-          componentProps:{
-            cliente: cliente
-          }
-        });
-        return await modal.present();
-      }
-
 
 
   async cargarDatos() {
-    this.controlCamionesGuiasService.facturas = []
+
     let clientes: ClientesGuia[] = []
 
-if(this.controlCamionesGuiasService.rutas.length == 0){
 
-  this.createmapa();
-
-  return;
-
-}
-    for(let r = 0; r< this.controlCamionesGuiasService.rutas.length; r++){
+    for(let r = 0; r< this.rutas.length; r++){
  
-     await  this.planificacionEntregasService.syncRutaFacturas(this.controlCamionesGuiasService.rutas[r].RUTA, this.controlCamionesGuiasService.fecha).then(resp => {
+     await  this.planificacionEntregasService.syncRutaFacturas(this.rutas[r].RUTA, this.controlCamionesGuiasService.fecha).then(resp => {
   
         for (let i = 0; i < resp.length; i++) {
   
@@ -331,23 +315,17 @@ if(this.controlCamionesGuiasService.rutas.length == 0){
             clientes[c].facturas.push(resp[i])
   
           } else {
-
             let cliente = {
               id: resp[i].CLIENTE_ORIGEN,
               idGuia:null,
               nombre: resp[i].NOMBRE_CLIENTE,
               latitud: resp[i].LATITUD,
               longitud: resp[i].LONGITUD,
-              marcador:null,
-              color: null,
-              cambioColor: '#00FF00',
               frio:false,
-              seco:false,
-              frioSeco:false,
+              caliente:false,
+              frioCaliente:false,
               totalFrio:0,
-              totalSeco:0,
-              totalBultos:0,
-              totalPeso:0,
+              totalCaliente:0,
               direccion:resp[i].DIRECCION_FACTURA,
               facturas: [resp[i]]
             }
@@ -370,49 +348,15 @@ if(this.controlCamionesGuiasService.rutas.length == 0){
   
       });
 
-      if(r == this.controlCamionesGuiasService.rutas.length -1){
+      if(r == this.rutas.length -1){
         
-      clientes.forEach((cliente, index) =>{
-
-        
-        let frio =   cliente.facturas.filter(f => f.FRIO_SECO == 'F').length
-        let seco =   cliente.facturas.filter(f => f.FRIO_SECO == 'N').length
-
-        cliente.totalSeco = seco;
-        cliente.totalFrio = frio;
-        cliente.frio =  frio > 0 ?  true : false
-        cliente.seco =  seco > 0 ?  true : false
-        cliente.frioSeco =  frio > 0 && seco > 0?  true : false
-        cliente.color =  frio > 0 ? '#0000FF' : '#eed202'
-
-
-        for(let f =0; f < cliente.facturas.length ; f++){
-
-          cliente.totalBultos += Number(cliente.facturas[f].RUBRO1);
-          cliente.totalPeso += cliente.facturas[f].TOTAL_PESO;
-        }
-     
-
-        if(index == clientes.length -1){
-
-          if(clientes.length > 0){
-            this.controlCamionesGuiasService.facturas = []
-            this.controlCamionesGuiasService.facturas =  clientes.length > 1 ? this.odenar(clientes) : clientes;
-            console.log('clientes',   this.odenar(clientes))
-            console.log('this.controlCamionesGuiasService.facturas',   this.controlCamionesGuiasService.facturas)
-         //   this.controlCamionesGuiasService.actualizarValores();
-            
-     
-           }
-    
-            this.createmapa();
-
-
-        }
-      })
-
-        
-  
+        this.controlCamionesGuiasService.facturas =  this.odenar(clientes);
+       
+        this.controlCamionesGuiasService.actualizarValores();
+        console.log('clientes',  clientes )
+        console.log(' this.rutas ',  this.rutas )
+        console.log(' this.controlCamionesGuiasService.facturas',   this.controlCamionesGuiasService.facturas )
+        this.createmapa();
       }
     }
 
@@ -421,7 +365,7 @@ if(this.controlCamionesGuiasService.rutas.length == 0){
 
   }
 
-odenar(array:ClientesGuia[])
+odenar(array:any[])
 
 {
   console.log('array', array)
@@ -443,10 +387,7 @@ return array;
 
 }
 
-rutasRacioGroup($event){
-  this.controlCamionesGuiasService.rutaZona = $event.detail.value;
-console.log('$event',$event.detail.value)
-}
+
 
 async listaGuias(){
 
@@ -468,35 +409,9 @@ async listaGuias(){
     this.calendarioModal();
   }
 }
-async gestionGuias(){
 
-  if(this.controlCamionesGuiasService.clientes.length == 0){
-
-    this.alertasService.message('IRP', 'Debdes de seleccionar al menos un cliente para poder continuar..')
-
-    return
-  }
-  const modal = await this.modalCtrl.create({
-    component: GestionGuiasEntregaPage,
-    cssClass: 'full-screen-modal',
-    componentProps:{
-      clientes:this.controlCamionesGuiasService.clientes
-    }
-  });
-  modal.present();
-
-
-  const { data } = await modal.onDidDismiss();
-
-
-  if (data !== undefined) {
-    this.cargarDatos();
-  }
-
-}
   limpiarDatos() {
-    this.zoomLevel = 6.5;
-  this.controlCamionesGuiasService.rutas = [];
+
     this.controlCamionesGuiasService.limpiarDatos();
     this.createmapa();
   }
@@ -516,17 +431,17 @@ console.log('data',data)
     //  this.limpiarDatos();
 
     for(let r = 0 ; r < data.rutas.length; r++ ){
-      let i:any = this.controlCamionesGuiasService.rutas.findIndex(rutas => rutas.RUTA == data.rutas[r].RUTA);
+      let i:any = this.rutas.findIndex(rutas => rutas.RUTA == data.rutas[r].RUTA);
 
       if(i < 0){
-        this.controlCamionesGuiasService.rutas.push(data.rutas[r])
+        this.rutas.push(data.rutas[r])
       
       }
       if(r == data.rutas.length -1){
 
         let ruta = data.rutas[0];
-        this.controlCamionesGuiasService.rutas = data.rutas;
-        console.log(this.controlCamionesGuiasService.rutas, 'rutas')
+        this.rutas = data.rutas;
+        console.log(this.rutas, 'rutas')
         this.controlCamionesGuiasService.rutaZona = ruta;
   
         this.calendarioModal();
@@ -553,7 +468,7 @@ console.log('data',data)
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-this.zoomLevel = 10;
+
       this.controlCamionesGuiasService.fecha = format(new Date(data.fecha), 'yyy/MM/dd');
     this.cargarDatos();
 
@@ -669,23 +584,21 @@ this.zoomLevel = 10;
 
                       
                       let cliente = {
+
+
                         id: factura.CLIENTE_ORIGEN,
                         idGuia:null,
                         nombre: factura.NOMBRE_CLIENTE,
-                        marcador:null,
-                        color: null,
-                        cambioColor: '#00FF00',
                         latitud: factura.LATITUD,
                         longitud: factura.LONGITUD,
                         frio:false,
-                        seco:false,
-                        frioSeco:false,
+                        caliente:false,
+                        frioCaliente:false,
                         totalFrio:0,
-                        totalSeco:0,
-                        totalBultos:0,
-                        totalPeso:0,
+                        totalCaliente:0,
                         direccion:factura.DIRECCION_FACTURA,
                         facturas: [factura]
+
  
                       }
 
@@ -752,7 +665,7 @@ this.zoomLevel = 10;
     let facturas = guia.facturas;
 
     for (let i = 0; i < facturas.length; i++) {
-      console.log('this.controlCamionesGuiasService.clientes', this.controlCamionesGuiasService.clientes)
+      console.log('this.clientes', this.controlCamionesGuiasService.clientes)
       let c = this.controlCamionesGuiasService.facturas.findIndex(cliente => cliente.id == facturas[i].CLIENTE_ORIGEN);
       console.log('c', c)
       console.log('facturas[i].CLIENTE_ORIGEN', facturas[i].CLIENTE_ORIGEN)
@@ -761,7 +674,7 @@ this.zoomLevel = 10;
         console.log('c', c)
 
         for (let f = 0; f < this.controlCamionesGuiasService.facturas[c].facturas.length; f++) {
-          console.log('this.controlCamionesGuiasService.clientes[c].facturas[f].ID_GUIA', this.controlCamionesGuiasService.facturas[c].facturas[f].ID_GUIA)
+          console.log('this.clientes[c].facturas[f].ID_GUIA', this.controlCamionesGuiasService.facturas[c].facturas[f].ID_GUIA)
           console.log('facturas[i].ID_GUIA', facturas[i].ID_GUIA)
           if (this.controlCamionesGuiasService.facturas[c].facturas[f].ID_GUIA == facturas[i].ID_GUIA) {
             facturas[i].ID_GUIA = null;
@@ -872,18 +785,13 @@ this.zoomLevel = 10;
       id: factura.CLIENTE_ORIGEN,
       idGuia:null,
       nombre: factura.NOMBRE_CLIENTE,
-      marcador:null,
-      color: null,
-      cambioColor: '#00FF00',
       latitud: factura.LATITUD,
       longitud: factura.LONGITUD,
       frio:false,
-      seco:false,
-      frioSeco:false,
+      caliente:false,
+      frioCaliente:false,
       totalFrio:0,
-      totalSeco:0,
-      totalBultos:0,
-      totalPeso:0,
+      totalCaliente:0,
       direccion:factura.DIRECCION_FACTURA,
       facturas: [factura]
     }

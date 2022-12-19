@@ -151,7 +151,7 @@ console.log('facturaaaaa inmpor', factu)
       if(i == this.facturasArray.length -1 ){
       this.modalCtrl.dismiss()
  
-      this.controlCamionesGuiasService.actualizarValores();
+   //   this.controlCamionesGuiasService.actualizarValores();
         if(this.controlCamionesGuiasService.facturasNoAgregadas.length >0){
           
 
