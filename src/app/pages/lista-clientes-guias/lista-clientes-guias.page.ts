@@ -80,7 +80,7 @@ textoBuscar = '';
 
   ngOnInit() {
     console.log( this.guia,'guiia')
-  this.clientes =   this.controlCamionesGuiasService.importarFacturas(this.guia.facturas);
+  //this.clientes =   this.controlCamionesGuiasService.importarFacturas(this.guia.facturas);
   console.log( this.clientes,'clientes')
   }
 

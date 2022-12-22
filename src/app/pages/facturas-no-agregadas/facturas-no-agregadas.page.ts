@@ -19,7 +19,7 @@ textoBuscar = '';
 
   ngOnInit(
   ) {
-this.facturas = this.controlCamionesService.importarFacturas(this.facturas);
+//this.facturas = this.controlCamionesService.importarFacturas(this.facturas);
     console.log('this.facturas', this.facturas)
   }
 

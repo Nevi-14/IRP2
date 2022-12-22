@@ -54,8 +54,28 @@ export class GestionGuiasEntregaPage {
 
   ionViewWillEnter() {
 
-    this.controlCamionesGuiasService.actualizarTotales();
+    this.controlCamionesGuiasService.pesoTotal = 0;
+    this.controlCamionesGuiasService.totalBultos = 0;
+    this.controlCamionesGuiasService.volumenTotal = 0;
+    this.controlCamionesGuiasService.totalFacturas = 0;
+    for(let i =0; i< this.clientes.length; i++){
 
+
+this.clientes[i].facturas.forEach( factura =>{
+
+this.controlCamionesGuiasService.pesoTotal += factura.TOTAL_PESO;
+this.controlCamionesGuiasService.totalBultos += Number(factura.RUBRO1);
+this.controlCamionesGuiasService.volumenTotal += factura.TOTAL_VOLUMEN;
+this.controlCamionesGuiasService.totalFacturas += 1;
+
+})
+
+      if(i == this.clientes.length -1){
+
+
+
+      }
+    }
    //this.limpiarDatos();
 
   }
@@ -76,7 +96,7 @@ cerrarModal(){
 
 
   limpiarDatos() {
-    this.controlCamionesGuiasService.cargarMapa = true;
+
     this.controlCamionesGuiasService.limpiarDatos();
   }
   async configuracionZonaRuta() {
@@ -398,7 +418,7 @@ cerrarModal(){
       //=============================================================================
     }
   }
- 
+
   async consultarFacturas() {
 
     const modal = await this.modalCtrl.create({
@@ -419,7 +439,10 @@ cerrarModal(){
 
         if(index == data.data.length -1){
        
-          this.controlCamionesGuiasService.actualizarTotales();
+        //  this.controlCamionesGuiasService.facturas = this.odenar(this.controlCamionesGuiasService.facturas);
+     
+          this.controlCamionesGuiasService.actualizarValores();
+   
 
         }
       });
@@ -450,15 +473,15 @@ cerrarModal(){
       direccion: factura.DIRECCION_FACTURA,
       facturas: [factura]
     }
-    let c = this.controlCamionesGuiasService.clientes.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
+    let c = this.controlCamionesGuiasService.facturas.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
     if (c >= 0) {
 
-      let facturaIndex = this.controlCamionesGuiasService.clientes[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
+      let facturaIndex = this.controlCamionesGuiasService.facturas[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
 
       if (facturaIndex < 0) {
 
-        this.controlCamionesGuiasService.clientes[c].facturas.push(factura);
-        console.log('found', this.controlCamionesGuiasService.clientes[c].facturas)
+        this.controlCamionesGuiasService.facturas[c].facturas.push(factura);
+        console.log('found', this.controlCamionesGuiasService.facturas[c].facturas)
 
       }
 
@@ -466,7 +489,7 @@ cerrarModal(){
     } else {
       this.controlCamionesGuiasService.totalFacturas += 1;
       console.log('new', cliente)
-      this.controlCamionesGuiasService.clientes.push(cliente)
+      this.controlCamionesGuiasService.facturas.push(cliente)
     }
 
 

@@ -6,6 +6,7 @@ import { PlanificacionEntregasService } from '../../services/planificacion-entre
 import { format } from 'date-fns';
 import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 import { AlertasService } from 'src/app/services/alertas.service';
+import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 interface facturas {
   factura: PlanificacionEntregas,
   checked:boolean
@@ -32,7 +33,8 @@ export class ConsultarFacturasPage implements OnInit {
    public rutaZonasService: RutaZonaService,
    public popOverCtrl:PopoverController,
    public planificacionEntregasService: PlanificacionEntregasService,
-   public alertasService:AlertasService
+   public alertasService:AlertasService,
+   public controlCamionesGuiasService: ControlCamionesGuiasService
   ) { }
  
 selectedArray :any = [];
@@ -45,13 +47,24 @@ selectedArray :any = [];
   }
 
   seleccionarCliente($event){
-let ruta = $event.detail.value;
- this.ruta = ruta;
+let ruta = {
+  RUTA:$event.detail.value.Ruta,
+  DESCRIPCION:$event.detail.value.Descripcion
+}
+ this.ruta = $event.detail.value;
+ this.controlCamionesGuiasService.rutaZona = ruta;
+ console.log('ruta', ruta)
+
+ let i = this.controlCamionesGuiasService.rutas.findIndex(rut => rut.RUTA == ruta.RUTA);
+ if(i < 0){
+  this.controlCamionesGuiasService.rutas.push(ruta);
+ }
 
  this.cargarDatos();
   }
 
   cargarListaClientes(){
+    this.clientes = [];
     this.ruta = null;
     this.rutaZonasService.syncRutasToPromise().then(resp =>{
 
@@ -104,7 +117,7 @@ selectMember(factura:facturas){
     console.log('onDidDismiss resolved with role', data);
     if(data != undefined ){
       this.date  = new Date(data.fecha)
-
+ 
    if(this.ruta){
 
     this.cargarDatos();
@@ -135,17 +148,47 @@ let facturas = [];
 
   }
 
-  
+  agregarTodasLasFacturas(){
+
+    let facturas = [];
+
+    for(let i =0; i < this.clientes.length; i++){
+
+      this.clientes[i].facturas.forEach(factura =>{
+     
+        this.controlCamionesGuiasService.importarFacturas(factura.factura, true);
+      //  facturas.push(factura.factura)
+
+      })
+      if(i == this.clientes.length -1){
+        this.controlCamionesGuiasService.actualizarTotales();
+        console.log('facturas', facturas)
+        this.modalCtrl.dismiss({
+          data:facturas
+        })
+      }
+    }
+
+   
+
+  }
   cargarDatos() {
 
-    let clientes: Clientes[] = []
+this.alertasService.presentaLoading('Cargando facturas...');
 
+ let clientes: Clientes[] = []
+
+    this.controlCamionesGuiasService.fecha = format(new Date(this.date), 'yyy/MM/dd');
+
+    
     this.planificacionEntregasService.syncRutaFacturas(this.ruta.Ruta, format(new Date(this.date),'yyyy-MM-dd')).then(resp => {
+
       if(resp.length ==0){
 
         this.alertasService.message('SDE RP', 'No se encontraron faturas para la ruta '+ this.ruta.Descripcion +' selecciona otra fecha')
-       // this.cargarListaClientes();
+        this.alertasService.loadingDissmiss();
 this.clientes = [];
+this.cargarListaClientes();
         return;
       }
 
@@ -193,10 +236,12 @@ if(clientes[c].facturas.length > 0){
  
 }
     if(c == clientes.length -1){
+
+      this.alertasService.loadingDissmiss();
       this.clientes = data;
 
       if(this.clientes.length ==0){
-
+        
         this.alertasService.message('SDE RP', 'No se encontraron faturas para la ruta '+ this.ruta.Ruta +' selecciona otro cliente')
         this.cargarListaClientes();
       }
@@ -208,6 +253,13 @@ if(clientes[c].facturas.length > 0){
 }
       }
 
+   
+
+
+    }, error =>{
+
+this.alertasService.loadingDissmiss();
+this.alertasService.message('IRP', 'Lo sentimos algo salio mal..')
 
 
     });

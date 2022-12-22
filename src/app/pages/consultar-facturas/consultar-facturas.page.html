@@ -133,6 +133,7 @@
 
 </ion-content>
 
-<ion-footer *ngIf="selectedArray.length > 0" class="ion-no-border ion-text-center ion-padding" >
-  <ion-button  color="dark" expand="block" (click)="agregarFacturas()">Agregar Facturas</ion-button>
+<ion-footer  class="ion-no-border ion-text-center ion-padding" >
+  <ion-button *ngIf="clientes.length > 0"   color="dark" expand="block" (click)="agregarTodasLasFacturas()">Agregar Todas las Facturas</ion-button>
+  <ion-button  *ngIf="selectedArray.length > 0"  color="dark" expand="block" (click)="agregarFacturas()">Agregar Facturas Seleccionadas</ion-button>
 </ion-footer>

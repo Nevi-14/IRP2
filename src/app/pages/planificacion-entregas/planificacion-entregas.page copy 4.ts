@@ -109,9 +109,12 @@ export class PlanificacionEntregasPage {
 
 
   borrarCliente(cliente: ClientesGuia) {
-    cliente.seleccionado = false;
+    let c = this.controlCamionesGuiasService.clientes.findIndex( client => client.id == cliente.id);
 
-    // this.controlCamionesGuiasService.clientes.push(cliente)
+    if (c >= 0){
+      this.controlCamionesGuiasService.clientes[c].seleccionado = false;
+    }
+   // this.controlCamionesGuiasService.clientes.push(cliente)
     this.controlCamionesGuiasService.borrarCliente(cliente)
     this.createmapa();
 
@@ -119,8 +122,8 @@ export class PlanificacionEntregasPage {
 
   createmapa() {
 
-    this.mapa = null;
-
+  this.mapa = null;
+   
     this.mapa = new mapboxgl.Map({
       container: this.divMapa.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -167,21 +170,25 @@ export class PlanificacionEntregasPage {
 
     for (let i = 0; i < this.controlCamionesGuiasService.clientes.length; i++) {
 
-      this.controlCamionesGuiasService.clientes[i].marcador = new mapboxgl.Marker({
-        color: this.controlCamionesGuiasService.clientes[i].color,
-        draggable: this.drag
-      })
+      if( !this.controlCamionesGuiasService.clientes[i].seleccionado){
+        this.controlCamionesGuiasService.clientes[i].marcador = new mapboxgl.Marker({
+          color: this.controlCamionesGuiasService.clientes[i].color,
+          draggable: this.drag
+        })
 
+
+      }
+  
 
       this.controlCamionesGuiasService.clientes[i].marcador.setLngLat([this.controlCamionesGuiasService.clientes[i].longitud, this.controlCamionesGuiasService.clientes[i].latitud])
 
 
-      if (!this.controlCamionesGuiasService.clientes[i].seleccionado) {
+      if(!this.controlCamionesGuiasService.clientes[i].seleccionado){
 
         this.controlCamionesGuiasService.clientes[i].marcador.addTo(this.mapa)
       }
 
-
+     
       const divElement = document.createElement('div');
       const assignBtn = document.createElement('div');
       assignBtn.innerHTML = `
@@ -212,8 +219,23 @@ export class PlanificacionEntregasPage {
       const miniPopup = new mapboxgl.Popup({ offset: 32 }).setDOMContent(divElement);
 
       miniPopup.on('open', () => {
-        this.controlCamionesGuiasService.clientes[i].seleccionado = true;
-        this.createmapa();
+
+        let index = this.controlCamionesGuiasService.clientes.findIndex(c => c.id == this.controlCamionesGuiasService.clientes[i].id);
+  let c = this.controlCamionesGuiasService.clientes.findIndex( client => client.id == this.controlCamionesGuiasService.clientes[i].id);
+    
+    if (c >= 0){
+      this.controlCamionesGuiasService.clientes[c].seleccionado = true;
+    }
+        if (index >= 0) {
+          this.controlCamionesGuiasService.clientes[index].seleccionado = true;
+          this.alertasService.message('ERP', 'El cliente ya es parte de la lista.');
+
+        } else {
+        
+          this.controlCamionesGuiasService.clientes.push(this.controlCamionesGuiasService.clientes[i]);
+      this.createmapa();
+        }
+
 
 
 
@@ -282,7 +304,7 @@ export class PlanificacionEntregasPage {
         for (let i = 0; i < resp.length; i++) {
 
 
-          this.controlCamionesGuiasService.importarFacturas(resp[i]);
+          this.importarFacturas(resp[i]);
 
 
         }
@@ -352,26 +374,15 @@ export class PlanificacionEntregasPage {
 
     const { data } = await modal.onDidDismiss();
 
-if(this.controlCamionesGuiasService.cargarMapa){
 
-  this.createmapa();
-  this.controlCamionesGuiasService.cargarMapa = false;
-}
+    if (data !== undefined) {
 
-if (data !== undefined) {
-this.irMarcador([data.cliente.longitud,data.cliente.latitud])
-}
-    
-  }
 
-  irMarcador(item) {
-    if (item) {
-      this.mapa.flyTo(
-        { center: item, zoom: 18 }
-      )
-  
+      this.calendarioModal();
     }
   }
+
+
   rutasRacioGroup($event) {
     this.controlCamionesGuiasService.rutaZona = $event.detail.value;
 
@@ -392,11 +403,7 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
 
     const { data } = await modal.onDidDismiss();
 
-if(  this.controlCamionesGuiasService.cargarMapa){
 
-  this.cargarDatos();
-  this.controlCamionesGuiasService.cargarMapa = false;
-}
     if (data !== undefined) {
       this.cargarDatos();
     }
@@ -469,15 +476,15 @@ if(  this.controlCamionesGuiasService.cargarMapa){
   }
 
 
-  consultarClientesSeleccionados() {
+consultarClientesSeleccionados(){
 
 
-    let total = this.controlCamionesGuiasService.clientes.filter(cliente => cliente.seleccionado == true);
+let total = this.controlCamionesGuiasService.clientes.filter(cliente => cliente.seleccionado == true);
 
-    return total.length;
+return total.length;
 
 
-  }
+}
 
 
   controlFacturas(factura) {
@@ -507,9 +514,61 @@ if(  this.controlCamionesGuiasService.cargarMapa){
     if (data !== undefined) {
       console.log(data, 'data')
       this.controlCamionesGuiasService.clientes = this.controlCamionesGuiasService.facturasOriginal;
+
+      //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
+      //=============================================================================
+      // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
+      // LAS FACTURAS A UNA SOLA GUIA
+      //=============================================================================
     }
   }
 
+
+  importarFacturas(factura) {
+    let cliente = {
+      id: factura.CLIENTE_ORIGEN,
+      idGuia: null,
+      nombre: factura.NOMBRE_CLIENTE,
+      marcador: null,
+      color: null,
+      cambioColor: '#00FF00',
+      latitud: factura.LATITUD,
+      longitud: factura.LONGITUD,
+      seleccionado:false,
+      cargarFacturas:true,
+      frio: false,
+      seco: false,
+      frioSeco: false,
+      totalFrio: 0,
+      totalSeco: 0,
+      totalBultos: 0,
+      totalPeso: 0,
+      direccion: factura.DIRECCION_FACTURA,
+      facturas: [factura]
+    }
+    let c = this.controlCamionesGuiasService.clientes.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
+    if (c >= 0) {
+
+      let facturaIndex = this.controlCamionesGuiasService.clientes[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
+
+      if (facturaIndex < 0) {
+
+        this.controlCamionesGuiasService.clientes[c].facturas.push(factura);
+        console.log('found', this.controlCamionesGuiasService.clientes[c].facturas)
+
+      }
+
+
+    } else {
+      this.controlCamionesGuiasService.totalFacturas += 1;
+      console.log('new', cliente)
+      this.controlCamionesGuiasService.clientes.push(cliente)
+    }
+
+
+
+
+  }
 
 
 

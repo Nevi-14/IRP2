@@ -25,6 +25,8 @@ constructor(
     public idGuia:string,
     public nombre: string,
     public marcador:Marker,
+    public seleccionado: boolean,
+    public cargarFacturas:boolean,
     public color:string,
     public cambioColor:string,
     public latitud: number,

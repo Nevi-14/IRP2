@@ -95,8 +95,6 @@ export class ControlCamionesGuiasService {
 //=============================================================================
 
 limpiarDatos(){
-
-this.cargarMapa  = false;
 this.rutas = [];
   this.clientes  = [];
   this.facturasOriginal = [];
@@ -998,20 +996,30 @@ return array;
 
 borrarCliente(cliente:ClientesGuia){
 
-  for(let f = 0; f < cliente.facturas.length ; f++){
-  console.log('cliente', cliente)
-  console.log('facturas', cliente.facturas[f])
-    if(cliente.facturas[f].ID_GUIA){
-      console.log(this.listaGuias)
-      this.borrarFacturaGuia(cliente.facturas[f])
+  let i = this.clientes.findIndex(c => c.id == cliente.id);
+  
+  if(i >=0 && this.clientes[i].facturas){
+  
+  console.log('this.clientes[i]', this.clientes[i])
+  console.log(this.listaGuias)
+  let facturas = this.clientes[i].facturas;
+  for(let f = 0; f < facturas.length ; f++){
+  
+if(this.clientes[i].idGuia){
+
+  console.log(this.listaGuias)
+  this.borrarFacturaGuia(facturas[f])
+}
+    if(f == facturas.length -1){
+     // this.clientes.splice(i,1)
+  
     }
-        if(f == cliente.facturas.length -1){
-         // this.clientes.splice(i,1)
-      
-        }
-      
-        
-      }
+  
+    
+  }
+  
+   
+  }
   
     }
     

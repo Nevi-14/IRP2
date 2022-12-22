@@ -20,11 +20,17 @@
         </ion-label>
    
         <ion-buttons slot="end" >
-
+       
           <ion-button  (click)="presentPopover($event)"    shape="round" color="dark" size="small">
             <ion-icon color="light" name="bus-outline"></ion-icon>n>
             <ion-badge color="primary" mode="ios">{{controlCamionesGuiasService.rutas.length}}</ion-badge>
           </ion-button>
+          <ion-button *ngIf="controlCamionesGuiasService.rutas.length > 0"  (click)="planificacionEntegasClientes()"    shape="round" color="dark" size="small">
+            <ion-icon   color="light" name="location-outline"></ion-icon>
+            <ion-badge color="primary" mode="ios">{{controlCamionesGuiasService.clientes.length}}</ion-badge>
+          </ion-button>
+
+
           <ion-popover mode="ios"  #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
             <ng-template>
               <ion-content class="ion-padding">
@@ -57,7 +63,7 @@
             <ion-icon name="home-outline"></ion-icon>
           </ion-button>
 
-          <ion-button *ngIf="controlCamionesGuiasService.clientes.length > 0" (click)="gestionGuias()" color="primary"  fill="solid" shape="round">
+          <ion-button  (click)="gestionGuias()" color="primary"  fill="solid" shape="round">
             Gestionar Guias
           </ion-button>
 
@@ -120,21 +126,25 @@
   </ion-grid>
 
 
-  <ion-accordion-group *ngIf="controlCamionesGuiasService.clientes.length > 0" style="  position: fixed;
+  <ion-accordion-group *ngIf="consultarClientesSeleccionados() > 0" style="  position: fixed;
   top: 160px;
   right: 130px;
   width:250px;">
-    <ion-accordion value="first">
+    <ion-accordion value="first" >
       <ion-item slot="header" color="light">
-        <ion-label>Clientes <ion-badge color="primary" mode="ios">{{controlCamionesGuiasService.clientes.length}}</ion-badge> </ion-label>
+        <ion-label>Clientes <ion-badge color="primary" mode="ios">{{consultarClientesSeleccionados()}}</ion-badge> </ion-label>
       </ion-item>
-      <div class="ion-padding" slot="content">
- <ion-item *ngFor="let cliente of controlCamionesGuiasService.clientes">
-  <ion-label button (click)="detalleClientes(cliente)" class="ion-text-wrap" style="font-size: 12px;">{{cliente.nombre}}</ion-label>
-  <ion-button (click)="borrarCliente(cliente)"   slot="end"  fill="clear"  >
-<ion-icon   color="danger" slot="icon-only" size="large" name="close-outline"></ion-icon>
-  </ion-button>
- </ion-item>
+      <div class="ion-padding fixed" slot="content">
+
+        <span *ngFor="let cliente of controlCamionesGuiasService.clientes"> 
+          <ion-item   *ngIf="cliente.seleccionado" >
+            <ion-label button (click)="detalleClientes(cliente)" class="ion-text-wrap" style="font-size: 12px;">{{cliente.nombre}}</ion-label>
+            <ion-button (click)="borrarCliente(cliente)"   slot="end"  fill="clear"  >
+          <ion-icon   color="danger" slot="icon-only" size="large" name="close-outline"></ion-icon>
+            </ion-button>
+           </ion-item>
+        </span>
+
       </div>
     </ion-accordion>
 
