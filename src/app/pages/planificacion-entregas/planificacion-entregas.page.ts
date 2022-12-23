@@ -110,7 +110,7 @@ export class PlanificacionEntregasPage {
 
   borrarCliente(cliente: ClientesGuia) {
     cliente.seleccionado = false;
-
+this.zoomLevel  = 10.5;
     // this.controlCamionesGuiasService.clientes.push(cliente)
     this.controlCamionesGuiasService.borrarCliente(cliente)
     this.createmapa();
@@ -129,6 +129,7 @@ export class PlanificacionEntregasPage {
       interactive: true
     });
 
+    
     new mapboxgl.Marker()
       .setLngLat(this.lngLat)
       .setPopup(new mapboxgl.Popup({ closeOnClick: false, closeButton: false }).setText("DISTRIBUIDORA ISLEÑA"))
@@ -184,6 +185,7 @@ export class PlanificacionEntregasPage {
 
       const divElement = document.createElement('div');
       const assignBtn = document.createElement('div');
+      const assignBtn2 = document.createElement('div');
       assignBtn.innerHTML = `
         
         <ion-list> 
@@ -200,20 +202,32 @@ export class PlanificacionEntregasPage {
         
         </ion-list>
         `;
-
+        assignBtn2.innerHTML = `
+        <ion-button    shape="round" fill="solid" color="dark">
+        <ion-icon slot="start"  name="add-outline"></ion-icon>
+        <ion-label>Incluir En Ruta</ion-label>
+     
+      </ion-button>
+        `;
       divElement.appendChild(assignBtn);
-
+      divElement.appendChild(assignBtn2);
       assignBtn.addEventListener('click', (e) => {
 
         this.detalleClientes(this.controlCamionesGuiasService.clientes[i]);
 
       });
+      assignBtn2.addEventListener('click', (e) => {
 
+        this.controlCamionesGuiasService.clientes[i].seleccionado = true;
+        this.zoomLevel  = this.mapa.getZoom();
+        this.createmapa();
+        this.irMarcador([this.controlCamionesGuiasService.clientes[i].longitud, this.controlCamionesGuiasService.clientes[i].latitud])
+
+      });
       const miniPopup = new mapboxgl.Popup({ offset: 32 }).setDOMContent(divElement);
 
       miniPopup.on('open', () => {
-        this.controlCamionesGuiasService.clientes[i].seleccionado = true;
-        this.createmapa();
+
 
 
 
@@ -367,7 +381,7 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
   irMarcador(item) {
     if (item) {
       this.mapa.flyTo(
-        { center: item, zoom: 18 }
+        { center: item, zoom: this.zoomLevel }
       )
   
     }
@@ -403,6 +417,7 @@ if(  this.controlCamionesGuiasService.cargarMapa){
 
   }
   limpiarDatos() {
+    this.lngLat = [-84.14123589305028, 9.982628288210657];
     this.zoomLevel = 6.5;
     this.controlCamionesGuiasService.rutas = [];
     this.controlCamionesGuiasService.limpiarDatos();
