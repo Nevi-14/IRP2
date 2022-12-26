@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { ClientesGuia } from '../../models/guia';
+import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.page';
 
 @Component({
   selector: 'app-planificacion-entrega-clientes',
@@ -44,6 +45,18 @@ this.controlCamionesGuiasService.borrarCliente(cliente);
 
   }
 
+  async detalleClientes(cliente) {
+
+
+    const modal = await this.modalCtrl.create({
+      component: PlanificacionEntregaClienteDetallePage,
+      cssClass: 'ui-modal',
+      componentProps: {
+        cliente: cliente
+      }
+    });
+    return await modal.present();
+  }
   location(cliente){
     this.modalCtrl.dismiss({
       cliente:cliente

@@ -62,7 +62,7 @@ interface  Guias{
   styleUrls: ['./lista-clientes-guias.page.scss'],
 })
 export class ListaClientesGuiasPage implements OnInit {
-@Input() facturas:any[]
+ 
 @Input()rutaZona;
 @Input() fecha;
 @Input()  idGuia

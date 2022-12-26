@@ -37,7 +37,7 @@ export class ControlCamionesGuiasService {
    guiasGeneradas:GuiaEntrega[] = [];
     clientes: ClientesGuia[] = []
     facturasOriginal: ClientesGuia[] = []
-    facturasNoAgregadas: PlanificacionEntregas[] = [];
+    facturasNoAgregadas: ClientesGuia[] = [];
     preListaGuias:Guias[] = []
     listaGuias : Guias[] = [];
   //  clientes:ClientesGuia[] = []
@@ -96,7 +96,7 @@ export class ControlCamionesGuiasService {
 
 limpiarDatos(){
 
-this.cargarMapa  = false;
+
 this.rutas = [];
   this.clientes  = [];
   this.facturasOriginal = [];
@@ -139,6 +139,55 @@ this.rutas = [];
 
 
 }
+
+
+arregloDEClientes(facturas:PlanificacionEntregas[]) {
+  let data:ClientesGuia[] = [];
+ 
+
+  facturas.forEach(factura =>{
+    let cliente = {
+      id: factura.CLIENTE_ORIGEN,
+      idGuia:null,
+      nombre: factura.NOMBRE_CLIENTE,
+      marcador:null,
+      color:null,
+      cambioColor: '#00FF00',
+      latitud: factura.LATITUD,
+      longitud: factura.LONGITUD,
+      seleccionado:false,
+      cargarFacturas:true,
+      frio:false,
+      seco:false,
+      frioSeco:false,
+      totalFrio:0,
+      totalSeco:0,
+      totalBultos:0,
+      totalPeso:0,
+      direccion:factura.DIRECCION_FACTURA,
+      facturas: [factura]
+    }
+    let c = data.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
+    if(c>=0){
+let f = data[c].facturas.findIndex(fact => fact.FACTURA ==  factura.FACTURA)
+if (f < 0){
+  data[c].facturas.push(factura)
+
+}
+    }else{
+      data.push(cliente)
+      
+    }
+
+
+  })
+
+  console.log('data', data)
+return data;
+
+}
+
+
 
 
 actualizarTotales(){
@@ -203,16 +252,18 @@ actualizarValores(){
 
   this.clientes.forEach(clientes =>{
 
-    let facturas = clientes.facturas;
-    facturas.forEach(factura =>{
-      this.pesoTotal += factura.TOTAL_PESO;
+if(clientes.seleccionado){
+  let facturas = clientes.facturas;
+  facturas.forEach(factura =>{
+    this.pesoTotal += factura.TOTAL_PESO;
 this.volumenTotal += factura.TOTAL_VOLUMEN;
 this.totalClientes  = this.clientes.length;
 this.totalBultos += Number(factura.RUBRO1);
 this.bultosTotales += Number(factura.RUBRO1);
 this.totalFacturas +=1;
 
-    })
+  })
+}
   })
 }
 
@@ -297,6 +348,29 @@ let cliente:Cliente =  {
   HoraFin:null
 }
 
+
+let noAgregado = {
+  id: factura.CLIENTE_ORIGEN,
+  idGuia: null,
+  nombre: factura.NOMBRE_CLIENTE,
+  marcador: null,
+  color: null,
+  cambioColor: '#00FF00',
+  latitud: factura.LATITUD,
+  longitud: factura.LONGITUD,
+  seleccionado:  false,
+  cargarFacturas:true,
+  frio: false,
+  seco: false,
+  frioSeco: false,
+  totalFrio: 0,
+  totalSeco: 0,
+  totalBultos: 0,
+  totalPeso: 0,
+  direccion: factura.DIRECCION_FACTURA,
+  facturas: [factura]
+}
+
 if(i >=0){
 
 
@@ -349,7 +423,7 @@ this.listaGuias.splice(guia, 1);
 
     }
    }
-      this.facturasNoAgregadas.push(factura)
+      this.facturasNoAgregadas.push(noAgregado)
     }
   
 }
@@ -850,17 +924,7 @@ borrarGuia(idGuia){
   let i  = this.listaGuias.findIndex(guia =>  guia.idGuia == idGuia);
 
   if(i >=0){
-    this.listaGuias[i].verificada = false;
-    let facturas = this.listaGuias[i].facturas;
-
-    for(let f =0; f < facturas.length; f++){
-      console.log('facturas[i]', facturas[i])
-      facturas[f].ID_GUIA = null;
-      console.log('facturas[i]', facturas[f])
-      if(f === facturas.length -1){
-        this.listaGuias.splice(i,1);
-      }
-    }
+    this.listaGuias.splice(i,1);
   }
 
 };
@@ -904,18 +968,43 @@ importarFacturas(factura:PlanificacionEntregas, seleccionado?:boolean) {
     if (facturaIndex < 0) {
 
       this.clientes[c].facturas.push(factura);
-      console.log('found', this.clientes[c].facturas)
 
     }
 
 
   } else {
     this.totalFacturas += 1;
-    console.log('new', cliente)
     this.clientes.push(cliente)
   }
 
+  this.clientes.forEach(cliente => {
+    cliente.totalBultos  = 0;
+    cliente.totalPeso  = 0;
 
+    let frio = cliente.facturas.filter(f => f.FRIO_SECO == 'F').length
+    let seco = cliente.facturas.filter(f => f.FRIO_SECO == 'N').length
+
+    cliente.totalSeco = seco;
+    cliente.totalFrio = frio;
+    cliente.frio = frio > 0 ? true : false
+    cliente.seco = seco > 0 ? true : false
+    cliente.frioSeco = frio > 0 && seco > 0 ? true : false
+    cliente.color = frio > 0 ? '#0000FF' : '#eed202'
+
+
+    for (let f = 0; f < cliente.facturas.length; f++) {
+
+      cliente.totalBultos += Number(cliente.facturas[f].RUBRO1);
+      cliente.totalPeso += cliente.facturas[f].TOTAL_PESO;
+
+      if(f == cliente.facturas.length -1){
+
+        this.actualizarValores();
+      }
+    }
+
+ 
+  })
 
 
 }
@@ -1002,6 +1091,7 @@ borrarCliente(cliente:ClientesGuia){
   console.log('cliente', cliente)
   console.log('facturas', cliente.facturas[f])
     if(cliente.facturas[f].ID_GUIA){
+      cliente.facturas[f].ID_GUIA = null;
       console.log(this.listaGuias)
       this.borrarFacturaGuia(cliente.facturas[f])
     }

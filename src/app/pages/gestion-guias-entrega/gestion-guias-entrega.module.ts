@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { GestionGuiasEntregaPageRoutingModule } from './gestion-guias-entrega-routing.module';
 
 import { GestionGuiasEntregaPage } from './gestion-guias-entrega.page';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GestionGuiasEntregaPageRoutingModule
+    GestionGuiasEntregaPageRoutingModule,
+    PipesModule
   ],
   declarations: [GestionGuiasEntregaPage]
 })

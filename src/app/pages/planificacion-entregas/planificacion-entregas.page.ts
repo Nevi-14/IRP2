@@ -83,7 +83,6 @@ export class PlanificacionEntregasPage {
 
     let i: any = this.controlCamionesGuiasService.rutas.findIndex(rutas => rutas.RUTA == ruta.RUTA);
 
-
     if (i >= 0) {
 
       this.controlCamionesGuiasService.rutas.splice(i, 1)
@@ -93,7 +92,6 @@ export class PlanificacionEntregasPage {
       }
 
       this.cargarDatos();
-      // this.limpiarDatos();
     }
 
   }
@@ -109,18 +107,18 @@ export class PlanificacionEntregasPage {
 
 
   borrarCliente(cliente: ClientesGuia) {
+
     cliente.seleccionado = false;
-this.zoomLevel  = 10.5;
-    // this.controlCamionesGuiasService.clientes.push(cliente)
+    this.zoomLevel  = 10.5;
     this.controlCamionesGuiasService.borrarCliente(cliente)
     this.createmapa();
+
 
   }
 
   createmapa() {
 
     this.mapa = null;
-
     this.mapa = new mapboxgl.Map({
       container: this.divMapa.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -189,7 +187,7 @@ this.zoomLevel  = 10.5;
       assignBtn.innerHTML = `
         
         <ion-list> 
-        <ion-item  button lines="none"  >
+        <ion-item  button lines="none"  detail >
     
 
         <ion-label class="ion-text-wrap">
@@ -233,10 +231,9 @@ this.zoomLevel  = 10.5;
 
       })
 
-
       miniPopup.on('close', () => {
 
-
+// when pop up closes
 
       })
 
@@ -305,47 +302,11 @@ this.zoomLevel  = 10.5;
 
       });
 
-      if (r == this.controlCamionesGuiasService.rutas.length - 1) {
+      if(r == this.controlCamionesGuiasService.rutas.length -1){
 
-        this.controlCamionesGuiasService.clientes.forEach((cliente, index) => {
-
-
-          let frio = cliente.facturas.filter(f => f.FRIO_SECO == 'F').length
-          let seco = cliente.facturas.filter(f => f.FRIO_SECO == 'N').length
-
-          cliente.totalSeco = seco;
-          cliente.totalFrio = frio;
-          cliente.frio = frio > 0 ? true : false
-          cliente.seco = seco > 0 ? true : false
-          cliente.frioSeco = frio > 0 && seco > 0 ? true : false
-          cliente.color = frio > 0 ? '#0000FF' : '#eed202'
-
-
-          for (let f = 0; f < cliente.facturas.length; f++) {
-
-            cliente.totalBultos += Number(cliente.facturas[f].RUBRO1);
-            cliente.totalPeso += cliente.facturas[f].TOTAL_PESO;
-          }
-
-          if (index == this.controlCamionesGuiasService.clientes.length - 1) {
-
-            if (this.controlCamionesGuiasService.clientes.length > 0) {
-              this.controlCamionesGuiasService.clientes = this.controlCamionesGuiasService.clientes.length > 1 ? this.controlCamionesGuiasService.odenar(this.controlCamionesGuiasService.clientes) : this.controlCamionesGuiasService.clientes;
-              console.log('clientes', this.controlCamionesGuiasService.odenar(this.controlCamionesGuiasService.clientes))
-              console.log('this.controlCamionesGuiasService.clientes', this.controlCamionesGuiasService.clientes)
-
-
-            }
-
-            this.createmapa();
-
-
-          }
-        })
-
-
-
+        this.createmapa();
       }
+
     }
 
 
@@ -408,7 +369,7 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
 
 if(  this.controlCamionesGuiasService.cargarMapa){
 
-  this.cargarDatos();
+  this.createmapa();
   this.controlCamionesGuiasService.cargarMapa = false;
 }
     if (data !== undefined) {
@@ -434,9 +395,8 @@ if(  this.controlCamionesGuiasService.cargarMapa){
 
     const { data } = await modal.onDidDismiss();
 
-    console.log('data', data)
     if (data !== undefined) {
-      //  this.limpiarDatos();
+
 
       for (let r = 0; r < data.rutas.length; r++) {
         let i: any = this.controlCamionesGuiasService.rutas.findIndex(rutas => rutas.RUTA == data.rutas[r].RUTA);
@@ -520,7 +480,6 @@ if(  this.controlCamionesGuiasService.cargarMapa){
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-      console.log(data, 'data')
       this.controlCamionesGuiasService.clientes = this.controlCamionesGuiasService.facturasOriginal;
     }
   }
@@ -545,7 +504,7 @@ if(  this.controlCamionesGuiasService.cargarMapa){
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-      console.log(data, 'data')
+   
 
 
     }

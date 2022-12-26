@@ -266,6 +266,7 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
       console.log(json, 'json return')
     
       const data = json.routes[0];
+
       const route = data.geometry.coordinates;
       let geojson :any = {
         type: 'Feature',

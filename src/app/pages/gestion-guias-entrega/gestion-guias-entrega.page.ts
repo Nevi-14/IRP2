@@ -11,9 +11,6 @@ import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.componen
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 import { DatatableService } from 'src/app/services/datatable.service';
 import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
-import { CalendarioPage } from '../calendario/calendario.page';
-import { format } from 'date-fns';
-import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
 import { FacturasService } from 'src/app/services/facturas.service';
 import { ListaClientesGuiasPage } from '../lista-clientes-guias/lista-clientes-guias.page';
 import { ConsultarFacturasPage } from '../consultar-facturas/consultar-facturas.page';
@@ -54,76 +51,40 @@ export class GestionGuiasEntregaPage {
 
   ionViewWillEnter() {
 
-    this.controlCamionesGuiasService.actualizarTotales();
-
-   //this.limpiarDatos();
+  this.controlCamionesGuiasService.actualizarTotales();
 
   }
 
-  ngOnDestroy() {
- //   this.limpiarDatos();
-  }
 
 
 cerrarModal(){
 
   this.modalCtrl.dismiss();
+
 }
 
 
 
-
-
-
   limpiarDatos() {
+
     this.controlCamionesGuiasService.cargarMapa = true;
     this.controlCamionesGuiasService.limpiarDatos();
+
   }
-  async configuracionZonaRuta() {
+  async agregarFacturas(cliente:ClientesGuia){
 
-    const modal = await this.modalCtrl.create({
-      component: ListaRutasZonasModalPage,
-      cssClass: 'ui-modal',
-    });
-    modal.present();
-
-
-    const { data } = await modal.onDidDismiss();
-
-   console.log('rutarutarutarutaruta',data);  
-    if (data !== undefined) {
-      this.limpiarDatos();
-      let ruta = data.rutas;
-      console.log('rutarutarutarutaruta',data);   
-      this.controlCamionesGuiasService.rutaZona = ruta;
-      this.controlCamionesGuiasService.rutas.push(ruta);
-      this.calendarioModal();
-    }
-  }
-
-  async calendarioModal() {
-
-    const modal = await this.modalCtrl.create({
-      component: CalendarioPage,
-      cssClass: 'ui-modal',
-      backdropDismiss: false,
-      swipeToClose: false,
-      mode: 'ios',
-    });
-    modal.present();
-
-
-
-    const { data } = await modal.onDidDismiss();
-
-    if (data !== undefined) {
-
+        const modal = await this.modalCtrl.create({
+          component: ControlFacturasPage,
+          cssClass: 'large-modal',
+          componentProps: {
+            factura: cliente,
+            facturas:this.controlCamionesGuiasService.clientes
+          },
+        });
+        modal.present();
     
-      this.controlCamionesGuiasService.fecha = format(new Date(data.fecha), 'yyy/MM/dd');
-  
-
-    }
-  }
+      }
+ 
 
   async filtrar() {
 
@@ -230,6 +191,8 @@ cerrarModal(){
                   filtroData.forEach(filtro => {
 
                     facturas.forEach(factura => {
+
+                    //  this.controlCamionesGuiasService.importarFacturas(factura);
                       let cliente = {
 
 
@@ -314,35 +277,17 @@ cerrarModal(){
 
   borrarGuia(guia: Guias) {
 
-    let facturas = guia.facturas;
-
-    for (let i = 0; i < facturas.length; i++) {
-      console.log('this.clientes', this.controlCamionesGuiasService.clientes)
-      let c = this.clientes.findIndex(cliente => cliente.id == facturas[i].CLIENTE_ORIGEN);
-      console.log('c', c)
-      console.log('facturas[i].CLIENTE_ORIGEN', facturas[i].CLIENTE_ORIGEN)
-
-      if (c >= 0) {
-        console.log('c', c)
-
-        for (let f = 0; f < this.clientes[c].facturas.length; f++) {
-          console.log('this.clientes[c].facturas[f].ID_GUIA', this.clientes[c].facturas[f].ID_GUIA)
-          console.log('facturas[i].ID_GUIA', facturas[i].ID_GUIA)
-          if (this.clientes[c].facturas[f].ID_GUIA == facturas[i].ID_GUIA) {
-            facturas[i].ID_GUIA = null;
-          }
 
 
-          if (f == this.clientes[c].facturas.length - 1) {
+    for (let i = 0; i < guia.facturas.length; i++) {
+ 
+      guia.facturas[i].ID_GUIA = null;
+      
+      if(i == guia.facturas.length -1){
 
-
-            this.controlCamionesGuiasService.borrarGuia(guia.idGuia)
-          }
-        }
-
-
-
+        this.controlCamionesGuiasService.borrarGuia(guia.idGuia)
       }
+
 
 
 
@@ -350,19 +295,7 @@ cerrarModal(){
 
 
   }
-  async agregarFacturas(cliente:ClientesGuia){
-    console.log(cliente)
-        const modal = await this.modalCtrl.create({
-          component: ControlFacturasPage,
-          cssClass: 'large-modal',
-          componentProps: {
-            factura: null,
-            facturas:cliente.facturas
-          },
-        });
-        modal.present();
-    
-      }
+
   controlFacturas(factura) {
 
     if (factura.LONGITUD == null || factura.LONGITUD == undefined || factura.LONGITUD == 0 || factura.LATITUD == 0) {
@@ -388,14 +321,9 @@ cerrarModal(){
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-      console.log(data, 'data')
+
       this.clientes = this.controlCamionesGuiasService.facturasOriginal;
 
-      //  this.controlCamionesGuiasService.generarGuia(factura, data.camion);
-      //=============================================================================
-      // UNA VEZ QUE OBTENEMOS LA INFORMACION DEL CAMION PROCEDEMOS A AGREGAR TODAS
-      // LAS FACTURAS A UNA SOLA GUIA
-      //=============================================================================
     }
   }
  
@@ -410,114 +338,20 @@ cerrarModal(){
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-      console.log(data, 'data')
-  
-      data.data.forEach((factura, index) => {
 
+      data.data.forEach(factura => {
 
-        this.importarFacturas(factura)
+        this.controlCamionesGuiasService.importarFacturas(factura, true)
 
-        if(index == data.data.length -1){
-       
-          this.controlCamionesGuiasService.actualizarTotales();
-
-        }
+     
       });
 
     }
 
   }
 
-  importarFacturas(factura) {
-    let cliente = {
-      id: factura.CLIENTE_ORIGEN,
-      idGuia: null,
-      nombre: factura.NOMBRE_CLIENTE,
-      marcador: null,
-      color: null,
-      cambioColor: '#00FF00',
-      latitud: factura.LATITUD,
-      longitud: factura.LONGITUD,
-      seleccionado:false,
-      cargarFacturas:true,
-      frio: false,
-      seco: false,
-      frioSeco: false,
-      totalFrio: 0,
-      totalSeco: 0,
-      totalBultos: 0,
-      totalPeso: 0,
-      direccion: factura.DIRECCION_FACTURA,
-      facturas: [factura]
-    }
-    let c = this.controlCamionesGuiasService.clientes.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
-    if (c >= 0) {
-
-      let facturaIndex = this.controlCamionesGuiasService.clientes[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
-
-      if (facturaIndex < 0) {
-
-        this.controlCamionesGuiasService.clientes[c].facturas.push(factura);
-        console.log('found', this.controlCamionesGuiasService.clientes[c].facturas)
-
-      }
 
 
-    } else {
-      this.controlCamionesGuiasService.totalFacturas += 1;
-      console.log('new', cliente)
-      this.controlCamionesGuiasService.clientes.push(cliente)
-    }
-
-
-
-
-  }
-  importarFacturas2(factura) {
-    let cliente = {
-      id:  factura.CLIENTE_ORIGEN,
-      idGuia:null,
-      nombre: factura.NOMBRE_CLIENTE,
-      latitud: factura.LATITUD,
-      longitud:factura.LONGITUD,
-      seleccionado: true,
-      cargarFacturas: false,
-      marcador:null,
-      color: null,
-      cambioColor: '#00FF00',
-      frio:false,
-      seco:false,
-      frioSeco:false,
-      totalFrio:0,
-      totalSeco:0,
-       totalBultos:0,
-                        totalPeso:0,
-      direccion:factura.DIRECCION_FACTURA,
-      facturas:  [factura]
-    }
-    let c = this.clientes.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
-    if (c >= 0) {
-
-      let facturaIndex = this.clientes[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
-
-      if (facturaIndex < 0) {
- 
-        this.clientes[c].facturas.push(factura);
-        console.log('found', this.clientes[c].facturas)
-
-      }
-
-
-    } else {
-      this.controlCamionesGuiasService.totalFacturas += 1;
-      console.log('new', cliente)
-      this.clientes.push(cliente)
-    }
-
-
-
-
-  }
 
 
 
@@ -591,9 +425,7 @@ cerrarModal(){
 
     }
   }
-  gestionErrores() {
-    this.alertasService.gestorErroresModal(this.planificacionEntregasService.errorArray);
-  }
+
 
   async alertaRutaZona(factura: PlanificacionEntregas) {
     const alert = await this.alertCtrl.create({
@@ -617,8 +449,7 @@ cerrarModal(){
               nombre: factura.NOMBRE_CLIENTE,
               facturas: [factura]
             }
-           // this.controlCamionesGuiasService.facturas.push(cliente)
-           this.importarFacturas(factura)
+           this.controlCamionesGuiasService.importarFacturas(factura)
             this.controlFacturas(factura)
 
           },
@@ -652,13 +483,13 @@ cerrarModal(){
 
   }
  
-  async detalleGuia(guia) {
+  async detalleGuia(guia:Guias) {
 
     const modal = await this.modalCtrl.create({
       component: ListaClientesGuiasPage,
       cssClass: 'large-modal',
       componentProps: {
-        facturas: guia.facturas,
+        clientes: this.controlCamionesGuiasService.arregloDEClientes( guia.facturas),
         rutaZona: this.controlCamionesGuiasService.rutaZona,
         fecha: this.controlCamionesGuiasService.fecha,
         guia: guia

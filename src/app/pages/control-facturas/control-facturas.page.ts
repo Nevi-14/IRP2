@@ -143,8 +143,11 @@ console.log('facturaaaaa inmpor', factu)
  console.log('deleting')
           this.controlCamionesGuiasService.borrarFacturaGuia(factu)
         }
-  
-        this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
+  if(factu.LONGITUD && factu.LATITUD){
+
+    this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
+  }
+     
       })
 
 
@@ -179,7 +182,11 @@ console.log('facturaaaaa inmpor', factu)
  
 
   this.controlCamionesGuiasService.listaGuias.push(camion);
-  this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia , this.factura);
+ 
+  if(this.factura.LONGITUD && this.factura.LATITUD){
+
+    this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
+  }
 
   this.controlCamionesGuiasService.actualizarValores();
   
@@ -201,7 +208,11 @@ if(this.incluirFacturas){
  
           this.controlCamionesGuiasService.borrarFacturaGuia(factu)
         }
-        this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
+
+        if(factu.LONGITUD && factu.LATITUD){
+          this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
+        }
+      
       })
 
       if(i == this.facturasArray.length -1 ){
