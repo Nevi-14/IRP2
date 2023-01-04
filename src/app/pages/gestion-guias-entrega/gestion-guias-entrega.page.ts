@@ -77,8 +77,8 @@ cerrarModal(){
           component: ControlFacturasPage,
           cssClass: 'large-modal',
           componentProps: {
-            factura: cliente,
-            facturas:this.controlCamionesGuiasService.clientes
+            factura: cliente.facturas[0],
+            facturas:[cliente]
           },
         });
         modal.present();

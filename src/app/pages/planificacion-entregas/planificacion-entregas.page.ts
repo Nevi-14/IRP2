@@ -128,11 +128,7 @@ export class PlanificacionEntregasPage {
     });
 
     
-    new mapboxgl.Marker()
-      .setLngLat(this.lngLat)
-      .setPopup(new mapboxgl.Popup({ closeOnClick: false, closeButton: false }).setText("DISTRIBUIDORA ISLEÑA"))
-      .addTo(this.mapa)
-      .togglePopup();
+
 
     this.mapa.addControl(new mapboxgl.NavigationControl());
     this.mapa.addControl(new mapboxgl.FullscreenControl());
