@@ -162,6 +162,7 @@ let facturas = [];
       })
       if(i == this.clientes.length -1){
         this.controlCamionesGuiasService.actualizarTotales();
+        this.controlCamionesGuiasService.clientes.sort((a, b) => a.id - b.id)
         console.log('facturas', facturas)
         this.modalCtrl.dismiss({
           data:facturas

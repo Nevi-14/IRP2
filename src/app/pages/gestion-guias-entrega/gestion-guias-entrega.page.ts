@@ -339,12 +339,13 @@ cerrarModal(){
 
     if (data !== undefined) {
 
-      data.data.forEach(factura => {
-
-        this.controlCamionesGuiasService.importarFacturas(factura, true)
-
-     
-      });
+      for(let i =0; i< data.data.length; i++){
+        this.controlCamionesGuiasService.importarFacturas(data.data[i], true)
+        if(i == data.data.length -1){
+         
+                    this.controlCamionesGuiasService.clientes.sort((a, b) => a.id - b.id)
+                  }
+      }
 
     }
 

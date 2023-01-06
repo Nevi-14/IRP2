@@ -351,11 +351,14 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
 
   async gestionGuias() {
 
+
+   
+
     const modal = await this.modalCtrl.create({
       component: GestionGuiasEntregaPage,
       cssClass: 'full-screen-modal',
       componentProps: {
-        clientes: this.controlCamionesGuiasService.clientes
+        clientes: this.controlCamionesGuiasService.clientes.sort((a, b) => a.id - b.id)
       }
     });
     modal.present();
