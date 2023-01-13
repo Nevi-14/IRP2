@@ -111,9 +111,6 @@ export class PlanificacionEntregasPage {
     cliente.seleccionado = false;
     this.zoomLevel  = 10.5;
     this.controlCamionesGuiasService.borrarCliente(cliente)
-    cliente.facturas.forEach(factura =>{
-      factura.SELECCIONADO = false;
-     })
     this.createmapa();
 
 
@@ -214,15 +211,11 @@ export class PlanificacionEntregasPage {
 
       });
       assignBtn2.addEventListener('click', (e) => {
- 
-        this.alertaCliente(this.controlCamionesGuiasService.clientes[i]);
-/**
- * 
- *         this.controlCamionesGuiasService.clientes[i].seleccionado = true;
+
+        this.controlCamionesGuiasService.clientes[i].seleccionado = true;
         this.zoomLevel  = this.mapa.getZoom();
         this.createmapa();
         this.irMarcador([this.controlCamionesGuiasService.clientes[i].longitud, this.controlCamionesGuiasService.clientes[i].latitud])
- */
 
       });
       const miniPopup = new mapboxgl.Popup({ offset: 32 }).setDOMContent(divElement);
@@ -260,49 +253,7 @@ export class PlanificacionEntregasPage {
 
   }
 
- async  alertaCliente(cliente:ClientesGuia){
 
-  const alert = await this.alertCtrl.create({
-  header:'IRP',
-subHeader:`${cliente.nombre}`,
-message:'Debes seleccionar las facturas que desea cargar!.',
-cssClass:'custom-alert',
-mode:'ios',
-buttons:[
-  {
-    text:'Cargar Todas Las Facturas',
-    role:'confirm',
-    cssClass:'alert-button-dark',
-    handler:()=>{
-      cliente.seleccionado = true;
-       console.log('all',cliente)
-
-       cliente.facturas.forEach(factura =>{
-        factura.SELECCIONADO = true;
-       })
-       this.zoomLevel  = this.mapa.getZoom();
-       this.createmapa();
-    }
-
-  },
-  {
-    text:'Seleccionar Factura',
-    role:'confirm',
-    cssClass:'alert-button-dark',
-    handler:()=>{
-      cliente.seleccionado = true;
-      this.detalleClientes(cliente);
-    }
-
-  } 
-]
- 
-
-  })
-
-  await alert.present();
-
-  }
   async detalleClientes(cliente) {
 
 
@@ -313,18 +264,7 @@ buttons:[
         cliente: cliente
       }
     });
-     await modal.present();
-     
-    const { data } = await modal.onDidDismiss();
-
-    if(this.controlCamionesGuiasService.cargarMapa){
-
-      this.createmapa();
-      this.controlCamionesGuiasService.cargarMapa = false;
-    }
-
-
-
+    return await modal.present();
   }
 
 
@@ -349,7 +289,7 @@ buttons:[
         for (let i = 0; i < resp.length; i++) {
 
 
-          this.controlCamionesGuiasService.importarFacturas(resp[i], false);
+          this.controlCamionesGuiasService.importarFacturas(resp[i]);
 
 
         }

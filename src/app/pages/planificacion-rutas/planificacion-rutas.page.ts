@@ -186,23 +186,78 @@ const index = this.planificacionRutasService.marcadores.findIndex(client => clie
 //============================================================================= 
 // MODAL GESTION DE LA LISTA DE RUTAS Y ZONAS A CONSULTAR
 //=============================================================================
-async listaRutasModal(){
+async configuracionZonaRuta(){
     
   const modal = await this.modalCtrl.create({
     component: ListaRutasZonasModalPage,
-    cssClass: 'large-modal',
+    cssClass: 'ui-modal',
   });
   modal.present();
 
   
 
   const { data } = await modal.onDidDismiss();
-
+  console.log(data )
 
   if(data !== undefined){
-    console.log(data.ruta, 'data retorno', data !== undefined)
-    console.log(data)
-  return data.ruta
+
+    this.features = []
+    if(data.rutas !== undefined){
+    
+      this.rutaZona = null;
+      this.rutaZona = data.rutas[0]
+ 
+      console.log(this.rutaZona ,'this.rutaZona ')
+
+       this.planificacionRutasService.rutaZona = null;
+       this.planificacionRutasService.rutaZona = this.rutaZona;
+      this.alertasService.presentaLoading('Generando lista de clientes')
+
+      this.clienteEspejo.syncRutas( this.rutaZona.RUTA).then((result) => {
+
+
+
+
+this.mapData(result, false)
+
+
+
+
+
+      
+       this.marcadoresDuplicados =[]
+      this.clientesArray = [];
+    
+   this.clientesArray = result;
+
+     this.alertasService.loadingDissmiss();
+
+    this.createmapa()
+
+  //  this.agregarMarcadores(false)
+    
+  }).catch((err) => {
+
+    this.alertasService.loadingDissmiss();
+
+    let errorObject = {
+
+      titulo: 'Insertar rutero',
+      fecha: new Date(),
+      metodo:'POST',
+      url:err.url,
+      message:err.message,
+      rutaError:'app/services/planificacion-rutas-service.ts',
+      json:null
+
+    }
+
+
+    this.planificacionRutasService.errorArray.push(errorObject)
+    
+  });
+     }
+  
 
   }else{
 
@@ -212,74 +267,7 @@ async listaRutasModal(){
 
 
 
-configuracionZonaRuta(){
-
-
-  const rutaZona =  this.listaRutasModal();
-
-  rutaZona.then(valor =>{
-
-this.features = []
-        if(valor !== undefined){
-        
-          this.rutaZona = null;
-      
-          this.rutaZona = valor
-           this.planificacionRutasService.rutaZona = null;
-           this.planificacionRutasService.rutaZona = valor;
-          this.alertasService.presentaLoading('Generando lista de clientes')
-
-         const clientes =   this.clienteEspejo.syncRutas( this.rutaZona.RUTA);
-        
-         clientes.then((result) => {
-
-
-
-
-  this.mapData(result, false)
-
-
-
-
-
-          
-           this.marcadoresDuplicados =[]
-          this.clientesArray = [];
-        
-       this.clientesArray = result;
-
-         this.alertasService.loadingDissmiss();
-
-        this.createmapa()
-
-      //  this.agregarMarcadores(false)
-        
-      }).catch((err) => {
-
-        this.alertasService.loadingDissmiss();
-
-        let errorObject = {
-
-          titulo: 'Insertar rutero',
-          fecha: new Date(),
-          metodo:'POST',
-          url:err.url,
-          message:err.message,
-          rutaError:'app/services/planificacion-rutas-service.ts',
-          json:null
-
-        }
-
-
-        this.planificacionRutasService.errorArray.push(errorObject)
-        
-      });
-         }
-      
-       
-      })
-      
-      }
+ 
 //============================================================================= 
 // NOS PERMITE AGREGAR NUEVOS CLIENTES AL MAPA
 //=============================================================================

@@ -948,7 +948,7 @@ importarFacturas(factura:PlanificacionEntregas, seleccionado?:boolean) {
     cambioColor: '#00FF00',
     latitud: factura.LATITUD,
     longitud: factura.LONGITUD,
-    seleccionado: seleccionado ? seleccionado : false,
+    seleccionado: seleccionado,
     cargarFacturas:true,
     frio: false,
     seco: false,
@@ -962,15 +962,17 @@ importarFacturas(factura:PlanificacionEntregas, seleccionado?:boolean) {
   }
   let c = this.clientes.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
   if (c >= 0) {
-
+    this.cargarMapa = true;
     let facturaIndex = this.clientes[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
-
+    this.clientes[c].seleccionado = seleccionado ? seleccionado : false;
     if (facturaIndex < 0) {
-
+      factura.SELECCIONADO = true;
       this.clientes[c].facturas.push(factura);
 
+    }else{
+   
+      this.clientes[c].facturas[facturaIndex].SELECCIONADO = true;
     }
-
 
   } else {
     this.totalFacturas += 1;
