@@ -961,12 +961,13 @@ importarFacturas(factura:PlanificacionEntregas, seleccionado?:boolean) {
     facturas: [factura]
   }
   let c = this.clientes.findIndex(client => client.id == factura.CLIENTE_ORIGEN);
+  factura.SELECCIONADO = true;
   if (c >= 0) {
     this.cargarMapa = true;
     let facturaIndex = this.clientes[c].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA)
     this.clientes[c].seleccionado = seleccionado ? seleccionado : false;
     if (facturaIndex < 0) {
-      factura.SELECCIONADO = true;
+     
       this.clientes[c].facturas.push(factura);
 
     }else{

@@ -359,7 +359,11 @@ cerrarModal(){
 
 
 
-
+convertToNumber(value){
+console.log(value, 'number')
+  let retNumber =  Number(value);
+  return isNaN(retNumber) ? 0 : retNumber;
+}
 
   async buscarFactura(ev: any) {
     let encontre = false;
