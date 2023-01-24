@@ -3,49 +3,65 @@ import { Injectable } from '@angular/core';
 import { Camiones } from '../models/camiones';
 import { environment } from 'src/environments/environment';
 import { AlertasService } from './alertas.service';
-import { FacturaLineasEspejo } from '../models/FacturaLineasEspejo';
 import { PlanificacionEntregas } from '../models/planificacionEntregas';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GestionCamionesService {
   camiones: Camiones[]=[];
-
+  URL:string = null;
   
 
   constructor(
     private http: HttpClient,
-    public alertasService: AlertasService
+    public alertasService: AlertasService,
+    public configuracionesService: ConfiguracionesService
     
     ) { }
 
   getIRPURL( api: string,id: string ){
+
     let test: string = ''
+
     if ( !environment.prdMode ) {
+
       test = environment.TestURL;
+
     }
 
-    const URL = environment.preURL  + test +  environment.postURL + api + id;
-console.log(URL);
-    return URL;
+    this.URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+
+
+this.configuracionesService.api = this.URL;
+
+    return  this.URL;
+
   }
+
   private getCamiones( ){
+
     const URL = this.getIRPURL( environment.camionesURL,'');
+
     return this.http.get<Camiones[]>( URL );
+
   }
 
   syncCamiones(){
+
    this.camiones = [];
-    this.alertasService.presentaLoading('Cargando Lista de camiones')
+    this.alertasService.presentaLoading('Cargando datos..')
+
     this.getCamiones().subscribe(
+
       resp =>{
-        this.camiones = resp.slice(0);
-console.log('camiones', this.camiones)
+
+this.camiones = resp.slice(0);
 this.alertasService.loadingDissmiss();
-        console.log(this.camiones, 'camiones')
 
       }, error  => {
+        this.alertasService.message('IRP', 'Error de conexión  con la API ' + this.configuracionesService.api);
         this.alertasService.loadingDissmiss();
         let errorObject = {
           titulo: 'Lista de camiones',
@@ -61,15 +77,7 @@ this.alertasService.loadingDissmiss();
 
     );
   }
-  getFacturasGuia(id){
-    const URL = this.getIRPURL( environment.facturasUrl,id);
-    return this.http.get<PlanificacionEntregas[]>( URL );
-   }
 
-   async syncGetFacturasGuia(id){
-
-    return  this.getFacturasGuia(id).toPromise();
-    }
 
     syncCamionesToPromise(){
 

@@ -32,10 +32,15 @@ export class AlertasService {
   
 
 
-  async presentaLoading( message: string ){
+  async presentaLoading(message: string ){
     this.isLoading = true;
     this.loadingCtrl.create({
-      message: message ? message : 'Please wait...'
+      message: message ? message : 'Please wait...',
+     // message:"conectando con ",
+      duration: 3000,
+      spinner: 'circles',
+      mode:'ios',
+      translucent:true,
     }).then(loader => {
       loader.present().then(() => {
         if (!this.isLoading) {

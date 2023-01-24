@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
+import { AlertasService } from '../../services/alertas.service';
 
 @Component({
   selector: 'app-log-in',
@@ -11,14 +13,26 @@ export class LogInPage implements OnInit {
   image = '../assets/login/islena.png';
   truck = '../assets/login/track.svg';
   showPass = false;
-  constructor(public route: Router, public login: LoginService) { }
+  constructor(
+    public route: Router, 
+    public login: LoginService,
+    public configuracionesService: ConfiguracionesService,
+    public alertasService: AlertasService
+    
+    ) { }
 
   ngOnInit() {
   }
 
   loginMethod(){
-    this.login.verified = true;
-    this.route.navigate(['/inicio']);
+    this.configuracionesService.cargarDatos();
+    this.alertasService.presentaLoading('Validando datos...')
+    setTimeout(()=>{
+      this.alertasService.loadingDissmiss();
+      this.login.verified = true;
+      this.route.navigate(['/inicio']);
+    }, 2000)
+
   }
 
 }

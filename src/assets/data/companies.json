@@ -1,0 +1,39 @@
+[
+
+    {
+    "companyCode": "01",
+    "company": "Distribuidora ISLEÑA",
+    "website": "https://www.di.cr/",
+    "user":"",
+    "email":"islena@gmail.com",
+    "contact":"(506) 2293-0609",
+    "preURL": "http://apiirp",
+    "postURL": ".di-apps.co.cr/api/",
+    "mapboxKey": "pk.eyJ1IjoibWhlcnJhIiwiYSI6ImNrcWxhdXk4eTByMDUyd28xNnZ2b2hoMjMifQ.IrIAxPGO4oFiRVR8U5sqkA",
+    "latitud":"",
+    "longitud":"",
+    "description":"Distribuidora Isleña de Alimentos S.A",
+    "logo":"../assets/islena.png",
+    "taxId":"3-101-10918017",
+    "fax":"(506) 2293-0609",
+    "address":"Dirección:Barreal Heredia-Alajuela-Costa Rica"
+    },
+    {
+    "companyCode": "02",
+    "company": "Distribuidora CORIS",
+    "website": "",
+    "user":"",
+    "email":"coris@gmail.com",
+    "contact":"",
+    "preURL": "http://construplaza",
+    "postURL": ".sderp.site/api/",
+    "mapboxKey": "pk.eyJ1IjoibWhlcnJhIiwiYSI6ImNrcWxhdXk4eTByMDUyd28xNnZ2b2hoMjMifQ.IrIAxPGO4oFiRVR8U5sqkA",
+    "latitud":9.979979,
+    "longitud":-84.140913,
+    "description":"",
+    "logo":"assets/islena.png",
+    "taxId":"",
+    "fax":"",
+    "address":""
+    }
+]

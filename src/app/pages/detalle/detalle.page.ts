@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
 
 @Component({
   selector: 'app-detalle',
@@ -41,7 +42,10 @@ export class DetallePage implements OnInit {
       url: '/gestion-liquidaciones',
     }
   ];
-  constructor() { }
+  constructor(
+public configuracioneService: ConfiguracionesService
+
+  ) { }
 
   ngOnInit() {
   }

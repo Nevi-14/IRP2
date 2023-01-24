@@ -9,7 +9,6 @@ import { PlanificacionEntregasService } from 'src/app/services/planificacion-ent
 import { AlertasService } from 'src/app/services/alertas.service';
 import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
-import { DatatableService } from 'src/app/services/datatable.service';
 import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 import { FacturasService } from 'src/app/services/facturas.service';
 import { ListaClientesGuiasPage } from '../lista-clientes-guias/lista-clientes-guias.page';
@@ -38,7 +37,6 @@ export class GestionGuiasEntregaPage {
     public controlCamionesGuiasService: ControlCamionesGuiasService,
     public planificacionEntregasService: PlanificacionEntregasService,
     public alertasService: AlertasService,
-    public datableService: DatatableService,
     public alertCtrl: AlertController,
     public facturasService: FacturasService,
     public pdfService:PdfService

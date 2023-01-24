@@ -8,7 +8,6 @@ import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-g
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
-import { DatatableService } from 'src/app/services/datatable.service';
 import { CalendarioPage } from '../calendario/calendario.page';
 import { format } from 'date-fns';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
@@ -61,7 +60,6 @@ export class PlanificacionEntregasPage {
     public controlCamionesGuiasService: ControlCamionesGuiasService,
     public planificacionEntregasService: PlanificacionEntregasService,
     public alertasService: AlertasService,
-    public datableService: DatatableService,
     public alertCtrl: AlertController,
     public facturasService: FacturasService,
     public pdfService: PdfService

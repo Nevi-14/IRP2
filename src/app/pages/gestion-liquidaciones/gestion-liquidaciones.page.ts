@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { DatatableService } from 'src/app/services/datatable.service';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
@@ -42,7 +41,6 @@ rutero: guias[]=[]
 textoBuscar = ''
 fecha =  format(new Date(), 'yyy/MM/dd');
   constructor(
-public datableService: DatatableService,
 public controlCamionesGuiasService: ControlCamionesGuiasService,
 public planificacionEntregasService: PlanificacionEntregasService,
 public ruteroService: RuteroService,
@@ -248,75 +246,7 @@ isIos() {
   const win = window as any;
   return win && win.Ionic && win.Ionic.mode === 'ios';
 }
-async configuracionZonaRuta2() {
-
-  const modal = await this.modalCtrl.create({
-    component: GuiasRutaPage,
-    cssClass: 'large-modal',
-    componentProps : {
-      ruta:'BOD',
-      switch:false
-    }
-  });
-   await modal.present();
-
-
-
-  const { data } = await modal.onDidDismiss();
-
-    if(data !== undefined  ){
-      this.guia = data.guia;
-      let facturas = [];
-console.log(data, 'data')
-this.actualizaFactLinService.syncGetActualizaFacLin(this.guia.idGuia).then(resp =>{
-  console.log(resp, 'resp')
-
-  resp.forEach(factura =>{
-
-    if(factura.cantEntregar -  factura.cantEntregada != 0){
-      facturas.push(factura)
-    }
-
-  });
-
-  if(facturas.length == 0){
-    this.alertasService.message('GESTION LIQUIDACIONES', 'No hay datos disponibles')
-  }
-  this.datableService.agruparElementos(facturas, 'numFactura',  [
-        
-    {name:'factura',default:true}
-
-]).then(resp =>{
-console.log(resp, 'respppp')
-this.datableService.generarDataTable(resp, 10).then(resp =>{
-  this.datableService.page = 0;
-  this.datableService.totalPages = resp.length;
-
-  this.datableService.dataTableArray = resp;
-  console.log('elementos agrupados', resp)
-
-  this.datableService.dataTableArray.forEach(facturas =>{
-
-    facturas.forEach(factura =>{
-      console.log('factura', factura)
-    factura.forEach(fac =>{
-      console.log('fac', fac)
-    })
-    })
-    
-  })
-})
-  })
-
-})
-
  
-      
-       
-    }
-
-
-  }
 
 
  async liquidarGuia(){

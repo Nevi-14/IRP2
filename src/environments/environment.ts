@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  companyCode:"02",
   production: false,
   maxCharCodigoProd: 6,
   adminClave: '123456',

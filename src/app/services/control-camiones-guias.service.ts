@@ -9,7 +9,6 @@ import { RuteroService } from './rutero.service';
 import { ActualizarFacturasService } from './actualizar-facturas.service';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Camiones } from '../models/camiones';
-import { DatatableService } from './datatable.service';
 import * as  mapboxgl from 'mapbox-gl';
 import { Cliente, ClientesGuia, Guias } from '../models/guia';
 import { ReporteFacturasPage } from '../pages/reporte-facturas/reporte-facturas.page';
@@ -81,8 +80,7 @@ export class ControlCamionesGuiasService {
     public guiasService: GuiasService,
     public ruteroService: RuteroService,
     public actualizarFacturasService: ActualizarFacturasService,
-    public gestionCamionesService: GestionCamionesService,
-    public datatableService: DatatableService
+    public gestionCamionesService: GestionCamionesService
 
   ) {
   
@@ -134,7 +132,7 @@ this.rutas = [];
   this.guiasService.limpiarDatos();
   this.ruteroService.limpiarDatos();
   this.actualizarFacturasService.limpiarDatos();
-  this.datatableService.limpiarDatos()
+
   this.planificacionEntregasService.limpiarDatos();
 
 
@@ -930,13 +928,7 @@ borrarGuia(idGuia){
 };
 
 
-borrarTodasLasGuias(){
-
-  this.listaGuias = [];
-  this.planificacionEntregasService.borrarIdGuiaFacturas();
-
-};
-
+ 
 
 importarFacturas(factura:PlanificacionEntregas, seleccionado?:boolean) {
   let cliente = {

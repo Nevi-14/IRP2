@@ -3,7 +3,6 @@ import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { AlertasService } from './alertas.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { DatatableService } from './datatable.service';
 
 interface facturas {
 idFactura:string,
@@ -37,7 +36,6 @@ export class PlanificacionEntregasService {
  constructor(
    
    private http: HttpClient,  
-   public datatableService: DatatableService,
    public alertasService: AlertasService
    
    
@@ -93,46 +91,6 @@ syncRutaFacturas(ruta:string, fecha:string){
 
 
 
-borrarIdGuiaFacturas(){
-
-  
-
-
-  this.datatableService.dataTableArray.forEach(cliente =>{
-
-    for(let i =0; i < cliente.length; i++){
-
-      for( let j = 0; j < cliente[i].length; j++){
-        cliente[i][j].factura.TIPO_DOCUMENTO = 'F';
-        cliente[i][j].idGuia = '';
-      }
-  
-    };
-  
-  });
- 
- }
-
-borrarIdGuiaFactura(idGuia){
-
-  this.datatableService.dataTableArray.forEach(cliente =>{
-
-    for(let i =0; i < cliente.length; i++){
-
-      for( let j = 0; j < cliente[i].length; j++){
-       
-        if( cliente[i][j].idGuia == idGuia){
-          cliente[i][j].idGuia = '';
-         }
-      }
-  
-    };
-  
-  });
-  
-
-
-}
 
 
 
