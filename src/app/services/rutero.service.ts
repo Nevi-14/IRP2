@@ -4,6 +4,7 @@ import { Rutero } from '../models/Rutero';
 import { HttpClient } from '@angular/common/http';
 import { AlertasService } from './alertas.service';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ url = null;
   constructor(
     public http: HttpClient,
     public alertasService: AlertasService,
-    public planificacionEntregasService: PlanificacionEntregasService
+    public planificacionEntregasService: PlanificacionEntregasService,
+    public configuracionesService: ConfiguracionesService
   ) { }
 
 
@@ -31,24 +33,25 @@ url = null;
 
   }
 
-getRuteroURL(api, id){
-let test : string = '';
+  getURL( api: string,identifier?: string ){
 
-if(!environment.prdMode){
-  test = environment.TestURL;
-}
-
-const URL = environment.preURL + test  + environment.postURL +  api + id;
-
-this.url = URL;
-return URL;
-
-
-}
+    let id = identifier ? identifier : "";
+    let test: string = ''
+   
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
+  
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
+  
+    return URL;
+  
+  }
 
 private getRutero(id){
 
-  const URL = this.getRuteroURL(environment.ruteroURL,id);
+  const URL = this.getURL(environment.ruteroURL,id);
 
   console.log(URL, 'GET rutero  URL')
   return this.http.get<Rutero[]>(URL);
@@ -64,7 +67,7 @@ return this.getRutero(id).toPromise();
 
 
 private postRutero(rutero){
- const URL = this.getRuteroURL(environment.ruteroURL,'');
+ const URL = this.getURL(environment.ruteroURL);
 
   const options = {
     headers: {
@@ -80,7 +83,7 @@ console.log(JSON.stringify(rutero), 'JSON.stringify(rutero)')
 }
 
 private putActualizarRutero(rutero){
-  const URL = this.getRuteroURL(environment.ruteroURL,'');
+  const URL = this.getURL(environment.ruteroURL);
  
    const options = {
      headers: {

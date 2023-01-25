@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LoadingController } from '@ionic/angular';
 import { Rutas } from '../models/rutas';
 import { environment } from 'src/environments/environment';
+import { ConfiguracionesService } from './configuraciones.service';
 
 
 @Injectable({
@@ -16,21 +17,35 @@ export class RutasService {
 }
   rutas: Rutas[]=[];
 
-  constructor(private http: HttpClient,private loadingCtrl: LoadingController) { }
+  constructor(
+    
+    private http: HttpClient,
+    private loadingCtrl: LoadingController,
+    public configuracionesService: ConfiguracionesService
+    
+    
+    
+    ) { }
 
 
   
-  getIRPURL( api: string,id: string ){
+  getURL( api: string,identifier?: string ){
+
+    let id = identifier ? identifier : "";
     let test: string = ''
+   
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
-    const URL = environment.preURL   + environment.postURL + api + id;
-console.log(URL);
+  
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
+  
     return URL;
+  
   }
   private getRutas( ){
-    const URL = this.getIRPURL( environment.rutasURL,'');
+    const URL = this.getURL( environment.rutasURL);
     return this.http.get<Rutas[]>( URL );
   }
 

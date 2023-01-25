@@ -20,15 +20,7 @@ public actualizaFacLinService: ActualizaFacLinService
   ) { }
 
   ngOnInit() {
-console.log('cliente', this.cliente)
-    if(this.cliente.facturas.length > 0){
-
-alert('hh')
-
-    }else{
-      this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia, this.cliente.idCliente);
-    }
- 
+    this.actualizaFacLinService.syncActualizaFacLin(this.cliente.idGuia, this.cliente.idCliente);
     
   }
   onSearchChange(event){

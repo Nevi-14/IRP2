@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FacturaLineasEspejo } from '../models/FacturaLineasEspejo';
 import { environment } from 'src/environments/environment';
 import { Manifiesto } from '../models/manieifiesto';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +12,26 @@ export class ActualizaFacLinService {
 
   facturaLineasEspejoArray : FacturaLineasEspejo[]=[];
   constructor(
-    public http: HttpClient
+    public http: HttpClient,
+    public configuracionesService: ConfiguracionesService
   ) { }
 
 
-getURL(api, id){
-  
-let test : string = '';
+  getURL( api: string,identifier?: string ){
 
-if(!environment.prdMode){
-  test = environment.TestURL;
-}
+    let id = identifier ? identifier : "";
+    let test: string = ''
+   
+    if ( !environment.prdMode ) {
+      test = environment.TestURL;
+    }
 
-const URL = environment.preURL + test  + environment.postURL +  api + id;
-console.log('url', URL)
-return URL;
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
 
+    return URL;
 
-}
-
+  }
 getURLAPI(api){
   
   let test : string = '';
@@ -38,8 +40,8 @@ getURLAPI(api){
     test = environment.TestURL;
   }
   
-  const URL = environment.preURL + test  + environment.postURL +  api;
-  console.log('url', URL)
+  const URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL +  api;
+  this.configuracionesService.api = URL;
   return URL;
   
   

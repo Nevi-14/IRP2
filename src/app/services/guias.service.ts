@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { AlertasService } from './alertas.service';
 import { ServicioClienteService } from './servicio-cliente.service';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class GuiasService {
     private http: HttpClient,
     public alertasService: AlertasService,
     public servicioClienteService: ServicioClienteService,
-    public planificacionEntregasService: PlanificacionEntregasService
+    public planificacionEntregasService: PlanificacionEntregasService,
+    public configuracionesService: ConfiguracionesService
     
     
     ) { }
@@ -35,27 +37,29 @@ export class GuiasService {
       this.url = null;
 
     }
-  getIRPURL( api: string ){
-    let test: string = ''
-    if ( !environment.prdMode ) {
-      test = environment.TestURL;
+    getURL( api: string,identifier?: string ){
+
+      let id = identifier ? identifier : "";
+      let test: string = ''
+     
+      if ( !environment.prdMode ) {
+        test = environment.TestURL;
+      }
+  
+      let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+      this.configuracionesService.api = URL;
+  
+      return URL;
+  
     }
-
-    const URL = environment.preURL  + test +environment.postURL + api ;
-    console.log(URL, 'POST GUIAS URL')
-    this.url = URL;
-    return URL;
-
-
-  }
   getIRPURLEstado( api: string,estado ){
     let test: string = ''
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test +environment.postURL + api + environment.guiasURLEstadoParam +estado;
-
+    const URL =this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + environment.guiasURLEstadoParam +estado;
+    this.configuracionesService.api = URL;
     return URL;
 
 
@@ -110,7 +114,7 @@ export class GuiasService {
 
 
   private postActualizarGuias (guia){
-    const URL = this.getIRPURL( environment.guiasURL );
+    const URL = this.getURL( environment.guiasURL );
     const options = {
       headers: {
           'Content-Type': 'application/json',
@@ -124,7 +128,7 @@ export class GuiasService {
   }
 
   private putActualizarGuias (guia,ID){
-    let URL = this.getIRPURL( environment.guiasURL );
+    let URL = this.getURL( environment.guiasURL );
     const options = {
       headers: {
           'Content-Type': 'application/json',

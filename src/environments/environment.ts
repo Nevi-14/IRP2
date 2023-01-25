@@ -3,15 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  companyCode:"02",
+  companyCode:"01",
   production: false,
   maxCharCodigoProd: 6,
   adminClave: '123456',
-  preURL: 'http://apiirp',
   TestURL: 'test',
-  postURL: '.di-apps.co.cr/api/',
   postCLienteEspejoURL:'ActualizaClientes/',
-  mapboxKey:'pk.eyJ1IjoibWhlcnJhIiwiYSI6ImNrcWxhdXk4eTByMDUyd28xNnZ2b2hoMjMifQ.IrIAxPGO4oFiRVR8U5sqkA',
   provinciaID: '?IdP=',
   cantonID: '&IdC=',
   distritoID: '&IdD=',
@@ -35,7 +32,7 @@ export const environment = {
   actualizaFacturasURL:'ActFac',
   actualizaFacLinUrl:'ActualizaFacLin/',
   clientesGuias:'ClientesGuia/',
-  prdMode: true,
+  prdMode: false,
   facturasUrl:'Facturas/?id=',
   manifiestoURL:'Manifiesto/?ID=',
   clientesClierre:'ClientesCierre/?fecha='

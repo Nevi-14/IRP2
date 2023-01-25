@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Zonas } from '../models/zonas';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,21 +13,32 @@ export class ZonasService {
     ZONA: '', 
     NOMBRE: ''
   }
-  constructor(private http: HttpClient) { }
+  constructor(
+    
+    private http: HttpClient,
+    public configuracionesService: ConfiguracionesService
+    
+    
+    ) { }
 
   
-  getIRPURL( api: string,id: string ){
+  getURL( api: string,identifier?: string ){
+
+    let id = identifier ? identifier : "";
     let test: string = ''
+   
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
-
-    const URL = environment.preURL  + test + environment.postURL + api + id;
-console.log(URL);
+  
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
+  
     return URL;
+  
   }
   private getZonas( ){
-    const URL = this.getIRPURL( environment.zonasURL,'');
+    const URL = this.getURL( environment.zonasURL,'');
     return this.http.get<Zonas[]>( URL );
   }
 

@@ -21,6 +21,7 @@ import { Rutas } from 'src/app/models/rutas';
 import { GestionGuiasEntregaPage } from '../gestion-guias-entrega/gestion-guias-entrega.page';
 import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.page';
 import { PlanificacionEntregaClientesPage } from '../planificacion-entrega-clientes/planificacion-entrega-clientes.page';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
 
 @Component({
   selector: 'app-planificacion-entregas',
@@ -43,7 +44,7 @@ export class PlanificacionEntregasPage {
   default: any = 'title';
   zoomLevel: number = 6.5;
   geocoderArray: any;
-  lngLat: [number, number] = [-84.14123589305028, 9.982628288210657];
+  lngLat: [number, number] = [ this.configuracionesService.company.longitud, this.configuracionesService.company.latitud ];
   drag = false;
   modo = 'off'
   mapa!: mapboxgl.Map;
@@ -62,7 +63,8 @@ export class PlanificacionEntregasPage {
     public alertasService: AlertasService,
     public alertCtrl: AlertController,
     public facturasService: FacturasService,
-    public pdfService: PdfService
+    public pdfService: PdfService,
+    public configuracionesService: ConfiguracionesService
 
   ) { }
 

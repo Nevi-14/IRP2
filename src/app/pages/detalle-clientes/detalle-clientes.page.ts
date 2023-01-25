@@ -9,7 +9,10 @@ import { Clientes } from '../../models/clientes';
 export class DetalleClientesPage implements OnInit {
   @Input() detalleCliente: Clientes;
 longLat = '';
-  constructor( public modalCtrl: ModalController) { }
+  constructor( 
+    public modalCtrl: ModalController
+    
+    ) { }
 
   ngOnInit() {
 this.longLat = '[ ' + this.detalleCliente.LONGITUD + ' , ' + this.detalleCliente.LATITUD + ' ]'

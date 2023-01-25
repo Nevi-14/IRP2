@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { AlertasService } from './alertas.service';
+import { ConfiguracionesService } from './configuraciones.service';
 
 interface facturaGuia{
   idGuia: string,
@@ -44,7 +45,8 @@ export class RutaFacturasService {
   constructor(
     
     private http: HttpClient, 
-    public alertasService: AlertasService
+    public alertasService: AlertasService,
+    public configuracionesService: ConfiguracionesService
     
     
     
@@ -54,12 +56,11 @@ export class RutaFacturasService {
 
 
 
+ 
 
 
 
-
-
-  getIrpUrl(api: string, id: string, fecha: string){
+    getURL(api: string, id: string, fecha: string){
 
 
     let test = '';
@@ -69,8 +70,8 @@ export class RutaFacturasService {
       
     }
 
-    const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
-
+    let  URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
+    this.configuracionesService.api = URL;
     //alert(URL)
 
     return URL;
@@ -82,7 +83,7 @@ export class RutaFacturasService {
  
   getRutaFacturas(ruta: string, fecha:string){
 
-    const URL = this.getIrpUrl(environment.rutaFacturasURL,ruta, fecha);
+    const URL = this.getURL(environment.rutaFacturasURL,ruta, fecha);
 
 console.log(URL)
     return this.http.get<PlanificacionEntregas[]>(URL);

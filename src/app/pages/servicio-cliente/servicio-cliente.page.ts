@@ -14,6 +14,7 @@ import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
 import { ServicioClienteMarcadoresPage } from '../servicio-cliente-marcadores/servicio-cliente-marcadores.page';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import { Rutero } from 'src/app/models/Rutero';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
 interface Marcadores {
   id: string,
   cliente: any,
@@ -47,7 +48,7 @@ export class ServicioClientePage  {
   geocoder: any;
   zoomLevel: number = 12;
   array: any;
-  lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+  lngLat: [number, number] = [ this.configuracionesService.company.longitud, this.configuracionesService.company.latitud ];
   marcadores: Marcadores[] = [];
   clientesArray = [];
   coordinates = [];
@@ -72,6 +73,7 @@ export class ServicioClientePage  {
       public ruteroService: RuteroService, 
       public alertasService: AlertasService,
       public servicioClienteService: ServicioClienteService,
+      public configuracionesService: ConfiguracionesService
       
       ) {
 
@@ -212,7 +214,7 @@ gestionErrores(){
     
      if(this.page == 0){
       newMarker.setLngLat(this.lngLat)
-      .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
+      .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText( this.configuracionesService.company.company))
       .addTo(this.mapa)
       .togglePopup();
      }

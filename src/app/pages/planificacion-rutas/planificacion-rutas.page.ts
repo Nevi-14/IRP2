@@ -14,6 +14,7 @@ import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
 
 
 interface Maradores2{
@@ -61,7 +62,7 @@ export class PlanificacionRutasPage  {
 default: any = 'title';
 zoomLevel: number = 12;
 geocoderArray: any;
-lngLat: [number, number] = [ -84.14123589305028, 9.982628288210657 ];
+lngLat: [number, number] = [ this.configuracionesService.company.longitud, this.configuracionesService.company.latitud ];
 marcadoresDuplicados : Marcadores [] = [];
 marcadoresModificados : Marcadores [] = [];
 marcadoresModal = []
@@ -84,7 +85,8 @@ features = [];
       public popOverCrtl: PopoverController, 
       public rutaZonas: RutaZonaService,
       public alertasService: AlertasService,
-      public planificacionRutasService:PlanificacionRutasService
+      public planificacionRutasService:PlanificacionRutasService,
+      public configuracionesService: ConfiguracionesService
        
        
        ) {
@@ -366,7 +368,7 @@ gestionErrores(){
   
       const newMarker = new mapboxgl.Marker()
       .setLngLat(this.lngLat)
-      .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
+      .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText(this.configuracionesService.company.company))
       .addTo(this.mapa)
       .togglePopup();
   

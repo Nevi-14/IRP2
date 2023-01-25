@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { Cantones } from '../models/cantones';
 import { HttpClient } from '@angular/common/http';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +10,31 @@ import { HttpClient } from '@angular/common/http';
 export class CantonesService {
   cantones: Cantones[]=[];
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    public configuracionesService: ConfiguracionesService
+    
+    
+    ) { }
 
-  getIRPURL( api: string,provincia: string ){
+
+  getURL( api: string,identifier?: string ){
+
+    let id = identifier ? identifier : "";
     let test: string = ''
+   
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test +environment.postURL + api + provincia;
-console.log(URL);
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
+
     return URL;
+
   }
   private getCantones(provincia){
-    const URL = this.getIRPURL( environment.cantonesURL,provincia);
+    const URL = this.getURL( environment.cantonesURL,provincia);
     return this.http.get<Cantones[]>( URL );
   }
 

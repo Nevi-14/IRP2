@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Provincias } from '../models/provicias';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +10,34 @@ import { Provincias } from '../models/provicias';
 export class ProvinciasService {
   provincias: Provincias[]=[];
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    
+    private http: HttpClient,
+    public configuracionesService: ConfiguracionesService
+    
+    
+    
+    ) { }
 
-  getIRPURL( api: string,id: string ){
+  getURL( api: string,identifier?: string ){
+
+    let id = identifier ? identifier : "";
     let test: string = ''
+   
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test +  environment.postURL + api + id;
-console.log(URL);
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
+
     return URL;
+
   }
+
+
   private getProvincias( ){
-    const URL = this.getIRPURL( environment.provinciasURL,'');
+    const URL = this.getURL( environment.provinciasURL);
     return this.http.get<Provincias[]>( URL );
   }
 

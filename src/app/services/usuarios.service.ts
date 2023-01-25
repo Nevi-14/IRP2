@@ -5,15 +5,7 @@ import { ConfiguracionesService } from './configuraciones.service';
   providedIn: 'root'
 })
 export class UsuariosService {
-  usuario= {
-     EMPLEADO: 'Employee',
-     Usuario: this.configuracioneService.company.user,
-     Clave: 'admin123',
-     Email: this.configuracioneService.company.email,
-     Nombre: this.configuracioneService.company.company,
-     UsuarioExactus: this.configuracioneService.company.user
-    
-  };
+  usuario = null
   constructor(
 public configuracioneService: ConfiguracionesService
 

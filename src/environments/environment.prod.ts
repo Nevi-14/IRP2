@@ -1,12 +1,10 @@
 export const environment = {
+  companyCode:"01",
   production: true,
   maxCharCodigoProd: 6,
   adminClave: '123456',
-  preURL: 'http://apiirp',
   TestURL: 'test',
-  postURL: '.di-apps.co.cr/api/',
   postCLienteEspejoURL:'ActualizaClientes/',
-  mapboxKey:'pk.eyJ1IjoibWhlcnJhIiwiYSI6ImNrcWxhdXk4eTByMDUyd28xNnZ2b2hoMjMifQ.IrIAxPGO4oFiRVR8U5sqkA',
   provinciaID: '?IdP=',
   cantonID: '&IdC=',
   distritoID: '&IdD=',

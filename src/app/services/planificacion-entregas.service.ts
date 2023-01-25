@@ -3,6 +3,7 @@ import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { AlertasService } from './alertas.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { ConfiguracionesService } from './configuraciones.service';
 
 interface facturas {
 idFactura:string,
@@ -36,7 +37,8 @@ export class PlanificacionEntregasService {
  constructor(
    
    private http: HttpClient,  
-   public alertasService: AlertasService
+   public alertasService: AlertasService,
+   public configuracionesService: ConfiguracionesService
    
    
    
@@ -51,6 +53,11 @@ export class PlanificacionEntregasService {
 
    }
 
+
+ 
+
+
+
    getURL(api: string, id: string, fecha: string){
 
 
@@ -61,9 +68,9 @@ export class PlanificacionEntregasService {
       
     }
 
-    const URL = environment.preURL + test  + environment.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api+ environment.rutaParam + id + environment.entregaParam + fecha;
 
-  console.log(URL)
+    this.configuracionesService.api = URL;
 
     return URL;
 

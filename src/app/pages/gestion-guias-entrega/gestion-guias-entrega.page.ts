@@ -16,6 +16,7 @@ import { ConsultarFacturasPage } from '../consultar-facturas/consultar-facturas.
 import { ClientesGuia, Guias } from 'src/app/models/guia';
 import { PdfService } from '../../services/pdf.service';
 import { ReporteFacturasPage } from '../reporte-facturas/reporte-facturas.page';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
 
 
 @Component({
@@ -39,7 +40,8 @@ export class GestionGuiasEntregaPage {
     public alertasService: AlertasService,
     public alertCtrl: AlertController,
     public facturasService: FacturasService,
-    public pdfService:PdfService
+    public pdfService:PdfService,
+    public configuracionesService: ConfiguracionesService
 
 
   ) { }
@@ -601,7 +603,7 @@ console.log(value, 'number')
       cssClass: 'large-modal',
       componentProps: {
         guia: guia,
-        lngLat: [-84.14123589305028, 9.982628288210657],
+        lngLat: [this.configuracionesService.company.longitud, this.configuracionesService.company.latitud],
         height: '100%',
         width: ' 100%',
         interactive: true

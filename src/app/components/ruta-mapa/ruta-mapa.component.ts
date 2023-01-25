@@ -7,6 +7,7 @@ import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
+import { ConfiguracionesService } from '../../services/configuraciones.service';
 interface Coordenadas {
 
   nombre:string ,
@@ -62,7 +63,19 @@ export class RutaMapaComponent implements AfterViewInit {
   totalClientes = 0;
   page = 0;
   
-  constructor(public modalCtrl:ModalController, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService) { }
+  constructor(
+    public modalCtrl:ModalController,
+     public popOverCrtl:PopoverController,
+      public rutaZona: RutaZonaService,
+       public zonas: ZonasService,
+        public rutas: RutasService,
+         public clienteEspejo: ClienteEspejoService,
+          public clientes: ClientesService,
+           public rutasFacturas: RutaFacturasService,
+           public configuracionesService: ConfiguracionesService
+           
+           
+           ) { }
 
   ionViewWillEnter(){
 
@@ -92,7 +105,7 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
 
   cargarElementosAlMapa(array){
     let primerElemento = {
-      nombre: 'ISLEÑA' ,
+      nombre: this.configuracionesService.company.company ,
       longitud : this.lngLat[0],
       latitud : this.lngLat[1],
       estado:  '',
@@ -188,7 +201,7 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
 
  if(this.page == 0){
   newMarker.setLngLat(this.lngLat)
-  .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText("DISTRIBUIDORA ISLEÑA"))
+  .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText(this.configuracionesService.company.company))
   .addTo(this.mapa)
   .togglePopup();
  }

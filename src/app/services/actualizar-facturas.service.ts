@@ -5,6 +5,7 @@ import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
 import { AlertasService } from './alertas.service';
 import { PlanificacionEntregasService } from './planificacion-entregas.service';
 import { RutaFacturasService } from './ruta-facturas.service';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ url = null;
     private http: HttpClient,
     public alertasService: AlertasService,
     public rutasFacturas: RutaFacturasService,
-    public planificacionEntregasService: PlanificacionEntregasService
+    public planificacionEntregasService: PlanificacionEntregasService,
+    public configuracionesService: ConfiguracionesService
     
     
     
@@ -31,21 +33,25 @@ url = null;
     this.url = null;
   }
 
-  getIRPURL( api: string ){
+
+  getURL( api: string,identifier?: string ){
+
+    let id = identifier ? identifier : "";
     let test: string = ''
+   
     if ( !environment.prdMode ) {
       test = environment.TestURL;
     }
 
-    const URL = environment.preURL  + test + environment.postURL + api ;
-    this.url = URL
-    console.log(URL, 'POST ACTUALIZAR FACTURAS')
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    this.configuracionesService.api = URL;
+
     return URL;
+
   }
 
-
   private postActualizarFactura (facturas){
-    const URL = this.getIRPURL( environment.actualizaFacturasURL);
+    const URL = this.getURL( environment.actualizaFacturasURL);
     const options = {
       headers: {
           'Content-Type': 'application/json',

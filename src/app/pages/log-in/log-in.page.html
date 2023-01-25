@@ -9,7 +9,7 @@
   
   
                 <div class="login-section" >
-                  <div class="heading ion-padding ion-text-uppercase ion-text-center"   >
+                  <div class="heading ion-padding ion-text-uppercase ion-text-center"  *ngIf="configuracionesService.company" >
                     <h3 class="ion-text-left">{{configuracionesService.company.company}}</h3>
                   </div>
                   

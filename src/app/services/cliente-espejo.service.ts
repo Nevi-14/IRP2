@@ -6,6 +6,7 @@ import { Clientes } from '../models/clientes';
 import { ClientesService } from './clientes.service';
 import { AlertasService } from './alertas.service';
 import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
+import { ConfiguracionesService } from './configuraciones.service';
 
 
 @Injectable({
@@ -22,7 +23,13 @@ export class ClienteEspejoService {
      private http: HttpClient,
      private clientes: ClientesService, 
      private alertasService: AlertasService,
-     public planificacionRutasService: PlanificacionRutasService) { }
+     public planificacionRutasService: PlanificacionRutasService,
+     public configuracionesService: ConfiguracionesService
+     
+     
+     
+     
+     ) { }
 
   
 
@@ -31,28 +38,29 @@ export class ClienteEspejoService {
 
 
 
-  getIRPURL( api: string, id: string ){
-    let test = '';
 
-    if(!environment.prdMode){
+     getURL( api: string,identifier?: string ){
 
-      test = environment.TestURL;
-
+      let id = identifier ? identifier : "";
+      let test: string = ''
+     
+      if ( !environment.prdMode ) {
+        test = environment.TestURL;
+      }
+  
+      let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+      this.configuracionesService.api = URL;
+  
+      return URL;
+  
     }
-    const URL = environment.preURL+ test  + environment.postURL + api +id;
-
-
-
-    return URL;
-
-  }
 
 
 
   
   private getRutas(ruta){
 
-    const URL = this.getIRPURL( environment.clientesURL , ruta);
+    const URL = this.getURL( environment.clientesURL , ruta);
     console.log('URL',URL)
     return this.http.get<Clientes[]>( URL );
 
@@ -70,7 +78,7 @@ export class ClienteEspejoService {
 
   private postClienteEspejo (ruta){
 
-    const URL = this.getIRPURL( environment.postCLienteEspejoURL,'' );
+    const URL = this.getURL( environment.postCLienteEspejoURL );
 
     const options = {
 

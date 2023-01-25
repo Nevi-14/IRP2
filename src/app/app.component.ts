@@ -13,16 +13,23 @@ export class AppComponent implements OnInit {
   mapSvg = '../assets/home/map.svg';
   
   constructor( 
-    private configuracionesService: ConfiguracionesService
-
-   
+    public configuracionesService: ConfiguracionesService
    ) {}
   ngOnInit(){
  
-this.configuracionesService.cargarDatos();
-    //this.global.mapMenu = false;
-    (mapboxgl as any ).accessToken = environment.mapboxKey;
- 
-  
+this.checkMapBoxKey();
    }
+
+   checkMapBoxKey(){
+
+ if(!this.configuracionesService.company){
+setTimeout(()=>{
+
+  this.checkMapBoxKey();
+}, 1000)
+  return;
+   }
+   (mapboxgl as any ).accessToken = this.configuracionesService.company.mapboxKey;
+   }
+   
 }

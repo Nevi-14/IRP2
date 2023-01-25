@@ -77,7 +77,11 @@ this.isChecked = !this.isChecked;
     this.clientesService.isChecked = false;
     this.clientesService.clientes = [];
     this.clientesService.clientesArray = [];
-  }
+    if(this.provincias.provincias.length == 0){
+      this.provincias.syncProvincias()
+      }
+    }
+  
 
   checkAll(e){
 

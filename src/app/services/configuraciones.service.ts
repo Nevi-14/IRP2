@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import companiesJSON from '../../assets/data/companies.json';  // to allow json files  we need to create a njson-typings.d.ts file with some default settings make sure it is wihin the SRC folder
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
+interface modulos {
+  id:string,
+  name: string,
+  title:string,
+  description:string,
+  image:string,
+  url:string,
+  included:boolean
+}
 interface company {
   companyCode: string,
   company: string,
@@ -17,31 +26,19 @@ interface company {
   logo:string,
   taxId: string,
   fax: string,
-  address: string
+  address: string,
+  modules:modulos[]
 }
 @Injectable({
   providedIn: 'root'
 })
 export class ConfiguracionesService {
+  menu = false;
+  isLoading = false;
+  loading: HTMLIonLoadingElement ;
+  elementos =[]
 
-  company:company =  {
-    companyCode: null,
-    company: null,
-    website: null,
-    user: null,
-    email: null,
-    contact: null,
-    preURL: null,
-    postURL: null,
-    mapboxKey: null,
-    latitud: null,
-    longitud: null,
-    description: null,
-    logo:null,
-    taxId: null,
-    fax: null,
-    address: null
-  };
+  company:company = null
 
   companies:company[] = companiesJSON;
   api:any = null;
@@ -49,11 +46,32 @@ export class ConfiguracionesService {
   constructor() { }
 
 
-cargarDatos(){
+async cargarDatos(){
 
 const i = this.companies.findIndex( c => c.companyCode == environment.companyCode);
 
      if(i >=0){
+
+      this.company = {
+        
+          companyCode: null,
+          company: null,
+          website: null,
+          user: null,
+          email: null,
+          contact: null,
+          preURL: null,
+          postURL: null,
+          mapboxKey: null,
+          latitud: null,
+          longitud: null,
+          description: null,
+          logo:null,
+          taxId: null,
+          fax: null,
+          address: null,
+          modules:null
+      }
 
       this.company.companyCode = this.companies[i].companyCode;
       this.company.company = this.companies[i].company;
@@ -70,6 +88,7 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
       this.company.taxId = this.companies[i].taxId;
       this.company.fax = this.companies[i].fax;
       this.company.address = this.companies[i].address
+      this.company.modules = this.companies[i].modules
       console.log('informacion compañia', this.company);
       
      }else{
@@ -78,6 +97,7 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
 
      }
 
+     return true;
 
   }
 

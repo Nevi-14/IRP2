@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ClientesService } from './clientes.service';
 import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,21 +15,28 @@ export class BusquedaClienteService {
 
   constructor(private http: HttpClient,
     public clientesService: ClientesService,
-    public planificacionRutasService:PlanificacionRutasService
+    public planificacionRutasService:PlanificacionRutasService,
+    public configuracionesService: ConfiguracionesService
     ) { }
 
-  getIRPURL( api: string,id: string ){
-    let test: string = ''
-    if ( !environment.prdMode ) {
-      test = environment.TestURL;
-    }
 
-    const URL = environment.preURL  + test +  environment.postURL + api + id;
-console.log(URL);
-    return URL;
-  }
+    getURL( api: string,identifier?: string ){
+
+      let id = identifier ? identifier : "";
+      let test: string = ''
+     
+      if ( !environment.prdMode ) {
+        test = environment.TestURL;
+      }
+  
+      let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+      this.configuracionesService.api = URL;
+  
+      return URL;
+  
+    }
   private getCliente(id ){
-    const URL = this.getIRPURL( environment.busquedaCliente,id);
+    const URL = this.getURL( environment.busquedaCliente,id);
     return this.http.get<Clientes[]>( URL );
   }
 

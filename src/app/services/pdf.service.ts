@@ -3,11 +3,7 @@ import {Img, PageReference, PdfMakeWrapper, Table, TextReference, Txt} from 'pdf
 
 // npm i pdfmake-wrapper && npm i pdfmake --save-dev
 
-
-import { ColonesPipe } from '../pipes/colones.pipe';
-
 import { HttpClient } from '@angular/common/http';
-import { FacturaLineasEspejo } from '../models/FacturaLineasEspejo';
 import { GuiaEntrega } from '../models/guiaEntrega';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Manifiesto } from '../models/manieifiesto';
