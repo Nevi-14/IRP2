@@ -25,13 +25,7 @@ const routes: Routes = [
     path: 'cliente-factura',
     loadChildren: () => import('./pages/cliente-factura/cliente-factura.module').then(m => m.ClienteFacturaPageModule), canLoad: [SettingsGuard]
   },
-
-
-  {
-    path: 'busqueda-mapa',
-    loadChildren: () => import('./pages/busqueda-mapa/busqueda-mapa.module').then(m => m.BusquedaMapaPageModule), canLoad: [SettingsGuard]
-  },
-  {
+{
     path: 'lista-clientes-ruta-facturas',
     loadChildren: () => import('./pages/lista-clientes-ruta-facturas/lista-clientes-ruta-facturas.module').then(m => m.ListaClientesRutaFacturasPageModule), canLoad: [SettingsGuard]
   },
@@ -134,7 +128,9 @@ const routes: Routes = [
     path: 'facturas-no-agregadas',
     loadChildren: () => import('./pages/facturas-no-agregadas/facturas-no-agregadas.module').then(m => m.FacturasNoAgregadasPageModule)
   },
-
+  {
+    path: 'busqueda-mapa',
+    loadChildren: () => import('./pages/busqueda-mapa/busqueda-mapa.module').then(m => m.BusquedaMapaPageModule)},
 
 
 ];
