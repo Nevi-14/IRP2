@@ -4,9 +4,9 @@ import { ClientesGuia, Guias } from 'src/app/models/guia';
 import { GuiaEntrega } from 'src/app/models/guiaEntrega';
 import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 import { AlertasService } from 'src/app/services/alertas.service';
-import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
-import { GuiasService } from 'src/app/services/guias.service';
+import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
+ 
 import { RuteroService } from 'src/app/services/rutero.service';
 import { FacturasNoAgregadasPage } from '../facturas-no-agregadas/facturas-no-agregadas.page';
 
@@ -17,8 +17,8 @@ import { FacturasNoAgregadasPage } from '../facturas-no-agregadas/facturas-no-ag
   styleUrls: ['./control-facturas.page.scss'],
 })
 export class ControlFacturasPage implements OnInit {
-  @Input() factura:PlanificacionEntregas
-  @Input() facturas:ClientesGuia[]
+  @Input() factura:PlanificacionEntregas =   null
+  @Input() facturas:ClientesGuia[] = []
   facturasOriginal:ClientesGuia[] = [];
   facturasArray:ClientesGuia[] = [];
   guias:Guias[]=[];
@@ -36,13 +36,12 @@ export class ControlFacturasPage implements OnInit {
 
   constructor(
     public alertCTrl: AlertController,
-    public controlCamionesGuiasService: ControlCamionesGuiasService,
-    public guiasService: GuiasService,
     public gestionCamiones: GestionCamionesService,
     public modalCtrl: ModalController,
     public ruteroService: RuteroService,
     public alertasService: AlertasService,
-    public gestionCamionesService: GestionCamionesService
+    public gestionCamionesService: GestionCamionesService,
+    public planificacionEntregasService: PlanificacionEntregasService
   ) { }
 
   ngOnInit() {
@@ -61,7 +60,7 @@ console.log('this.facturas', this.facturas)
  this.titulo = this.factura.NOMBRE_CLIENTE;
 
  console.log(this.facturas, 'facturas')
-    if(this.controlCamionesGuiasService.listaGuias.length > 0 ){
+    if(this.planificacionEntregasService.listaGuias.length > 0 ){
       this.listaGuiasExistentes = true
       this.listaGuias = false;
       this.listaOtrasGuias = false;
@@ -104,7 +103,7 @@ console.log($event)
       component: FacturasNoAgregadasPage,
       cssClass: 'ui-modal',
       componentProps:{
-        facturas:this.controlCamionesGuiasService.facturasNoAgregadas
+        facturas:this.planificacionEntregasService.facturasNoAgregadas
       }
     });
     modal.present();
@@ -117,35 +116,28 @@ console.log($event)
   async retornarCamion(camion:any){
 
 
-    this.controlCamionesGuiasService.facturasNoAgregadas = [];
-    let id = this.controlCamionesGuiasService.generarIDGuia();
-
-    console.log('this.factura', this.factura)
-    console.log('this.facturasArray', this.facturasArray)
-
-  
-  
+    this.planificacionEntregasService.facturasNoAgregadas = [];
+    let id = this.planificacionEntregasService.generarIDGuia();
 
  if(this.listaGuias){
   camion.idGuia = id;
   camion.camion.numeroGuia =id;
   if(this.incluirFacturas){
   
-  
-    this.controlCamionesGuiasService.listaGuias.push(camion);
-    console.log('camion', camion)
+    this.planificacionEntregasService.listaGuias.push(camion);
+
     for(let i =0; i< this.facturasArray.length; i++){
-console.log('this.facturasArray', this.facturasArray)
+
       let facturasArray2 = this.facturasArray[i].facturas;
       facturasArray2.forEach(factu  => {
-console.log('facturaaaaa inmpor', factu)
+
         if(factu.ID_GUIA   ){
- console.log('deleting')
-          this.controlCamionesGuiasService.borrarFacturaGuia(factu)
+
+          this.planificacionEntregasService.borrarFacturaGuia(factu)
         }
   if(factu.LONGITUD && factu.LATITUD){
 
-    this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
+    this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
   }
      
       })
@@ -153,16 +145,20 @@ console.log('facturaaaaa inmpor', factu)
 
       if(i == this.facturasArray.length -1 ){
       this.modalCtrl.dismiss()
- 
-   //   this.controlCamionesGuiasService.actualizarValores();
-        if(this.controlCamionesGuiasService.facturasNoAgregadas.length >0){
-          
+      console.log('this.planificacionEntregasService.facturasNoAgregadas', this.planificacionEntregasService.facturasNoAgregadas)
+   //   this.planificacionEntregasService.actualizarValores();
+   
+setTimeout(()=>{
+  //this.alertasService.presentaLoading('Validando datos..')
+  if(this.planificacionEntregasService.facturasNoAgregadas.length >0){
+    this.facturasNoAgregadas()
+    console.log('this.planificacionEntregasService.facturasNoAgregadas', this.planificacionEntregasService.facturasNoAgregadas)
+//this.alertasService.loadingDissmiss();
 
- this.facturasNoAgregadas()
-  
-  console.log('this.controlCamionesGuiasService.facturasNoAgregadas', this.controlCamionesGuiasService.facturasNoAgregadas)
-          return
-        }
+    return
+  }
+}, 3000)
+       
   
       }
     }
@@ -177,18 +173,18 @@ console.log('facturaaaaa inmpor', factu)
     if(this.factura.ID_GUIA){
 
       console.log('deleting', this.factura.ID_GUIA)
-      this.controlCamionesGuiasService.borrarFacturaGuia(this.factura)
+      this.planificacionEntregasService.borrarFacturaGuia(this.factura)
     }
  
 
-  this.controlCamionesGuiasService.listaGuias.push(camion);
+  this.planificacionEntregasService.listaGuias.push(camion);
  
   if(this.factura.LONGITUD && this.factura.LATITUD){
 
-    this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
+    this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
   }
 
-  this.controlCamionesGuiasService.actualizarValores();
+  this.planificacionEntregasService.actualizarTotales();
   
   this.cerrarModal();
   return
@@ -206,20 +202,20 @@ if(this.incluirFacturas){
 
         if(factu.ID_GUIA   && factu.ID_GUIA != camion.idGuia ){
  
-          this.controlCamionesGuiasService.borrarFacturaGuia(factu)
+          this.planificacionEntregasService.borrarFacturaGuia(factu)
         }
 
         if(factu.LONGITUD && factu.LATITUD){
-          this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
+          this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
         }
       
       })
 
       if(i == this.facturasArray.length -1 ){
       this.modalCtrl.dismiss()
-      this.controlCamionesGuiasService.actualizarValores();
+      this.planificacionEntregasService.actualizarTotales();
 
-        if(this.controlCamionesGuiasService.facturasNoAgregadas.length >0){
+        if(this.planificacionEntregasService.facturasNoAgregadas.length >0){
   
  this.facturasNoAgregadas()
   
@@ -233,8 +229,8 @@ if(this.incluirFacturas){
  
     }
     
-    this.controlCamionesGuiasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
-    this.controlCamionesGuiasService.actualizarValores();
+    this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
+    this.planificacionEntregasService.actualizarTotales();
     
   this.cerrarModal();
 }
@@ -271,7 +267,7 @@ if(this.incluirFacturas){
       guiasNuevas(){
         this.gestionCamionesService.syncCamionesToPromise().then(camiones =>{
       
-          this.controlCamionesGuiasService.generarPreListaGuias(camiones).then(lista =>{
+          this.planificacionEntregasService.generarPreListaGuias(camiones).then(lista =>{
     
             this.guias = lista;
             console.log('lista nueva', lista)
@@ -282,8 +278,8 @@ if(this.incluirFacturas){
       }
 
       guiasExistentes(){
-        this.guias = this.controlCamionesGuiasService.listaGuias;
-        console.log('guias existentes', this.controlCamionesGuiasService.listaGuias)
+        this.guias = this.planificacionEntregasService.listaGuias;
+        console.log('guias existentes', this.planificacionEntregasService.listaGuias)
       }
 
      

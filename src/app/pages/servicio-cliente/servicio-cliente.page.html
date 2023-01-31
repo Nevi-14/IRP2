@@ -1,59 +1,43 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="dark">
-
-    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
-      <ion-item>
-        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Servicio al cliente
-        <span  *ngIf="guia">
-       -   {{guia.idGuia}}
-        </span>
-        
-        </ion-title>
 
 
+  <ion-toolbar>
 
-        <ion-buttons  slot="end">
-          <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
-            <ion-icon name="home-outline"></ion-icon>
-              </ion-button>
-              <ion-button  shape="round" fill="solid" color="dark" (click)="gestionErrores()">
-                <ion-icon  name="bug"></ion-icon>
-                <ion-badge color="primary" mode="ios">{{servicioClienteService.errorArray.length}}</ion-badge>
-              </ion-button>
+    <ion-title class="ion-text-capitalize" class="title"><strong>Servicio al cliente
+      <span  *ngIf="guia">
+     -   {{guia.idGuia}}
+      </span></strong></ion-title>
 
-          <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
-            <ion-icon class="spin-element"  name="settings"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="features?.length > 0 "   shape="round" fill="solid" color="dark" (click)="informacionMarcadores()">
-            <ion-icon name="location"></ion-icon>
-            <ion-badge color="primary" mode="ios">{{ features?.length }}</ion-badge>
-          </ion-button>
-      
-      
  
-      
-      
-      
-    
-          <ion-button  *ngIf="features?.length > 0 "   (click)="refrescarVista()"  shape="round" fill="solid" color="dark">
-            <ion-icon  name="refresh"></ion-icon>
-              </ion-button>
+ 
+
+
+
   
-              <ion-button   *ngIf="features?.length > 0 "    (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
-                <ion-icon  name="trash"></ion-icon>
-                  </ion-button>
-        <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
-    <ion-label slot="start">Salir</ion-label>
-    <ion-icon name="close" slot="end"> </ion-icon>
-  </ion-button>
-        </ion-buttons>
-      </ion-item>
-    
-    </ion-list>
-  </ion-toolbar>
+  <ion-fab-button slot="end" color="dark" 
+  class="ion-margin-right" size="small" (click)="configuracionZonaRuta()">
+  <ion-icon class="spin-element"  name="settings"></ion-icon>
+</ion-fab-button>
+
+<span slot="end" style="position:relative"   *ngIf="features?.length > 0 "  >
+  <ion-fab-button   color="dark"   
+  class="ion-margin-right" size="small"    (click)="informacionMarcadores()">
+  <ion-icon name="location"></ion-icon>
+</ion-fab-button>
+<ion-badge style="position: absolute;top:0;right:-0.7rem;" color="primary" mode="ios">{{ features?.length }}</ion-badge>
+
+</span>
+<ion-fab-button slot="end" color="dark"  size="small"  *ngIf="features?.length > 0 "    (click)="limpiarDatos()"   >  
+  <ion-icon  name="refresh"></ion-icon>
+</ion-fab-button>
+
+ 
+
+</ion-toolbar>
 
 
-</ion-header>
+ 
+
+
 
 
 

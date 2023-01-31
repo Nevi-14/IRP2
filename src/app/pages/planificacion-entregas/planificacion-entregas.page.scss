@@ -1,57 +1,11 @@
- ion-grid{
-  ion-row{
+::-Webkit-scrollbar{
 
-    ion-col{
-      .ion-text-wrap{
-text-transform: capitalize;
-        font-size: 14px;
-      }
-    }
-  }
- }
-
- .fixed-content {        //comments showing what I replaced.
-  overflow: auto;
-  height: 62vh;
-}  ion-card {
-  overflow: unset !important;
-  min-height:250px;
-  ion-row{
-    ion-col{
-      font-size: 12px;
-      .ion-text-wrap{
-
-        font-size: 12px;
-        font-weight: bold;
-      }
-    }
-  }
-}
-.fixed-content-facturas {        //comments showing what I replaced.
-  overflow: auto;
-  height: 60vh;
-} .header-row{
-padding: 0;
-margin: 0;
-  font-weight: bold;
-  border-bottom: 2px solid black;
- 
- 
+ // display: none;
 }
 
-.data-row{
-  font-size: 12px;
-  border-bottom: 1px solid black;
+ion-card{
+    z-index: 1!important;
 }
-
-.fixed{
-
-  overflow: auto;
-  max-height: 200px;
+div{
+    z-index: 1000!important;
 }
-$colors: (
-        success:#23ab50,
-        danger: #f50142,
-        warning: #f56800,
-
-);

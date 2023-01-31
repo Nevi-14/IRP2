@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GuiasService } from 'src/app/services/guias.service';
 import { ModalController } from '@ionic/angular';
 import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import { RuteroService } from 'src/app/services/rutero.service';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
+import { GuiaEntrega } from '../../models/guiaEntrega';
+import { AlertasService } from '../../services/alertas.service';
 
 @Component({
   selector: 'app-guias-ruta',
@@ -17,24 +19,33 @@ export class GuiasRutaPage implements OnInit {
   idGuia = null;
   @Input() ruta:string
     @Input() switch:boolean
+    guiasRutas:GuiaEntrega[] =[]
   constructor(
 
-  public guiasService: GuiasService,
   public modalCtrl: ModalController,
   public servicioClienteService: ServicioClienteService,
-  public ruteroService: RuteroService
+  public ruteroService: RuteroService,
+  public planificacionEntregasService: PlanificacionEntregasService,
+  public alertasService: AlertasService
 
 
   ) { }
 
   ngOnInit() {
 
- 
-    this.guiasService.syncGuiasRuta(this.ruta);
+ this.alertasService.presentaLoading('Cargando datos...');
+    this.planificacionEntregasService.getGuiaEstadoToPromise(this.ruta).then(resp =>{
+      this.alertasService.loadingDissmiss();
+      this.guiasRutas = resp;
+
+      console.log('resp', resp)
+    }, error =>{
+      this.alertasService.loadingDissmiss();
+    })
     
     this.servicioClienteService.consultaGuias = [];
 
-  console.log(  this.guiasService.guiasArrayRuta)
+  
   }
   onSearchChange(event){
 

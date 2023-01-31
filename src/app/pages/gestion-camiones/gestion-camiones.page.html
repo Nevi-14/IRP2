@@ -1,62 +1,49 @@
 
 
-<ion-content class="ion-padding">
 
-  <ion-grid >
-    <ion-row>
-<ion-col size="6" style="display: flex;justify-content:center;align-items:center;">
 
-       
-  <img height="250" src="../assets/home/delivery.svg">
-</ion-col>
+  <ion-toolbar>
+    <ion-title class="ion-text-capitalize" class="title"><strong>Gestión Camiones</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{camionesService.camiones.length}}</ion-badge></ion-title>
+    <ion-searchbar slot="end" style="width:40%;margin-top: 1rem;" mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+  </ion-toolbar>
+
+ 
+<ion-content >
+
+<ion-grid >
+  <ion-row>
+    <ion-col size="3" *ngFor="let camion of camionesService.camiones | filtro : textoBuscarRuta:'chofer'">
+      <ion-card >
+        <ion-card-header>
+    
+          <ion-label>
+            {{camion.chofer}} <ion-badge color="dark" mode="ios">Placa : {{camion.idCamion}}</ion-badge>
           
-      <ion-col size="6">
-              
-        <ion-item-divider >
-          <ion-label slot="start" class="ion-text-uppercase">
-            <ion-badge color="dark"> <h3>Camiones</h3></ion-badge>
-            
           </ion-label>
-              <!-- Default Searchbar -->
-      <ion-searchbar mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-        </ion-item-divider>
-    
-    
-     
-          <ion-row>
-            <ion-col size="12" class="fixed-content">
+          <ion-icon   style="margin-left: 1rem;margin-top: 0.5rem;"  size="large"  color="primary" *ngIf="camion.frio" name="snow-outline"></ion-icon>
+          <ion-icon style="margin-left: 1rem;margin-top: 0.5rem;"        size="large"   color="warning" *ngIf="camion.seco" name="sunny-outline"></ion-icon>
           
-        <ion-card  *ngFor="let camion of camionesService.camiones | filtro : textoBuscarRuta:'chofer'" >
-          <ion-item>
-            <ion-label>{{camion.chofer}} <ion-badge color="dark" mode="ios">Placa : {{camion.idCamion}}</ion-badge></ion-label>
-            <ion-icon slot="end"  size="large"  color="primary" *ngIf="camion.frio" name="snow-outline"></ion-icon>
-            <ion-icon   slot="end"  size="large"   color="warning" *ngIf="camion.seco" name="sunny-outline"></ion-icon>
-          </ion-item>
-        
-          <ion-card-content>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-label>
             <p>{{camion.descripcion}} </p>
             <p>Capacidad Volumen: {{camion.capacidadVolumen}}</p>
             <p>Capacidad Peso : {{camion.capacidadPeso}}</p>
-    
-        
-          </ion-card-content>
-        </ion-card>
+          </ion-label>
+          
+        </ion-card-content>
+      </ion-card>
+     
+    </ion-col>
 
-            </ion-col>
-    
-            
-          </ion-row>
-    
-    
-    
-    
-    
-    
-      </ion-col>
-
-    </ion-row>
-  </ion-grid>
-
-
+  </ion-row>
+</ion-grid>
+ 
   </ion-content>
-  
+  <ion-footer class="ion-no-border">
+    <ion-toolbar class="ion-text-center">
+      <ion-title>Gestión Camiones</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+
+

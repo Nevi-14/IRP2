@@ -1,77 +1,73 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="dark">
-
-    <ion-list style="background: transparent!important;margin:0;padding:0" lines="none">
-      <ion-item>
-        <ion-title class="ion-text-left" style="font-size: 0.9rem;letter-spacing: 0.2rem; text-transform: uppercase;" color="light">Planificación de rutas</ion-title>
-
-        <ion-label color="light">
-          <h2 class="ion-text-uppercase">Ruta</h2>
-          <p *ngIf="rutaZona">
-            <ion-badge color="primary" mode="ios">{{rutaZona.RUTA}}</ion-badge>
-          </p>
-        </ion-label>
-        <ion-label color="light">
-          <h2 class="ion-text-uppercase">Zona</h2>
-          <p *ngIf="rutaZona">
-            <ion-badge color="primary" mode="ios">{{rutaZona.DESCRIPCION}}</ion-badge>
-          </p>
-        </ion-label>
-
-        <ion-buttons  slot="end">
-          <ion-button   [routerLink]="['/inicio']" fill="solid" shape="round" color="dark" size="small">
-            <ion-icon name="home-outline"></ion-icon>
-              </ion-button>
-  <ion-button  shape="round" fill="solid" color="dark" (click)="gestionErrores()">
-    <ion-icon  name="bug"></ion-icon>
-    <ion-badge color="primary" mode="ios">{{planificacionRutasService.errorArray.length}}</ion-badge>
-  </ion-button>
-
-          <ion-button  shape="round" fill="solid" color="dark" (click)="configuracionZonaRuta()">
-            <ion-icon class="spin-element"  name="settings"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="features.length> 0"   shape="round" fill="solid" color="dark" (click)="informacionMarcadores('title')">
-            <ion-icon name="location"></ion-icon>
-            <ion-badge color="primary" mode="ios">{{features.length }}</ion-badge>
-          </ion-button>
-      
-      
-          <ion-button  *ngIf="features.length > 0 "   shape="round" fill="solid" color="dark" (click)="dragMarcadores()"> 
-            <ion-icon slot="start" name="locate-outline"></ion-icon>
-            <ion-badge color="warning" mode="ios" >{{modo}}</ion-badge>
-          </ion-button>
-
-      
-      
-      
-          <ion-button shape="round" fill="solid" color="dark" (click)="menuCliente()" *ngIf="rutaZona">
-            <ion-icon  name="person-add"></ion-icon>
-          </ion-button>
-          <ion-button   *ngIf="rutaZona" (click)="limpiarDatos()"  shape="round" fill="solid" color="dark">
-            <ion-icon  name="trash-outline"></ion-icon>
-              </ion-button>
-          <ion-button   *ngIf="features.length > 0 " (click)="postRutas()"  shape="round" fill="solid" color="dark">
-        <ion-icon  name="save"></ion-icon>
-          </ion-button>
-        <ion-button    [routerLink]="['/log-in']" fill="solid" shape="round" color="danger" size="small">
-    <ion-label slot="start">Salir</ion-label>
-    <ion-icon name="close" slot="end"> </ion-icon>
-  </ion-button>
-        </ion-buttons>
-      </ion-item>
-    
-    </ion-list>
-  </ion-toolbar>
 
 
-</ion-header>
+  <ion-toolbar>
+
+    <ion-title class="ion-text-capitalize" class="title"><strong>Planificación Rutas</strong></ion-title>
+
+ 
+
+    <ion-label   *ngIf="rutaZona"    slot="end" class="ion-text-wrap"
+    style="margin-right: 1rem;">
+    <h2 class="ion-text-uppercase">Ruta <ion-badge   color="primary"
+        mode="ios">{{rutaZona.RUTA}}</ion-badge></h2>
+
+  </ion-label>
+  <ion-label  *ngIf="rutaZona" slot="end" class="ion-text-wrap"
+    style="margin-right: 1rem;">
+    <h2 class="ion-text-uppercase">Zona <ion-badge   color="primary"
+        mode="ios">{{rutaZona.DESCRIPCION}}</ion-badge></h2>
+
+  </ion-label>
+
+
+    <ion-fab-button slot="end" color="dark" 
+    class="ion-margin-right" size="small"  (click)="configuracionZonaRuta()">
+    <ion-icon class="spin-element"  name="settings"></ion-icon>
+  </ion-fab-button>
+
+
+  <span slot="end" style="position:relative"  *ngIf="features.length> 0" >
+    <ion-fab-button   color="dark"   
+    class="ion-margin-right" size="small"    (click)="informacionMarcadores('title')">
+    <ion-icon name="location"></ion-icon>
+  </ion-fab-button>
+  <ion-badge style="position: absolute;top:0;right:-0.7rem;" color="primary" mode="ios">{{features.length }}</ion-badge>
+  
+  
+  </span>
+
+
+  <span slot="end" style="position:relative" *ngIf="features.length> 0"  >
+    <ion-fab-button   color="dark"   
+    class="ion-margin-right" size="small"    (click)="dragMarcadores()">
+    <ion-icon   name="locate-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-badge style="position: absolute;top:0;right:-0.7rem;" color="primary" mode="ios">{{modo}}</ion-badge>
+  
+  
+  </span>
 
 
 
+  
+  <ion-fab-button slot="end" color="dark" 
+  class="ion-margin-right" size="small" (click)="menuCliente()" *ngIf="rutaZona">
+  <ion-icon  name="person-add"></ion-icon>
+</ion-fab-button>
+
+<ion-fab-button slot="end" color="dark" *ngIf="rutaZona" size="small" (click)="limpiarDatos()"  >  
+<ion-icon  name="trash-outline"></ion-icon>
+</ion-fab-button>
+
+<ion-fab-button slot="end" color="dark" 
+class="ion-margin-right" size="small"    *ngIf="features.length > 0 " (click)="postRutas()">
+<ion-icon  name="save"></ion-icon>
+</ion-fab-button>
+
+</ion-toolbar>
 
 
-
-<ion-content class="ion-padding">
+<ion-content>
 
 <ion-grid  style="height: 100%;">
 <ion-row    style="height: 100%;">

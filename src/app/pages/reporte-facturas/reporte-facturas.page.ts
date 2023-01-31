@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GuiasService } from '../../services/guias.service';
 import { ModalController } from '@ionic/angular';
 import { ActualizaFacLinService } from '../../services/actualizaFacLin';
 import { GuiaEntrega } from '../../models/guiaEntrega';
 import { PdfService } from 'src/app/services/pdf.service';
 import { HttpClient } from '@angular/common/http';
 import { GestionCamionesService } from '../../services/gestion-camiones.service';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
+import { AlertasService } from '../../services/alertas.service';
 
 @Component({
   selector: 'app-reporte-facturas',
@@ -15,35 +16,32 @@ import { GestionCamionesService } from '../../services/gestion-camiones.service'
 
 export class ReporteFacturasPage implements OnInit {
   @Input() guias :GuiaEntrega[]
+  guiasArrayRuta :GuiaEntrega[] = [];
   textoBuscar = '';
   constructor(
-   public guiasService:GuiasService,
    public modalCtrl:ModalController,
    public actualizaFacLinService: ActualizaFacLinService ,
    public pdfService:PdfService,
    public http:HttpClient,
-   public camionesService:GestionCamionesService
+   public camionesService:GestionCamionesService,
+   public planificacionEntregasService:PlanificacionEntregasService,
+   public alertasService: AlertasService
   ) { }
 
   ngOnInit() {
+this.alertasService.presentaLoading('Cargando datos...')
+    this.planificacionEntregasService.getGuiaEstadoToPromise('RUTA').then(guias =>{
+      this.alertasService.loadingDissmiss();
+      this.guiasArrayRuta = guias
+ this.camionesService.syncCamionesToPromise().then(resp =>{
 
-    if(this.guias){
+  this.camionesService.camiones = resp;
 
-
-      this.guiasService.guiasArrayRuta = []
-      this.guiasService.guiasArrayRuta = this.guias;
-    }else{
-
-      this.guiasService.syncGuiasRutaToPtomise('RUTA').then(guias =>{
-
-        this.guiasService.guiasArrayRuta = guias
+ })
   
-        console.log('guias', guias)
-        this.camionesService.syncCamiones();
-    
-      })
-
-    }
+    }, error =>{
+      this.alertasService.loadingDissmiss();
+    })
 
    
    

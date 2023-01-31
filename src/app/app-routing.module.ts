@@ -19,10 +19,7 @@ const routes: Routes = [
     path: 'inicio',
     loadChildren: () => import('./pages/inicio/inicio.module').then(m => m.InicioPageModule), canLoad: [SettingsGuard]
   },
-  {
-    path: 'planificacion-rutas',
-    loadChildren: () => import('./pages/planificacion-rutas/planificacion-rutas.module').then(m => m.PlanificacionRutasPageModule), canLoad: [SettingsGuard]
-  },
+
 
   {
     path: 'cliente-factura',
@@ -38,32 +35,18 @@ const routes: Routes = [
     path: 'lista-clientes-ruta-facturas',
     loadChildren: () => import('./pages/lista-clientes-ruta-facturas/lista-clientes-ruta-facturas.module').then(m => m.ListaClientesRutaFacturasPageModule), canLoad: [SettingsGuard]
   },
-  {
-    path: 'planificacion-entregas',
-    loadChildren: () => import('./pages/planificacion-entregas/planificacion-entregas.module').then(m => m.PlanificacionEntregasPageModule), canLoad: [SettingsGuard]
-  },
+
 
   {
     path: 'lista-guias',
     loadChildren: () => import('./pages/lista-guias/lista-guias.module').then(m => m.ListaGuiasPageModule), canLoad: [SettingsGuard]
   },
-  {
-    path: 'lista-clientes-guias',
-    loadChildren: () => import('./pages/lista-clientes-guias/lista-clientes-guias.module').then(m => m.ListaClientesGuiasPageModule), canLoad: [SettingsGuard]
-  },
-  {
-    path: 'servicio-cliente',
-    loadChildren: () => import('./pages/servicio-cliente/servicio-cliente.module').then(m => m.ServicioClientePageModule), canLoad: [SettingsGuard]
-  },
+
 
 
   {
     path: 'lista-camiones-modal',
     loadChildren: () => import('./pages/lista-camiones-modal/lista-camiones-modal.module').then(m => m.ListaCamionesModalPageModule), canLoad: [SettingsGuard]
-  },
-  {
-    path: 'calendario-modal',
-    loadChildren: () => import('./pages/calendario-modal/calendario-modal.module').then(m => m.CalendarioModalPageModule), canLoad: [SettingsGuard]
   },
 
   {
@@ -78,22 +61,6 @@ const routes: Routes = [
   {
     path: 'calendario',
     loadChildren: () => import('./pages/calendario/calendario.module').then(m => m.CalendarioPageModule), canLoad: [SettingsGuard]
-  },
-
-  {
-    path: 'calendario-popover',
-    loadChildren: () => import('./pages/calendario-popover/calendario-popover.module').then(m => m.CalendarioPopoverPageModule), canLoad: [SettingsGuard]
-
-  },
-  {
-    path: 'facturas-no-agregadas',
-    loadChildren: () => import('./pages/facturas-no-agregadas/facturas-no-agregadas.module').then(m => m.FacturasNoAgregadasPageModule), canLoad: [SettingsGuard]
-  },
-
-
-  {
-    path: 'planificacion-entrega-cliente-detalle',
-    loadChildren: () => import('./pages/planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.module').then(m => m.PlanificacionEntregaClienteDetallePageModule), canLoad: [SettingsGuard]
   },
 
 
@@ -116,10 +83,7 @@ const routes: Routes = [
     path: 'planificacion-entrega-clientes',
     loadChildren: () => import('./pages/planificacion-entrega-clientes/planificacion-entrega-clientes.module').then(m => m.PlanificacionEntregaClientesPageModule)
   },
-  {
-    path: 'gestion-guias-entrega',
-    loadChildren: () => import('./pages/gestion-guias-entrega/gestion-guias-entrega.module').then(m => m.GestionGuiasEntregaPageModule)
-  },
+ 
   {
     path: 'rutero-clientes',
     loadChildren: () => import('./pages/rutero-clientes/rutero-clientes.module').then(m => m.RuteroClientesPageModule)
@@ -137,10 +101,7 @@ const routes: Routes = [
     path: 'servicio-cliente-marcadores',
     loadChildren: () => import('./pages/servicio-cliente-marcadores/servicio-cliente-marcadores.module').then(m => m.ServicioClienteMarcadoresPageModule)
   },
-  {
-    path: 'consultar-facturas',
-    loadChildren: () => import('./pages/consultar-facturas/consultar-facturas.module').then(m => m.ConsultarFacturasPageModule) 
-  },
+
   {
     path: 'control-facturas',
     loadChildren: () => import('./pages/control-facturas/control-facturas.module').then(m => m.ControlFacturasPageModule)
@@ -157,6 +118,25 @@ const routes: Routes = [
     path: 'marcadores',
     loadChildren: () => import('./pages/marcadores/marcadores.module').then(m => m.MarcadoresPageModule)
   },
+  {
+    path: 'lista-clientes-guias',
+    loadChildren: () => import('./pages/lista-clientes-guias/lista-clientes-guias.module').then(m => m.ListaClientesGuiasPageModule) 
+  },
+  {
+    path: 'planificacion-entregas-vista-mapa',
+    loadChildren: () => import('./pages/planificacion-entregas-vista-mapa/planificacion-entregas-vista-mapa.module').then( m => m.PlanificacionEntregasVistaMapaPageModule)
+  },
+  {
+    path: 'planificacion-entrega-cliente-detalle',
+    loadChildren: () => import('./pages/planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.module').then(m => m.PlanificacionEntregaClienteDetallePageModule)
+  },
+  {
+    path: 'facturas-no-agregadas',
+    loadChildren: () => import('./pages/facturas-no-agregadas/facturas-no-agregadas.module').then(m => m.FacturasNoAgregadasPageModule)
+  },
+
+
+
 ];
 
 @NgModule({

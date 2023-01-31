@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PlanificacionEntregas } from '../../models/planificacionEntregas';
 import { ModalController } from '@ionic/angular';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
-import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
+import { ClientesGuia } from '../../models/guia';
+
 
 @Component({
   selector: 'app-facturas-no-agregadas',
@@ -10,11 +10,10 @@ import { ControlCamionesGuiasService } from '../../services/control-camiones-gui
   styleUrls: ['./facturas-no-agregadas.page.scss'],
 })
 export class FacturasNoAgregadasPage implements OnInit {
-@Input() facturas:any[]
+@Input() facturas:ClientesGuia[]
 textoBuscar = '';
   constructor(
-    public modalCtrl:ModalController,
-    public controlCamionesService:ControlCamionesGuiasService
+    public modalCtrl:ModalController
   ) { }
 
   ngOnInit(

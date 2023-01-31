@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CalendarioModalPage } from './calendario-modal.page';
+import { PlanificacionEntregasVistaMapaPage } from './planificacion-entregas-vista-mapa.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: CalendarioModalPage
+    component: PlanificacionEntregasVistaMapaPage
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CalendarioModalPageRoutingModule {}
+export class PlanificacionEntregasVistaMapaPageRoutingModule {}

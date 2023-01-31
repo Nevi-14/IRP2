@@ -1,45 +1,32 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ReporteFacturasPage } from '../reporte-facturas/reporte-facturas.page';
+import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
+import { format } from 'date-fns';
+import { CalendarioPage } from '../calendario/calendario.page';
+import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
+import { PlanificacionEntregaClientesPage } from '../planificacion-entrega-clientes/planificacion-entrega-clientes.page';
+import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.page';
 import { ModalController, AlertController } from '@ionic/angular';
-import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
+import { ZonasService } from 'src/app/services/zonas.service';
 import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
-import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
-import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
-import { AlertasService } from 'src/app/services/alertas.service';
-import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
-import { DatatableService } from 'src/app/services/datatable.service';
-import { CalendarioPage } from '../calendario/calendario.page';
-import { format } from 'date-fns';
-import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
-import { FacturasService } from 'src/app/services/facturas.service';
-import { ClientesGuia } from 'src/app/models/guia';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
+import { AlertasService } from '../../services/alertas.service';
+import { FacturasService } from '../../services/facturas.service';
 import { PdfService } from '../../services/pdf.service';
-import { ReporteFacturasPage } from '../reporte-facturas/reporte-facturas.page';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { Rutas } from 'src/app/models/rutas';
-import { GestionGuiasEntregaPage } from '../gestion-guias-entrega/gestion-guias-entrega.page';
-import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.page';
-import { PlanificacionEntregaClientesPage } from '../planificacion-entrega-clientes/planificacion-entrega-clientes.page';
-
+import { ClientesGuia } from '../../models/guia';
+import { Rutas } from '../../models/rutas';
+import { Router } from '@angular/router';
 @Component({
-  selector: 'app-planificacion-entregas',
-  templateUrl: './planificacion-entregas.page.html',
-  styleUrls: ['./planificacion-entregas.page.scss'],
-  styles: [
-    `
-  
-    #mapa {
-      height:100%;
-     width:100%;
-  
-    }
-
-    `
-  ]
+  selector: 'app-planificacion-entregas-vista-mapa',
+  templateUrl: './planificacion-entregas-vista-mapa.page.html',
+  styleUrls: ['./planificacion-entregas-vista-mapa.page.scss'],
 })
-export class PlanificacionEntregasPage {
+export class PlanificacionEntregasVistaMapaPage  {
+
   @ViewChild('mapa') divMapa!: ElementRef;
   default: any = 'title';
   zoomLevel: number = 6.5;
@@ -49,7 +36,7 @@ export class PlanificacionEntregasPage {
   modo = 'off'
   mapa!: mapboxgl.Map;
   @ViewChild('popover') popover;
-  isOpen = false;
+  isPopOverOpen = false;
 
   constructor(
 
@@ -58,37 +45,35 @@ export class PlanificacionEntregasPage {
     public zonas: ZonasService,
     public rutaFacturas: RutaFacturasService,
     public rutaZonas: RutaZonaService,
-    public controlCamionesGuiasService: ControlCamionesGuiasService,
     public planificacionEntregasService: PlanificacionEntregasService,
     public alertasService: AlertasService,
-    public datableService: DatatableService,
     public alertCtrl: AlertController,
     public facturasService: FacturasService,
-    public pdfService: PdfService
+    public pdfService: PdfService,
+    public router:Router
 
   ) { }
 
+  vistaRegular(){
 
+    this.router.navigateByUrl('/inicio/planificacion-entregas', {replaceUrl:true})
+  }
   presentPopover(e: Event) {
-
-    if (this.controlCamionesGuiasService.rutas.length > 0) {
-
+    if (this.planificacionEntregasService.rutas.length > 0) {
       this.popover.event = e;
-      this.isOpen = true;
-
+      this.isPopOverOpen = true;
     }
-
   }
   removerRuta(ruta: Rutas) {
 
-    let i: any = this.controlCamionesGuiasService.rutas.findIndex(rutas => rutas.RUTA == ruta.RUTA);
+    let i: any = this.planificacionEntregasService.rutas.findIndex(rutas => rutas.RUTA == ruta.RUTA);
 
     if (i >= 0) {
 
-      this.controlCamionesGuiasService.rutas.splice(i, 1)
-      if (ruta.RUTA == this.controlCamionesGuiasService.rutaZona.RUTA) {
+      this.planificacionEntregasService.rutas.splice(i, 1)
+      if (ruta.RUTA == this.planificacionEntregasService.rutaZona.RUTA) {
 
-        this.controlCamionesGuiasService.rutaZona = this.controlCamionesGuiasService.rutas[0]
+        this.planificacionEntregasService.rutaZona = this.planificacionEntregasService.rutas[0]
       }
 
       this.cargarDatos();
@@ -110,7 +95,7 @@ export class PlanificacionEntregasPage {
 
     cliente.seleccionado = false;
     this.zoomLevel  = 10.5;
-    this.controlCamionesGuiasService.borrarCliente(cliente)
+    this.planificacionEntregasService.borrarCliente(cliente)
     this.createmapa();
 
 
@@ -160,20 +145,20 @@ export class PlanificacionEntregasPage {
 
 
 
-    for (let i = 0; i < this.controlCamionesGuiasService.clientes.length; i++) {
+    for (let i = 0; i < this.planificacionEntregasService.clientes.length; i++) {
 
-      this.controlCamionesGuiasService.clientes[i].marcador = new mapboxgl.Marker({
-        color: this.controlCamionesGuiasService.clientes[i].color,
+      this.planificacionEntregasService.clientes[i].marcador = new mapboxgl.Marker({
+        color: this.planificacionEntregasService.clientes[i].color,
         draggable: this.drag
       })
 
 
-      this.controlCamionesGuiasService.clientes[i].marcador.setLngLat([this.controlCamionesGuiasService.clientes[i].longitud, this.controlCamionesGuiasService.clientes[i].latitud])
+      this.planificacionEntregasService.clientes[i].marcador.setLngLat([this.planificacionEntregasService.clientes[i].longitud, this.planificacionEntregasService.clientes[i].latitud])
 
 
-      if (!this.controlCamionesGuiasService.clientes[i].seleccionado) {
+      if (!this.planificacionEntregasService.clientes[i].seleccionado) {
 
-        this.controlCamionesGuiasService.clientes[i].marcador.addTo(this.mapa)
+        this.planificacionEntregasService.clientes[i].marcador.addTo(this.mapa)
       }
 
 
@@ -187,7 +172,7 @@ export class PlanificacionEntregasPage {
     
 
         <ion-label class="ion-text-wrap">
-        ${this.controlCamionesGuiasService.clientes[i].id + ' ' + this.controlCamionesGuiasService.clientes[i].nombre}
+        ${this.planificacionEntregasService.clientes[i].id + ' ' + this.planificacionEntregasService.clientes[i].nombre}
         </ion-label>
 
 
@@ -207,15 +192,15 @@ export class PlanificacionEntregasPage {
       divElement.appendChild(assignBtn2);
       assignBtn.addEventListener('click', (e) => {
 
-        this.detalleClientes(this.controlCamionesGuiasService.clientes[i]);
+        this.detalleClientes(this.planificacionEntregasService.clientes[i]);
 
       });
       assignBtn2.addEventListener('click', (e) => {
 
-        this.controlCamionesGuiasService.clientes[i].seleccionado = true;
+        this.planificacionEntregasService.clientes[i].seleccionado = true;
         this.zoomLevel  = this.mapa.getZoom();
         this.createmapa();
-        this.irMarcador([this.controlCamionesGuiasService.clientes[i].longitud, this.controlCamionesGuiasService.clientes[i].latitud])
+        this.irMarcador([this.planificacionEntregasService.clientes[i].longitud, this.planificacionEntregasService.clientes[i].latitud])
 
       });
       const miniPopup = new mapboxgl.Popup({ offset: 32 }).setDOMContent(divElement);
@@ -233,9 +218,9 @@ export class PlanificacionEntregasPage {
 
       })
 
-      this.controlCamionesGuiasService.clientes[i].marcador.setPopup(miniPopup);
+      this.planificacionEntregasService.clientes[i].marcador.setPopup(miniPopup);
 
-      if (i == this.controlCamionesGuiasService.clientes.length - 1) {
+      if (i == this.planificacionEntregasService.clientes.length - 1) {
 
         this.mapa.on('load', () => {
 
@@ -271,25 +256,25 @@ export class PlanificacionEntregasPage {
 
   async cargarDatos() {
 
-    this.controlCamionesGuiasService.clientes = []
+    this.planificacionEntregasService.clientes = []
 
 
 
-    if (this.controlCamionesGuiasService.rutas.length == 0) {
+    if (this.planificacionEntregasService.rutas.length == 0) {
 
       this.createmapa();
 
       return;
 
     }
-    for (let r = 0; r < this.controlCamionesGuiasService.rutas.length; r++) {
+    for (let r = 0; r < this.planificacionEntregasService.rutas.length; r++) {
 
-      await this.planificacionEntregasService.syncRutaFacturas(this.controlCamionesGuiasService.rutas[r].RUTA, this.controlCamionesGuiasService.fecha).then(resp => {
+      await this.planificacionEntregasService.syncRutaFacturas(this.planificacionEntregasService.rutas[r].RUTA, this.planificacionEntregasService.fecha).then(resp => {
 
         for (let i = 0; i < resp.length; i++) {
 
 
-          this.controlCamionesGuiasService.importarFacturas(resp[i]);
+          this.planificacionEntregasService.importarFacturas(resp[i]);
 
 
         }
@@ -298,7 +283,7 @@ export class PlanificacionEntregasPage {
 
       });
 
-      if(r == this.controlCamionesGuiasService.rutas.length -1){
+      if(r == this.planificacionEntregasService.rutas.length -1){
 
         this.createmapa();
       }
@@ -323,10 +308,10 @@ export class PlanificacionEntregasPage {
 
     const { data } = await modal.onDidDismiss();
 
-if(this.controlCamionesGuiasService.cargarMapa){
+if(this.planificacionEntregasService.cargarMapa){
 
   this.createmapa();
-  this.controlCamionesGuiasService.cargarMapa = false;
+  this.planificacionEntregasService.cargarMapa = false;
 }
 
 if (data !== undefined) {
@@ -344,7 +329,7 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
     }
   }
   rutasRacioGroup($event) {
-    this.controlCamionesGuiasService.rutaZona = $event.detail.value;
+    this.planificacionEntregasService.rutaZona = $event.detail.value;
 
   }
 
@@ -352,35 +337,14 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
   async gestionGuias() {
 
 
-   
-
-    const modal = await this.modalCtrl.create({
-      component: GestionGuiasEntregaPage,
-      cssClass: 'full-screen-modal',
-      componentProps: {
-        clientes: this.controlCamionesGuiasService.clientes.sort((a, b) => a.id - b.id)
-      }
-    });
-    modal.present();
-
-
-    const { data } = await modal.onDidDismiss();
-
-if(  this.controlCamionesGuiasService.cargarMapa){
-
-  this.createmapa();
-  this.controlCamionesGuiasService.cargarMapa = false;
-}
-    if (data !== undefined) {
-      this.cargarDatos();
-    }
+ 
 
   }
   limpiarDatos() {
     this.lngLat = [-84.14123589305028, 9.982628288210657];
     this.zoomLevel = 6.5;
-    this.controlCamionesGuiasService.rutas = [];
-    this.controlCamionesGuiasService.limpiarDatos();
+    this.planificacionEntregasService.rutas = [];
+    this.planificacionEntregasService.limpiarDatos();
     this.createmapa();
   }
   async configuracionZonaRuta() {
@@ -398,18 +362,18 @@ if(  this.controlCamionesGuiasService.cargarMapa){
 
 
       for (let r = 0; r < data.rutas.length; r++) {
-        let i: any = this.controlCamionesGuiasService.rutas.findIndex(rutas => rutas.RUTA == data.rutas[r].RUTA);
+        let i: any = this.planificacionEntregasService.rutas.findIndex(rutas => rutas.RUTA == data.rutas[r].RUTA);
 
         if (i < 0) {
-          this.controlCamionesGuiasService.rutas.push(data.rutas[r])
+          this.planificacionEntregasService.rutas.push(data.rutas[r])
 
         }
         if (r == data.rutas.length - 1) {
 
           let ruta = data.rutas[0];
-          this.controlCamionesGuiasService.rutas = data.rutas;
-          console.log(this.controlCamionesGuiasService.rutas, 'rutas')
-          this.controlCamionesGuiasService.rutaZona = ruta;
+          this.planificacionEntregasService.rutas = data.rutas;
+          console.log(this.planificacionEntregasService.rutas, 'rutas')
+          this.planificacionEntregasService.rutaZona = ruta;
 
           this.calendarioModal();
         }
@@ -436,7 +400,7 @@ if(  this.controlCamionesGuiasService.cargarMapa){
 
     if (data !== undefined) {
       this.zoomLevel = 10;
-      this.controlCamionesGuiasService.fecha = format(new Date(data.fecha), 'yyy/MM/dd');
+      this.planificacionEntregasService.fecha = format(new Date(data.fecha), 'yyy/MM/dd');
       this.cargarDatos();
 
     }
@@ -446,7 +410,7 @@ if(  this.controlCamionesGuiasService.cargarMapa){
   consultarClientesSeleccionados() {
 
 
-    let total = this.controlCamionesGuiasService.clientes.filter(cliente => cliente.seleccionado == true);
+    let total = this.planificacionEntregasService.clientes.filter(cliente => cliente.seleccionado == true);
 
     return total.length;
 
@@ -471,7 +435,7 @@ if(  this.controlCamionesGuiasService.cargarMapa){
       cssClass: 'large-modal',
       componentProps: {
         factura: factura,
-        facturas: this.controlCamionesGuiasService.clientes
+        facturas: this.planificacionEntregasService.clientes
       },
     });
     modal.present();
@@ -479,7 +443,7 @@ if(  this.controlCamionesGuiasService.cargarMapa){
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-      this.controlCamionesGuiasService.clientes = this.controlCamionesGuiasService.facturasOriginal;
+      this.planificacionEntregasService.clientes = this.planificacionEntregasService.facturasOriginal;
     }
   }
 
@@ -510,9 +474,6 @@ if(  this.controlCamionesGuiasService.cargarMapa){
 
 
   }
-
-
-
 
 
 

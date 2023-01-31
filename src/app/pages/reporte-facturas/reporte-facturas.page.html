@@ -4,7 +4,7 @@
   <ion-icon color="dark" size="large" name="arrow-back-outline"></ion-icon>
     </ion-button>
     <ion-title>Reporte Guias
-    <ion-badge>{{guiasService.guiasArrayRuta.length}}</ion-badge></ion-title>
+    <ion-badge>{{guiasArrayRuta.length}}</ion-badge></ion-title>
 
   </ion-toolbar>
   <ion-toolbar>
@@ -17,7 +17,7 @@
 
   <ion-list>
     
-    <ion-item *ngFor="let guia of  guiasService.guiasArrayRuta  | filtro : textoBuscar:'idGuia'">
+    <ion-item *ngFor="let guia of  guiasArrayRuta  | filtro : textoBuscar:'idGuia'">
       <ion-label>{{guia.idGuia}}</ion-label>
       <ion-button (click)="retornarFacturas(guia)" size="large"     fill="clear"  slot="end">
         <ion-icon   size="large" name="print-outline"></ion-icon>

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { ClientesGuia } from '../../models/guia';
 import { PlanificacionEntregas } from '../../models/planificacionEntregas';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 
 @Component({
   selector: 'app-planificacion-entrega-cliente-detalle',
@@ -14,7 +14,7 @@ export class PlanificacionEntregaClienteDetallePage implements OnInit {
 todas:boolean = false;
   constructor(
 public modalCtrl: ModalController,
-public controlCamionesGuiasService: ControlCamionesGuiasService
+public planificacionEntregasService: PlanificacionEntregasService
 
 
 ) { }
@@ -36,7 +36,7 @@ this.modalCtrl.dismiss();
 
   todasLasFacturas(e){
     console.log('e', e)
-    this.controlCamionesGuiasService.cargarMapa = true;
+    this.planificacionEntregasService.cargarMapa = true;
     if(e.detail.checked){
 
       this.cliente.seleccionado = true;
@@ -55,7 +55,7 @@ this.modalCtrl.dismiss();
 
 
   agregarFactura(factura:PlanificacionEntregas, e){
-    this.controlCamionesGuiasService.cargarMapa = true;
+    this.planificacionEntregasService.cargarMapa = true;
     var statement = true;
 
  

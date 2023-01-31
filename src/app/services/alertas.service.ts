@@ -37,7 +37,6 @@ export class AlertasService {
     this.loadingCtrl.create({
       message: message ? message : 'Please wait...',
      // message:"conectando con ",
-      duration: 3000,
       spinner: 'circles',
       mode:'ios',
       translucent:true,

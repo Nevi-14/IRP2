@@ -6,7 +6,6 @@ import { ZonasService } from 'src/app/services/zonas.service';
 import { RutasService } from 'src/app/services/rutas.service';
 import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { RutaZonaService } from 'src/app/services/ruta-zona.service';
-import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
@@ -69,7 +68,6 @@ export class ServicioClientePage  {
       public clienteEspejo: ClienteEspejoService, 
       public popOverCrtl: PopoverController, 
       public rutaZona: RutaZonaService, 
-      public guiasService:ControlCamionesGuiasService, 
       public ruteroService: RuteroService, 
       public alertasService: AlertasService,
       public servicioClienteService: ServicioClienteService,

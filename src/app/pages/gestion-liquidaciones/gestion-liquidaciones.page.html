@@ -1,26 +1,22 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="ion-padding">
-<ion-title>Lista Guias  - {{fecha}} <ion-badge color="dark" mode="ios">{{rutero.length}}</ion-badge> </ion-title> 
-<ion-searchbar slot="end" style="margin-top: 0.5rem; width:60%"   mode="ios" placeholder="Buscar guia" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-
-<ion-buttons slot="end">
-  <ion-fab-button     size="small"     color="dark" (click)="calendarioModal()" >
-    <ion-icon   name="calendar"></ion-icon>
-  </ion-fab-button> 
-  
  
-  <ion-fab-button *ngIf="rutero.length > 0"     size="small"     color="dark" (click)="limpiarDatos()" >
-    <ion-icon   name="refresh"></ion-icon>
-  </ion-fab-button> 
-</ion-buttons>
-
+  <ion-toolbar>
+    <ion-title class="ion-text-capitalize" class="title"><strong>Lista Guias  - {{fecha}}</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{rutero.length}}</ion-badge></ion-title>
+    <ion-searchbar slot="end" style="width:40%;margin-top: 1rem;" mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-fab-button     size="small"     color="dark" (click)="calendarioModal()" >
+        <ion-icon   name="calendar"></ion-icon>
+      </ion-fab-button> 
+      
+     
+      <ion-fab-button slot="end" *ngIf="rutero.length > 0"     size="small"     color="dark" (click)="limpiarDatos()" >
+        <ion-icon   name="refresh"></ion-icon>
+      </ion-fab-button> 
+    </ion-buttons>
   </ion-toolbar>
 
-
-  
-
  
-</ion-header>
+  
+ 
 
 <ion-content class="ion-padding">
        

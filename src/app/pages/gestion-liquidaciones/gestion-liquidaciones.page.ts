@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { RuteroService } from 'src/app/services/rutero.service';
-import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
 import { ActualizaFacLinService } from '../../services/actualizaFacLin';
 import { AlertasService } from 'src/app/services/alertas.service';
-import { GuiasService } from 'src/app/services/guias.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { CalendarioPage } from '../calendario/calendario.page';
 import { format } from 'date-fns';
@@ -41,14 +39,12 @@ rutero: guias[]=[]
 textoBuscar = ''
 fecha =  format(new Date(), 'yyy/MM/dd');
   constructor(
-public controlCamionesGuiasService: ControlCamionesGuiasService,
 public planificacionEntregasService: PlanificacionEntregasService,
 public ruteroService: RuteroService,
 public modalCtrl: ModalController,
 public gestionCamionesService: GestionCamionesService,
 public actualizaFactLinService: ActualizaFacLinService,
 public alertasService: AlertasService,
-public guiasService: GuiasService,
 public alerCtrl: AlertController,
 public ClientesService: ClientesService
   ) { }
@@ -271,7 +267,7 @@ isIos() {
           handler: () => {
             this.guia.estado = 'FIN'
             this.alertasService.presentaLoading('Actualizando Guia')
-            this.guiasService.putGuias(this.guia).then(resp =>{
+            this.planificacionEntregasService.putGuiaToPromise(this.guia).then(resp =>{
              console.log(resp)
         this.alertasService.loadingDissmiss();
         this.limpiarDatos();

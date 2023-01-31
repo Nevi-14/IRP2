@@ -18,13 +18,6 @@ public usuariosService: UsuariosService
 
   canLoad(){
 
-
-
-// converts the string into a number !!(+localStorage.getItem('company'))
-const loadCompany = 0;
-
-    console.log(loadCompany)
-
     if(this.configuracionesService.company ||  this.usuariosService.usuario){
      
       return true
@@ -42,7 +35,7 @@ const loadCompany = 0;
  
 this.router.navigate(['/log-in'],{ queryParams: { returnto: url } });
  
-      return true;
+      return false;
     }
     
   }

@@ -2,10 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { ModalController } from '@ionic/angular';
 import { GuiaEntrega } from 'src/app/models/guiaEntrega';
-import { ControlCamionesGuiasService } from 'src/app/services/control-camiones-guias.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
-import { GuiasService } from '../../services/guias.service';
-
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 @Component({
   selector: 'app-lista-guias',
   templateUrl: './lista-guias.page.html',
@@ -18,10 +16,9 @@ export class ListaGuiasPage implements OnInit {
   textoBuscar = '';
   myValue = false;
   constructor(
-    public controlCamionesGuiasService: ControlCamionesGuiasService,
 public modalCtrl: ModalController,
-public guiasService: GuiasService,
-public camionesService: GestionCamionesService
+public camionesService: GestionCamionesService,
+public planificacionEntregaService: PlanificacionEntregasService
 
   ) { }
 
@@ -35,7 +32,7 @@ public camionesService: GestionCamionesService
     if(this.myValue){
 
       let camionesGuias = [];
-      this.guiasService.syncGuiasEnRutaPromise('INI').then(resp =>{
+      this.planificacionEntregaService.getGuiaEstadoToPromise('INI').then(resp =>{
 
         resp.forEach(camion =>{
           const datosCamion = this.camionesService.camiones.findIndex(camion => camion.idCamion == camion.idCamion )

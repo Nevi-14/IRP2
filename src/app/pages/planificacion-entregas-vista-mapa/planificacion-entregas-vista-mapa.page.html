@@ -1,0 +1,144 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title class="ion-text-capitalize" class="title"><strong>Planificación Entregas</strong>
+    <p style="display: flex;justify-content: left;align-items: center;">
+
+      <ion-button (click)="vistaRegular()"   expand="block" fill="outline" shape="round" color="dark">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+        Vista Regular  
+      </ion-button>
+
+  
+    </p>
+    
+    </ion-title>
+    <ion-label *ngIf="planificacionEntregasService.rutaZona" slot="end" class="ion-text-wrap"
+      style="margin-right: 1rem;">
+      <h2 class="ion-text-uppercase">Ruta <ion-badge *ngIf="planificacionEntregasService.rutaZona" color="primary"
+          mode="ios">{{planificacionEntregasService.rutaZona.RUTA}}</ion-badge></h2>
+
+    </ion-label>
+    <ion-label *ngIf="planificacionEntregasService.rutaZona" slot="end" class="ion-text-wrap"
+      style="margin-right: 1rem;">
+      <h2 class="ion-text-uppercase">Zona <ion-badge *ngIf="planificacionEntregasService.rutaZona" color="primary"
+          mode="ios">{{planificacionEntregasService.rutaZona.DESCRIPCION}}</ion-badge></h2>
+
+    </ion-label>
+ 
+
+ 
+
+<span slot="end" style="position:relative" *ngIf="planificacionEntregasService.rutaZona">
+  <ion-fab-button   color="dark"  (click)="presentPopover($event)"
+  class="ion-margin-right" size="small">
+  <ion-icon   name="bus"></ion-icon>
+</ion-fab-button>
+<ion-badge style="position: absolute;top:0;right:-0.7rem;" color="primary" mode="ios">{{planificacionEntregasService.rutas.length}}</ion-badge>
+
+
+</span>
+<ion-popover mode="ios"  #popover [isOpen]="isPopOverOpen" (didDismiss)="isPopOverOpen = false">
+  <ng-template>
+    <ion-content class="ion-padding">
+
+      <ion-list>
+        <ion-radio-group [value]="planificacionEntregasService.rutaZona"  (ionChange)="rutasRacioGroup($event)">
+        <ion-item *ngFor="let ruta of planificacionEntregasService.rutas">
+          <ion-radio slot="start" [value]="ruta"></ion-radio>
+          <ion-label class="ion-text-wrap">{{ruta.DESCRIPCION}}</ion-label>
+ 
+          <button (click)="removerRuta(ruta)"  size="small" color="clear">
+
+            <ion-icon  slot="end" color="danger" name="close-outline"></ion-icon>
+
+          </button>
+        </ion-item>
+
+      </ion-radio-group>
+      </ion-list>
+
+
+    </ion-content>
+  </ng-template>
+
+
+
+
+</ion-popover>
+
+
+      <ion-fab-button slot="end" color="dark" *ngIf="planificacionEntregasService.rutaZona" (click)="calendarioModal()"
+      class="ion-margin-right" size="small">
+      <ion-icon   name="calendar"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button slot="end" color="dark"   (click)="reporteFacturas()"
+    class="ion-margin-right" size="small">
+    <ion-icon   name="search"></ion-icon>
+  </ion-fab-button>
+ 
+
+    <ion-fab-button slot="end" color="dark" *ngIf="planificacionEntregasService.rutaZona" (click)="limpiarDatos()"
+      class="ion-margin-right" size="small">
+      <ion-icon name="refresh"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button slot="end" color="dark" (click)="configuracionZonaRuta()" class="ion-margin-right" size="small">
+      <ion-icon class="spin-element" name="settings"></ion-icon>
+    </ion-fab-button>
+ 
+  </ion-toolbar>
+
+</ion-header>
+
+
+
+
+
+<ion-content class="ion-padding">
+
+  <ion-grid  style="height: 100%;">
+  <ion-row    style="height: 100%;">
+  
+        
+  <ion-col size="12">
+  
+  <div  #mapa  [ngStyle]="{
+    'height': '100%',
+    'width': '100%'
+  }" class="mapa"></div>
+  
+  </ion-col>
+  
+  
+             
+  
+  
+  </ion-row>
+  </ion-grid>
+
+
+  <ion-accordion-group *ngIf="consultarClientesSeleccionados() > 0" style="  position: fixed;
+  top: 160px;
+  right: 130px;
+  width:250px;">
+    <ion-accordion value="first" >
+      <ion-item slot="header" color="light">
+        <ion-label>Clientes <ion-badge color="primary" mode="ios">{{consultarClientesSeleccionados()}}</ion-badge> </ion-label>
+      </ion-item>
+      <div class="ion-padding fixed" slot="content">
+
+        <span *ngFor="let cliente of planificacionEntregasService.clientes"> 
+          <ion-item   *ngIf="cliente.seleccionado" >
+            <ion-label button (click)="detalleClientes(cliente)" class="ion-text-wrap" style="font-size: 12px;">{{cliente.nombre}}</ion-label>
+            <ion-button (click)="borrarCliente(cliente)"   slot="end"  fill="clear"  >
+          <ion-icon   color="danger" slot="icon-only" size="large" name="close-outline"></ion-icon>
+            </ion-button>
+           </ion-item>
+        </span>
+
+      </div>
+    </ion-accordion>
+
+  </ion-accordion-group>
+
+  </ion-content>
+  

@@ -3,9 +3,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 
 import { PlanificacionEntregas } from '../../models/planificacionEntregas';
-import { ControlCamionesGuiasService } from '../../services/control-camiones-guias.service';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 import { ClientesGuia } from '../../models/guia';
+import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 interface cliente {
   id: number,
   idGuia:string,
@@ -67,15 +67,15 @@ export class ListaClientesGuiasPage implements OnInit {
 @Input() fecha;
 @Input()  idGuia
 @Input()  guia:Guias
-clientes:ClientesGuia[]=[];
+@Input() clientes:ClientesGuia[]=[];
 verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
 textoBuscar = '';
   constructor(
-    public controlCamionesGuiasService: ControlCamionesGuiasService,
     public modalCtrl:ModalController,
-    public alertCTrl: AlertController
+    public alertCTrl: AlertController,
+    public planificacionEntregsService: PlanificacionEntregasService
   ) { }
 
   ngOnInit() {
@@ -102,6 +102,20 @@ textoBuscar = '';
     this.modalCtrl.dismiss();
   }
  */
+ }
+
+ borrarFacturaGuia(cliente:ClientesGuia, factura, i){
+this.planificacionEntregsService.borrarFacturaGuia(factura);
+cliente.facturas.splice(i, 1);
+  if(cliente.facturas.length  == 0){
+  let c = this.clientes.findIndex(cli => cli.id == cliente.id);
+  if(c => 0){
+    this.clientes.splice(c, 1);
+    if(this.clientes.length == 0) this.cerrarModal();
+  }
+
+  };
+
  }
   eliminarCamionesFacturaIndividualAlert(factura){
    // this.controlCamionesGuiasService.eliminarCamionesFacturaIndividualAlert(factura)
@@ -182,7 +196,7 @@ textoBuscar = '';
     const { data } = await modal.onDidDismiss();
   
     if(data !== undefined){
-      if(this.controlCamionesGuiasService.listaGuias.length == 0){
+      if(this.planificacionEntregsService.listaGuias.length == 0){
         this.modalCtrl.dismiss(null,null,'detalle-guia');
       }
       console.log(data, 'data')

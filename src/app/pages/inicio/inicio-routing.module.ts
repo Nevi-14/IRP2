@@ -24,6 +24,23 @@ const routes: Routes = [
       {
         path: 'gestion-liquidaciones',
         loadChildren: () => import('../gestion-liquidaciones/gestion-liquidaciones.module').then( m => m.GestionLiquidacionesPageModule)
+      },
+      {
+        path: 'planificacion-entregas',
+        loadChildren: () => import('../planificacion-entregas/planificacion-entregas.module').then( m => m.PlanificacionEntregasPageModule)
+      },
+      {
+        path: 'planificacion-entregas-vista-mapa',
+        loadChildren: () => import('../planificacion-entregas-vista-mapa/planificacion-entregas-vista-mapa.module').then( m => m.PlanificacionEntregasVistaMapaPageModule)
+      },
+      
+      {
+        path: 'planificacion-rutas',
+        loadChildren: () => import('../planificacion-rutas/planificacion-rutas.module').then( m => m.PlanificacionRutasPageModule)
+      },
+      {
+        path: 'servicio-cliente',
+        loadChildren: () => import('../servicio-cliente/servicio-cliente.module').then( m => m.ServicioClientePageModule)
       }
     ]
   },

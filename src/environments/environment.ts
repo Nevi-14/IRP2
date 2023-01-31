@@ -4,10 +4,10 @@
 
 export const environment = {
   companyCode:"01",
-  production: false,
+  production: true,
   maxCharCodigoProd: 6,
   adminClave: '123456',
-  TestURL: 'test',
+  TestURL:'test',
   postCLienteEspejoURL:'ActualizaClientes/',
   provinciaID: '?IdP=',
   cantonID: '&IdC=',
@@ -32,7 +32,7 @@ export const environment = {
   actualizaFacturasURL:'ActFac',
   actualizaFacLinUrl:'ActualizaFacLin/',
   clientesGuias:'ClientesGuia/',
-  prdMode: false,
+  prdMode: true,
   facturasUrl:'Facturas/?id=',
   manifiestoURL:'Manifiesto/?ID=',
   clientesClierre:'ClientesCierre/?fecha='

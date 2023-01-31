@@ -82,11 +82,8 @@ export class InicioPage implements OnInit {
 setTitle(data){
 
  
-if(data.url == '/inicio/planificacion-rutas'){
-
-  return;
-}
 this.titulo = data.title;
+this.configuracionesService.menu = false;
 this.router.navigateByUrl(data.url)
 
 }

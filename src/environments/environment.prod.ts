@@ -3,7 +3,7 @@ export const environment = {
   production: true,
   maxCharCodigoProd: 6,
   adminClave: '123456',
-  TestURL: 'test',
+  TestURL:'test',
   postCLienteEspejoURL:'ActualizaClientes/',
   provinciaID: '?IdP=',
   cantonID: '&IdC=',
