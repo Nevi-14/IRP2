@@ -159,6 +159,7 @@ this.alertasService.presentaLoading('Cargando datos...')
       });
       if (r == this.planificacionEntregasService.rutas.length - 1) {
       this.alertasService.loadingDissmiss();
+      this.planificacionEntregasService.clientes.sort((a, b) => a.id - b.id)
         if (rutasSinFacturas.length > 0) {
           this.alertasService.message('IRP', 'Lo sentimos no se encontraron facturas para las siguientes rutas ' + rutasSinFacturas.toString());
         }
