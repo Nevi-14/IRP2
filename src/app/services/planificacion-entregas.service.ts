@@ -868,7 +868,7 @@ if(verificarGuias.length > 0){
 
  return
 }
-this.alertasService.presentaLoading('Guardando Datos..')
+
   for(let i = 0; i < this.listaGuias.length; i++){
   if(this.listaGuias[i].verificada){
    console.log(this.listaGuias[i],'exporting')
@@ -1005,7 +1005,7 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
                 console.log('completado')
 
                 if(this.complete == this.listaGuias.length){
-                  this.modalCtrl.dismiss(true);
+           
                   this.guiasPost();
                   this.limpiarDatos();
                   this.alertasService.loadingDissmiss();

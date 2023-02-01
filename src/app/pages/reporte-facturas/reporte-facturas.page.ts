@@ -29,7 +29,10 @@ export class ReporteFacturasPage implements OnInit {
   ) { }
 
   ngOnInit() {
-this.alertasService.presentaLoading('Cargando datos...')
+
+    if(!this.guias){
+  
+      this.alertasService.presentaLoading('Cargando datos...')
     this.planificacionEntregasService.getGuiaEstadoToPromise('RUTA').then(guias =>{
       this.alertasService.loadingDissmiss();
       this.guiasArrayRuta = guias
@@ -43,6 +46,11 @@ this.alertasService.presentaLoading('Cargando datos...')
       this.alertasService.loadingDissmiss();
     })
 
+    return
+
+    }
+
+    this.guiasArrayRuta = this.guias;
    
    
   }

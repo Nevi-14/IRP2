@@ -71,7 +71,7 @@ this.limpiarDatos();
 
 
   async configuracionZonaRuta() {
-
+    this.planificacionEntregasService.guiasGeneradas = [];
     const modal = await this.modalCtrl.create({
       component: ListaRutasZonasModalPage,
       cssClass: 'ui-modal',
