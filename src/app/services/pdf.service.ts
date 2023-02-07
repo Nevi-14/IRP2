@@ -104,7 +104,7 @@ if(i >=0){
  
         [  { text: 'Chofer',bold: true}, [
 
-          {text: 'Ayudante',bold: true}
+          {text: 'Placa',bold: true}
 
         ] ],
         [ choferCamion, guia.idCamion, ]
@@ -140,7 +140,8 @@ if(i >=0){
         
         )
       if( a == facturas.length -1){
-
+   
+    
         pdf.add(
           [
           header,
@@ -150,9 +151,15 @@ if(i >=0){
           chofer,
           [{ text: '', margin: [ 10, 10, 10, 10 ]}],
           body
+          
         ]
       
         );
+
+        pdf.footer(function(currentPage, pageCount) { 
+          return [{text: 'Página ' +' ' +currentPage.toString() + ' de ' + pageCount  +' ' + 'total facturas ' + facturas.length, alignment: 'center'}];  }           
+          );
+        
        return  pdf;
     
 
