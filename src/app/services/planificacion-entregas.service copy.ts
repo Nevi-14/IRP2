@@ -39,8 +39,8 @@ export class PlanificacionEntregasService {
  guiasGeneradas:GuiaEntrega[] = [];
  complete = 0;
  facturasNoAgregadas: ClientesGuia[] = [];
-continuarRutaOptima = true;
-horaFinalAnterior = null;
+
+
 
     // Variables proceso de ordenamiento MAURICIO HERRA
 
@@ -342,7 +342,10 @@ this.listaGuias.splice(guia, 1);
 }
  borrarFacturaGuia(factura:PlanificacionEntregas){
 
+
   let i = this.listaGuias.findIndex(guia => guia.idGuia == factura.ID_GUIA);
+  
+
   
   if(i >=0){
     this.listaGuias[i].verificada = false;
@@ -353,7 +356,6 @@ this.listaGuias.splice(guia, 1);
       this.listaGuias[i].facturas[facturaEliminar].ID_GUIA = null;
       this.listaGuias[i].facturas.splice(facturaEliminar, 1)
       this.listaGuias[i].totalFacturas -= 1;
-
     }
 
 
@@ -362,14 +364,10 @@ this.listaGuias.splice(guia, 1);
     let cliente = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == factura.CLIENTE_ORIGEN);
   let conteoFacturasCliente = this.listaGuias[i].facturas.filter(cliente => cliente.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
 
-  if(cliente >=0){
+  if(conteoFacturasCliente.length  == 0){
+    this.listaGuias[i].clientes.splice(cliente, 1)
     this.listaGuias[i].numClientes -= 1;
-    if(conteoFacturasCliente.length  == 0){
-      this.listaGuias[i].clientes.splice(cliente, 1)
-   
-    }
   }
- 
  
   if(this.listaGuias[i].numClientes == 0 && this.listaGuias[i].totalFacturas == 0){
     this.listaGuias.splice(i, 1);
@@ -690,18 +688,21 @@ sumarOrdenados(){
   return c - 1;
 }
 
-async agregarTiempo(guia:Guias){
-
+agregarTiempo(guia:Guias){
+ 
   let start = guia.camion.HoraInicio.substring(0,2)
   let end = guia.camion.HoraFin.substring(0,2)
+  let timeExceeded:boolean = false;
 
  for(let t =1; t < this.rutero.length; t++){
 
    let date = new Date(guia.fecha);
+
    let defaultStartTime = new Date(guia.fecha);
    let defaultEndTime =   new Date(guia.fecha);
 
    if(t == 1){
+
 
 defaultStartTime.setHours(Number(start))
 defaultStartTime.setMinutes(date.getMinutes() + Number(this.rutero[t].duracion.toFixed(0)));
@@ -713,93 +714,18 @@ defaultEndTime.setMinutes( defaultStartTime.getMinutes()+20);
      defaultStartTime.setMinutes(this.rutero[t-1].HoraFin.getMinutes() + Number(this.rutero[t].duracion.toFixed(0)));
      defaultEndTime.setHours(defaultStartTime.getHours())
      defaultEndTime.setMinutes(defaultStartTime.getMinutes()+20);  
+
    }
 
   
-   if(defaultStartTime.getHours() >=  Number(end) && this.continuarRutaOptima || defaultEndTime.getHours() >=  Number(end) && this.continuarRutaOptima){
-       this.alertasService.loadingDissmiss();
+   if(defaultStartTime.getHours() >=  Number(end) || defaultEndTime.getHours() >=  Number(end)){
+
        
-      const subHeader = 'Ups!. ha excedido el tiempo limite de la guia, ¿Como desea proceder?';
-
-      const alert = await this.alertCtrl.create({
-        header:'Alerta IRP',
-        subHeader:subHeader,
-        cssClass:'custom-alert',
-        mode:'ios',
-        buttons:[
-      
-          {
-            text:'Continuar con la guia',
-            cssClass: 'alert-button-dark',
-        handler:()=>{
-          this.continuarRutaOptima = false;
-      this.agregarTiempo(guia)
-      alert.dismiss();
-            }
-          },
-          {
-            text:'Crear nueva guia',
-            cssClass: 'alert-button-dark',
-            handler:()=>{
-              guia.verificada = true;
-              let remaining = this.rutero.slice(t);
-               guia.camion.HoraFin = this.horaFinalAnterior;
-         // Para revemover los que exceden de la guia this.rutero.splice(t);
-    
-         this.gestionCamionesService.syncCamionesToPromise().then(resp =>{
-           let facturas = [];
-           remaining.forEach(cliente =>{
-        
-             let facturasCliente = guia.facturas.filter((b) => { return b.CLIENTE_ORIGEN == Number(cliente.id);});
-             let index2 = guia.clientes.findIndex(c => c.id == Number(cliente.id));
-             if(index2 >=0){
-               guia.clientes.splice(index2, 1);
-               guia.numClientes -= 1;
-             };
-    
-             facturas.push(...facturasCliente);
-           })
-    
-           facturas.forEach((factura, index) =>{
-             let Ifactura =  guia.facturas.findIndex(f =>  f.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
-             if(Ifactura >=0){
-               guia.facturas.splice(Ifactura, 1)
-             }
-             //   factura.ID_GUIA = '';
-             guia.totalFacturas = guia.facturas.length
-             guia.camion.peso -= factura.TOTAL_PESO_NETO
-             guia.camion.pesoRestante =     guia.camion.peso - factura.TOTAL_PESO
-             guia.camion.volumen -= Number(factura.RUBRO1)
-             factura.factura = ''
-             factura.TIPO_DOCUMENTO = 'F';
-    
-    
-             if(index == facturas.length-1){
-               this.exportarRuteros()  
-             // this.facturaNoAgregadas(facturas)
-             this.horaFinalAnterior = null;
-             this.facturaNoAgregadas(facturas)
-             // this.alertasService.message('IRP', 'Ups!. ha excedido el tiempo limite, por favor cambiar la hora de incio y fin de la guia y vuelva a intentar de nuevo!')
-             }
-           })
-         })
-
-
-
-             
-            }
-          }
-        ]
-      })
-      
-      await alert.present();
-
-      //this.presentarAlertaFacturas(remaining,subHeader)
-        //  timeExceeded  = true;
+      let remaining = this.rutero.slice(t);
+          timeExceeded  = true;
      // Para revemover los que exceden de la guia this.rutero.splice(t);
 
-/**
- *      this.gestionCamionesService.syncCamionesToPromise().then(resp =>{
+     this.gestionCamionesService.syncCamionesToPromise().then(resp =>{
        let facturas = [];
        remaining.forEach(cliente =>{
     
@@ -836,9 +762,8 @@ defaultEndTime.setMinutes( defaultStartTime.getMinutes()+20);
          }
        })
      })
- */
-   return
-
+   
+     return
    }
 
    console.log('start', defaultStartTime);
@@ -853,11 +778,8 @@ defaultEndTime.setMinutes( defaultStartTime.getMinutes()+20);
      console.log('duration',this.rutero[t].duracion)
      console.log('Fecha',guia.fecha)
      console.log('mls',':00')
-guia.verificada = true;
-if(!this.continuarRutaOptima){
-  guia.camion.HoraFin = String(this.rutero[this.rutero.length -1].HoraFin.getHours()).padStart(2, '0') +':'+String(this.rutero[this.rutero.length -1].HoraFin.getMinutes()).padStart(2, '0')
-}
 
+     !timeExceeded ? guia.verificada = true : guia.verificada = false;
  
      this.exportarRuteros();
    }
@@ -924,7 +846,7 @@ async exportarRuteros(){
         this.listaGuias[index].distancia = distancia;
         this.listaGuias[index].duracion = duracion;
         this.listaGuias[index].clientes  = this.rutero.slice(1);
-      
+        let guia = this.listaGuias[index]
       }
     }
 

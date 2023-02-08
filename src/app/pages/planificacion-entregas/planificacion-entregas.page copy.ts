@@ -656,21 +656,16 @@ this.alertasService.loadingDissmiss();
     this.router.navigateByUrl('/inicio/planificacion-entregas-vista-mapa');
 
   }
-  verificarGuia(guia:Guias) {
+  verificarGuia(guia) {
 
     if (guia.camion.HoraInicio == null || guia.camion.HoraInicio == undefined || guia.camion.HoraFin == null || guia.camion.HoraFin == undefined) {
       this.alertasService.message('IRP', 'Es necesario especificar la hora de inicio y fin de nuestra guia!.')
       return
     }
-    guia.verificada = false;
-    this.planificacionEntregasService.continuarRutaOptima = true;
+
     this.planificacionEntregasService.llenarRutero(guia)
 
-    if(this.planificacionEntregasService.horaFinalAnterior){
-      guia.camion.HoraFin = this.planificacionEntregasService.horaFinalAnterior;
-    }else{
-      this.planificacionEntregasService.horaFinalAnterior = guia.camion.HoraFin;
-    }
+
   }
 
 
