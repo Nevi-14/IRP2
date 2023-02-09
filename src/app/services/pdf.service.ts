@@ -8,6 +8,7 @@ import { GuiaEntrega } from '../models/guiaEntrega';
 import { GestionCamionesService } from './gestion-camiones.service';
 import { Manifiesto } from '../models/manieifiesto';
 import { format } from 'date-fns';
+import { RutasService } from './rutas.service';
 
 
 
@@ -19,7 +20,8 @@ export class PdfService {
   constructor(
 
 public http: HttpClient,
-public camionesService:GestionCamionesService
+public camionesService:GestionCamionesService,
+public rutasService:RutasService
 
   ) { }
 
@@ -38,11 +40,21 @@ public camionesService:GestionCamionesService
 
   async rellenarpdf(titulo,image,guia:GuiaEntrega,facturas:Manifiesto[]){
 
+  await this.camionesService.syncCamionesToPromise().then(resp => {this.camionesService .camiones = resp});
+  await this.rutasService.syncRutasToPromise().then(resp => {this.rutasService.rutas = resp});
+
     let i =  this.camionesService.camiones.findIndex(camion => camion.idCamion == guia.idCamion);
+    let r =  this.rutasService.rutas.findIndex(ruta => ruta.RUTA == guia.ruta);
     let choferCamion = '';
+    let nombreRuta = '';
+
+
 
 if(i >=0){
   choferCamion =  this.camionesService.camiones[i].chofer
+}
+if(r >=0){
+  nombreRuta = this.rutasService.rutas[r].DESCRIPCION
 }
 
     const pdf = new PdfMakeWrapper();
@@ -90,7 +102,7 @@ if(i >=0){
 
 
         ] ],
-        [  guia.idGuia, format( new Date( guia.fecha),'yyy-MM-dd') ,guia.ruta ]
+        [  guia.idGuia, format( new Date( guia.fecha),'yyy-MM-dd') ,nombreRuta + `(${guia.ruta})` ]
       ]
     }
     }
@@ -155,9 +167,9 @@ if(i >=0){
         ]
       
         );
-
+// margin: [left, top, right, bottom]
         pdf.footer(function(currentPage, pageCount) { 
-          return [{text: 'Página ' +' ' +currentPage.toString() + ' de ' + pageCount  +' ' + 'total facturas ' + facturas.length, alignment: 'center'}];  }           
+          return [{text: 'Página ' +' ' +currentPage.toString() + ' de ' + pageCount  +' ' + 'total facturas ' + facturas.length, alignment: 'center', margin:[ 100, 0]}];  }           
           );
         
        return  pdf;

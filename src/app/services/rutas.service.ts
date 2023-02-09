@@ -60,7 +60,10 @@ export class RutasService {
 
     );
   }
-
+  syncRutasToPromise(){
+   
+    return this.getRutas().toPromise()
+  }
   async presentaLoading( mensaje: string ){
     this.loading = await this.loadingCtrl.create({
       message: mensaje,

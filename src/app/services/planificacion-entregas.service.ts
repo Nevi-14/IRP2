@@ -206,6 +206,7 @@ for(let i =0; i < camiones.length; i++){
       distancia: 0,
       duracion:0,
       zona: this.rutaZona.RUTA,
+      nombreRuta:this.rutaZona.DESCRIPCION,
       ruta: this.rutaZona.RUTA,
       fecha: this.fecha,
       numClientes: 0,
