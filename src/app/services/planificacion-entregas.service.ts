@@ -16,6 +16,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { GuiaEntrega } from '../models/guiaEntrega';
 import { Camiones } from '../models/camiones';
 import { FacturasNoAgregadasPage } from '../pages/facturas-no-agregadas/facturas-no-agregadas.page';
+import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
  
 @Injectable({
   providedIn: 'root'
@@ -235,10 +236,9 @@ return guia;
   }
 
 
- agregarFacturaGuiaNueva(idGuia,factura:PlanificacionEntregas){
+ async agregarFacturaGuiaNueva(idGuia,factura:PlanificacionEntregas){
 
 let i = this.listaGuias.findIndex(guia => guia.idGuia == idGuia);
-
 let cliente:Cliente =  {
   id: factura.CLIENTE_ORIGEN,
   idGuia:null,
@@ -248,12 +248,11 @@ let cliente:Cliente =  {
   distancia: 0,
   duracion:0,
   direccion:factura.DIRECCION_FACTURA,
-  bultosTotales:Number(factura.RUBRO1),
+  bultosTotales:0,
   orden_visita:0,
   HoraInicio:null,
   HoraFin:null
 }
-
 
 let noAgregado = {
   id: factura.CLIENTE_ORIGEN,
@@ -278,12 +277,9 @@ let noAgregado = {
 }
 
 if(i >=0){
-
-
-  this.listaGuias[i].verificada = false; 
+this.listaGuias[i].verificada = false; 
 cliente.idGuia = this.listaGuias[i].idGuia; 
 factura.ID_GUIA =  this.listaGuias[i].idGuia;;
-
 let c = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == factura.CLIENTE_ORIGEN);
 
 let capacidadCamion = this.listaGuias[i].camion.capacidad;
@@ -298,7 +294,6 @@ let pesoFactura = factura.TOTAL_PESO;
   let guia = this.listaGuias.findIndex(guia => guia.idGuia == idGuia );
 
   if(guia > 0){
-
    if(this.listaGuias[guia].clientes.length == 0 || this.listaGuias[guia].facturas.length == 0 ){
 this.listaGuias.splice(guia, 1);
 
@@ -308,22 +303,15 @@ this.listaGuias.splice(guia, 1);
      this.facturasNoAgregadas.push(noAgregado)
  } else if(consultarPesoAntesDeAgregarFactura < capacidadCamion){
   
-  if(c >= 0){
-    let f =this.listaGuias[i].facturas.findIndex(fact => fact.FACTURA == factura.FACTURA);
-    if(f < 0){
-      
-    
-      this.listaGuias[i].facturas.push(factura)
-      this.listaGuias[i].totalFacturas += 1;
-      this.listaGuias[i].camion.bultos += Number(factura.RUBRO1);
-      this.listaGuias[i].camion.peso  += factura.TOTAL_PESO;
-      this.listaGuias[i].camion.pesoRestante  =  this.listaGuias[i].camion.capacidad - this.listaGuias[i].camion.peso
-  
-    }
-  } else{
+  if(c  < 0 ){
 
     this.listaGuias[i].clientes.push(cliente)
     this.listaGuias[i].numClientes += 1;
+
+
+  }
+  let f = this.listaGuias[i].facturas.findIndex( fa => fa.FACTURA == factura.FACTURA);
+  if(f < 0){
     this.listaGuias[i].facturas.push(factura)
     this.listaGuias[i].totalFacturas += 1;
     this.listaGuias[i].camion.bultos += Number(factura.RUBRO1);
@@ -341,35 +329,35 @@ this.listaGuias.splice(guia, 1);
  
 
 }
- borrarFacturaGuia(factura:PlanificacionEntregas){
-
+ async borrarFacturaGuia(factura:PlanificacionEntregas){
+  console.log('borrando', factura)
+ 
   let i = this.listaGuias.findIndex(guia => guia.idGuia == factura.ID_GUIA);
   
   if(i >=0){
     this.listaGuias[i].verificada = false;
     this.listaGuias[i].camion.peso  -= factura.TOTAL_PESO;
+    this.listaGuias[i].camion.bultos  -= Number(factura.RUBRO1);
     this.listaGuias[i].camion.pesoRestante  += factura.TOTAL_PESO
     let facturaEliminar = this.listaGuias[i].facturas.findIndex(fact => fact.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN)
     if(facturaEliminar >=0){
       this.listaGuias[i].facturas[facturaEliminar].ID_GUIA = null;
       this.listaGuias[i].facturas.splice(facturaEliminar, 1)
       this.listaGuias[i].totalFacturas -= 1;
+      let cliente = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == factura.CLIENTE_ORIGEN);
+      let conteoFacturasCliente = this.listaGuias[i].facturas.filter(cliente => cliente.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
+    
+      if(cliente >=0){
+        if(conteoFacturasCliente.length  == 0){
+          this.listaGuias[i].clientes.splice(cliente, 1)
+          this.listaGuias[i].numClientes -= 1;
+       
+        }
+      }
 
     }
 
 
- 
-
-    let cliente = this.listaGuias[i].clientes.findIndex(clientes => clientes.id == factura.CLIENTE_ORIGEN);
-  let conteoFacturasCliente = this.listaGuias[i].facturas.filter(cliente => cliente.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
-
-  if(cliente >=0){
-    this.listaGuias[i].numClientes -= 1;
-    if(conteoFacturasCliente.length  == 0){
-      this.listaGuias[i].clientes.splice(cliente, 1)
-   
-    }
-  }
  
  
   if(this.listaGuias[i].numClientes == 0 && this.listaGuias[i].totalFacturas == 0){
@@ -381,7 +369,7 @@ this.listaGuias.splice(guia, 1);
   
 
    console.log(this.listaGuias)
-  
+  return true
   }
 
 
@@ -513,7 +501,7 @@ borrarCliente(cliente:ClientesGuia){
       }
   
     }
-async importarClientes(facturas:PlanificacionEntregas[]) {
+ async importarClientes(facturas:PlanificacionEntregas[]) {
   let data:ClientesGuia[] = [];
  
 
@@ -544,17 +532,25 @@ async importarClientes(facturas:PlanificacionEntregas[]) {
 let f = data[c].facturas.findIndex(fact => fact.FACTURA ==  factura.FACTURA)
 if (f < 0){
   data[c].facturas.push(factura)
-
-}
+} 
     }else{
-      data.push(cliente)
-      
+      data.push(cliente)   
     }
+
+cliente.totalBultos +=  Number(factura.RUBRO1)
+cliente.totalPeso +=  Number(factura.TOTAL_PESO)
+let frio = cliente.facturas.filter(f => f.FRIO_SECO == 'F').length
+let seco = cliente.facturas.filter(f => f.FRIO_SECO == 'N').length
+
+cliente.totalSeco = seco;
+cliente.totalFrio = frio;
+cliente.frio = frio > 0 ? true : false
+cliente.seco = seco > 0 ? true : false
+cliente.frioSeco = frio > 0 && seco > 0 ? true : false
+cliente.color = frio > 0 ? '#0000FF' : '#eed202'
 
 
   })
-
-  console.log('data', data)
 return data;
 
 }
@@ -734,6 +730,7 @@ defaultEndTime.setMinutes( defaultStartTime.getMinutes()+20);
             cssClass: 'alert-button-dark',
         handler:()=>{
           this.continuarRutaOptima = false;
+          this.horaFinalAnterior = guia.camion.HoraFin;
       this.agregarTiempo(guia)
       alert.dismiss();
             }
@@ -743,49 +740,31 @@ defaultEndTime.setMinutes( defaultStartTime.getMinutes()+20);
             cssClass: 'alert-button-dark',
             handler:()=>{
               guia.verificada = true;
-              let remaining = this.rutero.slice(t);
-               guia.camion.HoraFin = this.horaFinalAnterior;
+              let remaining = this.rutero.splice(t);
+              this.horaFinalAnterior = null;
          // Para revemover los que exceden de la guia this.rutero.splice(t);
-    
          this.gestionCamionesService.syncCamionesToPromise().then(resp =>{
            let facturas = [];
            remaining.forEach(cliente =>{
         
-             let facturasCliente = guia.facturas.filter((b) => { return b.CLIENTE_ORIGEN == Number(cliente.id);});
-             let index2 = guia.clientes.findIndex(c => c.id == Number(cliente.id));
-             if(index2 >=0){
-               guia.clientes.splice(index2, 1);
-               guia.numClientes -= 1;
-             };
-    
+             let facturasCliente = guia.facturas.filter((b) => { return b.CLIENTE_ORIGEN == Number(cliente.id);});  
              facturas.push(...facturasCliente);
+             
            })
     
            facturas.forEach((factura, index) =>{
-             let Ifactura =  guia.facturas.findIndex(f =>  f.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
-             if(Ifactura >=0){
-               guia.facturas.splice(Ifactura, 1)
-             }
-             //   factura.ID_GUIA = '';
-             guia.totalFacturas = guia.facturas.length
-             guia.camion.peso -= factura.TOTAL_PESO_NETO
-             guia.camion.pesoRestante =     guia.camion.peso - factura.TOTAL_PESO
-             guia.camion.volumen -= Number(factura.RUBRO1)
-             factura.factura = ''
-             factura.TIPO_DOCUMENTO = 'F';
-    
-    
+this.borrarFacturaGuia(factura)
              if(index == facturas.length-1){
                this.exportarRuteros()  
-             // this.facturaNoAgregadas(facturas)
-             this.horaFinalAnterior = null;
+          
              this.facturaNoAgregadas(facturas)
-             // this.alertasService.message('IRP', 'Ups!. ha excedido el tiempo limite, por favor cambiar la hora de incio y fin de la guia y vuelva a intentar de nuevo!')
              }
+
+         
            })
          })
 
-
+      
 
              
             }
@@ -794,52 +773,7 @@ defaultEndTime.setMinutes( defaultStartTime.getMinutes()+20);
       })
       
       await alert.present();
-
-      //this.presentarAlertaFacturas(remaining,subHeader)
-        //  timeExceeded  = true;
-     // Para revemover los que exceden de la guia this.rutero.splice(t);
-
-/**
- *      this.gestionCamionesService.syncCamionesToPromise().then(resp =>{
-       let facturas = [];
-       remaining.forEach(cliente =>{
-    
-         let facturasCliente = guia.facturas.filter((b) => { return b.CLIENTE_ORIGEN == Number(cliente.id);});
-         let index2 = guia.clientes.findIndex(c => c.id == Number(cliente.id));
-         if(index2 >=0){
-           guia.clientes.splice(index2, 1);
-           guia.numClientes -= 1;
-         };
-
-         facturas.push(...facturasCliente);
-       })
-
-       facturas.forEach((factura, index) =>{
-         let Ifactura =  guia.facturas.findIndex(f =>  f.CLIENTE_ORIGEN == factura.CLIENTE_ORIGEN);
-         if(Ifactura >=0){
-           guia.facturas.splice(Ifactura, 1)
-         }
-         //   factura.ID_GUIA = '';
-         guia.totalFacturas = guia.facturas.length
-         guia.camion.peso -= factura.TOTAL_PESO_NETO
-         guia.camion.pesoRestante =     guia.camion.peso - factura.TOTAL_PESO
-         guia.camion.volumen -= Number(factura.RUBRO1)
-         factura.factura = ''
-         factura.TIPO_DOCUMENTO = 'F';
-
- 
-         if(index == facturas.length-1){
-           this.exportarRuteros()  
-         // this.facturaNoAgregadas(facturas)
-         const subHeader = 'Ups!. ha excedido el tiempo limite de la guia, ¿Como desea proceder?';
-         this.presentarAlertaFacturas(facturas,subHeader);
-         // this.alertasService.message('IRP', 'Ups!. ha excedido el tiempo limite, por favor cambiar la hora de incio y fin de la guia y vuelva a intentar de nuevo!')
-         }
-       })
-     })
- */
-   return
-
+      return
    }
 
    console.log('start', defaultStartTime);
@@ -1015,7 +949,7 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
 
   for(let i =0; i <  facturas.length; i++){
 
-    const actualizarFactura = {
+    const actualizarFactura:ActualizaFacturaGuia = {
       numFactura:   facturas[i].FACTURA,
       tipoDocumento:facturas[i].TIPO_DOCUMENTO,
       Fecha:        new Date(),
@@ -1024,6 +958,7 @@ completePost(guia: Guias, facturas:PlanificacionEntregas[], ruteros:Cliente[]){
       U_LATITUD:    facturas[i].LATITUD,
       U_LONGITUD:   facturas[i].LONGITUD,
       Fecha_Entrega: facturas[i].FECHA_ENTREGA,
+      U_ESTA_LIQUIDADO: 'N',
 
     }
     postFacturas.push(actualizarFactura) 

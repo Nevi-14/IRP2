@@ -34,7 +34,6 @@ export class PlanificacionEntregasPage {
   textFactura: string = '';
   clientes: ClientesGuia[];
 
-
   constructor(
     public modalCtrl: ModalController,
     public rutas: RutasService,
@@ -69,7 +68,9 @@ this.limpiarDatos();
 
 
 
-
+  todasLasFacturas(){
+    alert('helo')
+  }
   async configuracionZonaRuta() {
     this.planificacionEntregasService.guiasGeneradas = [];
     const modal = await this.modalCtrl.create({
@@ -99,13 +100,21 @@ this.limpiarDatos();
   }
 
 
-
+calendario(){
+  this.planificacionEntregasService.clientes  = [];
+  this.planificacionEntregasService.facturasOriginal = [];
+  this.planificacionEntregasService.facturasNoAgregadas = [];
+  this.planificacionEntregasService.listaGuias  = [];
+  this.calendarioModal();
+}
 
 
 
 
 
   async calendarioModal() {
+
+   
 
     this.isOpen = true;
     const modal = await this.modalCtrl.create({
@@ -279,7 +288,6 @@ this.alertasService.presentaLoading('Cargando datos...')
       component: ControlFacturasPage,
       cssClass: 'large-modal',
       componentProps: {
-        factura: cliente.facturas[0],
         facturas: [cliente]
       },
     });
@@ -519,8 +527,7 @@ this.alertasService.loadingDissmiss();
       component: ControlFacturasPage,
       cssClass: 'large-modal',
       componentProps: {
-        factura: factura,
-        facturas: this.planificacionEntregasService.clientes
+        facturas: await this.planificacionEntregasService.importarClientes([factura])
       },
     });
     modal.present();
@@ -668,8 +675,6 @@ this.alertasService.loadingDissmiss();
 
     if(this.planificacionEntregasService.horaFinalAnterior){
       guia.camion.HoraFin = this.planificacionEntregasService.horaFinalAnterior;
-    }else{
-      this.planificacionEntregasService.horaFinalAnterior = guia.camion.HoraFin;
     }
   }
 

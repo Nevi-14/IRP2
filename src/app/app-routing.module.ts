@@ -131,6 +131,12 @@ const routes: Routes = [
   {
     path: 'busqueda-mapa',
     loadChildren: () => import('./pages/busqueda-mapa/busqueda-mapa.module').then(m => m.BusquedaMapaPageModule)},
+  {
+    path: 'gestion-liquidaciones-facturas',
+    loadChildren: () => import('./pages/gestion-liquidaciones-facturas/gestion-liquidaciones-facturas.module').then( m => m.GestionLiquidacionesFacturasPageModule)
+  },
+
+
 
 
 ];

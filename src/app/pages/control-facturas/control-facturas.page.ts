@@ -1,15 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ClientesGuia, Guias } from 'src/app/models/guia';
-import { GuiaEntrega } from 'src/app/models/guiaEntrega';
-import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
- 
 import { RuteroService } from 'src/app/services/rutero.service';
 import { FacturasNoAgregadasPage } from '../facturas-no-agregadas/facturas-no-agregadas.page';
-
 
 @Component({
   selector: 'app-control-facturas',
@@ -17,23 +13,41 @@ import { FacturasNoAgregadasPage } from '../facturas-no-agregadas/facturas-no-ag
   styleUrls: ['./control-facturas.page.scss'],
 })
 export class ControlFacturasPage implements OnInit {
-  @Input() factura:PlanificacionEntregas =   null
   @Input() facturas:ClientesGuia[] = []
-  facturasOriginal:ClientesGuia[] = [];
-  facturasArray:ClientesGuia[] = [];
+  facturasAnteriores:ClientesGuia[] = []
   guias:Guias[]=[];
- titulo = null;
-  listaGuias:boolean = true;
-  listaOtrasGuias:boolean = false;
-  listaGuiasExistentes:boolean = false;
+  guiasAnteriores:Guias[]=[];
+  nuevaGuia:boolean = true;
+  guiaExistente:boolean = false;
   incluirFacturas:boolean = false;
-
-  guiaEnRuta:GuiaEntrega;
-  camiones  = [];
-  verdadero = true;
-  falso = false;
+  totalFacturas:number=0;
+  pesoTotal:number=0;
+  bultosTotales:number=0;
+  totalFrio:number=0;
+  totalSeco:number=0;
   textoBuscar = '';
-
+  sliderOpts = {
+    initialSlide: 0,
+    zoom: false,
+    slidesPerView: 2,
+    spaceBetween: 10,
+    centeredSlides: false,
+    autoplay:false,
+    speed: 500,
+    // Responsive breakpoints
+  breakpoints: {
+    // when window width is >= 320px
+    320: {
+      slidesPerView: 1,
+      spaceBetween: 20
+    },
+    // when window width is >= 640px
+    940: {
+      slidesPerView: 2,
+      spaceBetween: 40
+    }
+  },
+  };
   constructor(
     public alertCTrl: AlertController,
     public gestionCamiones: GestionCamionesService,
@@ -46,241 +60,138 @@ export class ControlFacturasPage implements OnInit {
 
   ngOnInit() {
 
-    console.log(' this.facturas',  this.facturas)
-
-    if(this.factura == null){
-      this.listaGuias = true;
-      this.incluirFacturas = true;
-this.facturasArray = this.facturas
-
-this.guiasNuevas();
-console.log('this.facturas', this.facturas)
-      return
-    }
- this.titulo = this.factura.NOMBRE_CLIENTE;
-
- console.log(this.facturas, 'facturas')
-    if(this.planificacionEntregasService.listaGuias.length > 0 ){
-      this.listaGuiasExistentes = true
-      this.listaGuias = false;
-      this.listaOtrasGuias = false;
-
-this.guiasExistentes();
-
+    if(this.planificacionEntregasService.listaGuias.length > 0){
+      this.nuevaGuia = false;
+      this.guiaExistente = true;
+      this.guias = this.planificacionEntregasService.listaGuias
     }else{
-      this.listaGuias = true;
-      this.listaGuiasExistentes = false
-      this.listaOtrasGuias = false;
       this.guiasNuevas();
     }
+this.calcularTotales();
   }
-
-
 
   onSearchChange(event){
     this.textoBuscar = event.detail.value;
     
    }
 
-  agregarTodasFacturas($event){
-    this.facturasArray = [];
-console.log($event)
- let next  = $event.detail.checked;
- this.incluirFacturas = next;
- if(next){
-  this.incluirFacturas = true;
-  console.log(' this.facturas', this.facturas)
-  this.facturasArray = this.facturas
-
- } 
-
-  
-  }
-
-  async facturasNoAgregadas(){
-  
-    const modal = await this.modalCtrl.create({
-      component: FacturasNoAgregadasPage,
-      cssClass: 'ui-modal',
-      componentProps:{
-        facturas:this.planificacionEntregasService.facturasNoAgregadas
-      }
-    });
-    modal.present();
-  
- 
-  
-  
-      
-  }
-  async retornarCamion(camion:any){
-
-
-    this.planificacionEntregasService.facturasNoAgregadas = [];
-    let id = this.planificacionEntregasService.generarIDGuia();
-
- if(this.listaGuias){
-  camion.idGuia = id;
-  camion.camion.numeroGuia =id;
-  if(this.incluirFacturas){
-  
-    this.planificacionEntregasService.listaGuias.push(camion);
-
-    for(let i =0; i< this.facturasArray.length; i++){
-
-      let facturasArray2 = this.facturasArray[i].facturas;
-      facturasArray2.forEach(factu  => {
-
-        if(factu.ID_GUIA   ){
-
-          this.planificacionEntregasService.borrarFacturaGuia(factu)
-        }
-  if(factu.LONGITUD && factu.LATITUD){
-
-    this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
-  }
-     
-      })
-
-
-      if(i == this.facturasArray.length -1 ){
-      this.modalCtrl.dismiss()
-      console.log('this.planificacionEntregasService.facturasNoAgregadas', this.planificacionEntregasService.facturasNoAgregadas)
-   //   this.planificacionEntregasService.actualizarValores();
-   
-setTimeout(()=>{
-  //this.alertasService.presentaLoading('Validando datos..')
-  if(this.planificacionEntregasService.facturasNoAgregadas.length >0){
-    this.facturasNoAgregadas()
-    console.log('this.planificacionEntregasService.facturasNoAgregadas', this.planificacionEntregasService.facturasNoAgregadas)
-//this.alertasService.loadingDissmiss();
-
-    return
-  }
-}, 3000)
-       
-  
-      }
-    }
-   
-  return
-    }
-
-
-
-    
-   
-    if(this.factura.ID_GUIA){
-
-      console.log('deleting', this.factura.ID_GUIA)
-      this.planificacionEntregasService.borrarFacturaGuia(this.factura)
-    }
- 
-
-  this.planificacionEntregasService.listaGuias.push(camion);
- 
-  if(this.factura.LONGITUD && this.factura.LATITUD){
-
-    this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
-  }
-
-  this.planificacionEntregasService.actualizarTotales();
-  
-  this.cerrarModal();
-  return
- }
-
-
- if(this.listaGuiasExistentes){
-  
-if(this.incluirFacturas){
-
-    for(let i =0; i< this.facturasArray.length; i++){
-
-      let facturasArray2 = this.facturasArray[i].facturas;
-      facturasArray2.forEach(factu  => {
-
-        if(factu.ID_GUIA   && factu.ID_GUIA != camion.idGuia ){
- 
-          this.planificacionEntregasService.borrarFacturaGuia(factu)
-        }
-
-        if(factu.LONGITUD && factu.LATITUD){
-          this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, factu);
-        }
-      
-      })
-
-      if(i == this.facturasArray.length -1 ){
-      this.modalCtrl.dismiss()
-      this.planificacionEntregasService.actualizarTotales();
-
-        if(this.planificacionEntregasService.facturasNoAgregadas.length >0){
-  
- this.facturasNoAgregadas()
-  
- 
-        }
-  
-      }
-    }
-   
-    return
- 
-    }
-    
-    this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, this.factura);
-    this.planificacionEntregasService.actualizarTotales();
-    
-  this.cerrarModal();
-}
- 
-
-  
-  }
-
-  cerrarModal(){
-    this.modalCtrl.dismiss();
-  }
 
   toggleGuiasNuevas($event){
-    if($event.detail.checked){
-      this.listaGuias = true;
-      this.listaGuiasExistentes = false
-     this.listaOtrasGuias = false;
+    let next  = $event.detail.checked;
+    this.guiaExistente = !next;
+    if(next){
       this.guiasNuevas();
+    }else{
+      this.guias = this.planificacionEntregasService.listaGuias
     }
   }
-  toggleGuiasExistentes($event){ 
 
-
-    if($event.detail.checked){
-     this.listaGuias = false;
-     this.listaOtrasGuias = false;
-     this.listaGuiasExistentes = true
-    this.guiasExistentes();
-    }
+toggleGuiasExistentes($event){
+  let next  = $event.detail.checked;
+  this.nuevaGuia = !next;
+  if(next){
+    this.guias = this.planificacionEntregasService.listaGuias
+  }else{
+    this.guiasNuevas();
   }
+
+}
+
+calcularTotales(){
+  this.totalFacturas = 0;
+  this.pesoTotal  = 0;
+  this.bultosTotales = 0;
+  this.totalFrio  = 0;
+  this.totalSeco = 0;
+  this.facturas.forEach(factura =>{
+  this.totalFacturas += factura.facturas.length;
+  this.pesoTotal += factura.totalPeso;
+  this.bultosTotales +=  factura.totalBultos;
+  this.totalFrio +=   factura.totalFrio;
+  this.totalSeco +=   factura.totalSeco;
+  })
+}
+
+
+
+agregarTodasFacturas($event){
+ let next  = $event.detail.checked;
+ if(next){
+  this.facturasAnteriores = this.facturas
+this.facturas = this.planificacionEntregasService.clientes;
+ }else{
+  this.facturas = this.facturasAnteriores
+  this.facturasAnteriores = []
+ } 
+ this.calcularTotales();
+  
+  }
+
+  guiasNuevas(){
+    this.gestionCamionesService.syncCamionesToPromise().then(camiones =>{
+      this.planificacionEntregasService.generarPreListaGuias(camiones).then(lista =>{
+        this.guias = lista;
+        console.log('lista guias', lista)
+      })
+
+    });   
+}
+cerrarModal() {
+  this.modalCtrl.dismiss();
+}
+
+
+async retornarCamion(camion:any){
+
+ console.log('camion', camion)
+this.planificacionEntregasService.facturasNoAgregadas = [];
+let  id = this.planificacionEntregasService.generarIDGuia();
+if(this.nuevaGuia){ 
+ camion.idGuia = id;
+  this.planificacionEntregasService.listaGuias.push(camion);
  
+}
+  for(let i =0; i< this.facturas.length; i++){
+    this.facturas[i].facturas.forEach(factura  => {
+     if(camion.idGuia != factura.ID_GUIA){
+      this.planificacionEntregasService.borrarFacturaGuia(factura) 
+     }
+      if(factura.LONGITUD && factura.LATITUD){
+          this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, factura);    
+      }  
+    })
 
+    if(i == this.facturas.length -1 ){
+    this.modalCtrl.dismiss()
+    this.planificacionEntregasService.actualizarTotales();
 
-      guiasNuevas(){
-        this.gestionCamionesService.syncCamionesToPromise().then(camiones =>{
-      
-          this.planificacionEntregasService.generarPreListaGuias(camiones).then(lista =>{
-    
-            this.guias = lista;
-            console.log('lista nueva', lista)
-          })
-    
-        });
-
+      if(this.planificacionEntregasService.facturasNoAgregadas.length >0){
+        this.facturasNoAgregadas()
       }
+    }
+  }  
+ this.planificacionEntregasService.actualizarTotales();
+this.cerrarModal();
+}
 
-      guiasExistentes(){
-        this.guias = this.planificacionEntregasService.listaGuias;
-        console.log('guias existentes', this.planificacionEntregasService.listaGuias)
-      }
 
-     
+
+
+async facturasNoAgregadas(){
+  const modal = await this.modalCtrl.create({
+    component: FacturasNoAgregadasPage,
+    cssClass: 'ui-modal',
+    componentProps:{
+      facturas:this.planificacionEntregasService.facturasNoAgregadas
+    }
+  });
+  modal.present();   
+}
+
+
+
+
+
+
+
 }

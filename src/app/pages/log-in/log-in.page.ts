@@ -34,7 +34,7 @@ export class LogInPage implements OnInit {
     if(!this.configuracionesService.company ||  !this.usuariosService.usuario)
     {
  
-      this.configuracionesService.cargarDatos();
+    
 
     }
 

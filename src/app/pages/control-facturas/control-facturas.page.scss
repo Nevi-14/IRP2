@@ -1,28 +1,8 @@
-ion-grid{
-    ion-row{
-  
-      ion-col{
-        .ion-text-wrap{
-  text-transform: capitalize;
-          font-size: 14px;
-        }
-      }
-    }
-   }
-  
-   .fixed-content {        //comments showing what I replaced.
-    overflow: auto;
-    height: 50vh;
-  }  ion-card {
-    font-size: 12px;
-  
-    overflow: unset !important;
-    min-height:250px;
-  }
-  .fixed-content-facturas {        //comments showing what I replaced.
-    overflow: auto;
-    height: 60vh;
-  } .header-row{
+.preview-slides {
+  background: #e6e6e6;
+ height: 100%;
+}
+.header-row{
   padding: 0;
   margin: 0;
     font-weight: bold;
@@ -32,6 +12,12 @@ ion-grid{
   }
   
   .data-row{
-    font-size: 12px;
+    font-size: 14px;
     border-bottom: 1px solid black;
+    ion-icon{
+    font-size: 1.5rem;
+    }
   }
+ion-content{
+//--background: #e6e6e6;
+}

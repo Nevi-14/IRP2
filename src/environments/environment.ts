@@ -34,6 +34,7 @@ export const environment = {
   clientesGuias:'ClientesGuia/',
   prdMode: true,
   facturasUrl:'Facturas/?id=',
+  facturasGuiasUrl:'FactGuias?id=',
   manifiestoURL:'Manifiesto/?ID=',
   clientesClierre:'ClientesCierre/?fecha='
 };

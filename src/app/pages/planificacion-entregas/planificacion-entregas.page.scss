@@ -1,11 +1,33 @@
-::-Webkit-scrollbar{
+::-Webkit-scrollbar {
 
- // display: none;
+    // display: none;
 }
 
-ion-card{
-    z-index: 1!important;
+ion-card {
+    z-index: 1 !important;
 }
-div{
-    z-index: 1000!important;
+
+div {
+    z-index: 1000 !important;
+}
+
+.grid {
+    height: 100%;
+}
+
+.row {
+    height: 100%;
+    overflow: auto;
+}
+
+.img-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url("/assets/home/background.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
 }

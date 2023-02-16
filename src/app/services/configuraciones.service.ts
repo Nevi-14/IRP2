@@ -46,10 +46,9 @@ export class ConfiguracionesService {
   constructor() { }
 
 
-async cargarDatos(){
-
+ cargarDatos(){
+  console.log('helllo')
 const i = this.companies.findIndex( c => c.companyCode == environment.companyCode);
-
      if(i >=0){
 
       this.company = {
@@ -97,7 +96,6 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
 
      }
 
-     return true;
 
   }
 

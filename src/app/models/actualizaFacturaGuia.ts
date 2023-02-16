@@ -7,7 +7,8 @@ export class ActualizaFacturaGuia{
         public U_LATITUD: number,
         public U_LONGITUD: number,
         public Fecha_Entrega: Date,
-        public  Fecha:Date
+        public  Fecha:Date,
+        public U_ESTA_LIQUIDADO:string
 
     ){}
 }

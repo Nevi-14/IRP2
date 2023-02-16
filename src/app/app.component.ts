@@ -21,7 +21,7 @@ this.checkMapBoxKey();
    }
 
    checkMapBoxKey(){
-
+    this.configuracionesService.cargarDatos();
  if(!this.configuracionesService.company){
 setTimeout(()=>{
 

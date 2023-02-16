@@ -50,7 +50,7 @@ url = null;
 
   }
 
-  private postActualizarFactura (facturas){
+  private postActualizarFactura (facturas:ActualizaFacturaGuia[]){
     const URL = this.getURL( environment.actualizaFacturasURL);
     const options = {
       headers: {
@@ -64,17 +64,29 @@ url = null;
  
   }
   
+  private putActualizarFactura (facturas:ActualizaFacturaGuia[]){
+    const URL = this.getURL( environment.actualizaFacturasURL);
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      }
+    };
 
+    return this.http.put( URL, JSON.stringify(facturas) , options );
+ 
+  }
+  
 
-  insertarFacturas(facturas){
-
+  insertarFacturas(facturas:ActualizaFacturaGuia[]){
     console.log(facturas, 'facturas post')
-
     return  this.postActualizarFactura(facturas).toPromise();
-
-    // this.actualizaFacturasArray = [];
   }
 
-
+  actualizarFacturas(facturas:ActualizaFacturaGuia[]){
+    console.log(facturas, 'facturas put')
+    return  this.putActualizarFactura(facturas).toPromise();
+  }
 
 }

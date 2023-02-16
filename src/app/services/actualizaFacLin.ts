@@ -51,6 +51,7 @@ getURLAPI(api){
 private getActualizaFacLin(id){
 
   const URL = this.getURL(environment.actualizaFacLinUrl,id);
+  console.log('URL', URL)
   return this.http.get<FacturaLineasEspejo[]>(URL);
 
 }

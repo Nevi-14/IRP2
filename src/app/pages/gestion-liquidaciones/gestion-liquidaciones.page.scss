@@ -3,3 +3,23 @@ ion-avatar{
     width: 4rem;
     margin-right: 1rem;
 }
+.grid {
+    height: 100%;
+}
+
+.row {
+    height: 100%;
+    overflow: auto;
+}
+
+.img-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url("/assets/home/liquidaciones.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+}

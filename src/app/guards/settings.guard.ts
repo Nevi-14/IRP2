@@ -17,15 +17,15 @@ public usuariosService: UsuariosService
   ){}
 
   canLoad(){
-
+  
     if(this.configuracionesService.company ||  this.usuariosService.usuario){
      
       return true
     }else{
-  
+   
       const navigation = this.router.getCurrentNavigation();
 
-      let url = '/';
+      let url = null;
 
       if(navigation){
         url = navigation.extractedUrl.toString();

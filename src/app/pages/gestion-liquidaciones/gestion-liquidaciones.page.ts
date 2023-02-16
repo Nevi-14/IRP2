@@ -2,24 +2,37 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
-import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
 import { ActualizaFacLinService } from '../../services/actualizaFacLin';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { CalendarioPage } from '../calendario/calendario.page';
 import { format } from 'date-fns';
 import { ClientesService } from '../../services/clientes.service';
-import { ClientesCierre } from '../../models/clientesCierre';
 import { RuteroClientesPage } from '../rutero-clientes/rutero-clientes.page';
 import { Rutero } from 'src/app/models/Rutero';
 import { Guias } from '../../models/guia';
- 
+import { GestionLiquidacionesFacturasPage } from '../gestion-liquidaciones-facturas/gestion-liquidaciones-facturas.page';
+ interface guia {
+   idGuia: string,
+   fecha: any,
+   zona: string,
+   ruta: string,
+   idCamion: string,
+   numClientes: number,
+   peso: number,
+   estado: string,
+   HH: string,
+   volumen: number
+
+ }
 interface guias {
 idGuia:string,
 totalClientes:number,
 chofer:string,
 placa:string,
-estado:{
+rutero:Rutero,
+guia:guia,
+estados:{
   color:string,
   completada:number,
   incompleta:number,
@@ -131,12 +144,46 @@ console.log('guis', guias)
        guiasClientes[c].clientes.push(clienteGuia) 
      }else{
 
+      let guia:guia = {
+        idGuia: guias[i].idGuia,
+        fecha: guias[i].fecha,
+        zona: guias[i].zona,
+        ruta: guias[i].ruta,
+        idCamion:guias[i].idCamion,
+        numClientes: guias[i].numClientes,
+        peso: guias[i].peso,
+        estado: guias[i].estado,
+        HH: guias[i].HH,
+        volumen: guias[i].volumen
+     
+      }
+      let rutero:Rutero = {
+         idGuia: guias[i].idGuia,
+         idCliente: guias[i].idCliente,
+         nombre: guias[i].nombre,
+         direccion:guias[i].direccion,
+         latitud:guias[i].latitud,
+         longitud:guias[i].longitud,
+         checkin: guias[i].checkin,
+         latitud_check: guias[i].latitud_check,
+         longitud_check: guias[i].longitud_Check,
+         observaciones:guias[i].observaciones,
+         estado: guias[i].estado,
+         bultos: guias[i].bultos,
+         checkout:guias[i].checkout,
+         orden_Visita: guias[i].orden_Visita,
+         Duracion: guias[i].Duracion,
+         distancia: guias[i].distancia
+      }
+
        guiasClientes.push({
         totalClientes:null,
          idGuia:guias[i].idGuia,
          chofer:guias[i].chofer,
          placa:guias[i].idCamion,
-         estado:{
+         guia:guia,
+         rutero:rutero,
+         estados:{
           color:null,
           completada:0,
           incompleta:0,
@@ -171,11 +218,11 @@ color = 'success'
 }
 
 guia.totalClientes = totalClientes;
-guia.estado.color = color;
-guia.estado.completada = totalEstadoE;
-guia.estado.incompleta = totalEstadoI;
-guia.estado.pendiente = totalEstadoP;
-guia.estado.reprogramado = totalEstadoR;
+guia.estados.color = color;
+guia.estados.completada = totalEstadoE;
+guia.estados.incompleta = totalEstadoI;
+guia.estados.pendiente = totalEstadoP;
+guia.estados.reprogramado = totalEstadoR;
 console.log(
 
   'totalClientes' , totalClientes, 'totalEstadoE',totalEstadoE,'totalEstadoI',totalEstadoI,'totalEstadoP',totalEstadoP,'totalEstadoR',totalEstadoR
@@ -234,7 +281,31 @@ console.log('rutero', rutero)
 
   }
 }
-
+async guiaFacturas(rutero:Guias) {
+  console.log('rutero', rutero)
+    const modal = await this.modalCtrl.create({
+      component: GestionLiquidacionesFacturasPage,
+      cssClass: 'ui-modal',
+      backdropDismiss: false,
+      swipeToClose: false,
+      mode: 'ios',
+      componentProps:{
+        guia:rutero,
+        fecha: new Date(this.fecha).toISOString()
+      }
+    });
+    modal.present();
+  
+  
+  
+    const { data } = await modal.onDidDismiss();
+  
+    if (data !== undefined) {
+  
+  
+  
+    }
+  }
 
 
 

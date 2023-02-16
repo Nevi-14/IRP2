@@ -82,8 +82,9 @@ console.log(JSON.stringify(rutero), 'JSON.stringify(rutero)')
 
 }
 
-private putActualizarRutero(rutero){
-  const URL = this.getURL(environment.ruteroURL);
+private putActualizarRutero(rutero:Rutero){
+  let URL = this.getURL(environment.ruteroURL);
+  URL = URL+'?ID='+ rutero.idGuia +'&idCliente='+rutero.idCliente;
  
    const options = {
      headers: {
@@ -96,6 +97,11 @@ private putActualizarRutero(rutero){
  console.log(JSON.stringify(rutero), 'JSON.stringify(rutero) put rutero')
    return this.http.put(URL,JSON.stringify(rutero), options);
  
+ }
+
+ putRuteroToPromise(rutero){
+
+  return  this.putActualizarRutero(rutero).toPromise();
  }
 putRutero(){
 

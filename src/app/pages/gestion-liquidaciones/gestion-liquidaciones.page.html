@@ -1,6 +1,6 @@
  
   <ion-toolbar>
-    <ion-title class="ion-text-capitalize" class="title"><strong>Lista Guias  - {{fecha}}</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{rutero.length}}</ion-badge></ion-title>
+    <ion-title class="ion-text-capitalize" class="title"><strong>Gestión Liquidaciones  - {{fecha}}</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{rutero.length}}</ion-badge></ion-title>
     <ion-searchbar slot="end" style="width:40%;margin-top: 1rem;" mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
     <ion-buttons slot="end">
       <ion-fab-button     size="small"     color="dark" (click)="calendarioModal()" >
@@ -24,7 +24,11 @@
 <span *ngFor="let guia of rutero | filtro:textoBuscar:'idGuia'" style="padding: 0.5rem;">
   <ion-list color="light" lines="full" >
     <ion-list-header>
-      <ion-label><strong>Detalle Guia</strong> <ion-badge [color]="guia.estado.color" mode="ios">{{ guia.idGuia }}</ion-badge>  <span style="margin-left: 0.5rem;"><strong> CHOFER {{guia.chofer}}</strong></span> Placa <ion-badge color="primary" mode="ios">{{guia.placa}}</ion-badge></ion-label>
+      <ion-label><strong>Detalle Guia</strong> <ion-badge [color]="guia.estados.color" mode="ios">{{ guia.idGuia }}</ion-badge>  <span style="margin-left: 0.5rem;"><strong> CHOFER {{guia.chofer}}</strong></span> Placa <ion-badge color="primary" mode="ios">{{guia.placa}}</ion-badge></ion-label>
+      
+      <ion-fab-button (click)="guiaFacturas(guia)" color="dark" size="small">
+        <ion-icon name="receipt-outline"></ion-icon>
+      </ion-fab-button>
     <ion-fab-button (click)="ruteroClientes(guia)" color="dark" size="small">
       <ion-icon name="eye-outline"></ion-icon>
     </ion-fab-button>
@@ -36,22 +40,22 @@
   
     <ion-item>
       <ion-label slot="start">Ordenes Completadas</ion-label>
-      <ion-label   slot="start" color="{{guia.estado.completada ==  guia.totalClientes ? 'success' : ''}}">{{guia.estado.completada}}</ion-label>
+      <ion-label   slot="start" color="{{guia.estados.completada ==  guia.totalClientes ? 'success' : ''}}">{{guia.estados.completada}}</ion-label>
     </ion-item>
   
     <ion-item>
       <ion-label slot="start">Ordenes Incompletas</ion-label>
-      <ion-label  slot="start" color="{{guia.estado.incompleta > 0 ? 'warning' : ''}}">{{guia.estado.incompleta}}</ion-label>
+      <ion-label  slot="start" color="{{guia.estados.incompleta > 0 ? 'warning' : ''}}">{{guia.estados.incompleta}}</ion-label>
     </ion-item>
   
     <ion-item>
       <ion-label slot="start">Ordenes Pendientes</ion-label>
-      <ion-label  slot="start" color="{{guia.estado.pendiente > 0 ? 'danger' : ''}}">{{guia.estado.pendiente}}</ion-label>
+      <ion-label  slot="start" color="{{guia.estados.pendiente > 0 ? 'danger' : ''}}">{{guia.estados.pendiente}}</ion-label>
     </ion-item>
   
     <ion-item>
       <ion-label slot="start">Ordenes Reprogramadas</ion-label>
-      <ion-label slot="start" color="{{guia.estado.reprogramado > 0 ? 'danger' : ''}}">{{guia.estado.reprogramado}}</ion-label>
+      <ion-label slot="start" color="{{guia.estados.reprogramado > 0 ? 'danger' : ''}}">{{guia.estados.reprogramado}}</ion-label>
     </ion-item>
   </ion-list>
   <ion-item lines="none" class="ion-text-center" >
@@ -63,17 +67,15 @@
 
    
 
-  <ion-grid *ngIf="rutero.length == 0" style="display: flex;justify-content: center;align-items: center; height: 100%;">
-    <ion-row style="display: flex;justify-content: center;align-items: center; height: 100%;">
-      <ion-col size="5" style="margin: 0 auto;">
-       
-          <img height="250"  class="slide-image" src="../assets/png/return.svg" />
-     <ion-card-content>
-     <h2 class="ion-text-uppercase"> Gestiona la Liquidacion  de guias  presionando el boton de configuracion en la parte superior derecha</h2>
-     </ion-card-content>
-          
-    
-      </ion-col>
+ 
+    <ion-grid  *ngIf="rutero.length == 0"  class="grid">
+      <ion-row class="row">
+  
+        <ion-col class="ion-text-center"
+          class="img-container">
+  
+        </ion-col>
+ 
     </ion-row>
   </ion-grid>
 

@@ -3,7 +3,8 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { PlanificacionEntregas } from '../models/planificacionEntregas';
 import { ConfiguracionesService } from './configuraciones.service';
-
+import { facturasGuia } from '../models/facturas';
+ 
 @Injectable({
   providedIn: 'root'
 })
@@ -31,16 +32,25 @@ export class FacturasService {
   }
   private getFactura(id){
     let URL = this.getURL( environment.facturasUrl,id);
-
+    
     return this.http.get<PlanificacionEntregas[]>( URL );
 
   }
+  private getFacGuias(id){
+    let URL = this.getURL( environment.facturasGuiasUrl,id);
 
+    return this.http.get<facturasGuia[]>( URL );
+
+  }
   syncGetFacturaToPromise(id){
 
   return  this.getFactura(id).toPromise();
 
   }
+  syncGetFacturasGuiasToPromise(id){
 
+    return  this.getFacGuias(id).toPromise();
+  
+    }
 
 }
