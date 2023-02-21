@@ -66,12 +66,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/lista-rutas-zonas-modal/lista-rutas-zonas-modal.module').then(m => m.ListaRutasZonasModalPageModule)
   },
   {
-    path: 'gestor-errores-modal',
-    loadChildren: () => import('./pages/gestor-errores-modal/gestor-errores-modal.module').then(m => m.GestorErroresModalPageModule)
-  },
-  {
-    path: 'reporte-facturas',
-    loadChildren: () => import('./pages/reporte-facturas/reporte-facturas.module').then(m => m.ReporteFacturasPageModule)
+    path: 'reporte-guias',
+    loadChildren: () => import('./pages/reporte-guias/reporte-guias.module').then(m => m.ReporteGuiasPageModule)
   },
   {
     path: 'planificacion-entrega-clientes',

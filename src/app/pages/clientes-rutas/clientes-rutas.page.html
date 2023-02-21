@@ -71,7 +71,7 @@
         <ion-row class="fixed-content-facturas">
           <ion-col size="12">
 
-            <ion-row class="data-row"  *ngFor="let facturaDetalle of actualizaFacLinService.facturaLineasEspejoArray | filtro:textoBuscar:'numFactura'">
+            <ion-row class="data-row"  *ngFor="let facturaDetalle of facturas | filtro:textoBuscar:'numFactura'">
               <ion-col size="4">
         <ion-label>
           

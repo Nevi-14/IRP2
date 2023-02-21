@@ -1,14 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
-import { CantonesService } from '../../services/cantones.service';
-import { BusquedaClienteService } from 'src/app/services/busqueda-cliente.service';
-import { DistritosService } from 'src/app/services/distritos.service';
-import { ProvinciasService } from 'src/app/services/provincias.service';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { AlertasService } from '../../services/alertas.service';
 import { PlanificacionRutasService } from '../../services/planificacion-rutas.service';
+import { ProvinciasCantonesDistritosService } from 'src/app/services/provincias-cantones-distritos.service';
 
 
 @Component({
@@ -34,13 +30,9 @@ export class MenuClientesPage implements OnInit {
     public modalCtrl: ModalController, 
     public alertCtrl: AlertController, 
     public clientesService: ClientesService, 
-    public provincias: ProvinciasService, 
-    public cantones: CantonesService, 
-    public distritos: DistritosService, 
-    public clienteEspejo: ClienteEspejoService, 
-    public busquedaClienteService: BusquedaClienteService,
     public aslertasService: AlertasService,
-    public planificacionRutasService: PlanificacionRutasService
+    public planificacionRutasService: PlanificacionRutasService,
+    public provinciasCantonesDistritosService:ProvinciasCantonesDistritosService
     
     
     
@@ -51,7 +43,7 @@ export class MenuClientesPage implements OnInit {
 
 if(this.busqueda){
 
-this.busquedaClienteService.generateArrayFromComaSeparated(event.detail.value)
+this.clientesService.getClienteID(event.detail.value)
    
 this.borrarFiltro();
 this.clientesArray = [];
@@ -77,8 +69,8 @@ this.isChecked = !this.isChecked;
     this.clientesService.isChecked = false;
     this.clientesService.clientes = [];
     this.clientesService.clientesArray = [];
-    if(this.provincias.provincias.length == 0){
-      this.provincias.syncProvincias()
+    if(this.provinciasCantonesDistritosService.provincias.length == 0){
+      this.provinciasCantonesDistritosService.syncProvincias()
       }
     }
   
@@ -148,7 +140,7 @@ this.modalCtrl.dismiss({
 
   async onSubmit(){
 this.aslertasService.presentaLoading('Cargando lista de clientes')
- this.planificacionRutasService.syncClientes(
+ this.clientesService.syncClientes(
 
    this.filtroClientes.Cod_Provincia,
    this.filtroClientes.Cod_Canton,
@@ -174,10 +166,10 @@ this.isChecked = !this.isChecked;
   onChange($event , provincia, canton, distrito){
     if(provincia){
       this.filtroClientes.Cod_Provincia = $event.target.value;
-      this.cantones.syncCantones(this.filtroClientes.Cod_Provincia);
+      this.provinciasCantonesDistritosService.syncCantones(this.filtroClientes.Cod_Provincia);
     }else if(canton){
       this.filtroClientes.Cod_Canton = $event.target.value;
-      this.distritos.syncDistritos(this.filtroClientes.Cod_Provincia, this.filtroClientes.Cod_Canton);
+      this.provinciasCantonesDistritosService.syncDistritos(this.filtroClientes.Cod_Provincia, this.filtroClientes.Cod_Canton);
     }else{
       this.filtroClientes.Cod_Distrito = $event.target.value;
     }

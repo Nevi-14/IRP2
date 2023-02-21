@@ -1,14 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Guias } from '../../models/guia';
 
-import { Manifiesto } from '../../models/manieifiesto';
-import { FacturaLineasEspejo } from '../../models/FacturaLineasEspejo';
 import { AlertasService } from '../../services/alertas.service';
 import { FacturasService } from 'src/app/services/facturas.service';
 import { facturasGuia } from 'src/app/models/facturas';
 import { ActualizaFacturaGuia } from 'src/app/models/actualizaFacturaGuia';
-import { ActualizarFacturasService } from 'src/app/services/actualizar-facturas.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 import { RuteroService } from 'src/app/services/rutero.service';
 interface manifiestoModel{
@@ -35,7 +31,6 @@ credito:number =0;
 montoTotal:number=0;
   constructor(
 public modalCtrl:ModalController,
-public actualizaFacturaService:ActualizarFacturasService,
 public alertasService:AlertasService,
 public facturasService:FacturasService,
 public planificacionEntregasService:PlanificacionEntregasService,
@@ -242,13 +237,14 @@ const actualizaFact:ActualizaFacturaGuia[] = [];
    */
 
         console.log('this.guia', this.guia.guia)
-        this.actualizaFacturaService.insertarFacturas(actualizaFact).then(facturas =>{
+        this.facturasService.insertarFacturas(actualizaFact).then(facturas =>{
           console.log('facturas', facturas)
     
           this.planificacionEntregasService.putGuiaToPromise(this.guia.guia).then(guia =>{
             console.log('guia updated', guia)
             this.alertasService.loadingDissmiss();
             this.alertasService.message('IRP','Liquidación completada.')
+            this.modalCtrl.dismiss(true)
           }, error =>{
             this.alertasService.loadingDissmiss();
             this.alertasService.message('IRP','Lo sentimos algo salio mal., verifica que la gui no haya sido liquidada..')

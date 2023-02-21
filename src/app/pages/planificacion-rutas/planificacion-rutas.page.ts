@@ -1,12 +1,8 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import {  ModalController, PopoverController } from '@ionic/angular';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import * as  mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
 import { Clientes } from 'src/app/models/clientes';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
@@ -15,6 +11,7 @@ import { BusquedaMapaPage } from '../busqueda-mapa/busqueda-mapa.page';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { ConfiguracionesService } from '../../services/configuraciones.service';
+import { ClientesService } from 'src/app/services/clientes.service';
 
 
 interface Maradores2{
@@ -78,15 +75,11 @@ features = [];
 
 
       public modalCtrl: ModalController, 
- 
-      public zonas: ZonasService, 
-      public rutas: RutasService, 
-      public clienteEspejo: ClienteEspejoService , 
       public popOverCrtl: PopoverController, 
-      public rutaZonas: RutaZonaService,
       public alertasService: AlertasService,
       public planificacionRutasService:PlanificacionRutasService,
-      public configuracionesService: ConfiguracionesService
+      public configuracionesService: ConfiguracionesService,
+      public clientesService: ClientesService
        
        
        ) {
@@ -215,7 +208,7 @@ async configuracionZonaRuta(){
        this.planificacionRutasService.rutaZona = this.rutaZona;
       this.alertasService.presentaLoading('Generando lista de clientes')
 
-      this.clienteEspejo.syncRutas( this.rutaZona.RUTA).then((result) => {
+      this.clientesService.syncGetRutaCliente( this.rutaZona.RUTA).then((result) => {
 
 
 
@@ -308,17 +301,7 @@ async menuCliente(){
       }
     
 
-
-//============================================================================= 
-// MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
-//=============================================================================
-
-
-gestionErrores(){
-
-  this.alertasService.gestorErroresModal(this.planificacionRutasService.errorArray);
-}
-
+ 
 
 
 //============================================================================= 
@@ -691,7 +674,7 @@ postArray.push(rutasClientes)
   if(i == this.planificacionRutasService.marcadores.length -1){
 
     console.log(postArray,'postArray')
-    this.clienteEspejo.insertarClienteEspejo(postArray);
+    this.clientesService.syncPostClienteEspejo(postArray);
     this.limpiarDatos();
   }
 }

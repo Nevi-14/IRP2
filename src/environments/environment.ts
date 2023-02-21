@@ -29,6 +29,9 @@ export const environment = {
   camionesURL:'Camiones',
   guiasURL:'Guias',
   guiasURLEstadoParam:'?estado=',
+  guiasRangoFecha:'guias-estado-rango-fecha?estado=',
+  fechaInicio:'&fechaInicio=',
+  fechaFin:'&fechaFin=',
   actualizaFacturasURL:'ActFac',
   actualizaFacLinUrl:'ActualizaFacLin/',
   clientesGuias:'ClientesGuia/',
@@ -36,6 +39,7 @@ export const environment = {
   facturasUrl:'Facturas/?id=',
   facturasGuiasUrl:'FactGuias?id=',
   manifiestoURL:'Manifiesto/?ID=',
+  consultarGuia:'consultar-guia/?id=',
   clientesClierre:'ClientesCierre/?fecha='
 };
 

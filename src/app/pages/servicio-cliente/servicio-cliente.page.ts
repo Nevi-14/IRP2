@@ -2,13 +2,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ModalController, AlertController, PopoverController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
-import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { AlertasService } from 'src/app/services/alertas.service';
-import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
 import { GuiasRutaPage } from '../guias-ruta/guias-ruta.page';
 import { ServicioClienteMarcadoresPage } from '../servicio-cliente-marcadores/servicio-cliente-marcadores.page';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
@@ -63,14 +58,9 @@ export class ServicioClientePage  {
       public modalCtrl: ModalController, 
       public alertCtrl: AlertController, 
       public clientes: ClientesService, 
-      public zonas: ZonasService, 
-      public rutas: RutasService, 
-      public clienteEspejo: ClienteEspejoService, 
       public popOverCrtl: PopoverController, 
-      public rutaZona: RutaZonaService, 
       public ruteroService: RuteroService, 
       public alertasService: AlertasService,
-      public servicioClienteService: ServicioClienteService,
       public configuracionesService: ConfiguracionesService
       
       ) {
@@ -80,17 +70,7 @@ export class ServicioClientePage  {
 
 
 
-
-//============================================================================= 
-// MODAL GESTION DE ERRORES DE CADA UNO DE LOS PROCESOS INVOLUCRADOS 
-//=============================================================================
-
-
-gestionErrores(){
-
-  this.alertasService.gestorErroresModal(this.servicioClienteService.errorArray);
-}
-
+ 
 
   
    ionViewWillEnter(){
@@ -448,17 +428,7 @@ this.alertasService.presentaLoading('Cargando lista de clientes')
   
           }), error =>{
             this.alertasService.loadingDissmiss();
-            let errorObject = {
-              titulo: 'this.ruteroService.syncRutero(data.idGuia)',
-              fecha: new Date(),
-              metodo:'GET',
-              url:error.url,
-              message:error.message,
-              rutaError:'app/services/rutero-service.ts',
-              json:JSON.stringify(this.clientesArray)
-            }
-            this.servicioClienteService.errorArray.push(errorObject)
-            
+ 
             console.log(error)
            
           }
@@ -656,16 +626,7 @@ refrescarVista(){
 
   }), error =>{
     this.alertasService.loadingDissmiss();
-    let errorObject = {
-      titulo: 'this.ruteroService.syncRutero(data.idGuia)',
-      fecha: new Date(),
-      metodo:'GET',
-      url:error.url,
-      message:error.message,
-      rutaError:'app/services/rutero-service.ts',
-      json:JSON.stringify(this.clientesArray)
-    }
-    this.servicioClienteService.errorArray.push(errorObject)
+
     
     console.log(error)
    

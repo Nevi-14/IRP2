@@ -10,11 +10,9 @@ import { ConfiguracionesService } from './configuraciones.service';
   providedIn: 'root'
 })
 export class RuteroService {
-
 ruteroArray: Rutero[]=[];
 rutertoPostArray: Rutero[]=[];
 rutertoPostArrayExistentes: Rutero[]=[];
-url = null;
 
   constructor(
     public http: HttpClient,
@@ -23,52 +21,39 @@ url = null;
     public configuracionesService: ConfiguracionesService
   ) { }
 
-
   limpiarDatos(){
-
     this.ruteroArray =[];
     this.rutertoPostArray =[];
     this.rutertoPostArrayExistentes =[];
-    this.url = null;
 
   }
 
-  getURL( api: string,identifier?: string ){
-
-    let id = identifier ? identifier : "";
+  getAPI( api: string ){
     let test: string = ''
-   
-    if ( !environment.prdMode ) {
-      test = environment.TestURL;
-    }
-  
-    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api + id;
+    if ( !environment.prdMode ) test = environment.TestURL; 
+    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api;
     this.configuracionesService.api = URL;
-  
     return URL;
-  
   }
 
-private getRutero(id){
-
-  const URL = this.getURL(environment.ruteroURL,id);
-
-  console.log(URL, 'GET rutero  URL')
+private getRutero(idGuia:string){
+  // GET
+  // https://apiirp.di-apps.co.cr/api/Rutero/20230123CT01V3683
+  let URL = this.getAPI(environment.ruteroURL);
+      URL = URL + idGuia;
+      console.log('getRutero',URL);
+      console.log('idGuia',idGuia);
   return this.http.get<Rutero[]>(URL);
+}
+syncRutero(idGuia:string){
+return this.getRutero(idGuia).toPromise();
 
 }
 
-syncRutero(id){
-return this.getRutero(id).toPromise();
-
-}
-
-
-
-
-private postRutero(rutero){
- const URL = this.getURL(environment.ruteroURL);
-
+private postRutero(rutero:Rutero[]){
+  // POST
+  // https://apiirp.di-apps.co.cr/api/Rutero/20230123CT01V3683
+ const URL = this.getAPI(environment.ruteroURL);
   const options = {
     headers: {
       'Content-Type':'application/json',
@@ -76,16 +61,16 @@ private postRutero(rutero){
       'Access-Control-Allow-Origin':'*'
     }
   };
-  console.log(URL,'URL')
-console.log(JSON.stringify(rutero), 'JSON.stringify(rutero)')
+  console.log('rutero:Rutero[]',rutero);
+  console.log('postRutero',URL);
   return this.http.post(URL,JSON.stringify(rutero), options);
-
 }
 
 private putActualizarRutero(rutero:Rutero){
-  let URL = this.getURL(environment.ruteroURL);
+  // PUT
+  // https://apiirp.di-apps.co.cr/api/Rutero/?ID=20230123CT01V3683&idCliente=1482
+  let URL = this.getAPI(environment.ruteroURL);
   URL = URL+'?ID='+ rutero.idGuia +'&idCliente='+rutero.idCliente;
- 
    const options = {
      headers: {
        'Content-Type':'application/json',
@@ -93,41 +78,23 @@ private putActualizarRutero(rutero:Rutero){
        'Access-Control-Allow-Origin':'*'
      }
    };
-   console.log(URL,'URL')
- console.log(JSON.stringify(rutero), 'JSON.stringify(rutero) put rutero')
+   console.log('rutero:Rutero',rutero);
+   console.log('putActualizarRutero',URL);
    return this.http.put(URL,JSON.stringify(rutero), options);
- 
  }
 
  putRuteroToPromise(rutero){
-
   return  this.putActualizarRutero(rutero).toPromise();
  }
+
 putRutero(){
-
-
   this.rutertoPostArrayExistentes.forEach(rutero =>{
     this.putActualizarRutero(rutero).subscribe(
-
       resp => {
-      
-        console.log(resp, ' rutero actualizado');
-    
-       
+        console.log(resp, ' rutero actualizado'); 
       }, error =>{
         this.alertasService.loadingDissmiss();
-        let errorObject = {
-          titulo: 'actualizar rutero',
-          fecha: new Date(),
-          metodo:'PUT',
-          url:error.url,
-          message:error.message,
-          rutaError:'app/services/rutero-service.ts',
-          json:JSON.stringify(this.rutertoPostArray)
-        }
-        this.planificacionEntregasService.errorArray.push(errorObject)
-        console.log(error, ' error actualizando rutero', rutero)
-       
+        console.log('error',error)      
       }
     )
 
@@ -137,19 +104,10 @@ putRutero(){
 }
 
 
-
-insertarPostRutero(postRutero){
-  console.log(postRutero, 'postRutero')
-
-
- //this.alertasService.presentaLoading('Insertando Rutero')
-if(postRutero.length > 0){
-  
- return this.postRutero(postRutero).toPromise();
+insertarPostRutero(rutero:Rutero[]){
+if(rutero.length > 0){ 
+ return this.postRutero(rutero).toPromise();
 }
-
 }
-
-
 
 }

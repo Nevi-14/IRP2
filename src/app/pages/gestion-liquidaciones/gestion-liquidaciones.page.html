@@ -26,13 +26,16 @@
     <ion-list-header>
       <ion-label><strong>Detalle Guia</strong> <ion-badge [color]="guia.estados.color" mode="ios">{{ guia.idGuia }}</ion-badge>  <span style="margin-left: 0.5rem;"><strong> CHOFER {{guia.chofer}}</strong></span> Placa <ion-badge color="primary" mode="ios">{{guia.placa}}</ion-badge></ion-label>
       
-      <ion-fab-button (click)="guiaFacturas(guia)" color="dark" size="small">
+      <ion-fab-button *ngIf="guia.rutero.estado_guia !='FIN'" (click)="guiaFacturas(guia)" color="dark" size="small">
         <ion-icon name="receipt-outline"></ion-icon>
       </ion-fab-button>
     <ion-fab-button (click)="ruteroClientes(guia)" color="dark" size="small">
       <ion-icon name="eye-outline"></ion-icon>
     </ion-fab-button>
     </ion-list-header>
+    <ion-item>
+      <ion-label>Estado <ion-badge style="margin-left: 0.5rem;" color="warning" mode="ios">{{guia.rutero.estado_guia}}</ion-badge></ion-label>
+    </ion-item>
     <ion-item>
       <ion-label slot="start">Total Clientes</ion-label>
       <ion-label  slot="start">{{guia.totalClientes}}</ion-label>

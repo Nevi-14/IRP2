@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ClientesGuia, Guias } from 'src/app/models/guia';
 import { AlertasService } from 'src/app/services/alertas.service';
+import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { RuteroService } from 'src/app/services/rutero.service';
@@ -55,7 +56,8 @@ export class ControlFacturasPage implements OnInit {
     public ruteroService: RuteroService,
     public alertasService: AlertasService,
     public gestionCamionesService: GestionCamionesService,
-    public planificacionEntregasService: PlanificacionEntregasService
+    public planificacionEntregasService: PlanificacionEntregasService,
+    public configuracionesService: ConfiguracionesService
   ) { }
 
   ngOnInit() {
@@ -156,9 +158,7 @@ if(this.nuevaGuia){
      if(camion.idGuia != factura.ID_GUIA){
       this.planificacionEntregasService.borrarFacturaGuia(factura) 
      }
-      if(factura.LONGITUD && factura.LATITUD){
-          this.planificacionEntregasService.agregarFacturaGuiaNueva(camion.idGuia, factura);    
-      }  
+     this.planificacionEntregasService.agregarFacturaGuia(camion.idGuia, factura);    
     })
 
     if(i == this.facturas.length -1 ){

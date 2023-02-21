@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ReporteFacturasPage } from '../reporte-facturas/reporte-facturas.page';
 import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 import { format } from 'date-fns';
 import { CalendarioPage } from '../calendario/calendario.page';
@@ -7,10 +6,6 @@ import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas
 import { PlanificacionEntregaClientesPage } from '../planificacion-entrega-clientes/planificacion-entrega-clientes.page';
 import { PlanificacionEntregaClienteDetallePage } from '../planificacion-entrega-cliente-detalle/planificacion-entrega-cliente-detalle.page';
 import { ModalController, AlertController } from '@ionic/angular';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
-import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 import { AlertasService } from '../../services/alertas.service';
 import { FacturasService } from '../../services/facturas.service';
@@ -20,6 +15,7 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { ClientesGuia } from '../../models/guia';
 import { Rutas } from '../../models/rutas';
 import { Router } from '@angular/router';
+import { ReporteGuiasPage } from '../reporte-guias/reporte-guias.page';
 @Component({
   selector: 'app-planificacion-entregas-vista-mapa',
   templateUrl: './planificacion-entregas-vista-mapa.page.html',
@@ -41,10 +37,6 @@ export class PlanificacionEntregasVistaMapaPage  {
   constructor(
 
     public modalCtrl: ModalController,
-    public rutasService: RutasService,
-    public zonas: ZonasService,
-    public rutaFacturas: RutaFacturasService,
-    public rutaZonas: RutaZonaService,
     public planificacionEntregasService: PlanificacionEntregasService,
     public alertasService: AlertasService,
     public alertCtrl: AlertController,
@@ -269,7 +261,7 @@ export class PlanificacionEntregasVistaMapaPage  {
     }
     for (let r = 0; r < this.planificacionEntregasService.rutas.length; r++) {
 
-      await this.planificacionEntregasService.syncRutaFacturas(this.planificacionEntregasService.rutas[r].RUTA, this.planificacionEntregasService.fecha).then(resp => {
+      await this.facturasService.syncRutaFacturasToPromise(this.planificacionEntregasService.rutas[r].RUTA, this.planificacionEntregasService.fecha).then(resp => {
 
         for (let i = 0; i < resp.length; i++) {
 
@@ -450,16 +442,12 @@ this.irMarcador([data.cliente.longitud,data.cliente.latitud])
 
 
 
-  gestionErrores() {
-    this.alertasService.gestorErroresModal(this.planificacionEntregasService.errorArray);
-  }
 
 
-
-  async reporteFacturas() {
+  async reporteGuias() {
 
     const modal = await this.modalCtrl.create({
-      component: ReporteFacturasPage,
+      component: ReporteGuiasPage,
       cssClass: 'ui-modal',
     });
     modal.present();

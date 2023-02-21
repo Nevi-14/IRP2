@@ -1,6 +1,6 @@
 export class ActualizaFacturaGuia{
     constructor(
-         public numFactura: string,
+        public numFactura: string,
         public tipoDocumento: string,
         public despachado: string,
         public rubro3: string,

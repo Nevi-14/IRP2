@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
-import { ActualizaFacLinService } from '../../services/actualizaFacLin';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { CalendarioPage } from '../calendario/calendario.page';
@@ -56,7 +55,6 @@ public planificacionEntregasService: PlanificacionEntregasService,
 public ruteroService: RuteroService,
 public modalCtrl: ModalController,
 public gestionCamionesService: GestionCamionesService,
-public actualizaFactLinService: ActualizaFacLinService,
 public alertasService: AlertasService,
 public alerCtrl: AlertController,
 public ClientesService: ClientesService
@@ -102,10 +100,18 @@ async calendarioModal() {
 
   let fecha = format(new Date(data.fecha), 'yyy/MM/dd');
   this.fecha = fecha
-   // this.cargarDatos();
-   this.limpiarDatos();
-   this.alertasService.presentaLoading('Cargando Datos')
-   this.ClientesService.syncGetClientesCierre(fecha).then(guias =>{
+   this.cargarDatos();
+
+
+
+  }
+}
+
+
+cargarDatos(){
+  this.limpiarDatos();
+  this.alertasService.presentaLoading('Cargando Datos')
+  this.ClientesService.syncGetClientesCierre( this.fecha).then(guias =>{
 
     if(guias.length ==0){
 
@@ -135,7 +141,8 @@ console.log('guis', guias)
         checkout:new Date( guias[i].checkout),
         orden_Visita:  guias[i].orden_Visita,
         Duracion: guias[i].Duracion,
-        distancia: guias[i].distancia
+        distancia: guias[i].distancia,
+        estado_guia:guias[i].estado_guia
      }
 
 
@@ -173,7 +180,8 @@ console.log('guis', guias)
          checkout:guias[i].checkout,
          orden_Visita: guias[i].orden_Visita,
          Duracion: guias[i].Duracion,
-         distancia: guias[i].distancia
+         distancia: guias[i].distancia,
+         estado_guia:guias[i].estado_guia
       }
 
        guiasClientes.push({
@@ -249,8 +257,6 @@ this.alertasService.loadingDissmiss();
    }, error =>{
     this.alertasService.loadingDissmiss();
    })
-
-  }
 }
 onSearchChange(event){
   this.textoBuscar = event.detail.value;
@@ -277,7 +283,7 @@ console.log('rutero', rutero)
 
   if (data !== undefined) {
 
-
+  
 
   }
 }
@@ -302,7 +308,7 @@ async guiaFacturas(rutero:Guias) {
   
     if (data !== undefined) {
   
-  
+      this.cargarDatos();
   
     }
   }

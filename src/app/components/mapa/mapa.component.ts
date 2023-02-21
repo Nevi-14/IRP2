@@ -1,13 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
-import { RutaZonaService } from 'src/app/services/ruta-zona.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
-
 
 @Component({
   selector: 'app-mapa',
@@ -49,7 +43,11 @@ export class MapaComponent implements AfterViewInit {
 
 
   array :any;
-  constructor(public modalCtrl:ModalController, public popOverCrtl:PopoverController, public rutaZona: RutaZonaService, public zonas: ZonasService, public rutas: RutasService, public clienteEspejo: ClienteEspejoService, public clientes: ClientesService, public rutasFacturas: RutaFacturasService) { }
+  constructor(
+    public modalCtrl:ModalController,
+    public popOverCrtl:PopoverController,
+    public clientes: ClientesService
+    ) { }
 
 
 

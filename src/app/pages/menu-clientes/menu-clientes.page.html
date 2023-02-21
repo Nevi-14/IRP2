@@ -34,7 +34,7 @@
             <ion-row>
               <ion-col size="3">
                 <ion-select placeholder="provincia" (ionChange)="onChange($event, true,false,false)" [(ngModel)]="filtroClientes.Cod_Provincia">
-                  <ng-template ngFor let-provincia [ngForOf]="provincias.provincias" let-i="index" >
+                  <ng-template ngFor let-provincia [ngForOf]="provinciasCantonesDistritosService.provincias" let-i="index" >
                   <ion-select-option value="{{provincia.Cod_Provincia}}" >{{provincia.Provincia}}</ion-select-option>
                   </ng-template>
                   
@@ -46,7 +46,7 @@
               <ion-col size="3">
                 <ion-select placeholder="cantón" (ionChange)="onChange($event, false,true,false)"  [(ngModel)]="filtroClientes.Cod_Canton">
           
-                  <ng-template ngFor let-canton [ngForOf]="cantones.cantones" let-i="index" >
+                  <ng-template ngFor let-canton [ngForOf]="provinciasCantonesDistritosService.cantones" let-i="index" >
                     <ion-select-option value="{{canton.Cod_Canton}}" >{{canton.Canton}}</ion-select-option>
                   </ng-template>
             
@@ -59,7 +59,7 @@
                 <ion-select placeholder="distrito" (ionChange)="onChange($event, false,false,true)" [(ngModel)]="filtroClientes.Cod_Distrito">
           
           
-                  <ng-template ngFor let-distrito [ngForOf]="distritos.distritos" let-i="index" >
+                  <ng-template ngFor let-distrito [ngForOf]="provinciasCantonesDistritosService.distritos" let-i="index" >
                   <ion-select-option value="{{distrito.Cod_Distrito}}" >{{distrito.Distrito}}</ion-select-option>
                   </ng-template>
                   

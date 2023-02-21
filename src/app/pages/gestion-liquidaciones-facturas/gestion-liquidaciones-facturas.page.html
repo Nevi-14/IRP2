@@ -78,8 +78,8 @@
   </ion-row>
 </ion-grid>
   </ion-toolbar>
-  <ion-toolbar *ngIf="guia.guia.Estado !='FIN'">
- <ion-button (click)="liquidarFacturas()" expand="block" fill="solid" color="dark">
+  <ion-toolbar >
+ <ion-button *ngIf="clientes.length > 0" (click)="liquidarFacturas()" expand="block" fill="solid" color="dark">
  Liquidar Facturas
  </ion-button>
   </ion-toolbar>

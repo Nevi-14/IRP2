@@ -16,8 +16,7 @@ export class AppComponent implements OnInit {
     public configuracionesService: ConfiguracionesService
    ) {}
   ngOnInit(){
- 
-this.checkMapBoxKey();
+    this.checkMapBoxKey();
    }
 
    checkMapBoxKey(){

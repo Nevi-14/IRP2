@@ -1,12 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import * as  mapboxgl from 'mapbox-gl';
-import { RutaZonaService } from 'src/app/services/ruta-zona.service';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { ClienteEspejoService } from 'src/app/services/cliente-espejo.service';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
 import { ConfiguracionesService } from '../../services/configuraciones.service';
 interface Coordenadas {
 
@@ -66,12 +61,7 @@ export class RutaMapaComponent implements AfterViewInit {
   constructor(
     public modalCtrl:ModalController,
      public popOverCrtl:PopoverController,
-      public rutaZona: RutaZonaService,
-       public zonas: ZonasService,
-        public rutas: RutasService,
-         public clienteEspejo: ClienteEspejoService,
           public clientes: ClientesService,
-           public rutasFacturas: RutaFacturasService,
            public configuracionesService: ConfiguracionesService
            
            
@@ -210,16 +200,18 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
 
     
 
-      const { newMarker , color } =  this.generarMarcadorColor(this.coordinates[i].estado, i)
-      let coordinate :any = [this.coordinates[i].longitud, this.coordinates[i].latitud]
-      console.log(coordinate)
-      newMarker.setLngLat(coordinate)
-      .addTo(this.mapa)
-    
-      const miniPopup = new  mapboxgl.Popup({closeOnClick: false, closeButton: false});
-      miniPopup.setText(this.coordinates[i].nombre)
-    
-      newMarker.setPopup(miniPopup)
+   if(this.coordinates[i].longitud && this.coordinates[i].latitud){
+    const { newMarker , color } =  this.generarMarcadorColor(this.coordinates[i].estado, i)
+    let coordinate :any = [this.coordinates[i].longitud, this.coordinates[i].latitud]
+    console.log(coordinate)
+    newMarker.setLngLat(coordinate)
+    .addTo(this.mapa)
+  
+    const miniPopup = new  mapboxgl.Popup({closeOnClick: false, closeButton: false});
+    miniPopup.setText(this.coordinates[i].nombre)
+  
+    newMarker.setPopup(miniPopup)
+   }
     }
 
     this.mapa.on('load', () => {
@@ -257,27 +249,32 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
     let middle = '';
   console.log(this.coordinates, 'this.coordinates')
     for (let i = 0; i < this.coordinates.length; i++){
-  
-      if(this.coordinates.length -1  == i){
-        middle += this.coordinates[i].longitud+','+this.coordinates[i].latitud
-      }else{
-        middle += this.coordinates[i].longitud+','+this.coordinates[i].latitud+';'
-      }
+
+if(this.coordinates[i].longitud && this.coordinates[i].latitud){
+  if(i == this.coordinates.length -1 ){
+    middle += this.coordinates[i].longitud+','+this.coordinates[i].latitud
+  }else{
+    middle += this.coordinates[i].longitud+','+this.coordinates[i].latitud+';'
+  }
+
+}
+    
   
     }
-  
+    if(middle.endsWith(';'))  middle = middle.slice(0,-1)
     console.log(middle,'middle')
+ 
     let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
     let final = firstPart + middle +secondPart;
-  
-    if(this.coordinates.length > 0){
+ console.log('final',final)
       const query = await fetch(
         final,
         { method: 'GET' }
       );
       const json = await query.json();
       console.log(json, 'json return')
-    
+    if(json.routes){
+
       const data = json.routes[0];
 
       const route = data.geometry.coordinates;
@@ -306,6 +303,9 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
           'line-opacity': 0.75
         }
       });
+
     }
+  
+    
   }
 }

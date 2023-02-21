@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { RutaZonaService } from '../../services/ruta-zona.service';
+import { RutasZonasService } from 'src/app/services/rutas-zonas.service';
 
 @Component({
   selector: 'app-lista-rutas-zonas-modal',
@@ -14,13 +14,13 @@ rutas = []
   constructor(
 
     public modalCtrl: ModalController,
-    public rutaZonas: RutaZonaService
+    public rutasZonasService: RutasZonasService
 
   ) { }
 
   ngOnInit() {
-    this.rutaZonas.syncRutas();
-    console.log(this.rutaZonas.rutasZonasArray, 'array')
+    this.rutasZonasService.syncRutas();
+    console.log(this.rutasZonasService.rutasZonasArray, 'array')
   }
   retornarRuta(ev:any){
 if(ev.currentTarget.checked){

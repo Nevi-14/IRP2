@@ -78,7 +78,7 @@
       class="ion-margin-right" size="small">
       <ion-icon   name="calendar"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button slot="end" color="dark"   (click)="reporteFacturas()"
+    <ion-fab-button slot="end" color="dark"   (click)="reporteGuias()"
     class="ion-margin-right" size="small">
     <ion-icon   name="search"></ion-icon>
   </ion-fab-button>
@@ -258,11 +258,11 @@
               <ion-grid>
                 <ion-row class="ion-text-left">
 
-                  <ion-col size="3">
-                    <ion-label><strong>Peso</strong>: {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG
+                  <ion-col size="2">
+                    <ion-label class="ion-text-wrap"><strong>Peso</strong>: {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG
                     </ion-label>
                   </ion-col>
-                  <ion-col size="3">
+                  <ion-col size="2">
                     <ion-label><strong>Bultos:</strong>
                       {{planificacionEntregasService.totalBultos.toFixed(2)}}</ion-label>
                   </ion-col>
@@ -272,6 +272,9 @@
                   </ion-col>
                   <ion-col size="2">
                     <ion-label><strong>Clientes</strong>: {{planificacionEntregasService.totalClientes}}</ion-label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-label><strong>Sin Puntear</strong>: {{planificacionEntregasService.totalSinPuntear}}</ion-label>
                   </ion-col>
                   <ion-col size="2">
                     <ion-label><strong>Facturas</strong>: {{planificacionEntregasService.totalFacturas}}</ion-label>
@@ -293,6 +296,7 @@
               <ion-item lines="full" style="margin-bottom: 0.5rem;">
                 <ion-badge style="margin-right: 0.5rem;" color="warning" mode="ios">{{cliente.id}}</ion-badge>
                 <ion-label style="font-size: 14px;"><strong>{{cliente.nombre}}</strong></ion-label>
+                <ion-badge *ngIf="!cliente.longitud || !cliente.latitud" slot="end"   color="danger" mode="ios">Sin Puntear</ion-badge>
                 <ion-button slot="end" (click)="agregarFacturas(cliente)" fill="clear">
                   <ion-icon slot="icon-only" name="create"></ion-icon>
                 </ion-button>

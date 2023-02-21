@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import companiesJSON from '../../assets/data/companies.json';  // to allow json files  we need to create a njson-typings.d.ts file with some default settings make sure it is wihin the SRC folder
 import { environment } from 'src/environments/environment';
+import companiesJSON from '../../assets/data/companies.json';  // to allow json files  we need to create a njson-typings.d.ts file with some default settings make sure it is wihin the SRC folder
 interface modulos {
   id:string,
   name: string,
@@ -45,9 +45,7 @@ export class ConfiguracionesService {
 
   constructor() { }
 
-
- cargarDatos(){
-  console.log('helllo')
+cargarDatos(){
 const i = this.companies.findIndex( c => c.companyCode == environment.companyCode);
      if(i >=0){
 
@@ -71,7 +69,6 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
           address: null,
           modules:null
       }
-
       this.company.companyCode = this.companies[i].companyCode;
       this.company.company = this.companies[i].company;
       this.company.website = this.companies[i].website;
@@ -91,7 +88,6 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
       console.log('informacion compañia', this.company);
       
      }else{
-
      console.log('error cargando datos de la compañia..')
 
      }

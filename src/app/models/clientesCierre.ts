@@ -24,7 +24,8 @@ export class ClientesCierre{
         public observaciones: string,
         public bultos: number,
         public Duracion: number,
-        public distancia: number
+        public distancia: number,
+        public estado_guia: string
 
 
     ){}

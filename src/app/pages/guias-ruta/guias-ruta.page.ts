@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ServicioClienteService } from 'src/app/services/servicio-cliente.service';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { PlanificacionEntregasService } from '../../services/planificacion-entregas.service';
 import { GuiaEntrega } from '../../models/guiaEntrega';
 import { AlertasService } from '../../services/alertas.service';
+import { ClientesService } from 'src/app/services/clientes.service';
 
 @Component({
   selector: 'app-guias-ruta',
@@ -23,7 +23,7 @@ export class GuiasRutaPage implements OnInit {
   constructor(
 
   public modalCtrl: ModalController,
-  public servicioClienteService: ServicioClienteService,
+  public clientesService:ClientesService,
   public ruteroService: RuteroService,
   public planificacionEntregasService: PlanificacionEntregasService,
   public alertasService: AlertasService
@@ -43,7 +43,7 @@ export class GuiasRutaPage implements OnInit {
       this.alertasService.loadingDissmiss();
     })
     
-    this.servicioClienteService.consultaGuias = [];
+    this.clientesService.consultaGuias = [];
 
   
   }
@@ -61,7 +61,7 @@ export class GuiasRutaPage implements OnInit {
    }
    submit(idGuia){
     this.idGuia = idGuia;
-    this.servicioClienteService.syncConsultarClientes(idGuia);
+    this.clientesService.syncConsultarClientes(idGuia);
     return
  
   }
@@ -70,7 +70,7 @@ export class GuiasRutaPage implements OnInit {
   let value = $event.detail.checked;
 if(value){
   this.busquedaClientes = value
-  this.servicioClienteService.syncConsultarClientes('');
+  this.clientesService.syncConsultarClientes('');
 
     console.log($event, 'event')
 }

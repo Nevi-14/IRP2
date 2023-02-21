@@ -1,9 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { ZonasService } from 'src/app/services/zonas.service';
-import { RutasService } from 'src/app/services/rutas.service';
-import { RutaFacturasService } from 'src/app/services/ruta-facturas.service';
-import { RutaZonaService } from 'src/app/services/ruta-zona.service';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
@@ -13,13 +9,13 @@ import { FacturasService } from 'src/app/services/facturas.service';
 import { ListaClientesGuiasPage } from '../lista-clientes-guias/lista-clientes-guias.page';
 import { ClientesGuia, Guias } from 'src/app/models/guia';
 import { PdfService } from '../../services/pdf.service';
-import { ReporteFacturasPage } from '../reporte-facturas/reporte-facturas.page';
 import { ConfiguracionesService } from '../../services/configuraciones.service';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
 import { format } from 'date-fns';
 import { CalendarioPage } from '../calendario/calendario.page';
 import { Rutas } from '../../models/rutas';
 import { Router } from '@angular/router';
+import { ReporteGuiasPage } from '../reporte-guias/reporte-guias.page';
 
 
 @Component({
@@ -36,10 +32,6 @@ export class PlanificacionEntregasPage {
 
   constructor(
     public modalCtrl: ModalController,
-    public rutas: RutasService,
-    public zonas: ZonasService,
-    public rutaFacturas: RutaFacturasService,
-    public rutaZonas: RutaZonaService,
     public planificacionEntregasService: PlanificacionEntregasService,
     public alertasService: AlertasService,
     public alertCtrl: AlertController,
@@ -157,7 +149,7 @@ this.alertasService.presentaLoading('Cargando datos...')
     let rutasSinFacturas = [];
 
     for (let r = 0; r < this.planificacionEntregasService.rutas.length; r++) {
-      await this.planificacionEntregasService.syncRutaFacturas(this.planificacionEntregasService.rutas[r].RUTA, this.planificacionEntregasService.fecha).then(resp => {
+      await this.facturasService.syncRutaFacturasToPromise(this.planificacionEntregasService.rutas[r].RUTA, this.planificacionEntregasService.fecha).then(resp => {
 
         if (resp.length == 0) {
           rutasSinFacturas.push(this.planificacionEntregasService.rutas[r].DESCRIPCION)
@@ -212,7 +204,8 @@ this.alertasService.presentaLoading('Cargando datos...')
 
                 } else {
                   if (!factura[0].LONGITUD || !factura[0].LATITUD) {
-                    this.alertasService.message('IRP', 'La factura a solicitar, es parte de otra ruta - zona, ademas  sin longitud ni latitud no pueden ser parte del proceso.')
+         // this.incluirFac();
+                   // this.alertasService.message('IRP', 'La factura a solicitar, es parte de otra ruta - zona, ademas  sin longitud ni latitud no pueden ser parte del proceso.')
                     return
                   }
                   this.alertaRutaZona(factura[0])
@@ -233,7 +226,42 @@ this.alertasService.presentaLoading('Cargando datos...')
 
 
 
+async incluirFac(cliente: ClientesGuia){
+  let alert = await      this.alertCtrl.create({
+    header:'Lo sentimos!',
+    message:'Los clientes sin latitud ni longitud no pueden ser parte del proceso. ¿Como desea proceder?',
+    buttons:[
+      {
+        text:'Excluir',
+        role:'close',
+        handler:()=>{
+          console.log('Excluir', cliente)
+        }    
+        
+      },
+      {
+        text:'Incluir',
+        handler:()=>{
+          let latitud =  this.configuracionesService.company.latitud;
+          let longitud =  this.configuracionesService.company.longitud;
+          cliente.latitud = latitud;
+          cliente.longitud = longitud;
+          for(let i =0; i < cliente.facturas.length; i++){
+            cliente.facturas[i].LATITUD = latitud;
+            cliente.facturas[i].LONGITUD = longitud;
+            if(i == cliente.facturas.length -1){
+              this.agregarFacturas(cliente)
+              console.log('Incluir',cliente)
+            }
+          }
+   
+        }
+      }
+    ]
+  })
 
+  await alert.present();
+}
 
   presentPopover(e: Event) {
     if (this.planificacionEntregasService.rutas.length > 0) {
@@ -280,10 +308,6 @@ this.alertasService.presentaLoading('Cargando datos...')
 
   async agregarFacturas(cliente: ClientesGuia) {
 
-    if (!cliente.longitud || !cliente.latitud) {
-      this.alertasService.message('IRP', 'Clientes sin longitud ni latitud no pueden ser parte del proceso.')
-      return
-    }
     const modal = await this.modalCtrl.create({
       component: ControlFacturasPage,
       cssClass: 'large-modal',
@@ -514,15 +538,8 @@ this.alertasService.loadingDissmiss();
   }
 
 
- 
 
   async modalControlFacturas(factura) {
-
-    if (factura.LONGITUD == null || factura.LONGITUD == undefined || factura.LONGITUD == 0 || factura.LATITUD == 0) {
-      this.alertasService.message('IRP', 'Clientes sin longitud ni latitud no pueden ser parte del proceso.')
-      return
-    }
-
     const modal = await this.modalCtrl.create({
       component: ControlFacturasPage,
       cssClass: 'large-modal',
@@ -575,9 +592,9 @@ this.alertasService.loadingDissmiss();
 
   }
 
-  async reporteFacturas() {
+  async reporteGuias() {
     const modal = await this.modalCtrl.create({
-      component: ReporteFacturasPage,
+      component: ReporteGuiasPage,
       cssClass: 'ui-modal',
     });
     modal.present();
