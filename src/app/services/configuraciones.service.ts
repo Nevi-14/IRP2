@@ -27,7 +27,12 @@ interface company {
   taxId: string,
   fax: string,
   address: string,
-  modules:modulos[]
+  modules:modulos[],
+  printing:string,
+  printingUser : {
+      email: string,
+      password: string
+  }
 }
 @Injectable({
   providedIn: 'root'
@@ -67,7 +72,12 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
           taxId: null,
           fax: null,
           address: null,
-          modules:null
+          modules:null,
+          printing:null,
+          printingUser : {
+              email: null,
+              password: null
+          }
       }
       this.company.companyCode = this.companies[i].companyCode;
       this.company.company = this.companies[i].company;
@@ -85,6 +95,9 @@ const i = this.companies.findIndex( c => c.companyCode == environment.companyCod
       this.company.fax = this.companies[i].fax;
       this.company.address = this.companies[i].address
       this.company.modules = this.companies[i].modules
+      this.company.printing = this.companies[i].printing
+      this.company.printingUser.email = this.companies[i].printingUser.email
+      this.company.printingUser.password = this.companies[i].printingUser.password
       console.log('informacion compañia', this.company);
       
      }else{

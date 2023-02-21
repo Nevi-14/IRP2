@@ -8,6 +8,7 @@ import { PlanificacionEntregasService } from 'src/app/services/planificacion-ent
 import { AlertasService } from 'src/app/services/alertas.service';
 import { format } from 'date-fns';
 import { ConsultaGuias } from '../../models/consultaGuias';
+import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 
 @Component({
   selector: 'app-reporte-guias',
@@ -30,7 +31,8 @@ export class ReporteGuiasPage implements OnInit {
    public http:HttpClient,
    public camionesService:GestionCamionesService,
    public planificacionEntregasService:PlanificacionEntregasService,
-   public alertasService: AlertasService
+   public alertasService: AlertasService,
+   public configuracionesService:ConfiguracionesService
   ) { }
 
  
@@ -104,6 +106,15 @@ this.show = false;
   }
   consultarGuia(guia:GuiaEntrega){
 console.log('guia', guia)
+if(this.configuracionesService.company.printing){
+  console.log('priting', this.configuracionesService.company.printing)
+  this.pdfService.syncPostGetTokenToPromise().then(token =>{
+
+    console.log('token', token)
+  }, error =>{
+    console.log('error', error)
+  })
+}
   }
  async  retornarFacturas(guia:GuiaEntrega){
   let img = await this.http.get('../assets/islena.png', { responseType: 'blob' }).toPromise();

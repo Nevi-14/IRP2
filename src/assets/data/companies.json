@@ -26,7 +26,12 @@
     { "id":"05","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
 
 
-    ]
+    ],
+    "printing":"https://nakmcieqcc.execute-api.us-east-1.amazonaws.com/QA/SP-congnito-Login",
+    "printingUser" : {
+        "email": "mherra@sde.cr",
+        "password": "0r#H8lVR*!f9uV4&2y"
+    }
     },
     {
     "companyCode": "02",
@@ -52,6 +57,11 @@
         { "id":"03","name":"Planificación de Entregas","title": "Planificación de Entregas","description":"Permite gestionar la factura por cliente de cada ruta", "image": "../assets/png/receipt.png,","url": "/inicio/planificacion-entregas","included":false},
         { "id":"04","name":"Atención al cliente","title": "Atención al cliente","description":"Permite gestionar las entregas en ruta", "image": "../assets/png/customer-service.svg","url": "/inicio/servicio-cliente","included":true},
         { "id":"05","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
-        ]
+        ],
+        "printing":null,
+        "printingUser" : {
+            "email": null,
+            "password": null
+        }
     }
 ]

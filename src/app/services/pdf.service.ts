@@ -7,6 +7,8 @@ import { GestionCamionesService } from './gestion-camiones.service';
 import { Manifiesto } from '../models/manieifiesto';
 import { format } from 'date-fns';
 import { RutasZonasService } from './rutas-zonas.service';
+import { environment } from 'src/environments/environment';
+import { ConfiguracionesService } from './configuraciones.service';
 
 
 @Injectable({
@@ -16,12 +18,46 @@ export class PdfService {
   constructor(
 public http: HttpClient,
 public camionesService:GestionCamionesService,
-public rutasZonasService:RutasZonasService
+public rutasZonasService:RutasZonasService,
+public configuracionesService: ConfiguracionesService
 
   ) { }
 
 
+  getAPI(api: string) {
+    let test: string = ''
 
+    if (!environment.prdMode) test = environment.TestURL;
+    let URL = this.configuracionesService.company.preURL + test + this.configuracionesService.company.postURL + api;
+    this.configuracionesService.api = URL;
+
+    return URL;
+
+  }
+
+  private getToken (){
+    // POST
+    // API https://apiirp.di-apps.co.cr/api/ActFac
+    const URL = this.configuracionesService.company.printing;
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      }
+    };
+ 
+    console.log('getToken', URL);
+    console.log('printingUser', this.configuracionesService.company.printingUser);
+    return this.http.post( URL, JSON.stringify(this.configuracionesService.company.printingUser) , options );
+  }
+  
+
+
+async syncPostGetTokenToPromise(){
+
+  return this.getToken().toPromise();
+}
   async rellenarpdf(titulo:string,image:any,guia:GuiaEntrega,facturas:Manifiesto[]){
 
   await this.camionesService.syncCamionesToPromise().then(resp => {this.camionesService .camiones = resp});
