@@ -824,3 +824,10 @@ button.alert-button.alert-button-dark {
   border-bottom-right-radius: 13px;
   border-top-right-radius: 13px;
 }
+
+* {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

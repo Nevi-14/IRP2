@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { ConfiguracionesService } from './configuraciones.service';
 import { Rutas } from '../models/rutas';
 import { ClientesGuia, Guias, Cliente } from '../models/guia';
-import { Rutero, RuteroMH } from '../models/Rutero';
+import {RuteroMH } from '../models/Rutero';
 import { GestionCamionesService } from './gestion-camiones.service';
 import * as  mapboxgl from 'mapbox-gl';
 import { RuteroService } from './rutero.service';
@@ -401,7 +401,7 @@ export class PlanificacionEntregasService {
         factura.ID_GUIA = null;
         let guia = this.listaGuias.findIndex(guia => guia.idGuia == idGuia);
 
-        if (guia > 0) {
+        if (guia >= 0) {
           if (this.listaGuias[guia].clientes.length == 0 || this.listaGuias[guia].facturas.length == 0) {
             this.listaGuias.splice(guia, 1);
 
@@ -1029,7 +1029,7 @@ export class PlanificacionEntregasService {
 
 
  async completePost(guia: Guias, facturas: PlanificacionEntregas[], ruteros: Cliente[]) {
-
+  this.alertasService.presentaLoading('Guardando guias..')
     let postFacturas = [];
     let postRutero = [];
     let putRutero = [];
@@ -1116,7 +1116,7 @@ export class PlanificacionEntregasService {
    }
 
       if (j === ruteros.length - 1) {
-        this.alertasService.presentaLoading('Guardando guias..')
+    
         console.log(postRutero, 'postRutero')
         console.log(putRutero, 'putRutero')
 

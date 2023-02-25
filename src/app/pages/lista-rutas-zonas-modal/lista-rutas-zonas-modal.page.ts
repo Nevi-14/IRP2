@@ -20,7 +20,6 @@ rutas = []
 
   ngOnInit() {
     this.rutasZonasService.syncRutas();
-    console.log(this.rutasZonasService.rutasZonasArray, 'array')
   }
   retornarRuta(ev:any){
 if(ev.currentTarget.checked){
@@ -30,15 +29,6 @@ let i = this.rutas.findIndex(ruta => ruta.RUTA == ev.target.value.RUTA)
 this.rutas.splice(i,1)
 
 }
-console.log('this.rutas', this.rutas)
- 
-  /**
-   *   this.modalCtrl.dismiss({
-
-      ruta: ev.target.value
-     });
-   */
-
   }
 
   onSearchChange(event){

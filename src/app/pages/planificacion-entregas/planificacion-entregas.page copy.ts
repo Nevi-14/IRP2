@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
@@ -58,11 +58,6 @@ this.limpiarDatos();
   }
 
 
-
-
-  todasLasFacturas(){
-    alert('helo')
-  }
   async configuracionZonaRuta() {
     this.planificacionEntregasService.guiasGeneradas = [];
     const modal = await this.modalCtrl.create({
@@ -105,9 +100,6 @@ calendario(){
 
 
   async calendarioModal() {
-
-   
-
     this.isOpen = true;
     const modal = await this.modalCtrl.create({
       component: CalendarioPage,
@@ -188,6 +180,7 @@ this.alertasService.presentaLoading('Cargando datos...')
               factura = facturas[f];
             } else {
               this.alertasService.message(`Factura ${this.textFactura}`, 'Ya fue agregada a la guia...!!!');
+              return
             }
           }
 
@@ -203,11 +196,7 @@ this.alertasService.presentaLoading('Cargando datos...')
                   this.modalControlFacturas(factura[0])
 
                 } else {
-                  if (!factura[0].LONGITUD || !factura[0].LATITUD) {
-         // this.incluirFac();
-                   // this.alertasService.message('IRP', 'La factura a solicitar, es parte de otra ruta - zona, ademas  sin longitud ni latitud no pueden ser parte del proceso.')
-                    return
-                  }
+           
                   this.alertaRutaZona(factura[0])
                 }
               } else {
@@ -312,7 +301,8 @@ async incluirFac(cliente: ClientesGuia){
       component: ControlFacturasPage,
       cssClass: 'large-modal',
       componentProps: {
-        facturas: [cliente]
+        facturas: [cliente],
+        fecha: this.planificacionEntregasService.fecha
       },
     });
     modal.present();
@@ -544,7 +534,8 @@ this.alertasService.loadingDissmiss();
       component: ControlFacturasPage,
       cssClass: 'large-modal',
       componentProps: {
-        facturas: await this.planificacionEntregasService.importarClientes([factura])
+        facturas: await this.planificacionEntregasService.importarClientes([factura]),
+        fecha:this.planificacionEntregasService.fecha
       },
     });
     modal.present();

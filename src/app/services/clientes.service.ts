@@ -66,6 +66,8 @@ private consultarClientes(idGuia:string){
   // https://apiirp.di-apps.co.cr/api/ClientesGuia/20230123CT01V3683
   let URL = this.getAPI( environment.clientesGuias);
       URL = URL + idGuia;
+      console.log('idGuia',idGuia)
+      console.log('consultarClientes',URL)
   return this.http.get<ConsultaGuias[]>( URL );
 }
 
@@ -91,6 +93,8 @@ private getClienteByIdCliente(idCliente:string){
   // https://apiirp.di-apps.co.cr/api/Clientes2/7636
   let URL = this.getAPI( environment.busquedaCliente);
       URL = URL + idCliente;
+      console.log('idCliente',idCliente)
+      console.log('getClienteByIdCliente',URL)
   return this.http.get<Clientes[]>( URL );
 }
 
@@ -136,7 +140,8 @@ private getClientes(idP:string, idC:string, idD:string) {
       // https://apiirp.di-apps.co.cr/api/Clientes/AJ01
      let URL = this.getAPI( environment.clientesURL);
          URL = URL + idCliente;
-      console.log('URL',URL)
+         console.log('idCliente',idCliente)
+         console.log('getRutaCliente',URL)
       return this.http.get<Clientes[]>( URL );
   
     }

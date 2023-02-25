@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { Rutero } from '../models/Rutero';
 import { HttpClient } from '@angular/common/http';
 import { AlertasService } from './alertas.service';
-import { PlanificacionEntregasService } from './planificacion-entregas.service';
+
 import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
@@ -17,7 +17,6 @@ rutertoPostArrayExistentes: Rutero[]=[];
   constructor(
     public http: HttpClient,
     public alertasService: AlertasService,
-    public planificacionEntregasService: PlanificacionEntregasService,
     public configuracionesService: ConfiguracionesService
   ) { }
 

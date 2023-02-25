@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
@@ -24,7 +24,7 @@ import { ReporteGuiasPage } from '../reporte-guias/reporte-guias.page';
   styleUrls: ['./planificacion-entregas.page.scss'],
 })
 export class PlanificacionEntregasPage {
-  @ViewChild('popover') popover;
+  @ViewChild('popover') popover: any;
   isOpen = false;
   isPopOverOpen = false;
   textFactura: string = '';
@@ -45,24 +45,16 @@ export class PlanificacionEntregasPage {
 
 
   ionViewWillEnter() {
-this.limpiarDatos();
-
-
+    this.limpiarDatos();
   }
 
 
   cerrarModal() {
-
     this.modalCtrl.dismiss();
 
   }
 
 
-
-
-  todasLasFacturas(){
-    alert('helo')
-  }
   async configuracionZonaRuta() {
     this.planificacionEntregasService.guiasGeneradas = [];
     const modal = await this.modalCtrl.create({
@@ -92,22 +84,17 @@ this.limpiarDatos();
   }
 
 
-calendario(){
-  this.planificacionEntregasService.clientes  = [];
-  this.planificacionEntregasService.facturasOriginal = [];
-  this.planificacionEntregasService.facturasNoAgregadas = [];
-  this.planificacionEntregasService.listaGuias  = [];
-  this.calendarioModal();
-}
-
-
+  calendario() {
+    this.planificacionEntregasService.clientes = [];
+    this.planificacionEntregasService.facturasOriginal = [];
+    this.planificacionEntregasService.facturasNoAgregadas = [];
+    this.planificacionEntregasService.listaGuias = [];
+    this.calendarioModal();
+  }
 
 
 
   async calendarioModal() {
-
-   
-
     this.isOpen = true;
     const modal = await this.modalCtrl.create({
       component: CalendarioPage,
@@ -132,13 +119,8 @@ calendario(){
 
 
 
-
-
-
-
-
   async cargarDatos() {
-this.alertasService.presentaLoading('Cargando datos...')
+    this.alertasService.presentaLoading('Cargando datos...')
     this.planificacionEntregasService.clientes = []
     if (this.planificacionEntregasService.rutas.length == 0) {
       this.alertasService.loadingDissmiss();
@@ -159,8 +141,8 @@ this.alertasService.presentaLoading('Cargando datos...')
         }
       });
       if (r == this.planificacionEntregasService.rutas.length - 1) {
-      this.alertasService.loadingDissmiss();
-      this.planificacionEntregasService.clientes.sort((a, b) => a.id - b.id)
+        this.alertasService.loadingDissmiss();
+        this.planificacionEntregasService.clientes.sort((a, b) => a.id - b.id)
         if (rutasSinFacturas.length > 0) {
           this.alertasService.message('IRP', 'Lo sentimos no se encontraron facturas para las siguientes rutas ' + rutasSinFacturas.toString());
         }
@@ -173,7 +155,6 @@ this.alertasService.presentaLoading('Cargando datos...')
 
 
   async buscarFactura() {
-
     let encontre = false;
     let factura: PlanificacionEntregas;
     if (this.textFactura.length > 0) {
@@ -202,9 +183,7 @@ this.alertasService.presentaLoading('Cargando datos...')
 
                 if (factura[0].RUTA == rutaActual) {
                   this.modalControlFacturas(factura[0])
-
                 } else {
-           
                   this.alertaRutaZona(factura[0])
                 }
               } else {
@@ -223,42 +202,6 @@ this.alertasService.presentaLoading('Cargando datos...')
 
 
 
-async incluirFac(cliente: ClientesGuia){
-  let alert = await      this.alertCtrl.create({
-    header:'Lo sentimos!',
-    message:'Los clientes sin latitud ni longitud no pueden ser parte del proceso. ¿Como desea proceder?',
-    buttons:[
-      {
-        text:'Excluir',
-        role:'close',
-        handler:()=>{
-          console.log('Excluir', cliente)
-        }    
-        
-      },
-      {
-        text:'Incluir',
-        handler:()=>{
-          let latitud =  this.configuracionesService.company.latitud;
-          let longitud =  this.configuracionesService.company.longitud;
-          cliente.latitud = latitud;
-          cliente.longitud = longitud;
-          for(let i =0; i < cliente.facturas.length; i++){
-            cliente.facturas[i].LATITUD = latitud;
-            cliente.facturas[i].LONGITUD = longitud;
-            if(i == cliente.facturas.length -1){
-              this.agregarFacturas(cliente)
-              console.log('Incluir',cliente)
-            }
-          }
-   
-        }
-      }
-    ]
-  })
-
-  await alert.present();
-}
 
   presentPopover(e: Event) {
     if (this.planificacionEntregasService.rutas.length > 0) {
@@ -272,7 +215,7 @@ async incluirFac(cliente: ClientesGuia){
     this.planificacionEntregasService.clientes = []
     this.planificacionEntregasService.rutas = [];
     this.planificacionEntregasService.limpiarDatos();
- 
+
   }
 
 
@@ -290,15 +233,12 @@ async incluirFac(cliente: ClientesGuia){
     if (i >= 0) {
       this.planificacionEntregasService.rutas.splice(i, 1)
       if (ruta.RUTA == this.planificacionEntregasService.rutaZona.RUTA) {
-      this.planificacionEntregasService.rutaZona = this.planificacionEntregasService.rutas[0]
+        this.planificacionEntregasService.rutaZona = this.planificacionEntregasService.rutas[0]
       }
       this.popover.dismiss();
       this.cargarDatos();
     }
   }
-
-
-
 
 
 
@@ -309,7 +249,8 @@ async incluirFac(cliente: ClientesGuia){
       component: ControlFacturasPage,
       cssClass: 'large-modal',
       componentProps: {
-        facturas: [cliente]
+        facturas: [cliente],
+        fecha: this.planificacionEntregasService.fecha
       },
     });
     modal.present();
@@ -321,7 +262,7 @@ async incluirFac(cliente: ClientesGuia){
 
     let inputs: any = [
 
-     {
+      {
         label: 'Frio',
         type: 'radio',
         value: {
@@ -343,6 +284,14 @@ async incluirFac(cliente: ClientesGuia){
         value: {
           column: 'ID_GUIA',
           value: null
+        },
+      },
+      {
+        label: 'Sin Puntear',
+        type: 'radio',
+        value: {
+          column: 'LONGLAT',
+          value: 'LONGLAT'
         },
       },
       {
@@ -378,10 +327,7 @@ async incluirFac(cliente: ClientesGuia){
           text: 'OK',
           role: 'confirm',
           handler: (filtro) => {
-
-
-this.filtrarDatos(filtro)
-     
+            this.filtrarDatos(filtro);
 
           },
         },
@@ -393,16 +339,17 @@ this.filtrarDatos(filtro)
 
   }
 
+  filtrarDatos(filtro: any) {
 
-  filtrarDatos(filtro:any){
+    let data: ClientesGuia[] = [];
+    let filtroData: PlanificacionEntregas[] = []
     this.alertasService.presentaLoading('Cargando datos...')
+
     if (this.planificacionEntregasService.clientes.length > this.planificacionEntregasService.facturasOriginal.length) {
       this.planificacionEntregasService.facturasOriginal = this.planificacionEntregasService.clientes;
-
     } else {
       this.planificacionEntregasService.clientes = this.planificacionEntregasService.facturasOriginal;
     }
-
 
     if (filtro.column == null && filtro.value == null) {
       this.alertasService.loadingDissmiss();
@@ -410,33 +357,17 @@ this.filtrarDatos(filtro)
       return
     }
 
-    let data: ClientesGuia[] = [];
-    let filtroData: PlanificacionEntregas[] = []
-
     for (let i = 0; i < this.planificacionEntregasService.clientes.length; i++) {
-
       let facturas = this.planificacionEntregasService.clientes[i].facturas;
-
       for (let f = 0; f < facturas.length; f++) {
-
         if (filtro.value == 'assigned') {
-
-          if (facturas[f][filtro.column] != null) {
-
-            filtroData.push(facturas[f])
-
-          }
-
+          if (facturas[f][filtro.column] != null) filtroData.push(facturas[f])
+        } else if (filtro.value == 'LONGLAT') {
+          if (!facturas[f].LONGITUD || !facturas[f].LATITUD) filtroData.push(facturas[f])
         } else {
-
-          if (facturas[f][filtro.column] == filtro.value) {  
-            filtroData.push(facturas[f])
-
-          }
+          if (facturas[f][filtro.column] == filtro.value) filtroData.push(facturas[f])
         }
-
-
-        if (f == facturas.length - 1) {            
+        if (f == facturas.length - 1) {
           filtroData.forEach(filtro => {
             for (let y = 0; y < facturas.length; y++) {
               let cliente = {
@@ -460,10 +391,8 @@ this.filtrarDatos(filtro)
                 direccion: facturas[y].DIRECCION_FACTURA,
                 facturas: [facturas[y]]
               }
-
               let frio = cliente.facturas.filter(f => f.FRIO_SECO == 'F').length
               let seco = cliente.facturas.filter(f => f.FRIO_SECO == 'N').length
-
               cliente.totalSeco = seco;
               cliente.totalFrio = frio;
               cliente.frio = frio > 0 ? true : false
@@ -472,22 +401,16 @@ this.filtrarDatos(filtro)
               cliente.color = frio > 0 ? '#0000FF' : '#eed202'
 
               if (facturas[y].CLIENTE_ORIGEN == filtro.CLIENTE_ORIGEN) {
-
                 let index = data.findIndex(cliente => cliente.id == facturas[y].CLIENTE_ORIGEN);
 
                 if (index >= 0) {
-
                   let index2 = data[index].facturas.findIndex(fa => fa.FACTURA == facturas[y].FACTURA);
-
                   data[index].totalBultos += Number(facturas[y].RUBRO1);
                   data[index].totalPeso += facturas[y].TOTAL_PESO;
                   if (index2 < 0) {
-
                     data[index].facturas.push(facturas[y])
-
                     let frio = data[index].facturas.filter(f => f.FRIO_SECO == 'F').length
                     let seco = data[index].facturas.filter(f => f.FRIO_SECO == 'N').length
-
                     data[index].totalSeco = seco;
                     data[index].totalFrio = frio;
                     data[index].frio = frio > 0 ? true : false
@@ -496,34 +419,29 @@ this.filtrarDatos(filtro)
                     data[index].color = frio > 0 ? '#0000FF' : '#eed202'
                   }
                 } else {
-
                   data.push(cliente)
                 }
               }
-              if (y == facturas.length - 1) {
-
-
-              }
+              if (y == facturas.length - 1) { }
             }
 
           })
         }
 
       }
-
       if (i == this.planificacionEntregasService.clientes.length - 1) {
-this.alertasService.loadingDissmiss();
+        this.alertasService.loadingDissmiss();
         if (data.length > 0) {
           this.planificacionEntregasService.clientes = data;
           this.planificacionEntregasService.actualizarTotales();
         } else {
-
           this.alertasService.message('IRP', 'Lo sentimos no se encontraron resultados..')
         }
-
       }
     }
   }
+
+
 
   borrarGuia(guia: Guias) {
     for (let i = 0; i < guia.facturas.length; i++) {
@@ -541,16 +459,15 @@ this.alertasService.loadingDissmiss();
       component: ControlFacturasPage,
       cssClass: 'large-modal',
       componentProps: {
-        facturas: await this.planificacionEntregasService.importarClientes([factura])
+        facturas: await this.planificacionEntregasService.importarClientes([factura]),
+        fecha: this.planificacionEntregasService.fecha
       },
     });
     modal.present();
 
     const { data } = await modal.onDidDismiss();
     if (data !== undefined) {
-
       this.clientes = this.planificacionEntregasService.facturasOriginal;
-
     }
   }
 
@@ -585,7 +502,6 @@ this.alertasService.loadingDissmiss();
     });
 
     await alert.present();
-    const { role } = await alert.onDidDismiss();
 
   }
 
@@ -595,12 +511,8 @@ this.alertasService.loadingDissmiss();
       cssClass: 'ui-modal',
     });
     modal.present();
-
     const { data } = await modal.onDidDismiss();
-
     if (data !== undefined) {
-      console.log(data, 'data')
-
 
     }
 
@@ -608,10 +520,6 @@ this.alertasService.loadingDissmiss();
   }
 
   async detalleGuia(guia: Guias) {
- 
-
-
-
     const modal = await this.modalCtrl.create({
       component: ListaClientesGuiasPage,
       cssClass: 'large-modal',
@@ -623,11 +531,9 @@ this.alertasService.loadingDissmiss();
       },
       id: 'detalle-guia'
     });
-
     modal.present();
-
-
   }
+
   async time(guia: Guias) {
 
     console.log('guia', guia)
@@ -672,12 +578,12 @@ this.alertasService.loadingDissmiss();
     await alert.present();
   }
 
-  vistaMapa(){
+  vistaMapa() {
     this.limpiarDatos();
     this.router.navigateByUrl('/inicio/planificacion-entregas-vista-mapa');
 
   }
-  verificarGuia(guia:Guias) {
+  verificarGuia(guia: Guias) {
 
     if (guia.camion.HoraInicio == null || guia.camion.HoraInicio == undefined || guia.camion.HoraFin == null || guia.camion.HoraFin == undefined) {
       this.alertasService.message('IRP', 'Es necesario especificar la hora de inicio y fin de nuestra guia!.')
@@ -687,7 +593,7 @@ this.alertasService.loadingDissmiss();
     this.planificacionEntregasService.continuarRutaOptima = true;
     this.planificacionEntregasService.llenarRutero(guia)
 
-    if(this.planificacionEntregasService.horaFinalAnterior){
+    if (this.planificacionEntregasService.horaFinalAnterior) {
       guia.camion.HoraFin = this.planificacionEntregasService.horaFinalAnterior;
     }
   }
@@ -741,7 +647,7 @@ this.alertasService.loadingDissmiss();
     const { data } = await modal.onDidDismiss();
 
     if (data !== undefined) {
-      console.log(data, 'data')
+
     }
   }
 

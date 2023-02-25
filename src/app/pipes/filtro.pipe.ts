@@ -8,7 +8,6 @@ export class FiltroPipe implements PipeTransform {
   transform(arreglo: any[],
     texto: string = '',
     columna: string = '' ): any[] {
-      console.log(texto,columna)
    if(texto === ''){
      return arreglo;
    }
@@ -16,7 +15,6 @@ export class FiltroPipe implements PipeTransform {
      return arreglo;
    }
 
-   console.log(typeof(texto), ' typeof')
    // todas las busquedas de javascript son case sentisive
    if(typeof(texto) != 'boolean' ){
     texto = texto.toLocaleLowerCase();

@@ -1,0 +1,44 @@
+p {
+    margin-top: 0.2rem;
+    font-size: 14px;
+    text-transform: capitalize;
+  }
+  .header-row{
+    padding: 0;
+    margin: 0;
+      font-weight: bold;
+      border-bottom: 2px solid black;
+     
+     
+    }
+    ion-card{
+      background: rgba(#cecee2,0.8);
+      color: #454555;
+      font-weight: bold;
+    }
+    .data-row{
+      font-size: 14px;
+      border-bottom: 1px solid black;
+      ion-icon{
+      font-size: 1.5rem;
+      }
+    }
+  .background{
+    background: #cecee2;
+    color: #454555;
+    font-weight: bold;
+    font-size: 14px;
+    ion-icon{
+      font-size: 1.7rem;
+    }
+  }
+  .align{
+    display: flex;justify-content: flex-start;align-items: center;
+  }
+  .margin-left{
+    margin-left: 0.5rem;
+  }
+  
+  .margin-right{
+    margin-right: 0.5rem;
+  }

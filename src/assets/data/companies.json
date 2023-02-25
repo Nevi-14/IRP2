@@ -27,10 +27,10 @@
 
 
     ],
-    "printing":"https://nakmcieqcc.execute-api.us-east-1.amazonaws.com/QA/SP-congnito-Login",
+    "printing":null,
     "printingUser" : {
-        "email": "mherra@sde.cr",
-        "password": "0r#H8lVR*!f9uV4&2y"
+        "email":null,
+        "password": null
     }
     },
     {
@@ -58,10 +58,10 @@
         { "id":"04","name":"Atención al cliente","title": "Atención al cliente","description":"Permite gestionar las entregas en ruta", "image": "../assets/png/customer-service.svg","url": "/inicio/servicio-cliente","included":true},
         { "id":"05","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
         ],
-        "printing":null,
+        "printing":"https://nakmcieqcc.execute-api.us-east-1.amazonaws.com/QA/SP-congnito-Login",
         "printingUser" : {
-            "email": null,
-            "password": null
+            "email": "mherra@sde.cr",
+            "password": "0r#H8lVR*!f9uV4&2y"
         }
     }
 ]

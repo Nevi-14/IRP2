@@ -62,7 +62,7 @@ interface  Guias{
   styleUrls: ['./lista-clientes-guias.page.scss'],
 })
 export class ListaClientesGuiasPage implements OnInit {
- 
+  textoBuscarClientes= '';
 @Input()rutaZona;
 @Input() fecha;
 @Input()  idGuia
@@ -71,7 +71,6 @@ export class ListaClientesGuiasPage implements OnInit {
 verdadero = true;
 image = '../assets/icons/delivery-truck.svg'
 falso = false;
-textoBuscar = '';
   constructor(
     public modalCtrl:ModalController,
     public alertCTrl: AlertController,
@@ -128,7 +127,7 @@ cliente.facturas.splice(i, 1);
 
   onSearchChange(event){
 
-    this.textoBuscar = event.detail.value;
+    this.textoBuscarClientes = event.detail.value;
   }
 
   async onOpenMenuGuias(factura) {

@@ -4,7 +4,7 @@
 
 export const environment = {
   companyCode:"01",
-  production: true,
+  production: false,
   maxCharCodigoProd: 6,
   adminClave: '123456',
   TestURL:'test',

@@ -106,8 +106,8 @@ if(this.guias){
   
       return
     }
-    let fechaInicio =   new Date(format(new Date(this.fechaInicio), 'MM-dd-yyy')).toISOString();
-    let fechaFin =   new Date(format(new Date(this.fechaFin), 'MM-dd-yyy')).toISOString();
+    let fechaInicio =   new Date(format(new Date(this.fechaInicio), 'MM-dd-yyy')).toISOString().split('T')[0];
+    let fechaFin =   new Date(format(new Date(this.fechaFin), 'MM-dd-yyy')).toISOString().split('T')[0];
     this.alertasService.presentaLoading('Cargando datos...')
     this.planificacionEntregasService.getGuiaEstadoRangoFechaToPromise(this.estado,fechaInicio,fechaFin).then(guias =>{
       this.alertasService.loadingDissmiss();
