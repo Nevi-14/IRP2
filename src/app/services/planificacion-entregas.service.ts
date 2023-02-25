@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { ConfiguracionesService } from './configuraciones.service';
 import { Rutas } from '../models/rutas';
 import { ClientesGuia, Guias, Cliente } from '../models/guia';
-import { RuteroMH } from '../models/Rutero';
+import { Rutero, RuteroMH } from '../models/Rutero';
 import { GestionCamionesService } from './gestion-camiones.service';
 import * as  mapboxgl from 'mapbox-gl';
 import { RuteroService } from './rutero.service';
@@ -18,6 +18,7 @@ import { ActualizaFacturaGuia } from '../models/actualizaFacturaGuia';
 import { FacturasService } from './facturas.service';
 import { Manifiesto } from '../models/manieifiesto';
 import { ReporteGuiasPage } from '../pages/reporte-guias/reporte-guias.page';
+import { format } from 'date-fns';
 
 @Injectable({
   providedIn: 'root'
@@ -654,16 +655,22 @@ export class PlanificacionEntregasService {
     return data;
 
   }
-  llenarRutero(guia: Guias) {
-
+  async llenarRutero(guia: Guias) {
+    this.continuarRutaOptima = true;
     this.alertasService.presentaLoading('Calculando ruta optima...')
     this.rutero = [];
     this.clientesSinPuntear = [];
+
+
+
     let item = new RuteroMH(0, guia.idGuia, this.configuracionesService.company.company, this.configuracionesService.company.latitud, this.configuracionesService.company.longitud, 0, 0, '', 0, 0, true, null, null);
     this.rutero.push(item);
     for (let i = 0; i < guia.clientes.length; i++) {
 
       let cliente = guia.clientes[i];
+   
+
+ 
       item = new RuteroMH(cliente.id, guia.idGuia, cliente.cliente, cliente.latitud, cliente.longitud, cliente.distancia, cliente.duracion, cliente.direccion, cliente.bultosTotales, cliente.orden_visita, false, null, null);
       if (cliente.latitud && cliente.longitud) {
         this.rutero.push(item);
@@ -675,9 +682,9 @@ export class PlanificacionEntregasService {
       if (i == guia.clientes.length - 1) {
 
         if (this.rutero.length == 0) {
-          this.alertasService.loadingDissmiss();
-          this.funcionClientesSinPuntear()
-          return
+        //  this.alertasService.loadingDissmiss();
+       return  this.funcionClientesSinPuntear()
+          
         }
         this.ordenaMH(0, guia)
         console.log('Rutero: ', this.rutero);
@@ -861,9 +868,9 @@ export class PlanificacionEntregasService {
                   facturas.forEach((factura, index) => {
                     this.borrarFacturaGuia(factura)
                     if (index == facturas.length - 1) {
-                      this.funcionClientesSinPuntear()
-
                       this.facturaNoAgregadas(facturas)
+                   return   this.funcionClientesSinPuntear()
+
                     }
 
 
@@ -879,6 +886,7 @@ export class PlanificacionEntregasService {
         })
 
         await alert.present();
+      
         return
       }
 
@@ -892,7 +900,9 @@ export class PlanificacionEntregasService {
         if (!this.continuarRutaOptima) {
           guia.camion.HoraFin = String(this.rutero[this.rutero.length - 1].HoraFin.getHours()).padStart(2, '0') + ':' + String(this.rutero[this.rutero.length - 1].HoraFin.getMinutes()).padStart(2, '0')
         }
-        this.funcionClientesSinPuntear();
+        console.log('end asigning time')
+         return this.funcionClientesSinPuntear()
+    
       }
     }
   }
@@ -942,10 +952,10 @@ export class PlanificacionEntregasService {
 
   async funcionClientesSinPuntear() {
 
-    if (this.clientesSinPuntear.length == 0) {
-      this.exportarRuteros();
-      return
-    }
+ if(this.clientesSinPuntear.length == 0){
+  return this.exportarRuteros();
+  
+ }
     for (let i = 0; i < this.clientesSinPuntear.length; i++) {
       let cliente = this.clientesSinPuntear[i];
       let index = this.rutero.findIndex(client => client.id == cliente.id)
@@ -954,8 +964,7 @@ export class PlanificacionEntregasService {
         this.rutero.push(cliente)
       }
       if (i == this.clientesSinPuntear.length - 1) {
-        this.clientesSinPuntear = []
-        this.exportarRuteros();
+      return   this.exportarRuteros();
       }
     }
 
@@ -980,6 +989,7 @@ export class PlanificacionEntregasService {
       }
       if (i == this.rutero.length - 1) {
         this.alertasService.loadingDissmiss();
+        console.log('finish exporting')
         return this.rutero;
 
       }
@@ -1018,19 +1028,20 @@ export class PlanificacionEntregasService {
   }
 
 
-  completePost(guia: Guias, facturas: PlanificacionEntregas[], ruteros: Cliente[]) {
+ async completePost(guia: Guias, facturas: PlanificacionEntregas[], ruteros: Cliente[]) {
 
     let postFacturas = [];
     let postRutero = [];
+    let putRutero = [];
 
-
+    let fecha = new Date(format(new Date(guia.fecha), 'yyy-MM-dd')).toISOString();
     let guiaaa: GuiaEntrega = {
       idGuia: guia.idGuia,
-      fecha: new Date(guia.fecha),
+      fecha: fecha,
       zona: guia.zona,
       ruta: guia.ruta,
       idCamion: guia.camion.idCamion,
-      numClientes: guia.numClientes,
+      numClientes: guia.clientes.length,
       peso: guia.camion.peso,
       estado: '',
       HH: '',
@@ -1039,11 +1050,11 @@ export class PlanificacionEntregasService {
     this.guiasGeneradas.push(guiaaa)
     const guiaCamion: GuiaEntrega = {
       idGuia: guia.idGuia,
-      fecha: new Date(guia.fecha),
+      fecha: fecha,
       zona: guia.zona,
       ruta: guia.ruta,
       idCamion: guia.camion.idCamion,
-      numClientes: guia.numClientes,
+      numClientes:  guia.clientes.length,
       peso: guia.camion.peso,
       estado: guia.camion.estado,
       HH: guia.camion.HH,
@@ -1085,36 +1096,80 @@ export class PlanificacionEntregasService {
         longitud_check: null,
         observaciones: null,
         estado: 'P',
-        bultos: ruteros[j].id,
+        bultos: ruteros[j].bultosTotales,
         checkout: null,
         distancia: ruteros[j].distancia,
         Duracion: ruteros[j].duracion,
         orden_Visita: ruteros[j].orden_visita
       }
+   
+    //  if(this.rutero[j].cliente)
 
-      postRutero.push(rut)
+    let ruterosExistentos = await this.ruteroService.syncRutero(guia.idGuia);
+    let r = ruterosExistentos.findIndex(rutero => rutero.idCliente == rut.idCliente);
+
+      
+   if(r >=0){
+    putRutero.push(rut)
+   }else{
+    postRutero.push(rut)
+   }
 
       if (j === ruteros.length - 1) {
         this.alertasService.presentaLoading('Guardando guias..')
-        console.log(postFacturas, 'postFacturas',)
+        console.log(postRutero, 'postRutero')
+        console.log(putRutero, 'putRutero')
+
+      
         let index = this.listaGuias.findIndex(filtrar => filtrar.idGuia == guia.idGuia);
         if (index >= 0) {
           //   this.listaGuias.splice(index,1)
 
           if (this.listaGuias[index].guiaExistente) {
-            this.putGuiaToPromise(guiaCamion).then(resp => {
-              this.ruteroService.insertarPostRutero(postRutero).then(resp => {
-                this.facturasService.insertarFacturas(postFacturas).then(resp => {
-                  this.complete += 1;
-                  console.log('completado')
+            this.putGuiaToPromise(guiaCamion).then(resp => {  
+              this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
+                if(putRutero.length == 0){
+                  this.facturasService.insertarFacturas(postFacturas).then(resp => {
+                    this.complete += 1;
+                    console.log('completado')
+  
+                    if (this.complete == this.listaGuias.length) {
+                      this.guiasPost();
+                      this.limpiarDatos();
+                      this.alertasService.loadingDissmiss();
+                    }
+                  });
+                  return
+                }
+                for(let r = 0;  r < putRutero.length ; r++){
+                  this.ruteroService.putRuteroToPromise(putRutero[r]).then(resp => {
+             console.log('ruteto actualziado', resp)
 
-                  if (this.complete == this.listaGuias.length) {
-                    this.guiasPost();
-                    this.limpiarDatos();
-                    this.alertasService.loadingDissmiss();
+                  }, error =>{
+                    console.log('error actualizando rutero', error, putRutero[r])
+                 
+                      
+                  })
+                  if(r == putRutero.length -1){
+                    this.facturasService.insertarFacturas(postFacturas).then(resp => {
+                      this.complete += 1;
+                      console.log('completado')
+    
+                      if (this.complete == this.listaGuias.length) {
+                        this.guiasPost();
+                        this.limpiarDatos();
+                        this.alertasService.loadingDissmiss();
+                      }
+                    });
+
                   }
-                });
+                }
               })
+
+
+
+          
+           
             });
           } else {
             this.postGuiaToPromise(guiaCamion).then(resp => {

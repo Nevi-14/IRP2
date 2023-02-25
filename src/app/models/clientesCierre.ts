@@ -1,7 +1,7 @@
 export class ClientesCierre{
     constructor(
        public idGuia: string,
-        public idCliente: string,
+        public idCliente: number,
         public nombre: string,
         public direccion: string,
         public fecha: string,

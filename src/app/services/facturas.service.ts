@@ -50,6 +50,15 @@ export class FacturasService {
     // https://apiirp.di-apps.co.cr/api/Facturas/?id=00100102010000050020
     let URL = this.getAPI( environment.facturasUrl);
         URL = URL + factura;  
+        console.log('getFactura', URL)
+    return this.http.get<PlanificacionEntregas[]>( URL );
+  }
+  private getFacturasGuia(id:string){
+    // GET
+    // https://apiirp.di-apps.co.cr/api/Facturas/?id=00100102010000050020
+    let URL = this.getAPI( environment.facturasGuias);
+        URL = URL + id;  
+        console.log('getFacturasGuia', URL)
     return this.http.get<PlanificacionEntregas[]>( URL );
   }
   private getFacGuias(idGuia:string){
@@ -57,6 +66,8 @@ export class FacturasService {
     // https://apiirp.di-apps.co.cr/api/FactGuias?id=20230201AJ01V8215
     let URL = this.getAPI( environment.facturasGuiasUrl);
         URL = URL + idGuia;
+
+        console.log('getFacGuias', URL)
     return this.http.get<facturasGuia[]>( URL );
   }
 

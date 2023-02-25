@@ -26,7 +26,7 @@
             <ng-template>
               <ion-content    class="ion-padding">
           
-                <ion-datetime [(ngModel)]="fechaInicio"  presentation="date"  id="datetime"></ion-datetime>
+                <ion-datetime (ionChange)="cerrarFechaModal()" [(ngModel)]="fechaInicio"  presentation="date"  id="datetime"></ion-datetime>
               </ion-content>
             </ng-template>
           </ion-popover>
@@ -52,7 +52,9 @@
             <ng-template>
               <ion-content    class="ion-padding">
           
-                <ion-datetime [(ngModel)]="fechaFin"    presentation="date"  id="datetime2"></ion-datetime>
+                <ion-datetime (ionChange)="cerrarFechaModal()" [(ngModel)]="fechaFin"    presentation="date"  id="datetime2"></ion-datetime>
+             
+             
               </ion-content>
             </ng-template>
           </ion-popover>
@@ -83,7 +85,7 @@
           <ion-label>Estado</ion-label>
           <ion-select [(ngModel)]="estado"   placeholder="Seleccionar Estado" mode="ios" (ionChange)="seleccionarEstado($event)">
             <ion-select-option value="INI">Inicio</ion-select-option>
-            <ion-select-option value="SYN">Sincronizada</ion-select-option>
+            <ion-select-option value="SYNC">Sincronizada</ion-select-option>
             <ion-select-option value="RUTA">Ruta</ion-select-option>
             <ion-select-option value="FIN">Liquidada</ion-select-option>
           </ion-select>
@@ -126,9 +128,10 @@
           <ion-label>{{guia.estado}}</ion-label>
         </ion-col>
         <ion-col size="3"  style="display: flex;">
-          <ion-button (click)="consultarGuia(guia)"  size="large"     fill="clear"    >
-           <ion-icon   name="create-outline"></ion-icon>
+          <ion-button *ngIf="guia.estado == 'SYNC' || guia.estado == 'RUTA'" (click)="cambiarEstado(guia)" size="large"     fill="clear">
+            <ion-icon   size="large" name="create-outline"></ion-icon>
           </ion-button>
+    
           <ion-button (click)="retornarFacturas(guia)" size="large"     fill="clear"  >
             <ion-icon   size="large" name="print-outline"></ion-icon>
           </ion-button>

@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ClientesGuia, Guias } from 'src/app/models/guia';
+import { GuiaEntrega } from 'src/app/models/guiaEntrega';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
+import { FacturasService } from 'src/app/services/facturas.service';
 import { GestionCamionesService } from 'src/app/services/gestion-camiones.service';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
+import { RutasZonasService } from 'src/app/services/rutas-zonas.service';
 import { RuteroService } from 'src/app/services/rutero.service';
 import { FacturasNoAgregadasPage } from '../facturas-no-agregadas/facturas-no-agregadas.page';
 
@@ -20,6 +23,7 @@ export class ControlFacturasPage implements OnInit {
   guiasAnteriores:Guias[]=[];
   nuevaGuia:boolean = true;
   guiaExistente:boolean = false;
+  guiaIni:boolean = false;
   incluirFacturas:boolean = false;
   totalFacturas:number=0;
   pesoTotal:number=0;
@@ -57,13 +61,17 @@ export class ControlFacturasPage implements OnInit {
     public alertasService: AlertasService,
     public gestionCamionesService: GestionCamionesService,
     public planificacionEntregasService: PlanificacionEntregasService,
-    public configuracionesService: ConfiguracionesService
+    public configuracionesService: ConfiguracionesService,
+    public facturasService: FacturasService,
+    public cdr: ChangeDetectorRef,
+    public rutaZonaService: RutasZonasService
   ) { }
 
   ngOnInit() {
 
     if(this.planificacionEntregasService.listaGuias.length > 0){
       this.nuevaGuia = false;
+      this.guiaIni  = false;
       this.guiaExistente = true;
       this.guias = this.planificacionEntregasService.listaGuias
     }else{
@@ -80,23 +88,115 @@ this.calcularTotales();
 
   toggleGuiasNuevas($event){
     let next  = $event.detail.checked;
-    this.guiaExistente = !next;
+
     if(next){
+      this.nuevaGuia = true;
+      this.guiaIni = false;
+      this.guiaExistente = false;
       this.guiasNuevas();
     }else{
       this.guias = this.planificacionEntregasService.listaGuias
     }
   }
 
+  toggleGuiasEstadoIni($event){
+    let next  = $event.detail.checked;
+    let fecha = this.planificacionEntregasService.fecha; 
+
+    if(next){
+      this.guiaIni = true;
+      this.nuevaGuia = false;
+      this.guiaExistente = false;
+     this.alertasService.presentaLoading('Cargando datos...')
+      this.planificacionEntregasService.getGuiaEstadoRangoFechaToPromise('INI',new Date(fecha).toISOString(),new Date(fecha).toISOString()).then(guias =>{
+ 
+    console.log('guias', guias)
+
+   this.guiasExistentes(guias)
+    
+
+      }, error =>{
+        this.alertasService.loadingDissmiss();
+        this.alertasService.message('IRP','Lo sentimos algo salio mal');
+      })
+    }else{
+      this.guiasNuevas();
+    }
+
+  }
+
+  async guiasExistentes(guias:GuiaEntrega[]){
+    this.guias = [];
+  const camiones = await  this.gestionCamiones.syncCamionesToPromise();  
+  const rutas = await this.rutaZonaService.syncRutasToPromise();
+  for(let i =0; i < guias.length ; i++ ){
+ 
+    let c = camiones.findIndex(camion => camion.idCamion == guias[i].idCamion);
+    let r = rutas.findIndex(ruta => ruta.RUTA == guias[i].ruta);
+    if(c >=0){
+
+
+      let capacidad = camiones[c].capacidadPeso;
+      let id =  guias[i].idGuia;
+      let guia: Guias = {
+        idGuia: id,
+        guiaExistente: true,
+        verificada: false,
+        totalFacturas: 0,
+        distancia: 0,
+        duracion: 0,
+        zona: guias[i].zona,
+        nombreRuta: r >=0 ? rutas[r].DESCRIPCION : 'Sin definir',
+        ruta: guias[i].ruta,
+        fecha:guias[i].fecha,
+        numClientes: guias[i].numClientes,
+        camion: {
+          numeroGuia: id,
+          chofer: camiones[c].chofer,
+          idCamion: camiones[c].idCamion,
+          capacidad: capacidad,
+          pesoRestante: capacidad,
+          peso: guias[i].peso,
+          estado: guias[i].estado,
+          HH: 'nd',
+          bultos: 0,
+          volumen: camiones[c].capacidadVolumen,
+          frio: camiones[c].frio,
+          seco: camiones[c].seco,
+          HoraInicio: '08:00',
+          HoraFin: '20:00'
+    
+        },
+        clientes: [],
+        facturas: []
+      }
+  
+  
+   this.guias.push(guia)
+    
+    }
+
+
+  
+
+
+
+    if(i == guias.length -1){
+      this.alertasService.loadingDissmiss();
+    }
+  }
+  }
 toggleGuiasExistentes($event){
   let next  = $event.detail.checked;
-  this.nuevaGuia = !next;
+
   if(next){
+    this.guiaExistente = true;
+    this.guiaIni = false;
+    this.nuevaGuia = false;
     this.guias = this.planificacionEntregasService.listaGuias
   }else{
     this.guiasNuevas();
   }
-
 }
 
 calcularTotales(){
@@ -145,6 +245,36 @@ cerrarModal() {
 
 async retornarCamion(camion:any){
 
+
+  if(camion.guiaExistente){
+    this.planificacionEntregasService.listaGuias.push(camion);
+    this.facturasService.syncGetFacturasGuiasToPromise(camion.idGuia).then(facturas =>{
+      
+      console.log('facturas', facturas)
+
+      for(let f = 0; f < facturas.length ; f++){
+
+         this.facturasService.syncGetFacturaToPromise(facturas[f].FACTURA).then(factura =>{
+         let cliente =  factura[0];
+             cliente.ClienteExistente = true
+          this.planificacionEntregasService.agregarFacturaGuia(camion.idGuia, cliente);  
+
+         });
+        
+
+        if(f == facturas.length -1){
+
+        }
+      }
+
+
+    }, error =>{
+
+this.alertasService.message('IRP','Lo sentimos algo salio mal');
+
+    })
+  }
+
  console.log('camion', camion)
 this.planificacionEntregasService.facturasNoAgregadas = [];
 let  id = this.planificacionEntregasService.generarIDGuia();
@@ -155,6 +285,7 @@ if(this.nuevaGuia){
 }
   for(let i =0; i< this.facturas.length; i++){
     this.facturas[i].facturas.forEach(factura  => {
+     
      if(camion.idGuia != factura.ID_GUIA){
       this.planificacionEntregasService.borrarFacturaGuia(factura) 
      }

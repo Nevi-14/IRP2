@@ -50,7 +50,8 @@ public NOMBRE_CLIENTE: string,
 public FRIO_SECO: string,
 public CAMION: string,
 public CONSECUTIVO:  string,
-public SELECCIONADO:  boolean
+public SELECCIONADO:  boolean,
+public ClienteExistente:  boolean
 
     ){}
 }

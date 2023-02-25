@@ -1,7 +1,7 @@
 export class Rutero {
     constructor(
         public idGuia: string,
-        public idCliente: string,
+        public idCliente: number,
         public nombre: string,
         public direccion:string,
         public latitud:number,
@@ -34,5 +34,7 @@ export class RuteroMH {
         public orden_visita: number,
         public asignado: boolean,
         public HoraInicio:Date,
-        public HoraFin:Date){}
+        public HoraFin:Date
+        
+        ){}
 }

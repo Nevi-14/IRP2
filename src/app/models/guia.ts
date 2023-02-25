@@ -14,7 +14,7 @@ export class Cliente {
   public bultosTotales:number,
   public orden_visita: number,
   public HoraInicio:Date,
-  public HoraFin:Date
+  public HoraFin:Date,
 
     ){}
 }

@@ -1,7 +1,7 @@
 export class GuiaEntrega{
     constructor(
        public idGuia: string,
-        public fecha: Date,
+        public fecha: any,
         public zona: string,
         public ruta: string,
         public idCamion: string,

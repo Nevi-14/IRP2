@@ -188,6 +188,7 @@ this.alertasService.presentaLoading('Cargando datos...')
               factura = facturas[f];
             } else {
               this.alertasService.message(`Factura ${this.textFactura}`, 'Ya fue agregada a la guia...!!!');
+              return
             }
           }
 
@@ -203,11 +204,7 @@ this.alertasService.presentaLoading('Cargando datos...')
                   this.modalControlFacturas(factura[0])
 
                 } else {
-                  if (!factura[0].LONGITUD || !factura[0].LATITUD) {
-         // this.incluirFac();
-                   // this.alertasService.message('IRP', 'La factura a solicitar, es parte de otra ruta - zona, ademas  sin longitud ni latitud no pueden ser parte del proceso.')
-                    return
-                  }
+           
                   this.alertaRutaZona(factura[0])
                 }
               } else {

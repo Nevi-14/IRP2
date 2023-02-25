@@ -37,6 +37,7 @@ export const environment = {
   clientesGuias:'ClientesGuia/',
   prdMode: true,
   facturasUrl:'Facturas/?id=',
+  facturasGuias:'get-facturas-guia/?Id=',
   facturasGuiasUrl:'FactGuias?id=',
   manifiestoURL:'Manifiesto/?ID=',
   consultarGuia:'consultar-guia/?id=',

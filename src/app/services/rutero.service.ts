@@ -83,7 +83,7 @@ private putActualizarRutero(rutero:Rutero){
    return this.http.put(URL,JSON.stringify(rutero), options);
  }
 
- putRuteroToPromise(rutero){
+ putRuteroToPromise(rutero:Rutero){
   return  this.putActualizarRutero(rutero).toPromise();
  }
 

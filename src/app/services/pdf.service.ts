@@ -9,7 +9,10 @@ import { format } from 'date-fns';
 import { RutasZonasService } from './rutas-zonas.service';
 import { environment } from 'src/environments/environment';
 import { ConfiguracionesService } from './configuraciones.service';
-
+interface Respuesta  {
+  error: string,
+  idToken: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -37,19 +40,22 @@ public configuracionesService: ConfiguracionesService
 
   private getToken (){
     // POST
-    // API https://apiirp.di-apps.co.cr/api/ActFac
+    // API https://apiirp.di-apps.co.cr/api/impresiones
     const URL = this.configuracionesService.company.printing;
     const options = {
-      headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-      }
+      headers : {
+        'UserAgent': 'SDERP/1.0.3',
+        'Content-Type': 'application/json',
+        'Accept': '/',
+    }
     };
  
     console.log('getToken', URL);
-    console.log('printingUser', this.configuracionesService.company.printingUser);
-    return this.http.post( URL, JSON.stringify(this.configuracionesService.company.printingUser) , options );
+    console.log('printingUser',JSON.stringify(this.configuracionesService.company.printingUser));
+
+
+    return this.http.post<Respuesta>( URL, '{"email": "mherra@sde.cr","password": "0r#H8lVR*!f9uV4&2y"}', options );
+
   }
   
 
