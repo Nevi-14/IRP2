@@ -96,7 +96,7 @@ export class ControlFacturasPage implements OnInit {
     let sum = 0;
 
     for (let i = 0; i < array.length; i += 1) {
-      sum += array[i].TOTAL_UNIDADES;
+      sum +=  array[i].RUBRO1 ?  Number(array[i].RUBRO1) : 0;
     }
 
     return sum;
@@ -221,11 +221,16 @@ export class ControlFacturasPage implements OnInit {
     this.planificacionEntregasService.facturasNoAgregadas = [];
     let id = this.planificacionEntregasService.generarIDGuia();
 
-    if (camion.guiaExistente) {
-
+    if (this.guiaIni) {
+ 
       camion.totalFacturas = 0;
       camion.numClientes = 0;
-      this.planificacionEntregasService.listaGuias.push(camion);
+      camion.camion.pesoRestante = 0;
+      camion.camion.peso = 0;
+      camion.camion.bultos = 0;
+      let i = this.planificacionEntregasService.listaGuias.findIndex(guia => guia.idGuia == camion.idGuia);
+      if(i < 0) this.planificacionEntregasService.listaGuias.push(camion);
+
       this.facturasService.syncGetFacturasGuiasToPromise(camion.idGuia).then(facturas => {
         for (let f = 0; f < facturas.length; f++) {
           this.facturasService.syncGetFacturaToPromise(facturas[f].FACTURA).then(factura => {

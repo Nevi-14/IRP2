@@ -9,6 +9,8 @@ import { format } from 'date-fns';
 import { RutasZonasService } from './rutas-zonas.service';
 import { environment } from 'src/environments/environment';
 import { ConfiguracionesService } from './configuraciones.service';
+import { FacturasService } from './facturas.service';
+import { facturasGuia } from '../models/facturas';
 interface Respuesta  {
   error: string,
   idToken: string
@@ -22,7 +24,8 @@ export class PdfService {
 public http: HttpClient,
 public camionesService:GestionCamionesService,
 public rutasZonasService:RutasZonasService,
-public configuracionesService: ConfiguracionesService
+public configuracionesService: ConfiguracionesService,
+public facturasService: FacturasService
 
   ) { }
 
@@ -58,14 +61,22 @@ public configuracionesService: ConfiguracionesService
 
   }
   
+  totalBultos(array: facturasGuia[]) {
+    let sum = 0;
 
+    for (let i = 0; i < array.length; i += 1) {
+      sum +=  array[i].RUBRO1 ?  Number(array[i].RUBRO1) : 0;
+    }
+
+    return sum;
+  }
 
 async syncPostGetTokenToPromise(){
 
   return this.getToken().toPromise();
 }
   async rellenarpdf(titulo:string,image:any,guia:GuiaEntrega,facturas:Manifiesto[]){
-
+    const totalFacturas = await this.facturasService.syncGetFacturasGuiasToPromise(guia.idGuia);
   await this.camionesService.syncCamionesToPromise().then(resp => {this.camionesService .camiones = resp});
   await this.rutasZonasService.syncRutasToPromise().then(resp => {this.rutasZonasService.rutas = resp});
     let i =  this.camionesService.camiones.findIndex(camion => camion.idCamion == guia.idCamion);
@@ -128,8 +139,19 @@ if(r >=0){
 
           {text: 'Placa',bold: true}
         ] ],
-        [ choferCamion, guia.idCamion, ]
-      ]
+        [ choferCamion, guia.idCamion, ],
+        [  { text: 'Clientes',bold: true}, [
+
+          {text: 'Facturas',bold: true}
+        ] ],
+        [ guia.numClientes, totalFacturas.length ],
+        [  { text: 'Bultos',bold: true}, [
+
+          {text: 'Peso',bold: true}
+        ] ],
+        [ this.totalBultos(totalFacturas).toFixed(2), guia.peso.toFixed(2), ]
+      ],
+      
     }
     }
 

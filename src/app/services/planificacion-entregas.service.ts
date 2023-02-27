@@ -1127,44 +1127,58 @@ export class PlanificacionEntregasService {
 
           if (this.listaGuias[index].guiaExistente) {
             this.putGuiaToPromise(guiaCamion).then(resp => {  
-              this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
-                if(putRutero.length == 0){
-                  this.facturasService.insertarFacturas(postFacturas).then(resp => {
-                    this.complete += 1;
-                    console.log('completado')
+              if(postRutero.length > 0){
+                this.ruteroService.insertarPostRutero(postRutero).then(resp =>{
+                  if(putRutero.length == 0){
+            if(postFacturas.length > 0){
+              this.facturasService.insertarFacturas(postFacturas).then(resp => {
+                this.complete += 1;
+                console.log('completado')
   
-                    if (this.complete == this.listaGuias.length) {
-                      this.guiasPost();
-                      this.limpiarDatos();
-                      this.alertasService.loadingDissmiss();
-                    }
-                  });
-                  return
+                if (this.complete == this.listaGuias.length) {
+                  this.guiasPost();
+                  this.limpiarDatos();
+                  this.alertasService.loadingDissmiss();
                 }
-                for(let r = 0;  r < putRutero.length ; r++){
-                  this.ruteroService.putRuteroToPromise(putRutero[r]).then(resp => {
-             console.log('ruteto actualziado', resp)
-
-                  }, error =>{
-                    console.log('error actualizando rutero', error, putRutero[r])
-                 
-                      
-                  })
-                  if(r == putRutero.length -1){
-                    this.facturasService.insertarFacturas(postFacturas).then(resp => {
-                      this.complete += 1;
-                      console.log('completado')
-    
-                      if (this.complete == this.listaGuias.length) {
-                        this.guiasPost();
-                        this.limpiarDatos();
-                        this.alertasService.loadingDissmiss();
-                      }
-                    });
-
+              });
+            }
+                    return
                   }
+                  for(let r = 0;  r < putRutero.length ; r++){
+                    this.ruteroService.putRuteroToPromise(putRutero[r]).then(resp => {
+               console.log('ruteto actualziado', resp)
+  
+                    }, error =>{
+                      console.log('error actualizando rutero', error, putRutero[r])
+                   
+                        
+                    })
+                    if(r == putRutero.length -1){
+                      if(postFacturas.length > 0){
+                      this.facturasService.insertarFacturas(postFacturas).then(resp => {
+                        this.complete += 1;
+                        console.log('completado')
+      
+                        if (this.complete == this.listaGuias.length) {
+                          this.guiasPost();
+                          this.limpiarDatos();
+                          this.alertasService.loadingDissmiss();
+                        }
+                      });
+                    }
+  
+                    }
+                  }
+                })
+              }else{
+                this.complete += 1;
+                if (this.complete == this.listaGuias.length) {
+                  this.guiasPost();
+                  this.limpiarDatos();
+                  this.alertasService.loadingDissmiss();
                 }
-              })
+              }
+      
 
 
 
