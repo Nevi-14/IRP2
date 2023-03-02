@@ -1,0 +1,31 @@
+ion-toolbar{
+    --background:#fff;
+    color: #000;
+  }
+
+  #form{
+    ion-item{
+        border-radius: 50px;
+        height: 55px;
+        box-shadow: 1px 8px 8px 0px rgba(0,0,0,0.08);
+        --highlight-height:0px;
+      }
+      
+      ion-input{
+        font-size: 18px;
+        --padding-top:20px;
+        --padding-bottom:15px;
+        --padding-start:5px;
+      
+      }
+      
+      ion-select{
+        font-size: 18px;
+        --padding-top:20px;
+        --padding-bottom:15px;
+        --padding-start:5px;
+        width: 100%;
+      
+      }
+
+  }

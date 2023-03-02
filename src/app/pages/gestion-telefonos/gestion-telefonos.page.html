@@ -1,0 +1,57 @@
+
+
+
+
+<ion-toolbar>
+  <ion-title class="ion-text-capitalize" class="title"><strong>Gestión Telefonos</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{telefonosService.telefonos.length}}</ion-badge></ion-title>
+  <ion-searchbar slot="end" style="width:40%;margin-top: 1rem;" mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+  <ion-fab-button (click)="detalleTelefono()"  slot="end" size="small" color="dark">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-toolbar>
+
+
+<ion-content class="ion-padding">
+
+
+<ion-grid style="height: 100%;">
+  <ion-row style="height: 100%;">
+
+    <ion-col size="12" style="height: 100%;overflow: auto;">
+<ion-list>
+
+
+<ion-list  *ngFor="let telefono of telefonosService.telefonos | filtro : textoBuscarTelfono:'Descripcion'">
+<ion-list-header>
+ 
+  <ion-badge color="warning" mode="ios" style="margin-right: 0.5rem;">{{telefono.idHH}}</ion-badge>
+  <ion-label>{{telefono.Descripcion}} 
+  
+  
+  </ion-label>
+
+  <ion-fab-button (click)="detalleTelefono(telefono)" size="small">
+    <ion-icon name="create-outline"></ion-icon>
+  </ion-fab-button>
+</ion-list-header>
+<ion-item>
+ <ion-label>Data</ion-label>
+  
+</ion-item>
+</ion-list>
+</ion-list>
+
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-text-center">
+    <ion-title>Gestión Telefonos</ion-title>
+  </ion-toolbar>
+</ion-footer>
+
+

@@ -9,52 +9,88 @@ import { ConfiguracionesService } from './configuraciones.service';
   providedIn: 'root'
 })
 export class GestionCamionesService {
-  camiones: Camiones[]=[];
- 
+  camiones: Camiones[] = [];
+
   constructor(
     private http: HttpClient,
     public alertasService: AlertasService,
     public configuracionesService: ConfiguracionesService
-    
-    ) { }
 
-  getURL( api: string ){
+  ) { }
+
+  getURL(api: string) {
     let test: string = '';
-    if ( !environment.prdMode ) test = environment.TestURL;
-    let URL = this.configuracionesService.company.preURL  + test +   this.configuracionesService.company.postURL + api;
+    if (!environment.prdMode) test = environment.TestURL;
+    let URL = this.configuracionesService.company.preURL + test + this.configuracionesService.company.postURL + api;
     this.configuracionesService.api = URL;
     return URL;
   }
 
-  private getCamiones( ){
+  private getCamiones() {
     // GET
     //  https://apiirp.di-apps.co.cr/api/Camiones
-    const URL = this.getURL( environment.camionesURL);
+    const URL = this.getURL(environment.camionesURL);
     console.log('getCamiones', URL)
-    return this.http.get<Camiones[]>( URL );
-
+    return this.http.get<Camiones[]>(URL);
   }
 
-  syncCamiones(){
-   this.camiones = [];
+  private postCamion(camion: Camiones[]) {
+    // POST
+    // API https://apiirp.di-apps.co.cr/api/Camiones
+    const URL = this.getURL(environment.camionesURL);
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    };
+    console.log('camion:Camiones', camion);
+    console.log('postCamion', URL);
+    return this.http.post(URL, JSON.stringify(camion), options);
+  }
+
+  private putCamion(ID: string, camion: Camiones) {
+    // PUT
+    // API https://apiirp.di-apps.co.cr/api/Camiones
+    let URL = this.getURL(environment.camionesURL);
+    URL = URL + '?ID=' + ID;
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    };
+    console.log('ID:string,camion:Camiones', ID, camion);
+    console.log('putCamion', URL);
+    return this.http.put(URL, JSON.stringify(camion), options);
+  }
+
+
+  syncCamiones() {
+    this.camiones = [];
     this.alertasService.presentaLoading('Cargando datos..')
     this.getCamiones().subscribe(
-      resp =>{
-this.camiones = resp.slice(0);
-this.alertasService.loadingDissmiss();
-      }, error  => {
+      resp => {
+        this.camiones = resp.slice(0);
+        this.alertasService.loadingDissmiss();
+      }, error => {
         this.alertasService.loadingDissmiss();
         this.alertasService.message('IRP', 'Error de conexión  con la API ' + this.configuracionesService.api);
-        
       }
 
     );
   }
 
-    syncCamionesToPromise(){
-      return this.getCamiones().toPromise();
-     }
- async syncPromiseCamiones(){
-   return  this.getCamiones().toPromise();
-   }
+  syncCamionesToPromise() {
+    return this.getCamiones().toPromise();
+  }
+
+  syncPostCamionesToPromise(camion: Camiones[]) {
+    return this.postCamion(camion).toPromise();
+  }
+  syncPutCamionesToPromise(ID: string, camion: Camiones) {
+    return this.putCamion(ID, camion).toPromise();
+  }
 }

@@ -27,6 +27,7 @@ export const environment = {
   zonasURL:'Zonas',
   idParam:'?ID=',
   camionesURL:'Camiones',
+  telefonosURL:'Telefonos',
   guiasURL:'Guias',
   guiasURLEstadoParam:'?estado=',
   guiasRangoFecha:'guias-estado-rango-fecha?estado=',

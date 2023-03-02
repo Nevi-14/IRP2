@@ -22,6 +22,10 @@ const routes: Routes = [
         loadChildren: () => import('../gestion-camiones/gestion-camiones.module').then( m => m.GestionCamionesPageModule)
       },
       {
+        path: 'gestion-telefonos',
+        loadChildren: () => import('../gestion-telefonos/gestion-telefonos.module').then( m => m.GestionTelefonosPageModule)
+      },
+      {
         path: 'gestion-liquidaciones',
         loadChildren: () => import('../gestion-liquidaciones/gestion-liquidaciones.module').then( m => m.GestionLiquidacionesPageModule)
       },

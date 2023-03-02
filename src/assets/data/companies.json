@@ -19,11 +19,12 @@
     "address":"Dirección:Barreal Heredia-Alajuela-Costa Rica",
     "modules":[
     { "id":"00","name":"Inicio","title": "Inicio","description":"", "image": "../assets/home/home.svg","url": "/inicio/detalle","included":true},
-    { "id":"01","name":"Gestión decamiones","title": "Gestión decamiones","description":"Permite gestionar los camiones en ruta", "image": "../assets/home/delivery.svg","url": "/inicio/gestion-camiones","included":true},
-    { "id":"02","name":"Planificación de Rutas","title": "Planificación de Rutas","description":"Permite definir la configuracion de Rutas - Clientes", "image": "../assets/home/route.png","url": "/inicio/planificacion-rutas","included":true},
-    { "id":"03","name":"Planificación de Entregas","title": "Planificación de Entregas","description":"Permite gestionar la factura por cliente de cada ruta", "image": "../assets/png/receipt.png","url": "/inicio/planificacion-entregas","included":true},
-    { "id":"04","name":"Atención al cliente","title": "Atención al cliente","description":"Permite gestionar las entregas en ruta", "image": "../assets/png/customer-service.svg","url": "/inicio/servicio-cliente","included":true},
-    { "id":"05","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
+    { "id":"01","name":"Gestión Camiones","title": "Gestión Camiones","description":"Permite gestionar los camiones en ruta", "image": "../assets/home/delivery.svg","url": "/inicio/gestion-camiones","included":true},
+    { "id":"02","name":"Gestión Telefonos","title": "Gestión Telefonos","description":"Permite gestionar los telefonos de usuarios", "image": "../assets/home/setting.svg","url": "/inicio/gestion-telefonos","included":true},
+    { "id":"03","name":"Planificación de Rutas","title": "Planificación de Rutas","description":"Permite definir la configuracion de Rutas - Clientes", "image": "../assets/home/route.png","url": "/inicio/planificacion-rutas","included":true},
+    { "id":"04","name":"Planificación de Entregas","title": "Planificación de Entregas","description":"Permite gestionar la factura por cliente de cada ruta", "image": "../assets/png/receipt.png","url": "/inicio/planificacion-entregas","included":true},
+    { "id":"05","name":"Atención al cliente","title": "Atención al cliente","description":"Permite gestionar las entregas en ruta", "image": "../assets/png/customer-service.svg","url": "/inicio/servicio-cliente","included":true},
+    { "id":"06","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
 
 
     ],
@@ -53,10 +54,11 @@
     "modules":[
         { "id":"00","name":"Inicio","title": "Inicio","description":"", "image": "../assets/home/home.svg","url": "/inicio/detalle","included":true},
         { "id":"01","name":"Gestión decamiones","title": "Gestión decamiones","description":"Permite gestionar los camiones en ruta", "image": "../assets/home/delivery.svg","url": "/inicio/gestion-camiones","included":true},
-        { "id":"02","name":"Planificación de Rutas","title": "Planificación de Rutas","description":"Permite definir la configuracion de Rutas - Clientes", "image": "../assets/home/route.png","url": "/inicio/planificacion-rutas","included":true},
-        { "id":"03","name":"Planificación de Entregas","title": "Planificación de Entregas","description":"Permite gestionar la factura por cliente de cada ruta", "image": "../assets/png/receipt.png,","url": "/inicio/planificacion-entregas","included":false},
-        { "id":"04","name":"Atención al cliente","title": "Atención al cliente","description":"Permite gestionar las entregas en ruta", "image": "../assets/png/customer-service.svg","url": "/inicio/servicio-cliente","included":true},
-        { "id":"05","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
+        { "id":"02","name":"Gestión Telefonos","title": "Gestión Telefonos","description":"Permite gestionar los telefonos de usuarios", "image": "../assets/home/setting.svg","url": "/inicio/gestion-telefonos","included":true},
+        { "id":"03","name":"Planificación de Rutas","title": "Planificación de Rutas","description":"Permite definir la configuracion de Rutas - Clientes", "image": "../assets/home/route.png","url": "/inicio/planificacion-rutas","included":true},
+        { "id":"04","name":"Planificación de Entregas","title": "Planificación de Entregas","description":"Permite gestionar la factura por cliente de cada ruta", "image": "../assets/png/receipt.png,","url": "/inicio/planificacion-entregas","included":false},
+        { "id":"05","name":"Atención al cliente","title": "Atención al cliente","description":"Permite gestionar las entregas en ruta", "image": "../assets/png/customer-service.svg","url": "/inicio/servicio-cliente","included":true},
+        { "id":"06","name":"Gestión Liquidaciones","title": "Gestión Liquidaciones","description":"Permite gestionar las liquidaciones de los camniones que han completado su ruta de entrega.", "image": "../assets/png/return.svg","url": "/inicio/gestion-liquidaciones","included":true}
         ],
         "printing":"https://nakmcieqcc.execute-api.us-east-1.amazonaws.com/QA/SP-congnito-Login",
         "printingUser" : {

@@ -11,6 +11,7 @@ export const environment = {
   clientesURL: 'Clientes/',
   provinciasURL: 'Provincias/',
   cantonesURL: 'Cantones/',
+  telefonosURL:'Telefonos',
   distritosURL: 'Distritos/',
   busquedaCliente: 'Clientes2/',
   ruteroURL:'Rutero/',

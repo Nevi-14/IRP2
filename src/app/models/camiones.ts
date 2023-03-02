@@ -7,7 +7,7 @@ export class Camiones{
         public propietario: string,
         public capacidadPeso: number,
         public capacidadVolumen: number,
-        public activo: number,
+        public activo: string,
         public frio: string,
         public seco: string,
         public chofer: string,

@@ -1119,7 +1119,7 @@ export class PlanificacionEntregasService {
     
         console.log(postRutero, 'postRutero')
         console.log(putRutero, 'putRutero')
-
+        console.log(postFacturas, 'postFacturas')
       
         let index = this.listaGuias.findIndex(filtrar => filtrar.idGuia == guia.idGuia);
         if (index >= 0) {
@@ -1171,12 +1171,26 @@ export class PlanificacionEntregasService {
                   }
                 })
               }else{
-                this.complete += 1;
+              if(postFacturas.length > 0){
+                this.facturasService.insertarFacturas(postFacturas).then(resp => {
+                  this.complete += 1;
+                  console.log('completado')
+    
+                  if (this.complete == this.listaGuias.length) {
+                    this.guiasPost();
+                    this.limpiarDatos();
+                    this.alertasService.loadingDissmiss();
+                  }
+                });
+
+              }else{
                 if (this.complete == this.listaGuias.length) {
                   this.guiasPost();
                   this.limpiarDatos();
                   this.alertasService.loadingDissmiss();
                 }
+              }
+          
               }
       
 

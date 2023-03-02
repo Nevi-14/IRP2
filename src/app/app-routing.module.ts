@@ -130,7 +130,19 @@ const routes: Routes = [
   {
     path: 'gestion-liquidaciones-facturas',
     loadChildren: () => import('./pages/gestion-liquidaciones-facturas/gestion-liquidaciones-facturas.module').then( m => m.GestionLiquidacionesFacturasPageModule)
+  },  {
+    path: 'agregar-actualizar-telefono',
+    loadChildren: () => import('./pages/agregar-actualizar-telefono/agregar-actualizar-telefono.module').then( m => m.AgregarActualizarTelefonoPageModule)
   },
+  {
+    path: 'agregar-actualizar-camion',
+    loadChildren: () => import('./pages/agregar-actualizar-camion/agregar-actualizar-camion.module').then( m => m.AgregarActualizarCamionPageModule)
+  },
+  {
+    path: 'gestion-telefonos',
+    loadChildren: () => import('./pages/gestion-telefonos/gestion-telefonos.module').then( m => m.GestionTelefonosPageModule)
+  },
+
 
 
 
