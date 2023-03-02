@@ -21,7 +21,7 @@
               
           <ion-label>Id HH</ion-label>
           <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-            <ion-input  maxlength="4" name="idHH"   [(ngModel)]="telefono.idHH"  type="text" placeholder="id HH" required></ion-input>
+            <ion-input readonly="{{editarTelefono ? true : false}}"  maxlength="4" name="idHH"   [(ngModel)]="telefono.idHH"  type="text" placeholder="id HH" required></ion-input>
             </ion-item>
         
         
@@ -56,9 +56,9 @@
                 </ion-col>
                 <ion-col size="12" size-md="4">
               
-                  <ion-label>COD ZON</ion-label>
+                  <ion-label>Cod Zona</ion-label>
                   <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                    <ion-input  maxlength="4" name="COD_ZON"   [(ngModel)]="telefono.COD_ZON"  type="text" placeholder="COD_ZON" required></ion-input>
+                    <ion-input  maxlength="4" name="COD_ZON"   [(ngModel)]="telefono.COD_ZON"  type="text" placeholder="Cod Zona" required></ion-input>
                     </ion-item>
                 
                 
@@ -66,9 +66,14 @@
 
                   <ion-col size="12" size-md="4">
               
-                    <ion-label>APLICA REC</ion-label>
+                    <ion-label>Aplica Rec</ion-label>
                     <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                      <ion-input  maxlength="1" name="APLICA_REC"   [(ngModel)]="telefono.APLICA_REC"  type="text" placeholder="APLICA REC" required></ion-input>
+                
+
+                      <ion-label>{{aplicaRec ? 'Si' : 'No'}}</ion-label>
+                      <ion-toggle size="small" name="aplicaRec" (ionChange)="aplicaRecToggleOnChange($event)" [(ngModel)]="aplicaRec" ></ion-toggle>
+
+
                       </ion-item>
                   
                   
@@ -76,9 +81,13 @@
 
                     <ion-col size="12" size-md="4">
               
-                      <ion-label>APLICA DEV</ion-label>
+                      <ion-label>Aplica Dev</ion-label>
                       <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                        <ion-input maxlength="1"  name="APLICA_DEV"   [(ngModel)]="telefono.APLICA_DEV"  type="text" placeholder="APLICA_DEV" required></ion-input>
+       
+                        <ion-label>{{aplicaDev ? 'Si' : 'No'}}</ion-label>
+                        <ion-toggle size="small" name="aplicaDev" (ionChange)="aplicaDevToggleOnChange($event)" [(ngModel)]="aplicaDev" ></ion-toggle>
+
+
                         </ion-item>
                     
                     

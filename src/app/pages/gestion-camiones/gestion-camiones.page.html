@@ -23,8 +23,8 @@
 
 <ion-list  *ngFor="let camion of camionesService.camiones | filtro : textoBuscarRuta:'chofer'">
   <ion-list-header>
-    <ion-icon   style="margin-left: 1rem;margin-top: 0.5rem;"  size="large"  color="primary" *ngIf="camion.frio" name="snow-outline"></ion-icon>
-    <ion-icon style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;"        size="large"   color="warning" *ngIf="camion.seco" name="sunny-outline"></ion-icon>
+    <ion-icon   style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;"  size="large"  color="primary" *ngIf="camion.frio == 'S'" name="snow-outline"></ion-icon>
+    <ion-icon style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;"        size="large"   color="warning" *ngIf="camion.seco == 'S'" name="sunny-outline"></ion-icon>
   
     <ion-badge color="warning" mode="ios" style="margin-right: 0.5rem;">{{camion.idCamion}}</ion-badge>
     <ion-label>{{camion.chofer}} 

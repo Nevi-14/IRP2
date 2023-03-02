@@ -21,6 +21,8 @@ export class AgregarActualizarTelefonoPage implements OnInit {
     APLICA_REC: 'N',
     APLICA_DEV: 'N'
  }
+ aplicaRec = false;
+ aplicaDev = false;
   constructor(
     public modalCtrl:ModalController,
     public gestionTelefonosService:GestionTelefonosService,
@@ -28,15 +30,48 @@ export class AgregarActualizarTelefonoPage implements OnInit {
   ) { }
 
   ngOnInit() {
-  if(this.editarTelefono) this.telefono = this.editarTelefono;
+  
+
+  if(this.editarTelefono){
+    this.telefono = this.editarTelefono;
+    this.aplicaRec = this.editarTelefono.APLICA_REC == 'S' ? true : false;
+    this.aplicaDev = this.editarTelefono.APLICA_DEV == 'S' ? true : false;
+  }
+
   }
 
   cerrarModal(){
     this.modalCtrl.dismiss();
   }
 
-
+  aplicaRecToggleOnChange($event){
+    let next = $event.detail.checked;
+    if(next){
+      this.telefono.APLICA_REC = 'S';
+      this.aplicaRec = true;
+    }else{
+      this.telefono.APLICA_REC = 'N';
+      this.aplicaRec = false;
+    }
+  }
+  aplicaDevToggleOnChange($event){
+    let next = $event.detail.checked;
+    if(next){
+      this.telefono.APLICA_DEV = 'S';
+      this.aplicaDev = true;
+    }else{
+      this.telefono.APLICA_DEV  = 'N';
+      this.aplicaDev = false;
+    }
+  }
   enviarFormulario(){
+
+    if(!this.telefono.idHH || !this.telefono.Descripcion || !this.telefono.Consec_Dev){
+      this.alertasService.message('IRP','Lo sentimos algo salio mal, verifica que cumpla con todos los campos requeridos...')
+      return
+    }
+
+    
     this.alertasService.presentaLoading('Guardando cambios...')
 if(this.editarTelefono){
   this.gestionTelefonosService.syncPutTelefonosToPromise(this.telefono.idHH,this.telefono).then(resp =>{

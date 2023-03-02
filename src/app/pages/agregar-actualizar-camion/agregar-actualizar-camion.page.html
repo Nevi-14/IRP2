@@ -21,7 +21,7 @@
               
           <ion-label>Id Camion</ion-label>
           <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-            <ion-input maxlength="10" name="idCamion"   [(ngModel)]="camion.idCamion"  type="text" placeholder="id camion" required></ion-input>
+            <ion-input readonly="{{editarCamion ? true : false}}" maxlength="10" name="idCamion"   [(ngModel)]="camion.idCamion"  type="text" placeholder="id camion" required></ion-input>
             </ion-item>
         
         

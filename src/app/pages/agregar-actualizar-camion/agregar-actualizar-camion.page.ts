@@ -60,10 +60,10 @@ export class AgregarActualizarCamionPage implements OnInit {
   frioToggleOnChange($event){
     let next = $event.detail.checked;
     if(next){
-      this.camion.seco = 'S';
+      this.camion.frio = 'S';
       this.frio = true;
     }else{
-      this.camion.seco = 'N';
+      this.camion.frio = 'N';
       this.frio = false;
     }
     }
@@ -80,6 +80,11 @@ export class AgregarActualizarCamionPage implements OnInit {
 
 
   enviarFormulario(){
+
+    if ( !this.camion.idCamion || !this.camion.descripcion || !this.camion.propietario || this.camion.capacidadPeso  < 0 || this.camion.capacidadVolumen < 0){
+      this.alertasService.message('IRP','Lo sentimos algo salio mal, verifica que cumpla con todos los campos requeridos...')
+      return
+    }
     this.alertasService.presentaLoading('Guardando cambios...')
 if(this.editarCamion){
   this.gestionCamionesService.syncPutCamionesToPromise(this.camion.idCamion,this.camion).then(resp =>{
