@@ -38,5 +38,6 @@ export const environment = {
   manifiestoURL:'Manifiesto/?ID=',
   consultarGuia:'consultar-guia/?id=',
   facturasGuias:'get-facturas-guia/?Id=',
-  clientesClierre:'ClientesCierre/?fecha='
+  clientesClierre:'ClientesCierre/?fecha=',
+  deleteRutero:'delete-ruteros'
 };

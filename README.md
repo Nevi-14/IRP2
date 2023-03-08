@@ -100,6 +100,10 @@ https://apiirp.di-apps.co.cr/api/Rutero/20230123CT01V3683
 - PUT
 https://apiirp.di-apps.co.cr/api/Rutero/?ID=20230123CT01V3683&idCliente=1482
 
+- DELETE
+https://apiirp.di-apps.co.cr/api/delete-ruteros
+
+
 ## Requirements
 
 The requirements section describes whether this project requires anything outside of Dev For Business core to work

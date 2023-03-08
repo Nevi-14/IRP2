@@ -520,14 +520,15 @@ export class PlanificacionEntregasPage {
   }
 
   async detalleGuia(guia: Guias) {
+ 
+
     const modal = await this.modalCtrl.create({
       component: ListaClientesGuiasPage,
       cssClass: 'large-modal',
       componentProps: {
-        clientes: await this.planificacionEntregasService.importarClientes(guia.facturas),
         rutaZona: this.planificacionEntregasService.rutaZona,
         fecha: this.planificacionEntregasService.fecha,
-        guia: guia
+        idGuia:guia.idGuia
       },
       id: 'detalle-guia'
     });

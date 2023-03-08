@@ -108,5 +108,24 @@ if(rutero.length > 0){
  return this.postRutero(rutero).toPromise();
 }
 }
+private deleteRuteros(rutero:Rutero) {
 
+  let URL = this.getAPI(environment.deleteRutero);
+      URL =  URL +'/?idCliente='+rutero.idCliente+'&idGuia='+rutero.idGuia; 
+  const options = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    }
+
+  };
+
+  return this.http.delete(URL, options);
+
+}
+
+syncDeleteRuterosToPromise(rutero:Rutero) {
+  return this.deleteRuteros(rutero).toPromise();
+}
 }
