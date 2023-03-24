@@ -120,6 +120,7 @@ export class PlanificacionEntregasPage {
 
 
   async cargarDatos() {
+    
     this.alertasService.presentaLoading('Cargando datos...')
     this.planificacionEntregasService.clientes = []
     if (this.planificacionEntregasService.rutas.length == 0) {

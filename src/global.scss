@@ -24,7 +24,17 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+.selectable {
 
+  -webkit-user-select: text;
+  
+  -moz-user-select: text;
+  
+  -ms-user-select: text;
+  
+  user-select: text;
+  
+  }
 html,body {
     width: 100%;
     width: 100%;
@@ -143,7 +153,17 @@ html,body {
       position: absolute;
     }
   }
-
+  .data-modal{
+    --backdrop-opacity: 0.8 !important;
+  
+    .modal-wrapper {
+      --position:absolute;
+      --left:0;
+      --width: 100% !important;
+      --height: 40%;
+      position: absolute;
+    }
+  }
   .modal-detalle{
     --backdrop-opacity: 0.8 !important;
   

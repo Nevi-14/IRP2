@@ -10,6 +10,10 @@ import { format } from 'date-fns';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { FacturasService } from 'src/app/services/facturas.service';
 import { RuteroService } from 'src/app/services/rutero.service';
+import { RutasZonasService } from 'src/app/services/rutas-zonas.service';
+import { Guias } from 'src/app/models/guia';
+import { facturasGuia } from 'src/app/models/facturas';
+import { Clipboard } from '@capacitor/clipboard';
 interface facturas {
   IdFactura:number,
   Factura:string,
@@ -63,12 +67,22 @@ export class ReporteGuiasPage implements OnInit {
    public facturasService:FacturasService,
    public ruteroService: RuteroService,
    public alertCtrl:AlertController,
-   public popOverCtrl:PopoverController
+   public popOverCtrl:PopoverController,
+   public rutasZonasService: RutasZonasService,
+   public gestionCamiones: GestionCamionesService,
+   public rutaZonaService: RutasZonasService
   ) { }
 
  
   ngOnInit() {
-
+   
+    if(this.rutaZonaService.rutasZonasArray.length == 0){
+      this.rutasZonasService.syncRutasToPromise().then(resp =>{
+        this.rutaZonaService.rutasZonasArray = resp;
+      }, error =>{
+        this.alertasService.message('IRP','Lo sentimos algo salio mal..')
+      })
+    }
 if(this.guias){
   this.guiasArrayRuta = this.guias;
 }
@@ -76,6 +90,22 @@ if(this.guias){
 
    
    
+  }
+
+  async copy(guia:GuiaEntrega){
+    await Clipboard.write({
+      string: guia.idGuia
+    });
+
+    this.alertasService.message('IRP',`ID Guia copiado ${guia.idGuia}`);
+  }
+   consultarRuta(guia:GuiaEntrega){
+ let i =   this.rutasZonasService.rutasZonasArray.findIndex(ruta => ruta.RUTA == guia.ruta);
+ if(i >=0){
+  return this.rutasZonasService.rutasZonasArray[i].DESCRIPCION
+ }else{
+  return 'No definida'
+ }
   }
   limpiarDatos(){
     this.guias = []; 
@@ -141,6 +171,63 @@ this.show = false;
         await popover.dismiss(null);
  
   }
+
+ async  agregarClientes(guia:GuiaEntrega){
+const alert = await this.alertCtrl.create({
+  header:'IRP',
+  subHeader:'Importar Guia',
+  message:`¿Desea incluir la guia ${guia.idGuia} en la lista de guias?`,
+  buttons:[
+    {
+      text:'continuar',
+      handler: ()=>{
+
+
+        
+        this.facturasService.syncGetFacturasGuiasToPromise(guia.idGuia).then(async(facturas) => {
+
+        await   this.planificacionEntregasService.guiaExistente(guia, facturas);
+
+          for (let f = 0; f < facturas.length; f++) {
+            this.facturasService.syncGetFacturaToPromise(facturas[f].FACTURA).then(factura => {
+              let cliente = factura[0];
+              cliente.ClienteExistente = true
+              this.planificacionEntregasService.agregarFacturaGuia(guia.idGuia, cliente);
+            });
+
+            if(f == facturas.length -1){
+              this.cerrarModal();
+              console.log(this.planificacionEntregasService.listaGuias,'guias')
+            }
+          }
+        }, error => {
+          if (error) this.alertasService.message('IRP', 'Lo sentimos algo salio mal');
+  
+        })
+
+
+
+
+
+
+      }
+    },
+    {
+      text:'cancelar',
+      handler:()=>{
+console.log('cancel')
+      }
+    }
+  ]
+})
+ 
+await alert.present();
+
+  }
+
+
+
+
   async cambiarEstado(guia:GuiaEntrega){
 
 const alert = await this.alertCtrl.create({

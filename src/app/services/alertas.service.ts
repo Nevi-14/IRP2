@@ -17,7 +17,7 @@ export class AlertasService {
 
   async presentaLoading(message: string ){
     this.isLoading = true;
-    this.loadingCtrl.create({
+    await this.loadingCtrl.create({
       message: message ? message : 'Please wait...',
       spinner: 'circles',
       mode:'ios',

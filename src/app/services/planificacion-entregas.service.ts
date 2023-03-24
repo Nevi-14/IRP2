@@ -19,6 +19,8 @@ import { FacturasService } from './facturas.service';
 import { Manifiesto } from '../models/manieifiesto';
 import { ReporteGuiasPage } from '../pages/reporte-guias/reporte-guias.page';
 import { format } from 'date-fns';
+import { facturasGuia } from '../models/facturas';
+import { RutasZonasService } from './rutas-zonas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -76,7 +78,8 @@ export class PlanificacionEntregasService {
     public configuracionesService: ConfiguracionesService,
     public gestionCamionesService: GestionCamionesService,
     public facturasService: FacturasService,
-    public ruteroService: RuteroService
+    public ruteroService: RuteroService,
+    public rutaZonaService: RutasZonasService
 
 
   ) { }
@@ -142,6 +145,58 @@ export class PlanificacionEntregasService {
 
   }
 
+  contarBultos(array: facturasGuia[]) {
+    let sum = 0;
+
+    for (let i = 0; i < array.length; i += 1) {
+      sum +=  array[i].RUBRO1 ?  Number(array[i].RUBRO1) : 0;
+    }
+
+    return sum;
+  }
+ 
+
+
+ async  guiaExistente(guia:GuiaEntrega,facturas:facturasGuia[]){
+    const camiones = await this.gestionCamionesService.syncCamionesToPromise();
+    const rutas = await this.rutaZonaService.syncRutasToPromise();
+    let c = camiones.findIndex(camion => camion.idCamion == guia.idCamion);
+    let r = rutas.findIndex(ruta => ruta.RUTA == guia.ruta);
+    let guiaEntrega: Guias = {
+      idGuia: guia.idGuia,
+      guiaExistente: true,
+      verificada: false,
+      totalFacturas: 0,
+      distancia: 0,
+      duracion: 0,
+      zona:guia.zona,
+      nombreRuta: r >= 0 ? rutas[r].DESCRIPCION : 'Sin definir',
+      ruta: guia.ruta,
+      fecha: guia.fecha,
+      numClientes: 0,
+      camion: {
+        numeroGuia: guia.idGuia,
+        chofer: camiones[c].chofer,
+        idCamion: camiones[c].idCamion,
+        capacidad: camiones[c].capacidadPeso,
+        pesoRestante: 0,
+        peso: guia.peso,
+        estado: guia.estado,
+        HH: 'nd',
+        bultos: 0,
+        volumen: 0,
+        frio: camiones[c].frio,
+        seco: camiones[c].seco,
+        HoraInicio: '08:00',
+        HoraFin: '20:00'
+      },
+      clientes: [],
+      facturas: []
+    }
+
+let i = this.listaGuias.findIndex(guia => guia.idGuia == guia.idGuia);
+if(i < 0) this.listaGuias.push(guiaEntrega);
+  }
 
 
 
@@ -1070,10 +1125,11 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
     let distancia = 0;
     let duracion = 0;
     for (let i = 0; i < this.rutero.length; i++) {
+      let index = this.listaGuias.findIndex(guia => guia.idGuia == this.rutero[i].idGuia)
       distancia += this.rutero[i].distancia
       duracion += this.rutero[i].duracion
       if (i == this.rutero.length - 1) {
-        let index = this.listaGuias.findIndex(guia => guia.idGuia == this.rutero[i].idGuia)
+    
         if (index >= 0) {
           this.listaGuias[index].clientes = [];
           this.listaGuias[index].distancia = distancia;
@@ -1082,6 +1138,7 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
         }
       }
       if (i == this.rutero.length - 1) {
+        this.listaGuias[index].verificada = true;
         this.alertasService.loadingDissmiss();
         console.log('finish exporting')
         return this.rutero;
