@@ -1,21 +1,35 @@
  
-  <ion-toolbar>
-    <ion-title class="ion-text-capitalize" class="title"><strong>Gestión Liquidaciones  - {{fecha}}</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{rutero.length}}</ion-badge></ion-title>
-    <ion-searchbar slot="end" style="width:40%;margin-top: 1rem;" mode="ios" palceholder="Buscar camion" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
-    <ion-buttons slot="end">
-      <ion-fab-button     size="small"     color="dark" (click)="calendarioModal()" >
-        <ion-icon   name="calendar"></ion-icon>
-      </ion-fab-button> 
-      
-     
-      <ion-fab-button slot="end" *ngIf="rutero.length > 0"     size="small"     color="dark" (click)="limpiarDatos()" >
-        <ion-icon   name="refresh"></ion-icon>
-      </ion-fab-button> 
-    </ion-buttons>
-  </ion-toolbar>
 
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+
+    <ion-grid >
+      <ion-row>
+        <ion-col size="12" size-md="7" style="display: flex;justify-content: center;align-items: center;">
+          <ion-title class="ion-text-capitalize" class="title"><strong>Gestión Liquidaciones  - {{fecha}}</strong> <ion-badge style="margin-left: 1rem;" color="dark" mode="ios">{{rutero.length}}</ion-badge></ion-title>
+        </ion-col>
+        <ion-col size="9" size-md="4" style="display: flex;justify-content: center;align-items: center;">
+          <ion-searchbar  style="margin-top: 1rem;"   mode="ios" placeholder="Buscar idGuia" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
+
+        </ion-col>
+        <ion-col size="3" size-md="1" style="display: flex;justify-content: center;align-items: center;">
  
-  
+          <ion-buttons  >
+            <ion-fab-button     size="small"     color="dark" (click)="calendarioModal()" >
+              <ion-icon   name="calendar"></ion-icon>
+            </ion-fab-button> 
+            
+           
+            <ion-fab-button   *ngIf="rutero.length > 0"     size="small"     color="dark" (click)="limpiarDatos()" >
+              <ion-icon   name="refresh"></ion-icon>
+            </ion-fab-button> 
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+   </ion-toolbar>
+ 
+</ion-header>
  
 
 <ion-content class="ion-padding">

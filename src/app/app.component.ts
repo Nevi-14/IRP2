@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import * as  mapboxgl from 'mapbox-gl';
 import { environment } from 'src/environments/environment';;
 import { ConfiguracionesService } from './services/configuraciones.service';
-
+import LogRocket from 'logrocket';
+ 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -13,9 +14,10 @@ export class AppComponent implements OnInit {
   mapSvg = '../assets/home/map.svg';
   
   constructor( 
-    public configuracionesService: ConfiguracionesService
+    public configuracionesService: ConfiguracionesService,
    ) {}
   ngOnInit(){
+    LogRocket.init('oifd5j/irp');
     this.checkMapBoxKey();
    }
 

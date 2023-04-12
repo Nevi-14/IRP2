@@ -1,15 +1,4 @@
-::-Webkit-scrollbar {
-
-    // display: none;
-}
-
-ion-card {
-    z-index: 1 !important;
-}
-
-div {
-    z-index: 1000 !important;
-}
+ 
 
 .grid {
     height: 100%;
@@ -29,5 +18,14 @@ div {
     background-image: url("/assets/home/background.svg");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 100% 100%;
+    background-size: 60% 60%;
 }
+ 
+ion-card{
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    margin: 0 !important;
+    max-height: 240px;
+    height: auto;
+  }

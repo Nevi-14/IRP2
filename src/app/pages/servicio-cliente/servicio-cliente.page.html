@@ -1,24 +1,27 @@
 
 
+
+<ion-header class="ion-no-border">
   <ion-toolbar>
 
-    <ion-title class="ion-text-capitalize" class="title"><strong>Servicio al cliente
-      <span  *ngIf="guia">
-     -   {{guia.idGuia}}
-      </span></strong></ion-title>
-
- 
- 
-
-
-
+    <ion-grid >
+      <ion-row>
+        <ion-col size="12" size-md="6" style="display: flex;justify-content: center;align-items: center;">
+          <ion-title class="ion-text-capitalize" class="title">
+            <strong>Servicio Al Cliente    <span  *ngIf="guia">
+              -   {{guia.idGuia}}
+               </span>  </strong>
+          </ion-title>
+        </ion-col>
+        <ion-col size="12" size-md="6" style="display: flex;justify-content: flex-end;align-items: center;">
+   
   
-  <ion-fab-button slot="end" color="dark" 
+  <ion-fab-button   color="dark" 
   class="ion-margin-right" size="small" (click)="configuracionZonaRuta()">
   <ion-icon class="spin-element"  name="settings"></ion-icon>
 </ion-fab-button>
 
-<span slot="end" style="position:relative"   *ngIf="features?.length > 0 "  >
+<span   style="position:relative"   *ngIf="features?.length > 0 "  >
   <ion-fab-button   color="dark"   
   class="ion-margin-right" size="small"    (click)="informacionMarcadores()">
   <ion-icon name="location"></ion-icon>
@@ -26,17 +29,16 @@
 <ion-badge style="position: absolute;top:0;right:-0.7rem;" color="primary" mode="ios">{{ features?.length }}</ion-badge>
 
 </span>
-<ion-fab-button slot="end" color="dark"  size="small"  *ngIf="features?.length > 0 "    (click)="limpiarDatos()"   >  
+<ion-fab-button   color="dark"  size="small"  *ngIf="features?.length > 0 "    (click)="limpiarDatos()"   >  
   <ion-icon  name="refresh"></ion-icon>
 </ion-fab-button>
-
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+   </ion-toolbar>
  
-
-</ion-toolbar>
-
-
+</ion-header>
  
-
 
 
 
@@ -45,21 +47,19 @@
 
 
 <ion-content class="ion-padding">
-
-<ion-grid  style="height: 100%;">
-<ion-row    style="height: 100%;">
-
-      
-<ion-col size="12">
-
-<div  #mapa  [ngStyle]="{
-  'height': '100%',
-  'width': '100%'
-}" class="mapa"></div>
-
-</ion-col>
-
-
+  <ion-grid  style="height: 100%;">
+    <ion-row    style="height: 100%;">
+    
+          
+    <ion-col size="12">
+    
+    <div  #mapa  [ngStyle]="{
+      'height': '100%',
+      'width': '100%'
+    }" class="mapa"></div>
+    
+    </ion-col>
+    
            
 
 

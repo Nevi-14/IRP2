@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { GestionCamionesPageRoutingModule } from './gestion-camiones-routing.module';
 
 import { GestionCamionesPage } from './gestion-camiones.page';
-import { PipesModule } from '../../pipes/pipes.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [

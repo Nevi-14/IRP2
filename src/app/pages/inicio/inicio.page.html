@@ -1,81 +1,52 @@
-
 <ion-app>
-  <ion-split-pane contentId="main-split"   >
-    <ion-menu  [ngClass]="configuracionesService.menu   ? 'expand-menu' :'menu-hide'"  contentId="main-content"  type="overlay"   menuId="myMenu">
-      <ion-toolbar   color="dark">
-  
-    <ion-title>IRP</ion-title>
-        <ion-button *ngIf="small"   (click)="toggle()"  slot="end"  fill="clear" >
-          <ion-icon color="danger" name="close" size="large"></ion-icon>
-        </ion-button>
-    
-    
-      </ion-toolbar>
-            <ion-content  >
-            
-             
-              <ion-list id="inbox-list" lines="none" class="fixed-content" >
- 
-      <ng-template ngFor let-p [ngForOf]="configuracionesService.company.modules"    >
+  <ion-split-pane contentId="main-split">
+    <ion-menu (mouseover)="openMenu()" [ngClass]="configuracionesService.menu   ? 'expand-menu' :'menu-hide'"
+      contentId="main-content" type="overlay" menuId="myMenu">
+      <ion-header class="ion-no-border">
+        <ion-toolbar color="dark"  class="ion-text-center">
+ <ion-title>IRP</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
 
-        <ion-item  button (click)="setTitle(p)"  *ngIf="p.included"    style="margin-top:0.5rem" routerDirection="root" routerLinkActive="active-item"  lines="none" detail="false" routerLinkActive="selected">
-          <ion-avatar   [ngStyle]="{'margin': !configuracionesService.menu ? '0 auto' : ''}" slot="{{configuracionesService.menu ? 'start':''}}"  >
-            <img [src]="p.image" />
-          </ion-avatar>
-  
-          <ion-label class="ion-text-wrap" *ngIf="configuracionesService.menu">{{ p.title }}</ion-label>
-        </ion-item>
 
-      </ng-template>
-      
-            
-             
-          
 
-                
-           
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of configuracionesService.company.modules; let i = index">
 
-              </ion-list>
-     
-         
-            </ion-content>
-            <ion-footer class="ion-no-border">
-              <ion-toolbar color="dark" lines="none">
-                <ion-item  (click)="cerrarSesion()">
-                  <ion-thumbnail   [ngStyle]="{'margin': !configuracionesService.menu ? '0 auto' : ''}" slot="{{configuracionesService.menu ? 'start':''}}"  >
-                    <img   src="../assets/icons/logout.svg" />
-                  </ion-thumbnail>
-    
-                        <ion-label *ngIf="configuracionesService.menu">Cerrar Sesión</ion-label>
-                </ion-item>
-    
-             
-                 
-           
-              </ion-toolbar>
-            </ion-footer>
-          </ion-menu>
-      
+          <ion-item *ngIf="p.included" (click)="menuAction(p.url)" button lines="{{configuracionesService.menu ? '' : 'none'}}">
+        
+<ion-avatar slot="{{configuracionesService.menu ? 'start' : ''}}">
+  <img [src]="p.image" />
+</ion-avatar>
+            <ion-label  *ngIf="configuracionesService.menu">{{ p.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
 
-    <div id="main-split" >
-      <app-encabezado [titulo]="titulo" ></app-encabezado>  
+
+
+      </ion-content>
+
+    </ion-menu>
+
+
+    <div id="main-split" (mouseover)="closeMenu()">
+
       <ion-router-outlet id="main-content">
-    
-    
-    
-      </ion-router-outlet>  
-    
-    
+
+
+
+      </ion-router-outlet>
+
+      <ion-footer class="ion-no-border" >
+        <ion-toolbar>
+          <ion-button  color="primary" size="small" slot="end">
+            &copy; {{year}} SDE - V1.1
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
     </div>
 
   </ion-split-pane>
 
 </ion-app>
-
-
-
-
-
-
-
 

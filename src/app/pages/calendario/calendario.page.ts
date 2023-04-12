@@ -8,7 +8,8 @@ import { format } from 'date-fns';
   styleUrls: ['./calendario.page.scss'],
 })
 export class CalendarioPage implements OnInit {
-  fecha = new Date(format(new Date(), 'MM-dd-yyy')).toISOString();
+  fecha: Date = new Date();
+ // fecha = new Date(format(new Date(), 'MM-dd-yyy')).toISOString();
   constructor(
     public modalCtrl: ModalController
   ) { }

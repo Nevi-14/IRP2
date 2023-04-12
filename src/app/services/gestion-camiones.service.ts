@@ -74,6 +74,7 @@ export class GestionCamionesService {
     this.getCamiones().subscribe(
       resp => {
         this.camiones = resp.slice(0);
+        console.log(this.camiones)
         this.alertasService.loadingDissmiss();
       }, error => {
         this.alertasService.loadingDissmiss();

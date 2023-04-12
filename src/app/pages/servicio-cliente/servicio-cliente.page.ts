@@ -26,6 +26,17 @@ interface Marcadores {
   selector: 'app-servicio-cliente',
   templateUrl: './servicio-cliente.page.html',
   styleUrls: ['./servicio-cliente.page.scss'],
+  styles: [
+    `
+  
+    #mapa {
+      height:100%;
+     width:100%;
+  
+    }
+
+    `
+  ]
 })
 export class ServicioClientePage  {
 
@@ -269,17 +280,18 @@ export class ServicioClientePage  {
      }
      
 
-
-        this.mapa.on('load', () => {
-          this.trazarRuta()
-          this.mapa.resize();
-        });
+ 
       
       }else{
   
         this.alertasService.loadingDissmiss()
       }
+      this.mapa.on('load', () => {
 
+        
+        this.mapa .resize();
+
+      });
 
       }
       async  trazarRuta() {

@@ -19,96 +19,170 @@
         
           <ion-col size="12" size-md="4">
               
-          <ion-label>Id Camion</ion-label>
-          <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-            <ion-input readonly="{{editarCamion ? true : false}}" maxlength="10" name="idCamion"   [(ngModel)]="camion.idCamion"  type="text" placeholder="id camion" required></ion-input>
-            </ion-item>
-        
+   
+ 
+        <ion-row>
+          <ion-col size="12">
+
+            <ion-label><strong>Placa</strong></ion-label>
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-input readonly="{{editarCamion ? true : false}}" maxlength="10" name="placa"   [(ngModel)]="camion.idCamion"  type="text" placeholder="placa" required></ion-input>
+          </ion-col>
+        </ion-row>
         
           </ion-col>
+ 
           <ion-col size="12" size-md="4">
+
+
+            <ion-row>
+              <ion-col size="12">
+                <ion-label><strong>Modelo</strong></ion-label>
+              </ion-col>
+<ion-col size="12">
+  <ion-input maxlength="10" name="modelo"   [(ngModel)]="camion.modelo"  type="text" placeholder="modelo" required></ion-input>
+</ion-col>
+            </ion-row>
               
-            <ion-label>Modelo</ion-label>
-            <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-              <ion-input maxlength="10" name="modelo"   [(ngModel)]="camion.modelo"  type="text" placeholder="modelo" required></ion-input>
-              </ion-item>
-          
-          
+            
+     
             </ion-col>
             <ion-col size="12" size-md="4">
-              
-              <ion-label>Propietario</ion-label>
-              <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                <ion-input maxlength="50" name="propietario"   [(ngModel)]="camion.propietario"  type="text" placeholder="propietario" required></ion-input>
-                </ion-item>
-            
-            
+              <ion-row>
+                <ion-col size="12">
+                  <ion-label><strong>Propietario</strong></ion-label>
+                </ion-col>
+                      <ion-col size="12">
+                        <ion-input maxlength="50" name="propietario"   [(ngModel)]="camion.propietario"  type="text" placeholder="propietario" required></ion-input>
+                </ion-col>
+              </ion-row>
+             
+      
               </ion-col>
               <ion-col size="12" size-md="4">
-                <ion-label>Chofer</ion-label>
-                <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                  <ion-input  maxlength="50" name="chofer"   [(ngModel)]="camion.chofer"  type="text" placeholder="chofer" required></ion-input>
-                  </ion-item>
-              
+
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-label><strong>Chofer</strong></ion-label>
+                  </ion-col>
+                        <ion-col size="12">
+                          <ion-input  maxlength="50" name="chofer"   [(ngModel)]="camion.chofer"  type="text" placeholder="chofer" required></ion-input>
+                  </ion-col>
+                </ion-row>
+
+
+
+         
               
                 </ion-col>
               <ion-col size="12" size-md="4">
+
+
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-label><strong>Capacidad Peso</strong></ion-label>
+                  </ion-col>
+                        <ion-col size="12">
+                          <ion-input name="capacidadPeso"   [(ngModel)]="camion.capacidadPeso"  type="number" placeholder="capacidad peso" required></ion-input>
+                  </ion-col>
+                </ion-row>
+
+
+
+
               
-                <ion-label>Capacidad Peso</ion-label>
-                <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                  <ion-input name="capacidadPeso"   [(ngModel)]="camion.capacidadPeso"  type="number" placeholder="capacidad peso" required></ion-input>
-                  </ion-item>
-              
+            
               
                 </ion-col>
                 <ion-col size="12" size-md="4">
+          
+
+                  <ion-row>
+                    <ion-col size="12">
+                      <ion-label><strong>Capacidad Volumen</strong></ion-label>
+
+                    </ion-col>
+                          <ion-col size="12">
+                            <ion-input name="capacidadVolumen"   [(ngModel)]="camion.capacidadVolumen"  type="number" placeholder="capacidad volumen" required></ion-input>
+                    </ion-col>
+                  </ion-row>
+
+
+
               
-                  <ion-label>Capacidad Volumen</ion-label>
-                  <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                    <ion-input name="capacidadVolumen"   [(ngModel)]="camion.capacidadVolumen"  type="number" placeholder="capacidad volumen" required></ion-input>
-                    </ion-item>
-                
+          
                 
                   </ion-col>
       
                     <ion-col size="12" size-md="4">
               
-                      <ion-label>Frio</ion-label>
-                      <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                        <ion-label>{{frio ? 'Si' : 'No'}}</ion-label>
-                        <ion-toggle size="small" name="frio" (ionChange)="frioToggleOnChange($event)" [(ngModel)]="frio" ></ion-toggle>
-                        </ion-item>
-                    
+
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-label><strong>Frio {{frio ? 'Si' : 'No'}}</strong></ion-label>
+                        </ion-col>
+                              <ion-col size="12">
+                                <ion-toggle size="small" name="frio" (ionChange)="frioToggleOnChange($event)" [(ngModel)]="frio" ></ion-toggle>
+                        </ion-col>
+                      </ion-row>
+
+
+                 
                     
                       </ion-col>
                       <ion-col size="12" size-md="4">
               
-                        <ion-label>Seco</ion-label>
-                        <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                          <ion-label>{{seco ? 'Si' : 'No'}}</ion-label>
-                          <ion-toggle  size="small"  name="seco" (ionChange)="secoToggleOnChange($event)" [(ngModel)]="seco" ></ion-toggle>
-                          </ion-item>
-                      
+
+
+                        <ion-row>
+                          <ion-col size="12">
+                            <ion-label><strong>Seco {{seco ? 'Si' : 'No'}}</strong></ion-label>
+                          </ion-col>
+                                <ion-col size="12">
+                                  <ion-toggle  size="small"  name="seco" (ionChange)="secoToggleOnChange($event)" [(ngModel)]="seco" ></ion-toggle>
+                          </ion-col>
+                        </ion-row>
+
+
+                  
                       
                         </ion-col>
                         <ion-col size="12" size-md="4">
               
-                          <ion-label>Activo</ion-label>
-                          <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                            <ion-label>{{activo ? 'Si' : 'No'}}</ion-label>
-                         <ion-toggle  size="small" name="activo" (ionChange)="activoToggleOnChange($event)" [(ngModel)]="activo" ></ion-toggle>
-                            </ion-item>
-                        
+
+
+                            <ion-row>
+              <ion-col size="12">
+                <ion-label><strong>Activo {{activo ? 'Si' : 'No'}}</strong></ion-label>
+              </ion-col>
+                    <ion-col size="12">
+                      <ion-toggle  size="small" name="activo" (ionChange)="activoToggleOnChange($event)" [(ngModel)]="activo" ></ion-toggle>
+              </ion-col>
+            </ion-row>
+
+
+ 
                         
                           </ion-col>
               
                           <ion-col size="12"   >
               
-                              <ion-label>Descripcion</ion-label>
-                              <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                                <ion-textarea  maxlength="100" name="descripcion"   [(ngModel)]="camion.descripcion"  type="text" placeholder="descripcion" required></ion-textarea>
-                                </ion-item>
-                            
+
+
+                            <ion-row>
+                              <ion-col size="12">
+                                <ion-label><strong>Descripción</strong></ion-label>
+                              </ion-col>
+                                    <ion-col size="12">
+                <ion-input class="description"  name="descripcion"    [(ngModel)]="camion.descripcion"  type="text" placeholder="descripción"></ion-input>
+                              </ion-col>
+                            </ion-row>
+
+
+
+                
                             
                               </ion-col>
         

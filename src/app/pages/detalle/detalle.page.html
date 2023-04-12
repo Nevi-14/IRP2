@@ -9,37 +9,41 @@
           <img height="50"   style="margin:1rem;"  src="{{configuracionesService.company.logo}}" />
               
         </ion-col>
-        <ion-col size="12">
+<ion-col size="12">
+  <ion-row class="ion-padding">
+    <ion-col size="12">
 
-           <ion-label>{{configuracionesService.company.description}}</ion-label>
-        </ion-col>
-        <ion-col size="12">
-           <ion-label>TAX ID: {{configuracionesService.company.taxId}}</ion-label>
-        </ion-col>
-        <ion-col size="12">
-           <ion-label>Telefono: {{configuracionesService.company.contact}}</ion-label>
-        </ion-col>
-        <ion-col size="12">
-           <ion-label>Fax: {{configuracionesService.company.fax}}</ion-label>
-        </ion-col>
-        <ion-col size="12">
-           <ion-label>Dirección:{{configuracionesService.company.address}}</ion-label>
-        </ion-col>
-        <ion-col size="12">
-           <ion-label><a href="{{configuracionesService.company.website}}" target="_blank">{{configuracionesService.company.website}}</a></ion-label>
-        </ion-col>
+      <ion-label>{{configuracionesService.company.description}}</ion-label>
+   </ion-col>
+   <ion-col size="12">
+      <ion-label>TAX ID: {{configuracionesService.company.taxId}}</ion-label>
+   </ion-col>
+   <ion-col size="12">
+      <ion-label>Telefono: {{configuracionesService.company.contact}}</ion-label>
+   </ion-col>
+   <ion-col size="12">
+      <ion-label>Fax: {{configuracionesService.company.fax}}</ion-label>
+   </ion-col>
+   <ion-col size="12">
+      <ion-label>Dirección:{{configuracionesService.company.address}}</ion-label>
+   </ion-col>
+   <ion-col size="12">
+      <ion-label><a href="{{configuracionesService.company.website}}" target="_blank">{{configuracionesService.company.website}}</a></ion-label>
+   </ion-col>
+  </ion-row>
+</ion-col>
       </ion-row>
     </ion-col>
     <ion-col size="12" size-md="6">
       <ion-list>
-        <ion-item>
+        <ion-item lines="none">
           <ion-label class="ion-text-uppercase"><strong>Modulos Incluidos en IRP </strong></ion-label>
         </ion-item>
   
         <ng-template ngFor let-p [ngForOf]="configuracionesService.company.modules"   button   >
 
           <ion-menu-toggle *ngIf="p.included" auto-hide="false" >
-            <ion-item     style="margin-top:0.5rem"   lines="full" detail="false" routerLinkActive="selected">
+            <ion-item  *ngIf="p.url !='salir'"     routerLinkActive="selected">
               <ion-avatar  slot="start" >
                 <img [src]="p.image" />
               </ion-avatar>
@@ -53,4 +57,3 @@
   </ion-row>
   </ion-grid>
   </ion-content>
-  

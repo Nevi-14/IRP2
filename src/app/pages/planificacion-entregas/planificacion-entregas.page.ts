@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { ModalController, AlertController } from '@ionic/angular';
+import { Component, ViewChild, ViewChildren } from '@angular/core';
+import { ModalController, AlertController, PopoverController, IonPopover } from '@ionic/angular';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { RutaMapaComponent } from '../../components/ruta-mapa/ruta-mapa.component';
@@ -24,12 +24,13 @@ import { ReporteGuiasPage } from '../reporte-guias/reporte-guias.page';
   styleUrls: ['./planificacion-entregas.page.scss'],
 })
 export class PlanificacionEntregasPage {
-  @ViewChild('popover') popover: any;
+  @ViewChild('popover') popover: IonPopover;         
   isOpen = false;
   isPopOverOpen = false;
   textFactura: string = '';
+  index = null;
   clientes: ClientesGuia[];
-
+show = false;
   constructor(
     public modalCtrl: ModalController,
     public planificacionEntregasService: PlanificacionEntregasService,
@@ -38,7 +39,8 @@ export class PlanificacionEntregasPage {
     public facturasService: FacturasService,
     public pdfService: PdfService,
     public configuracionesService: ConfiguracionesService,
-    public router: Router
+    public router: Router,
+    public popoverCtrl: PopoverController
 
   ) { }
 
@@ -53,6 +55,7 @@ export class PlanificacionEntregasPage {
     this.modalCtrl.dismiss();
 
   }
+
 
 
   async configuracionZonaRuta() {

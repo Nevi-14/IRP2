@@ -19,31 +19,37 @@
 
 <ion-content>
 
-  <ion-list lines="none">
-
  
-    
-        <ion-item  *ngFor="let item of rutasZonasService.rutasZonasArray | filtro: textoBuscar:'DESCRIPCION'">
-     
-    
-          <ion-label>   {{ item.DESCRIPCION }}</ion-label>
-         
-         <ion-checkbox  (ionChange)="retornarRuta($event)"slot="start"  [value]="item"></ion-checkbox> 
-      
-        </ion-item>
+    <ion-list lines="none">
+
+
+  
+      <ion-item  *ngFor="let item of rutasZonasService.rutasZonasArray | filtro: textoBuscar:'DESCRIPCION'">
    
+  
+        <ion-label>   {{ item.DESCRIPCION }}</ion-label>
+       
+       <ion-checkbox  (ionChange)="retornarRuta($event)"slot="start"  [value]="item"></ion-checkbox> 
     
+      </ion-item>
+ 
+  
+  
     
-      
-    </ion-list>
+  </ion-list>
+
 </ion-content>
 
 
-<ion-footer class="ion-no-border ion-text-center ion-padding" >
+<ion-footer  class="ion-no-border">
+<ion-toolbar>
  
-     <ion-button   (click)="devolverRutas()"    expand="block"  color="dark">
-      Continuar
-      
-       </ion-button>
- 
+</ion-toolbar>
+</ion-footer>
+<ion-footer  class="ion-no-border">
+  <ion-toolbar>
+    <ion-button (click)="devolverRutas()"   expand="block" fill="solid"  color="dark">
+    Continuar
+    </ion-button>
+  </ion-toolbar>
 </ion-footer>

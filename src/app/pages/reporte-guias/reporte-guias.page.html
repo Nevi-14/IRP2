@@ -187,7 +187,7 @@
   <ion-icon    name="print-outline"></ion-icon>
  </ion-fab-button>
 
- <ion-fab-button  *ngIf="planificacionEntregasService.clientes.length > 0 && guia.estado == 'INI'" size="small" color="dark" (click)="agregarClientes(guia)">
+ <ion-fab-button  *ngIf="guia.estado == 'INI'" size="small" color="dark" (click)="agregarClientes(guia)">
   <ion-icon name="person-add-outline"></ion-icon>
  </ion-fab-button>
 

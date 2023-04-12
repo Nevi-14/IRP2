@@ -18,87 +18,112 @@
           <ion-row>
         
           <ion-col size="12" size-md="4">
-              
-          <ion-label>Id HH</ion-label>
-          <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-            <ion-input readonly="{{editarTelefono ? true : false}}"  maxlength="4" name="idHH"   [(ngModel)]="telefono.idHH"  type="text" placeholder="id HH" required></ion-input>
-            </ion-item>
-        
+            <ion-row>
+              <ion-col size="12">
+                <ion-label><strong>Id HH</strong></ion-label>
+              </ion-col>
+                    <ion-col size="12">
+                      <ion-input readonly="{{editarTelefono ? true : false}}"  maxlength="4" name="idHH"   [(ngModel)]="telefono.idHH"  type="text" placeholder="hh" required></ion-input>
+              </ion-col>
+            </ion-row>
+
+      
         
           </ion-col>
           <ion-col size="12" size-md="4">
-              
-            <ion-label>Token</ion-label>
-            <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-              <ion-input  maxlength="20" name="Token"   [(ngModel)]="telefono.Token"  type="text" placeholder="token" required></ion-input>
-              </ion-item>
+            <ion-row>
+              <ion-col size="12">
+                <ion-label><strong>Token</strong></ion-label>
+              </ion-col>
+                    <ion-col size="12">
+                      <ion-input  maxlength="20" name="Token"   [(ngModel)]="telefono.Token"  type="text" placeholder="token" required></ion-input>
+              </ion-col>
+            </ion-row>
           
+  
           
             </ion-col>
 
             <ion-col size="12" size-md="4">
-              
-              <ion-label>Consec Rec</ion-label>
-              <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                <ion-input   maxlength="20" name="Consec_Rec"   [(ngModel)]="telefono.Consec_Rec"  type="text" placeholder="Consec_Rec" required></ion-input>
-                </ion-item>
-            
+              <ion-row>
+                <ion-col size="12">
+                  <ion-label><strong>Consec Rec</strong></ion-label>
+                </ion-col>
+                      <ion-col size="12">
+                        <ion-input   maxlength="20" name="Consec_Rec"   [(ngModel)]="telefono.Consec_Rec"  type="text" placeholder="consec rec" required></ion-input>
+                </ion-col>
+              </ion-row>
+           
+        
             
               </ion-col>
-              <ion-col size="12" size-md="4">
-              
-                <ion-label>Consec Dev</ion-label>
-                <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                  <ion-input  maxlength="50" name="Consec_Dev"   [(ngModel)]="telefono.Consec_Dev"  type="text" placeholder="Consec_Dev" required></ion-input>
-                  </ion-item>
-              
+              <ion-col size="12" size-md="6">
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-label><strong>Consec Dev</strong></ion-label>
+                  </ion-col>
+                        <ion-col size="12">
+                          <ion-input  maxlength="50" name="Consec_Dev"   [(ngModel)]="telefono.Consec_Dev"  type="text" placeholder="consec dev" required></ion-input>
+                  </ion-col>
+                </ion-row>
+          
+           
               
                 </ion-col>
-                <ion-col size="12" size-md="4">
-              
-                  <ion-label>Cod Zona</ion-label>
-                  <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                    <ion-input  maxlength="4" name="COD_ZON"   [(ngModel)]="telefono.COD_ZON"  type="text" placeholder="Cod Zona" required></ion-input>
-                    </ion-item>
+                <ion-col size="12" size-md="6">
+                  <ion-row>
+                    <ion-col size="12">
+                      <ion-label><strong>Cod Zona</strong></ion-label>
+                    </ion-col>
+                          <ion-col size="12">
+                            <ion-input  maxlength="4" name="COD_ZON"   [(ngModel)]="telefono.COD_ZON"  type="text" placeholder="cod zona" required></ion-input>
+                    </ion-col>
+                  </ion-row>
                 
+               
                 
                   </ion-col>
 
-                  <ion-col size="12" size-md="4">
-              
-                    <ion-label>Aplica Rec</ion-label>
-                    <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                
-
-                      <ion-label>{{aplicaRec ? 'Si' : 'No'}}</ion-label>
-                      <ion-toggle size="small" name="aplicaRec" (ionChange)="aplicaRecToggleOnChange($event)" [(ngModel)]="aplicaRec" ></ion-toggle>
-
-
-                      </ion-item>
+                  <ion-col size="12" size-md="6">
+                    <ion-row>
+                      <ion-col size="12">
+                        <ion-label><strong>Aplica Rec {{aplicaRec ? 'Si' : 'No'}} </strong></ion-label>
+                      </ion-col>
+                            <ion-col size="12">
+                              <ion-toggle size="small" name="aplicaRec" (ionChange)="aplicaRecToggleOnChange($event)" [(ngModel)]="aplicaRec" ></ion-toggle>
+                      </ion-col>
+                    </ion-row>
+                 
+            
                   
                   
                     </ion-col>
 
-                    <ion-col size="12" size-md="4">
-              
-                      <ion-label>Aplica Dev</ion-label>
-                      <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-       
-                        <ion-label>{{aplicaDev ? 'Si' : 'No'}}</ion-label>
-                        <ion-toggle size="small" name="aplicaDev" (ionChange)="aplicaDevToggleOnChange($event)" [(ngModel)]="aplicaDev" ></ion-toggle>
-
-
-                        </ion-item>
+                    <ion-col size="12" size-md="6">
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-label>Aplica Dev {{aplicaDev ? 'Si' : 'No'}}</ion-label>
+                        </ion-col>
+                              <ion-col size="12">
+                                <ion-toggle size="small" name="aplicaDev" (ionChange)="aplicaDevToggleOnChange($event)" [(ngModel)]="aplicaDev" ></ion-toggle>
+                        </ion-col>
+                      </ion-row>
+                    
+                  
                     
                     
                       </ion-col>
-                      <ion-col size="12" size-md="8">
-              
-                              <ion-label>Descripcion</ion-label>
-                              <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
-                                <ion-textarea maxlength="100" name="descripcion"   [(ngModel)]="telefono.Descripcion"  type="text" placeholder="descripcion" required></ion-textarea>
-                                </ion-item>
-                            
+                      <ion-col size="12">
+                        <ion-row>
+                          <ion-col size="12">
+                            <ion-label><strong>Descripción</strong></ion-label>
+                          </ion-col>
+                                <ion-col size="12">
+            <ion-input class="description"   [(ngModel)]="telefono.Descripcion"  type="text" placeholder="descripcion" required></ion-input>
+                          </ion-col>
+                        </ion-row>
+                   
+                           
                             
                               </ion-col>
         

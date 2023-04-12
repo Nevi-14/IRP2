@@ -1,69 +1,55 @@
-.split-pane-visible >.split-pane-side {
-  min-width: 100px!important;
-  max-width: 100px!important;
+ion-toolbar{
+  padding-bottom: 2rem;
+}
+ion-thumbnail {
+  width: 80px;
+  height: 80px;
+  margin-top: 1rem;
+  margin: 0 auto;
+}
+ion-avatar, img {
+  height: 35px;
+  width: 35px;
+}
+ 
+.split-pane-visible>.split-pane-side {
+  min-width: 80px !important;
+  max-width: 80px !important;
   border: none;
   background-color: #222428;
-} 
-.fixed-content {        //comments showing what I replaced.
-  overflow: auto;
-  height: 100%;
+  transition: all 0.25s ease-in;
 }
-::-webkit-scrollbar{
-  display: none;
-}
-.split-pane-visible >.expand-menu  {
-  min-width: 200px!important;
-  max-width: 200px!important;
-
-}
-#main-split{
-  width: 100%;
+.split-pane-visible>.expand-menu {
+  min-width: 240px !important;
+  max-width: 240px !important;
+  transition: all 0.25s ease-out;
 }
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #222428));
 }
-
-ion-menu.md ion-content, ion-list {
-  background-color: #222428;
+:host {
+  ion-item {
+    &:hover {
+      --background-hover: #408A84; 
+    }
+  }
+}
+ion-item {
+  width: 100%;
+  --background: transparent !important;
+  color: #fff;
+}
+ion-menu.md ion-item ion-icon {
+  color: #616e7e;
 }
 
-ion-menu ion-item.selected ion-label {
-  font-weight: bold;
-}
-
-ion-item:hover{
-background:#284C5C
-}
 ion-item:hover ion-label {
-  color: var(--ion-color-success);
+  color: #0095FA;
 }
-ion-avatar, ion-thumbnail{
-  height: 35px;
-  width: 35px;
-  
-  }
-  
-  ion-item{
-    color: #fff;
-  }
+ion-footer{
+  position: absolute;
+  bottom: 0;
   ion-button{
-    color: #fff;
-    ion-label{
-      text-transform: capitalize;
-  
-    }
+    margin-right: 1rem;
   }
-
-  @media(min-width:768px){
-    ion-router-outlet{
-      margin-top: 63px;
-    }
-    
-  }
-  
-  @media(max-width:768px){
-    ion-router-outlet{
-      margin-top: 56px;
-    }
-    
-  }
+}

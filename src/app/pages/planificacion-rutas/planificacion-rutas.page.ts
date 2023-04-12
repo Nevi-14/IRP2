@@ -12,17 +12,6 @@ import { MarcadoresPage } from '../marcadores/marcadores.page';
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import { ConfiguracionesService } from '../../services/configuraciones.service';
 import { ClientesService } from 'src/app/services/clientes.service';
-
-
-interface Maradores2{
-  title: string,
-  color: string,
-  new: boolean,
-  modify:boolean,
-  exclude:boolean,
-  client:any,
-  select : boolean
-}
 interface Marcadores {
   select:boolean,
   id: string,
@@ -36,21 +25,15 @@ interface Marcadores {
   marker?: mapboxgl.Marker,
   centro?: [number, number]
 }
-
 @Component({
   selector: 'app-planificacion-rutas',
   templateUrl: './planificacion-rutas.page.html',
   styleUrls: ['./planificacion-rutas.page.scss'],
-  styles: [
-    `
-  
+  styles: [`
     #mapa {
       height:100%;
-     width:100%;
-  
-    }
-
-    `
+     width:100%; 
+    }`
   ]
 })
 export class PlanificacionRutasPage  {
@@ -72,8 +55,6 @@ features = [];
 
 
     constructor(
-
-
       public modalCtrl: ModalController, 
       public popOverCrtl: PopoverController, 
       public alertasService: AlertasService,
@@ -89,7 +70,6 @@ features = [];
 
 
     ionViewWillEnter(){
-
       this.limpiarDatos();
     }
   
@@ -109,7 +89,6 @@ mapData(clientes:Clientes[], newClient){
 
   let newCount = 0;
   let duplicateCount = 0;
-
 
   this.planificacionRutasService.marcadores.forEach(client=>{
 
@@ -186,6 +165,7 @@ async configuracionZonaRuta(){
   const modal = await this.modalCtrl.create({
     component: ListaRutasZonasModalPage,
     cssClass: 'ui-modal',
+    mode: 'ios',
   });
   modal.present();
 
@@ -340,118 +320,40 @@ async menuCliente(){
 //=============================================================================
 
  createmapa( ) {
-
-  this.mapa   = new mapboxgl.Map({
+if(this.mapa){
+    this.mapa.remove();
+}
+   this.mapa   = new mapboxgl.Map({
         container: this.divMapa.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/mapbox/streets-v12',
         center: this.lngLat,
         zoom: this.zoomLevel,
         interactive: true
       });
-  
-      const newMarker = new mapboxgl.Marker()
+
+      new mapboxgl.Marker()
       .setLngLat(this.lngLat)
       .setPopup(new mapboxgl.Popup({closeOnClick: false, closeButton: false}).setText(this.configuracionesService.company.company))
       .addTo(this.mapa)
       .togglePopup();
-  
-        this.mapa .addControl(new mapboxgl.NavigationControl());
-        this.mapa .addControl(new mapboxgl.FullscreenControl());
-        this.mapa .addControl(new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true
-      }));
+
+      //this.mapa.addControl(new mapboxgl.NavigationControl());
+      //this.mapa.addControl(new mapboxgl.FullscreenControl());
+      //this.mapa.addControl(new mapboxgl.GeolocateControl({
+     /**
+      *  positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
+    }));
+
+      */
 
 
-  
-  
-      const geocoder= new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-        placeholder: 'Buscar zona',
-      })
-  
-      this.mapa .addControl(geocoder);
-  
-  
-      geocoder.on('result', (e) => {
-        console.log(e.result);
-        this.geocoderArray = e.result
-        this.busquedaMapa(e.result);
-  
-      })
-  
-
-      const geojson: any = {
-        'type': 'FeatureCollection',
-        'features': this.planificacionRutasService.marcadores
-        };
-
-
-        // add markers to map
-for (const feature of geojson.features) {
-   
-const { newMarker , color } =  this.generarMarcadorColor( feature.properties.color)
-
-feature.properties.color = color
-feature.marker = newMarker
-newMarker.setLngLat(feature.geometry.coordinates)
-.addTo(this.mapa)
-const name = 'abc';
-
-
-const divElement = document.createElement('div');
-const assignBtn = document.createElement('div');
-assignBtn.innerHTML = `
-
-<ion-list> 
-<ion-item>
-<ion-button fill="clear" class="ion-text-wrap">
-${feature.title + ' ' + feature.id}
-</ion-button>
-</ion-item>
-
-</ion-list>
-`;
-divElement.appendChild(assignBtn);
-// btn.className = 'btn';
-assignBtn.addEventListener('click', (e) => {
-this.detalleClientes(feature.properties.client)
-});
-newMarker.setPopup(new mapboxgl.Popup({offset: 32})
-.setDOMContent(divElement))
-    
-newMarker.on('dragend', () => {
-
-  const { lng, lat } = newMarker.getLngLat();
-const i = this.planificacionRutasService.marcadores.findIndex(marcador => marcador.id == feature.id);
-
-if(i >=0){
-  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = lng;
-  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = lat;
-  this.planificacionRutasService.marcadores[i].modify = true;
-  this.planificacionRutasService.marcadores[i].marker.setLngLat([lng, lat]);
-  this.planificacionRutasService.marcadores[i].geometry.coordinates = [lng, lat]
-
-}
-
-//   this.createmapa(this.divMapa,false, true);
-  this.irMarcador(this.planificacionRutasService.marcadores[i].marker);
-
-})
-.addTo(this.mapa);
-
-//.togglePopup();
-}
-  
-      this.mapa .on('load', () => {
-
-        
-        this.mapa .resize();
-
+      this.mapa.on('load', () => {
+        this.mapa.resize();
       });
+ 
 
     }
 
