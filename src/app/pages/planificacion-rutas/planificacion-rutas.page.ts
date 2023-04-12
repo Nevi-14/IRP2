@@ -2,7 +2,6 @@ import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import {  ModalController, PopoverController } from '@ionic/angular';
 import { AlertasService } from 'src/app/services/alertas.service';
 import * as  mapboxgl from 'mapbox-gl';
-import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.service';
 import { Clientes } from 'src/app/models/clientes';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
@@ -348,12 +347,16 @@ if(this.mapa){
     }));
 
       */
-
+    this.mapa.on('click', 'points', function (e) {
+      console.log('click', e)
+  });
 
       this.mapa.on('load', () => {
         this.mapa.resize();
       });
- 
+      this.mapa.on('touchend', 'points', function (e) {
+        console.log('touchend', e)
+    });
 
     }
 

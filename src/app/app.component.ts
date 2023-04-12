@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
     public configuracionesService: ConfiguracionesService,
    ) {}
   ngOnInit(){
+    
     LogRocket.init('oifd5j/irp');
     this.checkMapBoxKey();
    }

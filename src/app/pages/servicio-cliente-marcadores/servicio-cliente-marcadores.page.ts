@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ClientesRutasPage } from '../clientes-rutas/clientes-rutas.page';
+import * as  mapboxgl from 'mapbox-gl';
 interface Marcadores{
   id:string,
   funcion: string,

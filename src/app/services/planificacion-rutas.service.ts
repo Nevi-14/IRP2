@@ -6,6 +6,7 @@ import { ListaRutasZonasModalPage } from '../pages/lista-rutas-zonas-modal/lista
 import { ConfiguracionesService } from './configuraciones.service';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { ClientesService } from './clientes.service';
+import * as  mapboxgl from 'mapbox-gl';
 interface Marcadores {
   id: any,
   select: boolean,
