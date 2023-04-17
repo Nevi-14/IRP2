@@ -36,7 +36,9 @@ estados:{
   completada:number,
   incompleta:number,
   pendiente:number,
-  reprogramado:number
+  reprogramado:number,
+  parcial:number,
+  cancelado:number
 },
 clientes:Rutero[]
 }
@@ -196,7 +198,9 @@ console.log('guis', guias)
           completada:0,
           incompleta:0,
           pendiente:0,
-          reprogramado:0
+          reprogramado:0,
+          parcial:0,
+          cancelado:0
         },
          clientes:[clienteGuia]
 }) 
@@ -210,10 +214,12 @@ console.log('guis', guias)
         guiasClientes.forEach((guia, index) => {
 let color = null;
 let totalClientes = guia.clientes.length;
-let totalEstadoE =   guia.clientes.filter(g => g.estado == 'E').length
-let totalEstadoI =   guia.clientes.filter(g => g.estado == 'I').length
 let totalEstadoP =   guia.clientes.filter(g => g.estado == 'P').length
+let totalEstadoI =   guia.clientes.filter(g => g.estado == 'I').length
+let totalEstadoE =   guia.clientes.filter(g => g.estado == 'E').length
+let totalEstadoX =   guia.clientes.filter(g => g.estado == 'X').length
 let totalEstadoR =   guia.clientes.filter(g => g.estado == 'R').length
+let totalEstadoC =   guia.clientes.filter(g => g.estado == 'C').length
 
 if(totalClientes == totalEstadoE){
 
@@ -231,6 +237,8 @@ guia.estados.completada = totalEstadoE;
 guia.estados.incompleta = totalEstadoI;
 guia.estados.pendiente = totalEstadoP;
 guia.estados.reprogramado = totalEstadoR;
+guia.estados.parcial = totalEstadoX;
+guia.estados.cancelado = totalEstadoC;
 console.log(
 
   'totalClientes' , totalClientes, 'totalEstadoE',totalEstadoE,'totalEstadoI',totalEstadoI,'totalEstadoP',totalEstadoP,'totalEstadoR',totalEstadoR

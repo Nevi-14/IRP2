@@ -1,21 +1,21 @@
+<ion-header class="ion-no-border">
 
   <ion-toolbar>
+    <ion-button  slot="start"  (click)="cerrarModal()" expand="block" fill="clear" shape="round">
+      <ion-icon color="dark" size="large" name="arrow-back-outline"></ion-icon>
+    </ion-button>
     <ion-title>{{detalleCliente.NOMBRE}}</ion-title>
-  <ion-buttons slot="end">
-    <ion-button (click)="cerrarModal()" fill="solid" color="danger"  id="circle" >
-        <ion-icon  name="close"></ion-icon>
-      </ion-button>
-      </ion-buttons>
-
+ 
   </ion-toolbar>
-<ion-content >
+</ion-header>
+<ion-content class="ion-padding">
 
 
     
     <ion-grid style="height: 100%;" >
       <ion-row style="height: 100%;">
 
-      <ion-col size="12" size-md="6"   style="height: 100%;" >
+      <ion-col size="12"     >
 <ion-list>
   <ion-item>
     <ion-label>
@@ -53,7 +53,7 @@
   </ion-item>
 </ion-list>
       </ion-col>
-      <ion-col size="12" size-md="6"  style="height: 100%;">
+      <ion-col size="12"   style="height: 100%;">
 
         <app-mini-mapa  [height]="'100%'" [width]="'100%'"  [interactive]="true" [lngLat]="[detalleCliente.LONGITUD,detalleCliente.LATITUD]"></app-mini-mapa>
  

@@ -7,6 +7,7 @@ import { ConfiguracionesService } from './configuraciones.service';
 import { ClienteEspejo } from '../models/clienteEspejo';
 import { ClientesService } from './clientes.service';
 import * as  mapboxgl from 'mapbox-gl';
+import { MapBoxGLService } from './mapbox-gl.service';
 interface Marcadores {
   id: any,
   select: boolean,
@@ -27,6 +28,10 @@ interface Marcadores {
   }
 
 }
+interface rutas {
+  RUTA:string,
+  DESCRIPCION:string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -34,12 +39,16 @@ export class PlanificacionRutasService {
   errorArray = [];
   marcadores: Marcadores[] = []
   marcadoresExcluidos: Marcadores[] = []
-  rutaZona = null;
+  rutaZona = {
+    RUTA:null,
+    DESCRIPCION:null
+  };
   constructor(
     public alertasService: AlertasService,
     public modalCtrl: ModalController,
     public configuracionesService: ConfiguracionesService,
-    public clientesService: ClientesService
+    public clientesService: ClientesService,
+    public mapboxService:MapBoxGLService
 
   ) { }
 
@@ -86,45 +95,54 @@ export class PlanificacionRutasService {
 
 
 
-  moverRuta(id) {
-    const i = this.marcadores.findIndex(marcador => marcador.id == id);
+ async  moverRuta(id) {
+    const i = this.mapboxService.clientes.findIndex(marcador => marcador.IdCliente == id);
     if (i >= 0) {
-      const rutaZona = this.listaRutasModal();
-      rutaZona.then(valor => {
-        if (valor !== undefined) {
+      const modal = await this.modalCtrl.create({
+        component: ListaRutasZonasModalPage,
+        cssClass: 'ui-modal',
+      });
+      modal.present();
+      const { data } = await modal.onDidDismiss();
+      if (data !== undefined) {
+        let ruta:rutas[] = data.rutas;
+        console.log(ruta, 'dataaaaaa')
+    
+        if (data.rutas !== undefined) {
+
+          if(this.rutaZona.RUTA === ruta[0].RUTA){
+            return this.alertasService.message('IRP','Lo sentimos no puedes utilizar la ruta actual!.')
+          }
           const rutasClientes:ClienteEspejo = {
-            IdCliente: this.marcadores[i].id,
+            IdCliente: this.mapboxService.clientes[i].IdCliente,
             Fecha: new Date().toISOString(),
             Usuario: 'IRP',
-            Zona: valor.Zona,
-            Ruta: valor.Ruta,
-            Latitud: this.marcadores[i].properties.client.LATITUD,
-            Longitud: this.marcadores[i].properties.client.LONGITUD
+            Zona: 'ND',
+            Ruta: ruta[0].RUTA,
+            Latitud: this.mapboxService.clientes[i].LATITUD,
+            Longitud:this.mapboxService.clientes[i].LONGITUD
           }
           this.insertarClienteEspejo([rutasClientes]);
           console.log([rutasClientes])
-          this.marcadores.splice(i, 1)
+       
+          this.mapboxService.marcadores.forEach(marcadores =>{
+
+            marcadores.forEach((marcador, index) =>{
+              if(marcador.id == this.mapboxService.clientes[i].IdCliente){
+                marcadores.splice(index, 1);
+                this.mapboxService.clientes.splice(i, 1);
+                this.rutaZona = null;
+                this.mapboxService.renderizarMapa();
+              }
+
+            })
+          })
         }
-      })
-
+      }
 
     }
 
 
-  }
-  async listaRutasModal() {
-    const modal = await this.modalCtrl.create({
-      component: ListaRutasZonasModalPage,
-      cssClass: 'ui-modal',
-    });
-    modal.present();
-    const { data } = await modal.onDidDismiss();
-    if (data !== undefined) {
-      console.log(data.ruta, 'data retorno', data !== undefined)
-      console.log(data)
-      let ruta = data.ruta;
-      return ruta;
-    }
   }
 
   exportarMarcadores() {

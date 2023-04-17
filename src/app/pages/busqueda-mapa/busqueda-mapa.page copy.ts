@@ -46,18 +46,30 @@ console.log('todos')
 
     const marcadoresActualizados = [];
     
- this.mapboxService.clientes.forEach((marcador, index) =>{
+ this.planificacionRutasService.marcadores.forEach(marcador =>{
 
-  if(marcador.seleccionado){
-  marcador.modificado = true;
-  marcador.LONGITUD = this.data.geometry.coordinates[0];
-  marcador.LATITUD = this.data.geometry.coordinates[1];
+  if(marcador.select){
+
+
+    const  i =  this.planificacionRutasService.marcadores.findIndex(m => m.id === marcador.id);
+
+if(i >= 0){
+
+  this.planificacionRutasService.marcadores[i].modify = true;
+  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = this.data.geometry.coordinates[0];
+  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = this.data.geometry.coordinates[1];
+  this.planificacionRutasService.marcadores[i].properties.client.LONGITUD = this.data.geometry.coordinates[0];
+  this.planificacionRutasService.marcadores[i].properties.client.LATITUD = this.data.geometry.coordinates[1];
+  this.planificacionRutasService.marcadores[i].geometry = { type: 'Feature' , coordinates: [this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]}
+  this.planificacionRutasService.marcadores[i].marker.setLngLat([this.data.geometry.coordinates[0],this.data.geometry.coordinates[1]]);
+
+}
+marcadoresActualizados.push(marcador)
+  this.modalCtrl.dismiss({
+    marcadores:marcadoresActualizados
+  });
   }
-
-  if(index == this.mapboxService.clientes.length -1){
-    this.modalCtrl.dismiss(true);
-  }
-
+  marcador.select = false;
  })
 
   }

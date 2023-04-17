@@ -125,7 +125,7 @@ private getClientes(idP:string, idC:string, idD:string) {
   //  GET
   // https://apiirp.di-apps.co.cr/api/Clientes/?IdP=4&IdC=04&IdD=04
       let URL = this.getAPI(environment.clientesURL);
-          URL =  + environment.provinciaID + idP + environment.cantonID + idC + environment.distritoID + idD;
+          URL =  URL + environment.provinciaID + idP + environment.cantonID + idC + environment.distritoID + idD;
           console.log('idP,idC,idD',idP,idC,idD);
           console.log('getClientes',URL);
       return this.http.get<Clientes[]>(URL);

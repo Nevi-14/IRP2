@@ -1,0 +1,40 @@
+
+ion-input, ion-select{
+    border-radius: 10px;
+    border: solid 1px rgba(218,218,218,1);
+    height: 2.5rem;
+    text-indent: 0.2pc;
+    width: 100%;
+  }
+  ion-label{
+    font-weight: 500;
+  }
+  ion-textarea{
+    border-radius: 10px;
+    border: solid 1px rgba(218,218,218,1);
+    height: 4rem;
+  
+  
+  }
+  .description{
+    height: 4rem;
+  }
+  .has-focus {
+    border: 2px solid #5b9bd1 !important;
+  }
+  ion-footer, ion-toolbar {
+    --background: white;
+  }
+  ion-footer ion-toolbar ion-button{
+    --padding-top:1rem;
+    --padding-bottom:1rem;
+    --padding-start:0.75rem;
+    --padding-end:0.75rem;  
+    height: 3rem;
+    width: 90%;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  

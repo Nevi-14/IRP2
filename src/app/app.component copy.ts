@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import * as  mapboxgl from 'mapbox-gl';
+import { environment } from 'src/environments/environment';;
 import { ConfiguracionesService } from './services/configuraciones.service';
- 
+import LogRocket from 'logrocket';
  
 @Component({
   selector: 'app-root',
@@ -16,16 +18,20 @@ export class AppComponent implements OnInit {
    ) {}
   ngOnInit(){
     
- 
+    LogRocket.init('oifd5j/irp');
     this.checkMapBoxKey();
    }
 
    checkMapBoxKey(){
     this.configuracionesService.cargarDatos();
  if(!this.configuracionesService.company){
+setTimeout(()=>{
+
   this.checkMapBoxKey();
+}, 1000)
+  return;
    }
- 
+   (mapboxgl as any ).accessToken = this.configuracionesService.company.mapboxKey;
    }
    
 }

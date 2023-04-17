@@ -67,7 +67,7 @@ export class ProvinciasCantonesDistritosService {
     // GET
     // https://apiirp.di-apps.co.cr/api/Distritos/?IdP=4&IdC=04
     let URL = this.getAPI( environment.distritosURL);
-        URL = URL + + environment.provinciaID +idP+ environment.cantonID + idC;
+        URL = URL + environment.provinciaID +idP+ environment.cantonID + idC;
         console.log('idP,idC', idP, idC);
         console.log('getDistritos', URL );
     return this.http.get<Distritos[]>( URL );

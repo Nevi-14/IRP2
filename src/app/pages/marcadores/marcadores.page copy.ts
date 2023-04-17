@@ -5,8 +5,17 @@ import { PlanificacionRutasService } from 'src/app/services/planificacion-rutas.
 import { DetalleClientesPage } from '../detalle-clientes/detalle-clientes.page';
 import * as  mapboxgl from 'mapbox-gl';
 import { AlertasService } from 'src/app/services/alertas.service';
-import { MapBoxGLService } from 'src/app/services/mapbox-gl.service';
-import { Clientes } from 'src/app/models/clientes';
+interface Maradores{
+  id: any,
+  title: string,
+  color: string,
+  new: boolean,
+  modify:boolean,
+  exclude:boolean,
+  client:any,
+  select : boolean
+}
+
 
 @Component({
   selector: 'app-marcadores',
@@ -15,39 +24,46 @@ import { Clientes } from 'src/app/models/clientes';
 })
 
 export class MarcadoresPage implements OnInit {
+  count =this.planificacionRutasService.marcadores.length;
+
   lngLat: [number,number] = [ -84.1165100,10.0023600];
+  @Input() marcadores:Maradores;
   @Input() default: any = null;
   filtroToggle = true;
-  public tipos = [{display:'Todos', value:'title'},{display:'Nuevos', value:'nuevo'},{display:'Modificados', value:'modificado'},{display:'Excluir', value:'excluir'}];
+  public tipos = [{display:'Todos', value:'title'},{display:'Nuevos', value:'new'},{display:'Modificados', value:'modify'}];
   public selectedType = this.tipos[0].value;
   toggleValue: any ;
 @Input() funcion:string;
 textoBuscar: any = '';
-  constructor(
-    public modalCtrl: ModalController, 
-    public alertCTrl:AlertController, 
-    public alertasService:AlertasService,
-    public mapboxService:MapBoxGLService,
-    public planificacionRutasService:PlanificacionRutasService
-    ) { }
+  constructor(public clientes: ClientesService, public modalCtrl: ModalController, public planificacionRutasService:PlanificacionRutasService, public alertCTrl:AlertController, public alertasService:AlertasService ) { }
 
   ngOnInit() {
     this.selectedType = this.default ? this.default : this.tipos[0].value;
     this.toggleValue = this.selectedType;
- 
-
+    if(this.default == 'duplicate'){
+      this.toggleValue = 'duplicate';
+      this.textoBuscar = true;
+      this.alertasService.message('IRP','Lista de clientes duplicados no agregados al mapa')
+    }else  if(this.default == 'new'){
+      this.toggleValue = 'new';
+      this.textoBuscar = true;
+      this.alertasService.message('IRP','Lista de clientes nuevos  agregados al mapa')
+    }
+  console.log( this.planificacionRutasService.marcadores, ' this.planificacionRutasService.marcadores')
   }
   cerrarModal(){
- 
     this.modalCtrl.dismiss();
   }
   segmentChanged(event:any){
-    console.log('custom search')
+
     this.selectedType = event.detail.value;
     this.toggleValue = event.detail.value;
-   if(this.selectedType == 'nuevo' || this.selectedType == 'modificado'   || this.selectedType == 'excluir' ){
+   if(this.selectedType == 'new' || this.selectedType == 'modify'  ){
 this.textoBuscar = true;
+this.count = this.planificacionRutasService.contador(this.selectedType,this.textoBuscar);
+
    }else{
+     this.count = this.planificacionRutasService.marcadores.length;
      this.textoBuscar = '';
    }
   }
@@ -73,7 +89,7 @@ this.textoBuscar = true;
         value: 'value1',
         handler: () => {
           console.log('Radio 1 selected');
-          this.mapboxService.detalleClientes(item.properties.client)
+          this.detalleClientes(item.properties.client)
           this.alertCTrl.dismiss();
         },
         checked: false
@@ -96,11 +112,6 @@ this.textoBuscar = true;
         value: 'value1',
         handler: () => {
           console.log('Radio 1 selected');
-
-          if(!item.properties.client.LONGITUD || item.properties.client.LATITUD){
-            this.alertCTrl.dismiss();
-            return this.alertasService.message('IRP','Latitud y Longitud son necesarios para calcular la distancia!.')
-          }
           this.getRoute( { title:item.title, coordinate:item.geometry.coordinates})
           this.alertCTrl.dismiss();
         },
@@ -116,7 +127,7 @@ let include :any =          {
   value: 'value4',
   handler: () => {
     console.log('Radio 4 selected');
-   //this.planificacionRutasService.incluirClienteRuta(item.id)
+    this.planificacionRutasService.incluirClienteRuta(item.id)
     this.alertCTrl.dismiss();
   }
 }
@@ -128,13 +139,7 @@ let exclude :any =     {
   value: 'value3',
   handler: () => {
     console.log('Radio 3 selected');
-  // this.planificacionRutasService.excluirClienteRuta(item.id)
-  item.excluir = true;
-let cliente:Clientes = item.properties.client.IdCliente;
-  let i = this.mapboxService.clientes.findIndex(e => e.IdCliente == cliente.IdCliente );
-  if(i >=0){
-    this.mapboxService.clientes[i].excluir = true;
-  }
+   this.planificacionRutasService.excluirClienteRuta(item.id)
   this.alertCTrl.dismiss();
   }
 }
@@ -145,7 +150,7 @@ let move:any =    {
   label: 'Incluir en otra ruta',
   value: 'value4',
   handler: () => {
-   this.planificacionRutasService.moverRuta(item.id)
+    this.planificacionRutasService.moverRuta(item.id)
     console.log('Radio 4 selected');
     this.alertCTrl.dismiss();
   }
@@ -198,23 +203,21 @@ inputArray.push(move)
    }
 
    
-   renderizarMapa($event){
-    console.log($event)
-  
-     if( $event.detail.value == 0 && this.mapboxService.marcadores[0].length > 500){
-      this.mapboxService.size = 500
-   
-      
-     }else if( $event.detail.value == 0 && this.mapboxService.marcadores[0].length <= 500){
-      this.mapboxService.size = this.mapboxService.clientes.length;
-     }else{
-      this.mapboxService.size = 500;
-       
-     }
-  
-    // this.changeDetector.detectChanges();
-    this.mapboxService.renderizarMapa();
-  }
+async detalleClientes(client){
+
+  const modal = await this.modalCtrl.create({
+    component: DetalleClientesPage,
+    cssClass: 'large-modal',
+    componentProps:{
+      detalleCliente: client
+    }
+  });
+  await modal.present();
+
+
+
+}
+
 async  getRoute(item) {
   // make a directions request using cycling profile
   // an arbitrary start will always be the same

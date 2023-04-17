@@ -38,7 +38,7 @@ export class MapaComponent implements AfterViewInit {
   @ViewChild('mapa') divMapa!:ElementRef;
   @Input() height: string;
   @Input() width: string;
-  @Input() interactive: boolean;
+  @Input() interactive: boolean = false;
   @Input() location: boolean = false;
 
 

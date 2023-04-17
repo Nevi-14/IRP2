@@ -16,6 +16,13 @@ export class FiltroPipe implements PipeTransform {
    if(!arreglo){
      return arreglo;
    }
+   if(typeof(texto) == 'boolean'){
+    console.log(arreglo)
+    return arreglo.filter(
+      item=> item[columna] == true
+      );
+   }
+   
    // todas las busquedas de javascript son case sentisive
 texto = texto.toLocaleLowerCase();
  //  return null;

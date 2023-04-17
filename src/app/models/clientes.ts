@@ -26,7 +26,12 @@ export class Clientes {
         public LONGITUD: number,
         public LATITUD: number,
         public FECHA_ACTUALIZACION_UBICACION: Date,
-        public direccion: string
+        public direccion: string,
+        public nuevo : boolean,
+        public modificado : boolean,
+        public excluir:boolean,
+        public color:string,
+        public seleccionado: boolean
     ){}
 }
 

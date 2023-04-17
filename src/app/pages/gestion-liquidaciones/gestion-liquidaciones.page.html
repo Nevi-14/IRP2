@@ -59,10 +59,13 @@
       <ion-label slot="start">Ordenes Completadas</ion-label>
       <ion-label   slot="start" color="{{guia.estados.completada ==  guia.totalClientes ? 'success' : ''}}">{{guia.estados.completada}}</ion-label>
     </ion-item>
-  
+    <ion-item>
+      <ion-label slot="start">Ordenes Parciales</ion-label>
+      <ion-label   slot="start" color="{{guia.estados.parcial > 0  ? 'danger' : ''}}">{{guia.estados.parcial}}</ion-label>
+    </ion-item>
     <ion-item>
       <ion-label slot="start">Ordenes Incompletas</ion-label>
-      <ion-label  slot="start" color="{{guia.estados.incompleta > 0 ? 'warning' : ''}}">{{guia.estados.incompleta}}</ion-label>
+      <ion-label  slot="start" color="{{guia.estados.incompleta > 0 ? 'danger' : ''}}">{{guia.estados.incompleta}}</ion-label>
     </ion-item>
   
     <ion-item>
@@ -73,6 +76,10 @@
     <ion-item>
       <ion-label slot="start">Ordenes Reprogramadas</ion-label>
       <ion-label slot="start" color="{{guia.estados.reprogramado > 0 ? 'danger' : ''}}">{{guia.estados.reprogramado}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label slot="start">Ordenes Canceladas</ion-label>
+      <ion-label slot="start" color="{{guia.estados.cancelado > 0 ? 'danger' : ''}}">{{guia.estados.cancelado}}</ion-label>
     </ion-item>
   </ion-list>
   <ion-item lines="none" class="ion-text-center" >
