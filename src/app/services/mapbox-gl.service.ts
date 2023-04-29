@@ -40,11 +40,12 @@ export class MapBoxGLService {
   drag: boolean = false;
   modo: string = 'off';
   clientes: Clientes[] = [];
-  featuresBefore = []
+ 
   marcadores: marcadores[][] = [];
   totalMarcadores: number = 0;
   style = `mapbox://styles/mapbox/streets-v12`;
   featuresIndex = 0;
+features = [];
   mapa: mapboxgl.Map;
   size = 500;
   interactivo: boolean = true;
@@ -80,7 +81,7 @@ export class MapBoxGLService {
       interactive: this.interactivo
     });
     await this.rellenarPines();
-
+    this.marcadores = await this.segregarArreglo();
     new mapboxgl.Marker()
       .setLngLat(this.lngLat)
       .setPopup(new mapboxgl.Popup({ closeOnClick: false, closeButton: false }).setText(this.configuracionesService.company.company))
@@ -114,9 +115,10 @@ export class MapBoxGLService {
         this.mapa.resize();
       });
     }
-    this.marcadores = await this.segregarArreglo();
-    console.log(this.marcadores, 'marcadores', 'index', this.featuresIndex, 'size', this.size)
+
+  
     if (this.marcadores.length > 0) {
+
       if (this.featuresIndex > this.marcadores.length) this.featuresIndex = 0;
       for (let i = 0; i < this.marcadores[this.featuresIndex].length; i++) {
 
@@ -224,11 +226,15 @@ ${this.marcadores[this.featuresIndex][i].title + ' ' + this.marcadores[this.feat
 
 
   async segregarArreglo() {
-    this.totalMarcadores = this.featuresBefore.length
+
+    this.totalMarcadores = this.features.length
     var arrays = [];
-    while (this.featuresBefore.length > 0)
-      arrays.push(this.featuresBefore.splice(0, this.size));
-    return arrays
+    while (this.features.length > 0)
+      arrays.push(this.features.splice(0, this.size));
+      console.log('arreglo segregado', arrays)
+
+      return arrays;
+    
   }
 
   async rellenarPines() {
@@ -252,7 +258,7 @@ ${this.marcadores[this.featuresIndex][i].title + ' ' + this.marcadores[this.feat
           client: this.clientes[i],
         }
       }
-      this.featuresBefore.push(feature)
+      this.features.push(feature)
       if (i == this.clientes.length - 1) {
 
         return console.log('array completed', this.marcadores)

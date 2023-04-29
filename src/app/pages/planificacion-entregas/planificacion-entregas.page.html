@@ -1,15 +1,15 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-
     <ion-grid>
+
       <ion-row>
-        <ion-col size="12" size-md="6" style="display: flex;justify-content: center;align-items: center;">
+        <ion-col size="12" size-md="4" style="display: flex;justify-content: center;align-items: center;">
           <ion-title class="ion-text-capitalize" class="title">
             <strong>Gestion Entregas {{ planificacionEntregasService.rutaZona ?
               planificacionEntregasService.rutaZona.DESCRIPCION : ''}} </strong>
           </ion-title>
         </ion-col>
-        <ion-col size="12" size-md="6" style="display: flex;justify-content: flex-end;align-items: center;">
+        <ion-col size="12" size-md="8" style="display: flex;justify-content: flex-end;align-items: center;">
           <ion-searchbar *ngIf="planificacionEntregasService.clientes.length > 0" mode="ios"
             style="max-width: 300px;margin-top: 1rem;" placeholder="Buscar Factura" inputmode="numeric" type="numeric"
             [(ngModel)]="textFactura" (ionChange)="buscarFactura()" [debounce]="1500"></ion-searchbar>
@@ -75,6 +75,13 @@
             class="ion-margin-right" size="small">
             <ion-icon name="funnel-outline"></ion-icon>
           </ion-fab-button>
+          <ion-fab-button *ngIf="planificacionEntregasService.listaGuias.length > 0"  color="dark" (click)="exportarGuias()"
+            class="ion-margin-right" size="small">
+            <ion-icon name="save-outline"></ion-icon>
+          </ion-fab-button>
+
+      
+     
         </ion-col>
 
       </ion-row>
@@ -83,131 +90,153 @@
 
 </ion-header>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <ion-content>
 
-  <ion-grid class="grid">
-
-
+  <ion-grid  *ngIf="planificacionEntregasService.clientes.length == 0"  class="grid">
     <ion-row class="row">
 
-      <ion-col class="ion-text-center" *ngIf="planificacionEntregasService.clientes.length == 0" class="img-container">
+      <ion-col class="ion-text-center"
+        class="img-container">
 
       </ion-col>
 
+  </ion-row>
+</ion-grid>
+
+  <ion-grid style="height: 100%;" class="grid"  *ngIf="planificacionEntregasService.clientes.length > 0">
 
 
-      <ion-col size="4" style="height: 100%" *ngIf="planificacionEntregasService.listaGuias.length > 0"  >
+    <ion-row class="row" style="height: 100%;">
+
+    
+
+
+      <ion-col size="4" style="height: 100%;overflow: auto;" *ngIf="planificacionEntregasService.listaGuias.length > 0"  >
   
-       <ion-list style="height: 80%;overflow: auto;padding-bottom: 2.5rem;">
-        <ion-row   *ngFor="let guia of planificacionEntregasService.listaGuias; let i = index;">
-          <ion-col style="padding: 0;display: block;align-items: center;justify-content: center;" size="2" class="ion-fab-buttons">
-            <ion-fab-button style="width: 30px;height: 30px;" (click)="time(guia)" size="small" class="custom-button" color="primary">
-              <ion-icon name="time-outline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button  style="width: 30px;height: 30px;"  (click)="verificarGuia(guia)" size="small" class="custom-button" color="primary">
-              <ion-icon name="settings-outline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button  style="width: 30px;height: 30px;"  *ngIf="guia.verificada" (click)="mapa(guia)" size="small" class="custom-button"
-              color="dark">
-              <ion-icon name="map-outline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button style="width: 30px;height: 30px;"   (click)="detalleGuia(guia)" size="small" class="custom-button" color="primary">
-              <ion-icon name="create-outline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button style="width: 30px;height: 30px;"   (click)="borrarGuia(guia)" size="small" class="custom-button" color="danger">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-fab-button>
-          </ion-col>
-          <ion-col size="10">
-            <ion-card style="padding:0.5rem;">
-              <ion-row>
-
-                <ion-col size="12">
-                  <strong class="ion-text-capitalize"> {{guia.camion.chofer}} - Placa
-                    {{guia.camion.idCamion}}</strong>
-                </ion-col>
-                <ion-col size="12">
-                  <strong class="ion-text-capitalize">Guia <ion-badge style="margin-left: 0.5rem;" color="primary"
-                      mode="ios">{{guia.idGuia}}</ion-badge></strong>
-                </ion-col>
-                <ion-col size="12" *ngIf="guia.verificada">
-                  <strong>Distancia</strong> : {{guia.distancia.toFixed(2) }} km <strong>Duración</strong> :
-                  {{guia.duracion.toFixed(2)}} min
-                </ion-col>
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-label style="display: block;"><strong>Clientes</strong> </ion-label>
-
-                  <ion-badge style="margin-top: 0.2rem;" color="dark" mode="ios">
-                    {{guia.clientes.length}}</ion-badge>
-
-                </ion-col>
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-label style="display: block;"><strong>Facturas</strong> </ion-label>
-
-                  <ion-badge style="margin-top: 0.2rem;" color="dark" mode="ios"> {{guia.totalFacturas}}
-
-
-                  </ion-badge>
-
-                </ion-col>
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-label style="display: block;"><strong>Bultos</strong></ion-label>
-
-                  <ion-badge style="margin-top: 0.2rem;" color="dark" mode="ios">{{guia.camion.bultos.toFixed(2)
-                    }}</ion-badge>
-
-
-                </ion-col>
-
-
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-label style="display: block;"><strong>Peso Total</strong></ion-label>
-
-
-                  <ion-badge style="margin-top:  0.2rem;" color="dark"
-                    mode="ios">{{guia.camion.capacidad.toFixed(2) }}</ion-badge>
-                </ion-col>
-                <ion-col size="4" class="ion-text-wrap">
-
-                  <ion-label style="display: block;"><strong>Actual</strong></ion-label>
-
-                  <ion-badge style="margin-top:  0.2rem;" color="dark" mode="ios">{{guia.camion.peso.toFixed(2)
-                    }}</ion-badge>
-                </ion-col>
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-label style="display: block;">
-                    <strong>Restante</strong>
-                  </ion-label>
-
-
-                  <ion-badge style="margin-top:  0.2rem;" color="dark"
-                    mode="ios">{{guia.camion.pesoRestante.toFixed(2)}}</ion-badge>
-                </ion-col>
-
-              </ion-row>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-
-       </ion-list>
-       <ion-list style="height: 20%;">
-        <ion-row>
-          <ion-col size="12">
-            <ion-button expand="block" color="dark" fill="solid" (click)="exportarGuias()">
-              <ion-icon slot="start" name="save"></ion-icon>
-
-              Guardar Guias
-            </ion-button>
-          </ion-col>
-        </ion-row>
-       </ion-list>
-
+   
+ 
+ 
+ 
+<ion-row *ngFor="let guia of planificacionEntregasService.listaGuias; let i = index;">
+  <ion-col size="2">
+    <ion-fab  >
+      <ion-fab-button   (click)="time(guia)" size="small" class="custom-button" color="primary">
+        <ion-icon name="time-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button    (click)="validarClientes(guia)" size="small" class="custom-button" color="primary">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button    *ngIf="guia.verificada" (click)="mapa(guia)" size="small" class="custom-button"
+        color="dark">
+        <ion-icon name="map-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button   (click)="detalleGuia(guia)" size="small" class="custom-button" color="primary">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button   (click)="borrarGuia(guia)" size="small" class="custom-button" color="danger">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-col>
+  <ion-col size="10">
+    <ion-card style="padding:0.5rem; ">
+      <ion-row>
+  
+        <ion-col size="12">
+          <strong class="ion-text-capitalize"> {{guia.camion.chofer}} - Placa
+            {{guia.camion.idCamion}}</strong>
+        </ion-col>
+        <ion-col size="12">
+          <strong class="ion-text-capitalize">Guia <ion-badge style="margin-left: 0.5rem;" color="primary"
+              mode="ios">{{guia.idGuia}}</ion-badge></strong>
+        </ion-col>
+        <ion-col size="12" *ngIf="guia.verificada">
+          <strong>Distancia</strong> : {{guia.distancia.toFixed(2) }} km <strong>Duración</strong> :
+          {{guia.duracion.toFixed(2)}} min
+        </ion-col>
+        <ion-col size="4" class="ion-text-wrap">
+          <ion-label style="display: block;"><strong>Clientes</strong> </ion-label>
+  
+          <ion-badge style="margin-top: 0.2rem;" color="dark" mode="ios">
+            {{guia.clientes.length}}</ion-badge>
+  
+        </ion-col>
+        <ion-col size="4" class="ion-text-wrap">
+          <ion-label style="display: block;"><strong>Facturas</strong> </ion-label>
+  
+          <ion-badge style="margin-top: 0.2rem;" color="dark" mode="ios"> {{guia.totalFacturas}}
+  
+  
+          </ion-badge>
+  
+        </ion-col>
+        <ion-col size="4" class="ion-text-wrap">
+          <ion-label style="display: block;"><strong>Bultos</strong></ion-label>
+  
+          <ion-badge style="margin-top: 0.2rem;" color="dark" mode="ios">{{guia.camion.bultos.toFixed(2)
+            }}</ion-badge>
+  
+  
+        </ion-col>
+  
+  
+        <ion-col size="4" class="ion-text-wrap">
+          <ion-label style="display: block;"><strong>Peso Total</strong></ion-label>
+  
+  
+          <ion-badge style="margin-top:  0.2rem;" color="dark"
+            mode="ios">{{guia.camion.capacidad.toFixed(2) }}</ion-badge>
+        </ion-col>
+        <ion-col size="4" class="ion-text-wrap">
+  
+          <ion-label style="display: block;"><strong>Actual</strong></ion-label>
+  
+          <ion-badge style="margin-top:  0.2rem;" color="dark" mode="ios">{{guia.camion.peso.toFixed(2)
+            }}</ion-badge>
+        </ion-col>
+        <ion-col size="4" class="ion-text-wrap">
+          <ion-label style="display: block;">
+            <strong>Restante</strong>
+          </ion-label>
+  
+  
+          <ion-badge style="margin-top:  0.2rem;" color="dark"
+            mode="ios">{{guia.camion.pesoRestante.toFixed(2)}}</ion-badge>
+        </ion-col>
+  
+      </ion-row>
+    </ion-card>
+  </ion-col>
+</ion-row>
+ 
+ 
 
       </ion-col>
+
+
+
+
       <ion-col *ngIf="planificacionEntregasService.clientes.length > 0"
         size="{{planificacionEntregasService.listaGuias.length > 0 ? 8 : 12}}" style="height: 100%;">
         <ion-row style="height: 100%;">
-          <ion-col size="12" *ngIf="planificacionEntregasService.clientes.length > 0" class="ion-margin-bottom">
+          <ion-col size="12" *ngIf="planificacionEntregasService.clientes.length > 0"  >
 
             <ion-item lines="full">
               <ion-label slot="start" class="ion-text-uppercase"> <strong>Detalles Generales</strong></ion-label>
@@ -223,27 +252,87 @@
                 <ion-row class="ion-text-left">
 
                   <ion-col size="2">
-                    <ion-label class="ion-text-wrap"><strong>Peso</strong>:
-                      {{planificacionEntregasService.pesoTotal.toFixed(2)}} KG
-                    </ion-label>
+      <ion-row>
+        <ion-col size="12">
+          <ion-label class="ion-text-wrap"><strong>Peso</strong>:</ion-label> 
+        </ion-col>
+        <ion-col size="12">
+
+          <ion-label>{{planificacionEntregasService.pesoTotal.toFixed(2)}} KG</ion-label>
+        </ion-col>
+      </ion-row>
                   </ion-col>
                   <ion-col size="2">
-                    <ion-label class="ion-text-wrap"><strong>Bultos:</strong>
-                      {{planificacionEntregasService.totalBultos.toFixed(2)}}</ion-label>
+
+                    <ion-row>
+                      <ion-col size="12">
+                        <ion-label class="ion-text-wrap"><strong>Bultos</strong>:</ion-label> 
+                      </ion-col>
+                      <ion-col size="12">
+              
+                        <ion-label>  {{planificacionEntregasService.totalBultos.toFixed(2)}}</ion-label>
+                      </ion-col>
+                    </ion-row>
+ 
                   </ion-col>
                   <ion-col size="2">
-                    <ion-label class="ion-text-wrap"><strong>Volumen</strong>:
-                      {{planificacionEntregasService.volumenTotal.toFixed(2)}}</ion-label>
+             
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-label class="ion-text-wrap"><strong>Volumen</strong>:</ion-label> 
+                        </ion-col>
+                        <ion-col size="12">
+                
+                          <ion-label> {{planificacionEntregasService.volumenTotal.toFixed(2)}}</ion-label>
+                        </ion-col>
+                      </ion-row>
+
+
                   </ion-col>
                   <ion-col size="2">
-                    <ion-label><strong>Clientes</strong>: {{planificacionEntregasService.totalClientes}}</ion-label>
+
+                    <ion-row>
+                      <ion-col size="12">
+                        <ion-label class="ion-text-wrap"><strong>Clientes</strong>:</ion-label> 
+                      </ion-col>
+                      <ion-col size="12">
+              
+                        <ion-label>{{planificacionEntregasService.totalClientes}}</ion-label>
+                      </ion-col>
+                    </ion-row>
+
+
+
+           
                   </ion-col>
                   <ion-col size="2">
-                    <ion-label><strong>Sin Puntear</strong>:
-                      {{planificacionEntregasService.totalSinPuntear}}</ion-label>
+
+                    <ion-row>
+                      <ion-col size="12">
+                        <ion-label class="ion-text-wrap"><strong>Sin Puntear</strong>:</ion-label> 
+                      </ion-col>
+                      <ion-col size="12">
+              
+                        <ion-label>{{planificacionEntregasService.totalSinPuntear}}</ion-label>
+                      </ion-col>
+                    </ion-row>
+
+
+ 
                   </ion-col>
                   <ion-col size="2">
-                    <ion-label><strong>Facturas</strong>: {{planificacionEntregasService.totalFacturas}}</ion-label>
+
+                    <ion-row>
+                      <ion-col size="12">
+                        <ion-label class="ion-text-wrap"><strong>Facturas</strong>:</ion-label> 
+                      </ion-col>
+                      <ion-col size="12">
+              
+                        <ion-label>{{planificacionEntregasService.totalFacturas}}</ion-label>
+                      </ion-col>
+                    </ion-row>
+
+ 
                   </ion-col>
 
                 </ion-row>
@@ -381,3 +470,5 @@
   </ion-grid>
 
 </ion-content>
+
+ 

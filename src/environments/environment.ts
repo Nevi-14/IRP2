@@ -3,6 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+
+  preURL:'https://',
+  preURL2:'https://dev-coding.com/cabys/api',
+  postURL:'dev-coding.com/cabys/api/',
+  postEmail:'post/send/email',
+
   companyCode:"01",
   production: false,
   maxCharCodigoProd: 6,
@@ -43,7 +49,16 @@ export const environment = {
   manifiestoURL:'Manifiesto/?ID=',
   consultarGuia:'consultar-guia/?id=',
   clientesClierre:'ClientesCierre/?fecha=',
-  deleteRutero:'delete-ruteros'
+  deleteRutero:'delete-ruteros',
+  // actualiza clientes
+getActualizaClientes:'get/irp/actualiza/clientes',
+postActualizaClientes:'post/irp/actualiza/cliente',
+putActualizaClientes:'put/irp/actualiza/cliente?id=',
+deleteActualizaClientes:'delete/irp/actualiza/cliente?id='
+
+
+
+
 };
 
 

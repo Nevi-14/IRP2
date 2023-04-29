@@ -107,10 +107,13 @@ getClienteID(clientesIds:string){
    if(elementos[i] != ''){
     this.getClienteByIdCliente(elementos[i]).subscribe(
     resp =>{
-    resp.slice(0).forEach(cliente => {
+    resp.slice(0).forEach((cliente, index) => {
     this.cliente.push(cliente);
     const c =  this.clientesArray.findIndex( clientesArray => clientesArray.IdCliente == cliente.IdCliente);
-    if(c < 0) this.clientesArray.push(cliente);  
+    if(c < 0) this.clientesArray.push(cliente);
+    if(index == resp.slice(0).length -1) {
+      console.log('this.clientesArray', this.clientesArray)
+    } 
  }) 
      }, error =>{
         console.log(error);      

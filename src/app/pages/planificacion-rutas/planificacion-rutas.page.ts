@@ -8,6 +8,8 @@ import { PlanificacionRutasService } from '../../services/planificacion-rutas.se
 import { MenuClientesPage } from '../menu-clientes/menu-clientes.page';
 import { Clientes } from 'src/app/models/clientes';
 import { MarcadoresPage } from '../marcadores/marcadores.page';
+import { ClientesSinUbicacionPage } from '../clientes-sin-ubicacion/clientes-sin-ubicacion.page';
+import { ActualizaClientesService } from 'src/app/services/actualiza-clientes.service';
 @Component({
   selector: 'app-planificacion-rutas',
   templateUrl: './planificacion-rutas.page.html',
@@ -28,7 +30,8 @@ export class PlanificacionRutasPage implements OnInit {
     public mapboxService: MapBoxGLService,
     public clientesService: ClientesService,
     public planificacionRutasService: PlanificacionRutasService,
-    public changeDetector: ChangeDetectorRef
+    public changeDetector: ChangeDetectorRef,
+    public actualizaClientesService:ActualizaClientesService
 
 
   ) {
@@ -83,6 +86,39 @@ export class PlanificacionRutasPage implements OnInit {
     }
   }
 
+  async clientesSinUbicacion() {
+
+
+
+    const modal = await this.modalCtrl.create({
+      component: ClientesSinUbicacionPage,
+      cssClass: 'ui-modal',
+      componentProps: {
+      }
+    });
+
+    modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data != undefined) {
+
+      data.item.forEach((cliente: Clientes, i) => {
+        console.log(cliente, 'cli')
+        const index = this.mapboxService.clientes.findIndex(client => client.IdCliente == cliente.IdCliente)
+        if (index < 0) {
+          cliente.nuevo = true;
+          cliente.seleccionado = false;
+          this.mapboxService.clientes.push(cliente)
+        }
+        if (i == data.item.length - 1) {
+          console.log('new customer', cliente)
+          this.mapboxService.renderizarMapa();
+        }
+      })
+
+    }
+  }
 
   renderizarMapa($event) {
     console.log($event)
@@ -179,7 +215,7 @@ export class PlanificacionRutasPage implements OnInit {
             Fecha: new Date().toISOString(),
             Usuario: 'IRP',
             Zona: 'ND',
-            Ruta: this.planificacionRutasService.rutaZona.RUTA,
+            Ruta: this.planificacionRutasService.rutaZona ? this.planificacionRutasService.rutaZona.RUTA : this.mapboxService.clientes[i].RUTA,
             Latitud: this.mapboxService.clientes[i].LATITUD,
             Longitud: this.mapboxService.clientes[i].LONGITUD
           }
@@ -192,7 +228,10 @@ export class PlanificacionRutasPage implements OnInit {
 
         }
 
+this.actualizaClientesService.syncDeleteActualizaClientes(this.mapboxService.clientes[i].IdCliente).then(resp =>{
 
+}, error =>{
+})
         if (i == this.mapboxService.clientes.length - 1) {
           console.log(postArray, 'postArray')
           this.clientesService.syncPostClienteEspejoToPromise(postArray).then(resp => {

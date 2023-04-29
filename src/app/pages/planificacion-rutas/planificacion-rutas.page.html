@@ -1,6 +1,7 @@
  
 
 <ion-header class="ion-no-border">
+  <app-encabezado  ></app-encabezado>
   <ion-toolbar>
 
     <ion-grid >
@@ -10,8 +11,9 @@
             <strong>Gestion Rutas  {{planificacionRutasService.rutaZona ?  planificacionRutasService.rutaZona.DESCRIPCION : ''}}  </strong>
           </ion-title>
         </ion-col>
+   
         <ion-col size="12" size-md="6" style="display: flex;justify-content: flex-end;align-items: center;">
-          <ion-item *ngIf="mapboxService.marcadores.length > 0">
+          <ion-item class="ion-hide-md-down" *ngIf="mapboxService.marcadores.length > 0">
        
             <ion-select name="carga" (ionChange)="renderizarMapa($event)" [(ngModel)]="mapboxService.featuresIndex"   placeholder="Cargar Pines">
               <ion-select-option *ngFor="let item of mapboxService.marcadores; let i = index;" [value]="i"> 
@@ -68,6 +70,11 @@
       class="ion-margin-right" size="small"    (click)="postRutas()">
       <ion-icon  name="save"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button    color="dark" (click)="clientesSinUbicacion()"
+      class="ion-margin-right" size="small">
+      <ion-icon name="notifications-outline"></ion-icon>
+    </ion-fab-button>
+
         </ion-col>
    
       </ion-row>
@@ -99,3 +106,4 @@
 </ion-grid>
 
 </ion-content>
+<app-pie-pagina  ></app-pie-pagina>

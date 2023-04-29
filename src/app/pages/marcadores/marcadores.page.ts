@@ -41,7 +41,9 @@ textoBuscar: any = '';
  
     this.modalCtrl.dismiss();
   }
-  segmentChanged(event:any){
+async   segmentChanged(event:any){
+
+
     console.log('custom search')
     this.selectedType = event.detail.value;
     this.toggleValue = event.detail.value;

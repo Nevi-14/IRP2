@@ -142,7 +142,15 @@ const routes: Routes = [
   {
     path: 'gestion-telefonos',
     loadChildren: () => import('./pages/gestion-telefonos/gestion-telefonos.module').then( m => m.GestionTelefonosPageModule)
+  },  {
+    path: 'validacion-lng-lat',
+    loadChildren: () => import('./pages/validacion-lng-lat/validacion-lng-lat.module').then( m => m.ValidacionLngLatPageModule)
   },
+  {
+    path: 'clientes-sin-ubicacion',
+    loadChildren: () => import('./pages/clientes-sin-ubicacion/clientes-sin-ubicacion.module').then( m => m.ClientesSinUbicacionPageModule)
+  },
+
 
 
 

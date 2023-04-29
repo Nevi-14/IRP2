@@ -3,8 +3,8 @@
     <ion-menu (mouseover)="openMenu()" [ngClass]="configuracionesService.menu   ? 'expand-menu' :'menu-hide'"
       contentId="main-content" type="overlay" menuId="myMenu">
       <ion-header class="ion-no-border">
-        <ion-toolbar color="dark"  class="ion-text-center">
- <ion-title>IRP</ion-title>
+        <ion-toolbar color="dark"  >
+ <ion-label class="ion-text-left" style="margin-left: 1rem;">IRP </ion-label>
         </ion-toolbar>
       </ion-header>
       <ion-content>
@@ -25,7 +25,13 @@
 
 
       </ion-content>
-
+      <ion-footer class="ion-no-border ion-hide-md-up" >
+        <ion-toolbar color="dark">
+          <ion-button  color="primary" size="small" slot="end">
+            &copy; {{year}} SDE - V1.1
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
     </ion-menu>
 
 
@@ -33,17 +39,10 @@
 
       <ion-router-outlet id="main-content">
 
-
+   
 
       </ion-router-outlet>
 
-      <ion-footer class="ion-no-border" >
-        <ion-toolbar>
-          <ion-button  color="primary" size="small" slot="end">
-            &copy; {{year}} SDE - V1.1
-          </ion-button>
-        </ion-toolbar>
-      </ion-footer>
     </div>
 
   </ion-split-pane>

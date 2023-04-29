@@ -15,6 +15,8 @@ export class Cliente {
   public orden_visita: number,
   public HoraInicio:Date,
   public HoraFin:Date,
+  public asignado:boolean,
+  public valido:boolean,
 
     ){}
 }

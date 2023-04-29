@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ModalController, AlertController, PopoverController, IonPopover } from '@ionic/angular';
 import { PlanificacionEntregasService } from 'src/app/services/planificacion-entregas.service';
 import { AlertasService } from 'src/app/services/alertas.service';
@@ -7,7 +7,7 @@ import { ControlFacturasPage } from '../control-facturas/control-facturas.page';
 import { PlanificacionEntregas } from 'src/app/models/planificacionEntregas';
 import { FacturasService } from 'src/app/services/facturas.service';
 import { ListaClientesGuiasPage } from '../lista-clientes-guias/lista-clientes-guias.page';
-import { ClientesGuia, Guias } from 'src/app/models/guia';
+import { Cliente, ClientesGuia, Guias } from 'src/app/models/guia';
 import { PdfService } from '../../services/pdf.service';
 import { ConfiguracionesService } from '../../services/configuraciones.service';
 import { ListaRutasZonasModalPage } from '../lista-rutas-zonas-modal/lista-rutas-zonas-modal.page';
@@ -16,6 +16,9 @@ import { CalendarioPage } from '../calendario/calendario.page';
 import { Rutas } from '../../models/rutas';
 import { Router } from '@angular/router';
 import { ReporteGuiasPage } from '../reporte-guias/reporte-guias.page';
+import { HttpClient } from '@angular/common/http';
+import { ValidacionLngLatPage } from '../validacion-lng-lat/validacion-lng-lat.page';
+import { ClientesSinUbicacionPage } from '../clientes-sin-ubicacion/clientes-sin-ubicacion.page';
 
 
 @Component({
@@ -30,7 +33,6 @@ export class PlanificacionEntregasPage {
   textFactura: string = '';
   index = null;
   clientes: ClientesGuia[];
-show = false;
   constructor(
     public modalCtrl: ModalController,
     public planificacionEntregasService: PlanificacionEntregasService,
@@ -40,7 +42,8 @@ show = false;
     public pdfService: PdfService,
     public configuracionesService: ConfiguracionesService,
     public router: Router,
-    public popoverCtrl: PopoverController
+    public popoverCtrl: PopoverController,
+    public http: HttpClient
 
   ) { }
 
@@ -49,7 +52,6 @@ show = false;
   ionViewWillEnter() {
     this.limpiarDatos();
   }
-
 
   cerrarModal() {
     this.modalCtrl.dismiss();
@@ -69,7 +71,7 @@ show = false;
 
     if (data !== undefined) {
 
-      for (let r = 0; r < data.rutas.length; r++) {
+       for (let r = 0; r < data.rutas.length; r++) {
         let i: any = this.planificacionEntregasService.rutas.findIndex(rutas => rutas.RUTA == data.rutas[r].RUTA);
         if (i < 0) {
           this.planificacionEntregasService.rutas.push(data.rutas[r])
@@ -109,7 +111,6 @@ show = false;
     if (this.isOpen) {
       modal.present();
     }
-
     const { data } = await modal.onDidDismiss();
     this.isOpen = false;
     if (data !== undefined) {
@@ -583,26 +584,55 @@ show = false;
     await alert.present();
   }
 
+
   vistaMapa() {
     this.limpiarDatos();
     this.router.navigateByUrl('/inicio/planificacion-entregas-vista-mapa');
 
   }
-  verificarGuia(guia: Guias) {
+  
+ 
 
+   validarClientes(guia: Guias){
     if (guia.camion.HoraInicio == null || guia.camion.HoraInicio == undefined || guia.camion.HoraFin == null || guia.camion.HoraFin == undefined) {
       this.alertasService.message('IRP', 'Es necesario especificar la hora de inicio y fin de nuestra guia!.')
       return
     }
-    guia.verificada = false;
-    this.planificacionEntregasService.continuarRutaOptima = true;
-    this.planificacionEntregasService.llenarRutero(guia)
+let count = 0;
+guia.clientes.forEach( async (cliente, index) =>{
+  console.log(cliente )
+  let start =`${ this.configuracionesService.company.longitud},${this.configuracionesService.company.latitud};${cliente.longitud},`
+  let  URL = `https://api.mapbox.com/directions/v5/mapbox/driving/${start},${cliente.latitud}?steps=true&geometries=geojson&access_token=${this.configuracionesService.company.mapboxKey}`;
+ 
+  await this.http.get<any>(URL).toPromise().then( resp =>{
+    console.log(resp)
+count ++
+cliente.valido = true;
+console.log(count)
+console.log( guia.clientes.length)
+if(count == guia.clientes.length){
 
-    if (this.planificacionEntregasService.horaFinalAnterior) {
-      guia.camion.HoraFin = this.planificacionEntregasService.horaFinalAnterior;
-    }
+  console.log(count, '2')
+  let clientes = guia.clientes.filter( e => e.valido == false);
+  if(clientes.length> 0)return  this.resulltadoLongLat(clientes, guia)
+  this.rellenarRutero(guia)
+}
+  }, error =>{
+    let clientesValidos = guia.clientes.filter( e => e.valido == true);
+    cliente.valido = false;
+    cliente.orden_visita =  clientesValidos[0].orden_visita ? clientesValidos[0].orden_visita + 1  : clientesValidos.length+1;
+    count ++
+    console.log(error)
+  })
+
+  if(count == guia.clientes.length){
+    let clientes = guia.clientes.filter( e => e.valido == false);
+if(clientes.length> 0)return  this.resulltadoLongLat(clientes, guia)
+this.rellenarRutero(guia)
   }
 
+})
+  }
 
   async exportarGuias() {
 
@@ -632,8 +662,37 @@ show = false;
 
     await alert.present();
   }
+  async resulltadoLongLat(clientes:Cliente[],guia: Guias) {
+    const modal = await this.modalCtrl.create({
+      component: ValidacionLngLatPage,
+      cssClass: 'ui-modal',
+      componentProps: {
+        clientes
+      }
+    });
 
+    modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data !== undefined) {
+      this.rellenarRutero(guia)
+    }
+  }
+
+
+async  rellenarRutero(guia: Guias){
+    guia.verificada = false;
+    this.planificacionEntregasService.continuarRutaOptima = true;
+
+    if (this.planificacionEntregasService.horaFinalAnterior) {
+      guia.camion.HoraFin = this.planificacionEntregasService.horaFinalAnterior;
+    }
+     this.planificacionEntregasService.rellenarRutero(guia)
+  }
   async mapa(guia) {
+
+
 
     const modal = await this.modalCtrl.create({
       component: RutaMapaComponent,
@@ -655,7 +714,6 @@ show = false;
 
     }
   }
-
 
 
 

@@ -41,6 +41,7 @@ export class InicioPage implements OnInit {
 
 
   dkmrg() {
+   
     this.menuCtrl.swipeGesture(true)
   }
   ngOnInit() {

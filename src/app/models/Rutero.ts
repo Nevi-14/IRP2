@@ -34,7 +34,8 @@ export class RuteroMH {
         public orden_visita: number,
         public asignado: boolean,
         public HoraInicio:Date,
-        public HoraFin:Date
+        public HoraFin:Date,
+        public valido:boolean
         
         ){}
 }

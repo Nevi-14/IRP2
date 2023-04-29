@@ -41,6 +41,7 @@ interface Coordenadas {
   ]
 })
 export class RutaMapaComponent implements AfterViewInit {
+  mapbox = (mapboxgl as typeof mapboxgl);
   @Input() lngLat: [number,number];
   @ViewChild('mapa') divMapa!:ElementRef;
   mapa!: mapboxgl.Map;
@@ -68,7 +69,8 @@ export class RutaMapaComponent implements AfterViewInit {
            ) { }
 
   ionViewWillEnter(){
-
+    this.mapbox.accessToken = this.configuracionesService.company.mapboxKey
+console.log(this.lngLat)
   if(this.guia.verificada){
     console.log(this.guia, this.guia.clientes)
     this.coordinates = [];
@@ -95,17 +97,21 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
 
   cargarElementosAlMapa(array){
     let primerElemento = {
-      nombre: this.configuracionesService.company.company ,
+      nombre: this.configuracionesService.company.company,
       longitud : this.lngLat[0],
       latitud : this.lngLat[1],
       estado:  '',
       color:  "#000000",
     }
     this.coordinates = [];
+
+
     if(this.page == 0){
+
       this.coordinates.push(primerElemento)
 
     }
+
 
 
     for(let i =0; i < array.length; i++){
@@ -118,8 +124,10 @@ this.cargarElementosAlMapa( this.elementosAgrupados[this.page])
       }
       this.coordinates.push(clienteCoordenada)
       console.log(array[i], 'this.elementosAgrupados[this.page][i]')
+  
       if(i === array.length -1){
-        this.crearMapa();
+        console.log(this.coordinates)
+       this.crearMapa();
       }
 
     }
@@ -264,7 +272,7 @@ if(this.coordinates[i].longitud && this.coordinates[i].latitud){
     if(middle.endsWith(';'))  middle = middle.slice(0,-1)
     console.log(middle,'middle')
  
-    let secondPart = `?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
+    let secondPart = `?steps=true&geometries=geojson&access_token=${this.configuracionesService.company.mapboxKey}`;
     let final = firstPart + middle +secondPart;
  console.log('final',final)
       const query = await fetch(

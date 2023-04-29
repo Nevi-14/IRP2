@@ -1,11 +1,10 @@
-
-
 <ion-header class="ion-no-border">
+  <app-encabezado></app-encabezado>
   <ion-toolbar>
 
-    <ion-grid >
+    <ion-grid>
       <ion-row>
-        <ion-col size="12" size-md="7" style="display: flex;justify-content: center;align-items: center;">
+        <ion-col size="12" size-md="7" style="display: flex;justify-content: flex-start;align-items: center;">
           <ion-fab-button color="dark" size="small">
             {{camionesService.camiones.length}}
           </ion-fab-button>
@@ -14,65 +13,92 @@
           </ion-title>
         </ion-col>
         <ion-col size="9" size-md="4" style="display: flex;justify-content: center;align-items: center;">
-          <ion-searchbar style="margin-top: 1rem;" placeholder="Placa camión"  type="text" (ionChange)="onSearchChange($event)"   [debounce]="250"  mode="ios"></ion-searchbar>
+          <ion-searchbar style="margin-top: 1rem;" placeholder="Placa camión" type="text"
+            (ionChange)="onSearchChange($event)" [debounce]="250" mode="ios"></ion-searchbar>
 
         </ion-col>
         <ion-col size="3" size-md="1" style="display: flex;justify-content: center;align-items: center;">
-             
-          <ion-fab-button (click)="detalleCamion()"    size="small" color="dark">
+
+          <ion-fab-button (click)="detalleCamion()" size="small" color="dark">
             <ion-icon name="add"></ion-icon>
           </ion-fab-button>
         </ion-col>
       </ion-row>
     </ion-grid>
-   </ion-toolbar>
+  </ion-toolbar>
 
-   <ion-list>
+  <ion-list>
     <ion-item lines="none">
-      <ion-grid >
+      <ion-grid>
         <ion-row>
-          <ion-col  size="2"   class="ion-hide-md-down"><strong>Frio / Seco</strong></ion-col>
-          <ion-col><strong>Placa</strong></ion-col>
-          <ion-col   class="ion-hide-md-down"><strong>Chofer</strong></ion-col>
-          <ion-col   size="2"  class="ion-hide-md-down"><strong>Capacidad</strong></ion-col>
-          <ion-col><strong>Opciones</strong></ion-col>
+          <ion-col size="2" class="ion-hide-md-down"><strong>Frio / Seco</strong></ion-col>
+          <ion-col class="ion-hide-md-down"><strong>Placa</strong></ion-col>
+          <ion-col class="ion-hide-md-down"><strong>Chofer</strong></ion-col>
+          <ion-col size="8" class="ion-hide-md-up"><strong>Chofer</strong></ion-col>
+          <ion-col size="2" class="ion-hide-md-down"><strong>Capacidad</strong></ion-col>
+          <ion-col class="ion-hide-md-down"><strong>Opciones</strong></ion-col>
+          <ion-col size="4" class="ion-hide-md-up"><strong>Opciones</strong></ion-col>
         </ion-row>
       </ion-grid>
-      </ion-item>
-  
+    </ion-item>
+
   </ion-list>
 </ion-header>
 
+
+
 <ion-content>
- 
-<ion-list>
-  <ion-item *ngFor="let camion of camionesService.camiones | filtro : textoBuscarRuta:'idCamion'">
-    <ion-grid >
-      <ion-row >
-        <ion-col   size="2"  class="ion-hide-md-down" style="display: flex;justify-content: flex-start;align-items: center;">
-          <ion-icon   style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;"  size="large"  color="primary" *ngIf="camion.frio == 'S'" name="snow-outline"></ion-icon>
-          <ion-icon style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;"        size="large"   color="warning" *ngIf="camion.seco == 'S'" name="sunny-outline"></ion-icon>
-        </ion-col>
-        <ion-col  >
-          
-         <ion-label style="margin-left: 1rem;">{{camion.idCamion}}</ion-label> 
-         </ion-col>
-         <ion-col    class="ion-hide-md-down">{{camion.chofer}}</ion-col>
-        <ion-col   size="2"   class="ion-hide-md-down">{{camion.capacidadPeso | number }} <strong>KG</strong> </ion-col>
-        <ion-col  style="display: flex;justify-content: flex-start;align-items: center;">
-          <ion-fab-button (click)="detalleCamion(camion)" size="small"   color="dark">
-            <ion-icon name="create"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-button   size="small"  color="danger">
-            <ion-icon name="trash"></ion-icon>
-          </ion-fab-button>  
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-        </ion-item>
-</ion-list>
+
+  <ion-list>
+    <ion-item *ngFor="let camion of camionesService.camiones | filtro : textoBuscarRuta:'idCamion'">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2" class="ion-hide-md-down"
+            style="display: flex;justify-content: flex-start;align-items: center;">
+            <ion-icon style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;" size="large" color="primary"
+              *ngIf="camion.frio == 'S'" name="snow-outline"></ion-icon>
+            <ion-icon style="margin-left: 1rem;margin-top: 0.5rem;margin-right: 1rem;" size="large" color="warning"
+              *ngIf="camion.seco == 'S'" name="sunny-outline"></ion-icon>
+          </ion-col>
+          <ion-col class="ion-hide-md-down">
+
+            <ion-label style="margin-left: 1rem;">
+              {{camion.idCamion}}
+            </ion-label>
+          </ion-col>
+          <ion-col class="ion-hide-md-down">{{camion.chofer}}</ion-col>
+          <ion-col size="8" class="ion-hide-md-up">
+            <ion-label>
+              {{camion.idCamion}}
+              <p class="ion-hide-md-up" style="margin-bottom: 0.5rem;"> {{camion.chofer}}</p>
+            </ion-label>
+
+          </ion-col>
+          <ion-col size="2" class="ion-hide-md-down">{{camion.capacidadPeso | number }} <strong>KG</strong> </ion-col>
+          <ion-col class="ion-hide-md-down" style="display: flex;justify-content: flex-start;align-items: center;">
+            <ion-fab-button (click)="detalleCamion(camion)" size="small" color="dark">
+              <ion-icon name="create"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button size="small" color="danger">
+              <ion-icon name="trash"></ion-icon>
+            </ion-fab-button>
+          </ion-col>
+
+          <ion-col size="4" class="ion-hide-md-up"
+            style="display: flex;justify-content: flex-start;align-items: center;">
+            <ion-fab-button (click)="detalleCamion(camion)" size="small" color="dark">
+              <ion-icon name="create"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button size="small" color="danger">
+              <ion-icon name="trash"></ion-icon>
+            </ion-fab-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
 
 
 </ion-content>
 
- 
+<app-pie-pagina></app-pie-pagina>

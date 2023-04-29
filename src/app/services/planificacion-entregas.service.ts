@@ -8,7 +8,6 @@ import { Rutas } from '../models/rutas';
 import { ClientesGuia, Guias, Cliente } from '../models/guia';
 import { Rutero, RuteroMH } from '../models/Rutero';
 import { GestionCamionesService } from './gestion-camiones.service';
-import * as  mapboxgl from 'mapbox-gl';
 import { RuteroService } from './rutero.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { GuiaEntrega } from '../models/guiaEntrega';
@@ -69,6 +68,7 @@ export class PlanificacionEntregasService {
 
   listaCliente: boolean = false;
 
+contador = 0;
 
   constructor(
     private modalCtrl: ModalController,
@@ -413,7 +413,9 @@ if(i < 0) this.listaGuias.push(guiaEntrega);
       bultosTotales: 0,
       orden_visita: 0,
       HoraInicio: null,
-      HoraFin: null
+      HoraFin: null,
+      valido:null,
+      asignado:null
     }
 
     let noAgregado = {
@@ -809,100 +811,73 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
     return data;
 
   }
-  async llenarRutero(guia: Guias) {
-    this.continuarRutaOptima = true;
-    this.alertasService.presentaLoading('Calculando ruta optima...')
-    this.rutero = [];
-    this.clientesSinPuntear = [];
 
 
 
-    let item = new RuteroMH(0, guia.idGuia, this.configuracionesService.company.company, this.configuracionesService.company.latitud, this.configuracionesService.company.longitud, 0, 0, '', 0, 0, true, null, null);
-    this.rutero.push(item);
-    for (let i = 0; i < guia.clientes.length; i++) {
 
-      let cliente = guia.clientes[i];
-
-
-
-      item = new RuteroMH(cliente.id, guia.idGuia, cliente.cliente, cliente.latitud, cliente.longitud, cliente.distancia, cliente.duracion, cliente.direccion, cliente.bultosTotales, cliente.orden_visita, false, null, null);
-      if (cliente.latitud && cliente.longitud) {
-        this.rutero.push(item);
-      } else {
-        this.clientesSinPuntear.push(item);
-      }
-
-
-      if (i == guia.clientes.length - 1) {
-
-        if (this.rutero.length == 0) {
-          //  this.alertasService.loadingDissmiss();
-          return this.funcionClientesSinPuntear()
-
-        }
-        this.ordenaMH(0, guia)
-        console.log('Rutero: ', this.rutero);
-
-      }
-
-    }
-
+  rellenarRutero(guia:Guias){
+    this.alertasService.presentaLoading('Calculando Ruta Optima..')
+    let clientes = guia.clientes.filter( e => e.valido == true)
+    let compania:Cliente = {
+      id: null,
+      idGuia:guia.idGuia,
+      cliente: this.configuracionesService.company.company,
+      latitud: this.configuracionesService.company.latitud,
+      longitud:this.configuracionesService.company.longitud,
+      distancia: null,
+      duracion:null,
+      direccion:null,
+      bultosTotales:0,
+      orden_visita: null,
+      HoraInicio:null,
+      HoraFin:null,
+      asignado:false,
+      valido:true,
+   }
+   clientes.unshift(compania)
+   this.ordenaMH(0, clientes, guia)
 
   }
-
-
-  ordenaMH(a: number, guia) {
+ async  ordenaMH(a: number,clientes:Cliente[], guia:Guias){
 
     let m: number;
     let o: number;
+    await this.getDistancia(clientes, a)
+    m =   this.calcularMenor(clientes);
+    clientes[m].asignado = true;
+    o =  this.sumarOrdenados(clientes);
+    clientes[m].orden_visita = o
+    if (o < clientes.length - 1) {
+      this.ordenaMH(m,clientes, guia);
+    }
 
-    this.getDistancia(a)
-      .then(x => console.log(x, 'final'))
-      .then(x => {
-        m = this.calcularMenor();
-        console.log(m);
-        this.rutero[m].asignado = true;
-        o = this.sumarOrdenados();
-        this.rutero[m].orden_visita = o
+    if( o == clientes.length-1){
+       console.log( clientes, 'Fin')
+      this.agregarTiempo(guia);
+       return
+   
+     }
 
-
-        if (o < this.rutero.length - 1) {
-          this.ordenaMH(m, guia);
-        }
-        if (o == this.rutero.length - 1) {
-
-          this.rutero.sort((a, b) => a.orden_visita - b.orden_visita)
-
-          console.log('this.rutero', this.rutero)
-          //   return
-          this.agregarTiempo(guia);
-
-
-
-        }
-      }, error => {
-        this.alertasService.loadingDissmiss();
-        this.alertasService.message('IRP', 'Lo sentimos algo salio mal.')
-
-      })
+ 
+ 
 
   }
 
 
-  async getDistancia(a: number) {
+  async getDistancia(clientes:Cliente[], a: number) {
     // NOS AYUDA ENCONTRAR LA DISTANCIA Y DURACION
 
     let start: string;
     let end: string;
     let URL: string;
-    console.log(URL);
+ 
 
-    for (let i = 1; i < this.rutero.length; i++) {
-      if (!this.rutero[i].asignado) {
-        start = this.rutero[a].longitud + ',' + this.rutero[a].latitud;
-        end = this.rutero[i].longitud + ',' + this.rutero[i].latitud;
-        URL = `https://api.mapbox.com/directions/v5/mapbox/driving/${start};${end}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-        console.log('ettt2', a, this.rutero[a], URL, 'URL')
+    for (let i = 1; i < clientes.length; i++) {
+      if (!clientes[i].asignado) {
+        start = clientes[a].longitud + ',' + clientes[a].latitud;
+        end = clientes[i].longitud + ',' + clientes[i].latitud;
+        URL = `https://api.mapbox.com/directions/v5/mapbox/driving/${start};${end}?steps=true&geometries=geojson&access_token=${this.configuracionesService.company.mapboxKey}`;
+        console.log(URL);
         const query = await fetch(
           URL,
           { method: 'GET' }
@@ -910,9 +885,9 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
         const json = await query.json();
 
         if (json.routes) {
-          this.rutero[i].distancia = Number((json.routes[0].distance / 1000).toFixed(2));
+         clientes[i].distancia = Number((json.routes[0].distance / 1000).toFixed(2));
 
-          this.rutero[i].duracion = Number((json.routes[0].duration / 60).toFixed(2));
+          clientes[i].duracion = Number((json.routes[0].duration / 60).toFixed(2));
         }
       }
 
@@ -922,17 +897,17 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
 
 
 
-    return this.rutero;
+    return clientes;
   }
 
-  calcularMenor() {
+   calcularMenor(clientes:Cliente[]) {
     let menor: number = 100000;
     let indice: number = 0;
 
-    for (let i = 0; i < this.rutero.length; i++) {
-      if (!this.rutero[i].asignado) {
-        if (this.rutero[i].distancia < menor) {
-          menor = this.rutero[i].distancia;
+    for (let i = 0; i <  clientes.length; i++) {
+      if (!clientes[i].asignado) {
+        if ( clientes[i].distancia < menor) {
+          menor =  clientes[i].distancia;
           indice = i;
         }
       }
@@ -942,10 +917,10 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
 
 
 
-  sumarOrdenados() {
+   sumarOrdenados(clientes:Cliente[]) {
     let c: number = 0;
 
-    this.rutero.forEach(x => {
+    clientes.forEach(x => {
       if (x.asignado) {
         c += 1;
       }
@@ -955,29 +930,30 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
 
   async agregarTiempo(guia: Guias) {
 
+    console.log(guia)
     let start = guia.camion.HoraInicio.substring(0, 2)
     let end = guia.camion.HoraFin.substring(0, 2)
+    let clientes = guia.clientes.filter( e => e.valido == true)
+    console.log(clientes, 'clientes')
 
-    if (this.rutero.length == 1) {
-      return this.funcionClientesSinPuntear();
-    }
-
-    for (let t = 1; t < this.rutero.length; t++) {
-
+    for (let t = 0; t < clientes.length; t++) {
+   
+      console.log(t, 't')
       let date = new Date(guia.fecha);
       let defaultStartTime = new Date(guia.fecha);
       let defaultEndTime = new Date(guia.fecha);
 
-      if (t == 1) {
+      if (t == 0) {
 
         defaultStartTime.setHours(Number(start))
-        defaultStartTime.setMinutes(date.getMinutes() + Number(this.rutero[t].duracion.toFixed(0)));
+        defaultStartTime.setMinutes(date.getMinutes() + Number(clientes[t].duracion.toFixed(0)));
         defaultEndTime.setHours(defaultStartTime.getHours())
         defaultEndTime.setMinutes(defaultStartTime.getMinutes() + 20);
 
       } else {
-        defaultStartTime.setHours(this.rutero[t - 1].HoraFin.getHours())
-        defaultStartTime.setMinutes(this.rutero[t - 1].HoraFin.getMinutes() + Number(this.rutero[t].duracion.toFixed(0)));
+
+        defaultStartTime.setHours(clientes[t-1].HoraFin.getHours())
+        defaultStartTime.setMinutes(clientes[t-1].HoraFin.getMinutes() + Number(clientes[t].duracion.toFixed(0)));
         defaultEndTime.setHours(defaultStartTime.getHours())
         defaultEndTime.setMinutes(defaultStartTime.getMinutes() + 20);
       }
@@ -1039,20 +1015,18 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
         return
       }
 
-      console.log('start', defaultStartTime);
-      console.log('end', defaultEndTime);
-      this.rutero[t].HoraInicio = defaultStartTime;
-      this.rutero[t].HoraFin = defaultEndTime;
-
-      if (t == this.rutero.length - 1) {
+      clientes[t].HoraInicio = defaultStartTime;
+      clientes[t].HoraFin = defaultEndTime;
+      if (t == clientes.length - 1) {
         guia.verificada = true;
         if (!this.continuarRutaOptima) {
-          guia.camion.HoraFin = String(this.rutero[this.rutero.length - 1].HoraFin.getHours()).padStart(2, '0') + ':' + String(this.rutero[this.rutero.length - 1].HoraFin.getMinutes()).padStart(2, '0')
+          guia.camion.HoraFin = String(clientes[clientes.length - 1].HoraFin.getHours()).padStart(2, '0') + ':' + String(clientes[clientes.length - 1].HoraFin.getMinutes()).padStart(2, '0')
         }
-        console.log('end asigning time')
-        return this.funcionClientesSinPuntear()
+        console.log('end asigning time', guia)
+        return await this.funcionClientesSinPuntear()
 
       }
+     
     }
   }
 
@@ -1102,7 +1076,7 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
   async funcionClientesSinPuntear() {
 
     if (this.clientesSinPuntear.length == 0) {
-      return this.exportarRuteros();
+      return await this.exportarRuteros();
 
     }
     for (let i = 0; i < this.clientesSinPuntear.length; i++) {
@@ -1113,7 +1087,7 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
         this.rutero.push(cliente)
       }
       if (i == this.clientesSinPuntear.length - 1) {
-        return this.exportarRuteros();
+        return await this.exportarRuteros();
       }
     }
 
@@ -1139,7 +1113,7 @@ this.alertasService.message('IRP', 'Lo sentimos, esta es una guia existente!, bo
       }
       if (i == this.rutero.length - 1) {
         this.listaGuias[index].verificada = true;
-        this.alertasService.loadingDissmiss();
+        await this.alertasService.loadingDissmiss();
         console.log('finish exporting')
         return this.rutero;
 

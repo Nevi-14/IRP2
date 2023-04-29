@@ -1,4 +1,12 @@
 export const environment = {
+
+  preURL:'https://',
+  preURL2:'https://dev-coding.com/cabys/api',
+  postURL:'dev-coding.com/cabys/api/',
+  postEmail:'post/send/email',
+
+
+  
   companyCode:"01",
   production: true,
   maxCharCodigoProd: 6,
@@ -39,5 +47,10 @@ export const environment = {
   consultarGuia:'consultar-guia/?id=',
   facturasGuias:'get-facturas-guia/?Id=',
   clientesClierre:'ClientesCierre/?fecha=',
-  deleteRutero:'delete-ruteros'
+  deleteRutero:'delete-ruteros',
+    // actualiza clientes
+getActualizaClientes:'get/actualiza/clientes',
+postActualizaClientes:'post/actualiza/cliente',
+putActualizaClientes:'put/actualiza/cliente?id=',
+deleteActualizaClientes:'delete/actualiza/cliente?id='
 };

@@ -31,7 +31,7 @@ export class AgregarActualizarTelefonoPage implements OnInit {
 
   ngOnInit() {
   
-
+console.log(this.telefono)
   if(this.editarTelefono){
     this.telefono = this.editarTelefono;
     this.aplicaRec = this.editarTelefono.APLICA_REC == 'S' ? true : false;
