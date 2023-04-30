@@ -7,12 +7,16 @@
     </ion-button>
     <ion-title>Lista de Clientes      </ion-title>
 
-    <ion-select slot="end" name="carga" (ionChange)="renderizarMapa($event)" [(ngModel)]="mapboxService.size"   placeholder="Cargar Pines">
-      <ion-select-option *ngFor="let item of mapboxService.opciones; let i = index;" [value]="item.valor"> 
+    <ion-select style="margin-right: 1rem;" slot="end" name="carga" (ionChange)="renderizarMapa($event)" [(ngModel)]="mapboxService.featuresIndex"   placeholder="Cargar Pines">
+      <ion-select-option *ngFor="let item of mapboxService.marcadores; let i = index;" [value]="i"> 
 
-{{item.rango}}
+    {{i == 0 ? mapboxService.marcadores[0].length > 500 ? '' : i + ' - ' : mapboxService.size * i + 1  + ' - '}}  {{ i == 0  ?  mapboxService.marcadores[0].length > 500 ?  'Segregar': item.length :  mapboxService.size * i + item.length }}
+    
 
       </ion-select-option>
+      <ion-select-option   value="0">Todos</ion-select-option>
+      
+       
     </ion-select>
 
   </ion-toolbar>

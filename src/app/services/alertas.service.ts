@@ -49,6 +49,11 @@ export class AlertasService {
     });
     await alert.present();
 }
-
+async presentLoading(message) {
+  this.loading = await this.loadingCtrl.create({
+  message ,
+  });
+  await this.loading.present();
+  }
 
 }

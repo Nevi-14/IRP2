@@ -202,18 +202,8 @@ inputArray.push(move)
    
    renderizarMapa($event){
     console.log($event)
-  
-     if( $event.detail.value == 0 && this.mapboxService.marcadores[0].length > 500){
-      this.mapboxService.size = 500
-   
-      
-     }else if( $event.detail.value == 0 && this.mapboxService.marcadores[0].length <= 500){
-      this.mapboxService.size = this.mapboxService.clientes.length;
-     }else{
-      this.mapboxService.size = 500;
-       
-     }
-  
+    this.mapboxService.size = $event.detail.value;
+
     // this.changeDetector.detectChanges();
     this.mapboxService.renderizarMapa();
   }

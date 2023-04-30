@@ -22,7 +22,7 @@ import { ActualizaClientesService } from 'src/app/services/actualiza-clientes.se
   ]
 })
 export class PlanificacionRutasPage implements OnInit {
-
+  pendientes = [];
   constructor(
     public modalCtrl: ModalController,
     public popOverCrtl: PopoverController,
@@ -31,7 +31,8 @@ export class PlanificacionRutasPage implements OnInit {
     public clientesService: ClientesService,
     public planificacionRutasService: PlanificacionRutasService,
     public changeDetector: ChangeDetectorRef,
-    public actualizaClientesService:ActualizaClientesService
+    public actualizaClientesService:ActualizaClientesService,
+    public actualizaClintesService: ActualizaClientesService
 
 
   ) {
@@ -40,7 +41,9 @@ export class PlanificacionRutasPage implements OnInit {
   }
 
 
-  ngOnInit() {
+async  ngOnInit() {
+
+  this.pendientes =   await this.actualizaClintesService.syncGetActualizaClientes();
     this.limpiarDatos();
   }
 
@@ -51,7 +54,9 @@ export class PlanificacionRutasPage implements OnInit {
     this.mapboxService.drag = false;
     this.mapboxService.modo = 'off';
     this.mapboxService.featuresIndex = 0;
+    this.mapboxService.size = 500;
     this.mapboxService.renderizarMapa();
+
   }
   moverMarcadores() {
     this.mapboxService.moverMarcadores();
@@ -88,7 +93,7 @@ export class PlanificacionRutasPage implements OnInit {
 
   async clientesSinUbicacion() {
 
-
+    this.clientesService.isChecked = false;
 
     const modal = await this.modalCtrl.create({
       component: ClientesSinUbicacionPage,
@@ -100,7 +105,6 @@ export class PlanificacionRutasPage implements OnInit {
     modal.present();
 
     const { data } = await modal.onDidDismiss();
-
     if (data != undefined) {
 
       data.item.forEach((cliente: Clientes, i) => {
@@ -112,6 +116,7 @@ export class PlanificacionRutasPage implements OnInit {
           this.mapboxService.clientes.push(cliente)
         }
         if (i == data.item.length - 1) {
+          this.clientesService.clientesArray = [];
           console.log('new customer', cliente)
           this.mapboxService.renderizarMapa();
         }
@@ -123,16 +128,7 @@ export class PlanificacionRutasPage implements OnInit {
   renderizarMapa($event) {
     console.log($event)
 
-    if ($event.detail.value == 0 && this.mapboxService.marcadores[0].length > 500) {
-      this.mapboxService.size = 500
-
-
-    } else if ($event.detail.value == 0 && this.mapboxService.marcadores[0].length <= 500) {
-      this.mapboxService.size = this.mapboxService.clientes.length;
-    } else {
-      this.mapboxService.size = 500;
-
-    }
+this.mapboxService.size = $event.detail.value;
 
     // this.changeDetector.detectChanges();
     this.mapboxService.renderizarMapa();
@@ -228,7 +224,8 @@ export class PlanificacionRutasPage implements OnInit {
 
         }
 
-this.actualizaClientesService.syncDeleteActualizaClientes(this.mapboxService.clientes[i].IdCliente).then(resp =>{
+this.actualizaClientesService.syncDeleteActualizaClientes(this.mapboxService.clientes[i].IdCliente).then(async resp =>{
+  this.pendientes =   await this.actualizaClintesService.syncGetActualizaClientes();
 
 }, error =>{
 })

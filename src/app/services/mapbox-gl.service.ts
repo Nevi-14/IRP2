@@ -27,12 +27,15 @@ interface marcadores {
   },
   properties: Clientes
 }
-
+interface opciones {
+valor : number,
+rango:string
+}
 @Injectable({
   providedIn: 'root'
 })
 export class MapBoxGLService {
-
+  opciones:opciones[] = [];
   mapbox = (mapboxgl as typeof mapboxgl);
   zoom: number = 12;
   geocoderArray: any;
@@ -70,7 +73,7 @@ features = [];
 
   async renderizarMapa() {
 
-
+this.opciones = [];
     this.mapa = null;
 
     this.mapa = new mapboxgl.Map({
@@ -184,10 +187,33 @@ ${this.marcadores[this.featuresIndex][i].title + ' ' + this.marcadores[this.feat
 
         }).addTo(this.mapa);
         if (i == this.marcadores[this.featuresIndex].length - 1) {
-          this.mapa.on('load', () => {
-            this.mapa.resize();
-          });
 
+          this.opciones.push({ valor: 500, rango: '0 - 500' });
+          this.marcadores.forEach((marcador, index) =>{
+
+           let   opcion:opciones = {
+              valor:  index == 0 ?  500 : 500*index+1,
+              rango: `${ index == 0  ? 0 :   500 * index + 1 } - ${ index == 0 ?  marcador.length : 500*index  + marcador.length}`
+            }
+          if(marcador.length < this.size)  this.opciones.push(opcion);
+           
+            if(index == this.marcadores.length -1){
+              let   opcion:opciones = {
+                valor: this.clientes.length,
+                rango: `0 - ${this.clientes.length}`
+              }
+              this.opciones.push(opcion);
+              console.log(  this.opciones)
+              this.mapa.on('load', () => {
+                this.mapa.resize();
+              });
+    
+        
+            }
+          })
+
+
+    
         }
       }
     }

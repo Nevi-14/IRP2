@@ -43,7 +43,7 @@ export class ValidacionLngLatPage implements OnInit {
   notificarYContinuar() {
     let body:string = '';
     let clientes =[];
-    this.alertService.presentaLoading('Un momento...')
+    //this.alertService.presentaLoading('Un momento...')
     this.clientes.forEach(async (cliente, index) => {
 let actualizaCliente:ActualizaClientes = {
   ID:null,
@@ -56,7 +56,7 @@ let actualizaCliente:ActualizaClientes = {
 await this.actualizaClientesService.syncPostActualizaClientes(actualizaCliente)
 
 if(index == this.clientes.length -1){
-  this.alertService.loadingDissmiss();
+//  this.alertService.loadingDissmiss();
   this.modalCtrl.dismiss();
 
 }
